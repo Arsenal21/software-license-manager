@@ -2,13 +2,22 @@
 /*
 Plugin Name: License Manager
 Version: v1.9
-Plugin URI: http://tipsandtricks-hq.com
+Plugin URI: https://www.tipsandtricks-hq.com
 Author: Tips and Tricks HQ
-Author URI: http://www.tipsandtricks-hq.com/
+Author URI: https://www.tipsandtricks-hq.com/
 Description: Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
 */
+
+if(!defined('ABSPATH'))exit; //Exit if accessed directly
+
+//Short name/slug "SLM" or "slm"
+
 define('WP_LICENSE_MANAGER_VERSION', "1.9");
-include_once('wp_license_manager1.php');
+define('WP_LICENSE_MANAGER_DB_VERSION', '1.2');
+define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
+define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));
+
+include_once('slm_plugin_core.php');
 
 //Installer
 function wp_lic_manager_install ()

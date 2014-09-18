@@ -21,17 +21,18 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       date_renewed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
       date_expiry datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
       PRIMARY KEY (id)
-   )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+      )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 dbDelta($lk_tbl_sql);
 
 $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
-              id INT NOT NULL AUTO_INCREMENT ,
-              lic_key_id INT NOT NULL ,
-              lic_key varchar(255) NOT NULL ,
-              registered_domain VARCHAR( 100 ) NOT NULL ,
-              PRIMARY KEY ( id )
-       )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+      id INT NOT NULL AUTO_INCREMENT ,
+      lic_key_id INT NOT NULL ,
+      lic_key varchar(255) NOT NULL ,
+      registered_domain VARCHAR( 100 ) NOT NULL ,
+      PRIMARY KEY ( id )
+      )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 dbDelta($ld_tbl_sql);
+
 // Add default options
 update_option("wp_lic_mgr_db_version", WP_LICENSE_MANAGER_DB_VERSION);
 

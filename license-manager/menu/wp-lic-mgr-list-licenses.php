@@ -18,10 +18,10 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     }
         
     function column_id($item){
-        $price_list_id = $item['id'];
+        $row_id = $item['id'];
         $actions = array(
-            'edit' => sprintf('<a href="admin.php?page=WPS-pricelist&task=edit&id=%s">Edit</a>',$price_list_id),
-            'delete' => sprintf('<a href="admin.php?page=WPS-pricelist&task=delete&id=%s" onclick="return confirm(\'Are you sure you want to delete this item?\')">Delete</a>',$price_list_id),
+            'edit' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id),
+            'delete' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&task=delete&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',$row_id),
         );
         return sprintf('%1$s <span style="color:silver"></span>%2$s',
             /*$1%s*/ $item['id'],
