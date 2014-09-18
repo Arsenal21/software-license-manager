@@ -180,7 +180,25 @@ function lic_mgr_add_lic_view($editing_record,$id='')
     <td><input name="manual_reset_count" type="text" id="manual_reset_count" value="<?php echo $editing_record->manual_reset_count; ?>" size="6" />
     <br/>The number of times this license has been manually reset by the admin (use it if you want to keep track of it). It can be helpful for the admin to keep track of manual reset counts.</td>
     </tr>
-    
+
+    <tr valign="top">
+    <th scope="row">Date Created</th>
+    <td><input name="date_created" type="text" id="date_created" value="<?php echo $editing_record->date_created; ?>" size="6" />
+    <br/>Creation date of license.</td>
+    </tr>
+
+    <tr valign="top">
+    <th scope="row">Date Renewed</th>
+    <td><input name="date_renewed" type="text" id="date_renewed" value="<?php echo $editing_record->date_renewed; ?>" size="6" />
+    <br/>Renewal date of license.</td>
+    </tr>
+
+    <tr valign="top">
+    <th scope="row">Date of Expiry</th>
+    <td><input name="date_expiry" type="text" id="date_expiry" value="<?php echo $editing_record->date_expiry; ?>" size="6" />
+    <br/>Expiry date of license.</td>
+    </tr>
+
     </table>
 
     <div class="submit">

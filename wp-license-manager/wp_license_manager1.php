@@ -3,11 +3,38 @@ include_once('lic_db_access.php');
 
 define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
 define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));
-
+define('WP_LICENSE_MANAGER_DB_VERSION', '1.2');
 /*** Start! Everything to do with License verification, activation, deactivation ***/
 define('WP_LICENSE_MGR_LIC_SECRET_KEY', '4c132da1f24a41.63429762');
 define('WP_LICENSE_MGR_LIC_DEACTIVATION_POST_URL', 'http://license-manager.tipsandtricks-hq.com/wp-content/plugins/wp-license-manager/api/deactivate.php');
 define('WP_LICENSE_MGR_LIC_ACTIVATION_POST_URL', 'http://license-manager.tipsandtricks-hq.com/wp-content/plugins/wp-license-manager/api/verify.php');
+
+global $wpdb;
+define('WPLM_TBL_LICENSE_KEYS', $wpdb->prefix . "lic_key_tbl");
+define('WPLM_TBL_LIC_DOMAIN', $wpdb->prefix . "lic_reg_domain_tbl");
+
+if (is_admin()){ //Load admin side only files
+    include_once('menu/includes/wp-license-mgr-list-table.php'); //Load our own WP List Table class
+}
+
+add_action('init',  'wp_lic_mgr_init');
+
+function wp_lic_mgr_init()
+{
+    //Load all common scripts and styles only
+    wp_enqueue_script('jquery');
+
+    if(is_admin())//Load all admin side scripts and styles only
+    {
+            wp_enqueue_script('jquery-ui-datepicker');
+
+            wp_enqueue_script('jquery-ui-core');
+            wp_enqueue_script('jquery-ui-widget');
+            wp_enqueue_script('jquery-ui-position');
+            wp_enqueue_script('jquery-ui-mouse');
+            wp_enqueue_script('jquery-ui-dialog');
+    }
+}
 
 function wp_lic_mgr_deactivate_lic($lic)
 {
@@ -66,6 +93,7 @@ function wp_lic_mgr_lic_verify($lic)
 }
 function wp_lic_mgr_is_license_valid()
 {
+    return true;
     $is_valid = false;
     $license_key = get_option('wp_lic_mgr_lic_key');    
     if(!empty($license_key))
@@ -124,4 +152,15 @@ if (is_admin())
     add_action('admin_menu','wp_lic_mgr_add_admin_menu');
 }
 
-?>
+add_action('plugins_loaded','wp_lic_mgr_plugins_loaded_handler');//plugins loaded hook
+
+function wp_lic_mgr_plugins_loaded_handler()
+{
+    //Runs when plugins_loaded action gets fired
+    if(is_admin()){
+        //Check if db update needed
+        if (get_option('wp_lic_mgr_db_version') != WP_LICENSE_MANAGER_DB_VERSION) {
+            require_once(dirname(__FILE__).'/lic_manager_installer.php');
+        }
+    }
+}

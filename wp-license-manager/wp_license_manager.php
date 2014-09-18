@@ -13,7 +13,7 @@ include_once('wp_license_manager1.php');
 //Installer
 function wp_lic_manager_install ()
 {
-	require_once(dirname(__FILE__).'/lic_manager_installer.php');
+    require_once(dirname(__FILE__).'/lic_manager_installer.php');
 }
 register_activation_hook(__FILE__,'wp_lic_manager_install');
 ?>
