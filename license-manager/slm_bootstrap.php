@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: License Manager
+Plugin Name: Software License Manager
 Version: v1.9
 Plugin URI: https://www.tipsandtricks-hq.com
 Author: Tips and Tricks HQ

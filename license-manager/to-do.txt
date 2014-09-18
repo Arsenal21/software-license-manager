@@ -5,3 +5,7 @@
 //Move the content of the "api" folder to a class and execute it from the front end of the site
 //Convert CURL requests to WordPress's http query functions
 
+=================
+//Language translation
+
+

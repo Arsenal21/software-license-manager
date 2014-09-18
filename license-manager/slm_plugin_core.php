@@ -4,8 +4,10 @@
 global $wpdb;
 define('WPLM_TBL_LICENSE_KEYS', $wpdb->prefix . "lic_key_tbl");
 define('WPLM_TBL_LIC_DOMAIN', $wpdb->prefix . "lic_reg_domain_tbl");
+define("SLM_MANAGEMENT_PERMISSION", "manage_options");
 
 //Includes
+include_once('includes/slm_init_time_tasks.php');
 include_once('lic_db_access.php');
 //Include admin side only files
 if (is_admin()){
@@ -17,24 +19,13 @@ add_action('init', 'wp_lic_mgr_init');
 add_action('plugins_loaded', 'wp_lic_mgr_plugins_loaded_handler');
 
 
+//Do init time tasks
 function wp_lic_mgr_init()
 {
-    //Load all common scripts and styles only
-    wp_enqueue_script('jquery');
-
-    if(is_admin())//Load all admin side scripts and styles only
-    {
-            wp_enqueue_script('jquery-ui-datepicker');
-
-            wp_enqueue_script('jquery-ui-core');
-            wp_enqueue_script('jquery-ui-widget');
-            wp_enqueue_script('jquery-ui-position');
-            wp_enqueue_script('jquery-ui-mouse');
-            wp_enqueue_script('jquery-ui-dialog');
-    }
+    new SLM_Init_Time_Tasks();
 }
 
-
+//Do plugins loaded time tasks
 function wp_lic_mgr_plugins_loaded_handler()
 {
     //Runs when plugins_loaded action gets fired
@@ -55,18 +46,19 @@ function del_reg_dom(){
 	exit(0);
 }
 
+
+//******* TODO - Move to a separate file ***********
 //Add the Admin Menus
-define("LIC_MGR_MANAGEMENT_PERMISSION", "edit_themes");
 if (is_admin())
 {
     function wp_lic_mgr_add_admin_menu()
     {
-        add_menu_page("License Mgr", "License Mgr", LIC_MGR_MANAGEMENT_PERMISSION, __FILE__, "wp_lic_mgr_manage_licenses_menu");
-        add_submenu_page(__FILE__, "Manage Licenses", "Manage Licenses", LIC_MGR_MANAGEMENT_PERMISSION, __FILE__, "wp_lic_mgr_manage_licenses_menu");
-        add_submenu_page(__FILE__, "Add/Edit Licenses", "Add/Edit Licenses", LIC_MGR_MANAGEMENT_PERMISSION, 'wp_lic_mgr_addedit', "wp_lic_mgr_add_licenses_menu");
-        add_submenu_page(__FILE__, "Settings", "Settings", LIC_MGR_MANAGEMENT_PERMISSION, 'wp_lic_mgr_settings', "wp_lic_mgr_settings_menu");
-        add_submenu_page(__FILE__, "Admin Functions", "Admin Functions", LIC_MGR_MANAGEMENT_PERMISSION, 'wp_lic_mgr_admin_fnc', "wp_lic_mgr_admin_fnc_menu");
-        add_submenu_page(__FILE__, "Integration Help", "Integration Help", LIC_MGR_MANAGEMENT_PERMISSION, 'lic_mgr_integration_help_page', "lic_mgr_integration_help_menu");
+        add_menu_page("License Manager", "License Manager", SLM_MANAGEMENT_PERMISSION, __FILE__, "wp_lic_mgr_manage_licenses_menu");
+        add_submenu_page(__FILE__, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, __FILE__, "wp_lic_mgr_manage_licenses_menu");
+        add_submenu_page(__FILE__, "Add/Edit Licenses", "Add/Edit Licenses", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_addedit', "wp_lic_mgr_add_licenses_menu");
+        add_submenu_page(__FILE__, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_settings', "wp_lic_mgr_settings_menu");
+        add_submenu_page(__FILE__, "Admin Functions", "Admin Functions", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_admin_fnc', "wp_lic_mgr_admin_fnc_menu");
+        add_submenu_page(__FILE__, "Integration Help", "Integration Help", SLM_MANAGEMENT_PERMISSION, 'lic_mgr_integration_help_page', "lic_mgr_integration_help_menu");
     }
     //Include menus
     require_once(dirname(__FILE__).'/menu/lic_manage_licenses.php');
