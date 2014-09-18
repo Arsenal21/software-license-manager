@@ -21,8 +21,8 @@ define('WP_LICENSE_MANAGER_PATH', plugin_dir_path(__FILE__));
 include_once('slm_plugin_core.php');
 
 //Installer
-function wp_lic_manager_install ()
+function slm_db_install ()
 {
-    require_once(dirname(__FILE__).'/lic_manager_installer.php');
+    require_once(dirname(__FILE__).'/slm_installer.php');
 }
-register_activation_hook(__FILE__,'wp_lic_manager_install');
+register_activation_hook(__FILE__,'slm_db_install');

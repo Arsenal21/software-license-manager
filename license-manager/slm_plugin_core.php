@@ -34,7 +34,7 @@ function wp_lic_mgr_plugins_loaded_handler()
     if(is_admin()){
         //Check if db update needed
         if (get_option('wp_lic_mgr_db_version') != WP_LICENSE_MANAGER_DB_VERSION) {
-            require_once(dirname(__FILE__).'/lic_manager_installer.php');
+            require_once(dirname(__FILE__).'/slm_installer.php');
         }
     }
 }
