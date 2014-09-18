@@ -104,7 +104,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     function delete_licences($entries)
     {
         global $wpdb;
-        $license_table = WPLM_TBL_LICENSE_KEYS;
+        $license_table = SLM_TBL_LICENSE_KEYS;
         if (is_array($entries))
         {
             //Delete multiple records
@@ -153,7 +153,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         $this->process_bulk_action();
     	
     	global $wpdb;
-        $license_table = WPLM_TBL_LICENSE_KEYS;
+        $license_table = SLM_TBL_LICENSE_KEYS;
         
 	/* -- Ordering parameters -- */
 	    //Parameters that are going to be used to order the result

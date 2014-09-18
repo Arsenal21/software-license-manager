@@ -46,7 +46,7 @@ function wp_lic_mgr_add_licenses_menu() {
 
     lic_mgr_add_lic_view($editing_record, $id);
 
-    echo '<a href="admin.php?page=wp-license-manager/wp_license_manager1.php" class="button rbutton">Manage Licenses</a><br /><br />';
+    echo '<a href="admin.php?page='.SLM_MAIN_MENU_SLUG.'" class="button">Manage Licenses</a><br /><br />';
     echo '</div></div>';
     echo '</div>';
 }
@@ -69,15 +69,22 @@ function lic_mgr_add_lic_view($editing_record, $id = '') {
             <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
                 <table class="form-table">
 
-    <?php
-    if ($id != '') {
-        echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
-    } else {
-        //Auto generate unique key
-        $lic_key_prefix = get_option('wp_lic_mgr_key_prefix');
-        $editing_record->license_key = uniqid($lic_key_prefix); //uniqid('', true);
-    }
-    ?>
+                    <?php
+                    if ($id != '') {
+                        echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
+                    } else {
+                        if(!isset($editing_record)){//Create an empty object
+                            $editing_record = new stdClass();
+                        }
+                        //Auto generate unique key
+                        $lic_key_prefix = get_option('wp_lic_mgr_key_prefix');
+                        if (!empty($lic_key_prefix)) {
+                            $editing_record->license_key = uniqid($lic_key_prefix);
+                        } else {
+                            $editing_record->license_key = uniqid();
+                        }
+                    }
+                    ?>
 
                     <tr valign="top">
                         <th scope="row">License Key</th>
@@ -100,42 +107,42 @@ function lic_mgr_add_lic_view($editing_record, $id = '') {
                             </select>
                         </td></tr>
 
-    <?php
-    if ($id != '') {
-        global $wpdb;
-        $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
-        $reg_domains = $wpdb->get_results(" SELECT * FROM $reg_table WHERE lic_key_id= '$id'", OBJECT);
-        ?>
+                    <?php
+                    if ($id != '') {
+                        global $wpdb;
+                        $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
+                        $reg_domains = $wpdb->get_results(" SELECT * FROM $reg_table WHERE lic_key_id= '$id'", OBJECT);
+                        ?>
                         <tr valign="top">
                             <th scope="row">Registered Domains</th>
                             <td><?php
-        if (count($reg_domains) > 0) {
-            ?>
+                                if (count($reg_domains) > 0) {
+                                    ?>
                                     <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
                                     <div style="overflow:auto; height:157px;width:250px;border:1px solid #ccc;">
                                         <table cellpadding="0" cellspacing="0">
-                            <?php
-                            $count = 0;
-                            foreach ($reg_domains as $reg_domain) {
-                                ?>
+                                            <?php
+                                            $count = 0;
+                                            foreach ($reg_domains as $reg_domain) {
+                                                ?>
                                                 <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
                                                     <td height="5"><?php echo $reg_domain->registered_domain; ?></td> 
                                                     <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
                                                 </tr>
-                <?php
-                $count++;
-            }
-            ?>
+                                                <?php
+                                                $count++;
+                                            }
+                                            ?>
                                         </table>         
                                     </div>
-            <?php
-        } else {
-            echo "Not Registered Yet.";
-        }
-        ?>
+                                    <?php
+                                } else {
+                                    echo "Not Registered Yet.";
+                                }
+                                ?>
                             </td>
                         </tr>
-                            <?php } ?>
+                    <?php } ?>
 
                     <tr valign="top">
                         <th scope="row">First Name</th>
@@ -170,26 +177,26 @@ function lic_mgr_add_lic_view($editing_record, $id = '') {
 
                     <tr valign="top">
                         <th scope="row">Date Created</th>
-                        <td><input name="date_created" type="text" id="date_created" value="<?php echo $editing_record->date_created; ?>" size="6" />
+                        <td><input name="date_created" type="text" id="date_created" value="<?php echo $editing_record->date_created; ?>" size="10" />
                             <br/>Creation date of license.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Date Renewed</th>
-                        <td><input name="date_renewed" type="text" id="date_renewed" value="<?php echo $editing_record->date_renewed; ?>" size="6" />
+                        <td><input name="date_renewed" type="text" id="date_renewed" value="<?php echo $editing_record->date_renewed; ?>" size="10" />
                             <br/>Renewal date of license.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Date of Expiry</th>
-                        <td><input name="date_expiry" type="text" id="date_expiry" value="<?php echo $editing_record->date_expiry; ?>" size="6" />
+                        <td><input name="date_expiry" type="text" id="date_expiry" value="<?php echo $editing_record->date_expiry; ?>" size="10" />
                             <br/>Expiry date of license.</td>
                     </tr>
 
                 </table>
 
                 <div class="submit">
-                    <input type="submit" name="save_record" value="Save &raquo;" />
+                    <input type="submit" class="button-primary" name="save_record" value="Save Record" />
                 </div>
             </form>
         </div></div>

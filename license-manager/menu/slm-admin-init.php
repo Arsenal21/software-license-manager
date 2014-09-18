@@ -5,18 +5,17 @@
  * Admin menu rendering code goes in this file.
  */
 
-add_action('admin_menu','wp_lic_mgr_add_admin_menu');
- 
-//Include menu handling files
-require_once(WP_LICENSE_MANAGER_PATH.'/menu/lic_manage_licenses.php');
-require_once(WP_LICENSE_MANAGER_PATH.'/menu/lic_add_licenses.php');
-require_once(WP_LICENSE_MANAGER_PATH.'/menu/lic_settings.php');
-require_once(WP_LICENSE_MANAGER_PATH.'/menu/wp_lic_mgr_admin_fnc.php');    
-require_once(WP_LICENSE_MANAGER_PATH.'/menu/lic_mgr_integration_help_page.php');
+add_action('admin_menu', 'wp_lic_mgr_add_admin_menu');
 
-function wp_lic_mgr_add_admin_menu()
-{
-    add_menu_page("License Manager", "License Manager", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu");
+//Include menu handling files
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_manage_licenses.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_add_licenses.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_settings.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/wp_lic_mgr_admin_fnc.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_mgr_integration_help_page.php');
+
+function wp_lic_mgr_add_admin_menu() {
+    add_menu_page("License Manager", "License Manager", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu", SLM_MENU_ICON);
     add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu");
     add_submenu_page(SLM_MAIN_MENU_SLUG, "Add/Edit Licenses", "Add/Edit Licenses", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_addedit', "wp_lic_mgr_add_licenses_menu");
     add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_settings', "wp_lic_mgr_settings_menu");

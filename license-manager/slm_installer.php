@@ -3,8 +3,8 @@
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');	
 
 //***Installer variables***
-$lic_key_table = WPLM_TBL_LICENSE_KEYS;
-$lic_domain_table = WPLM_TBL_LIC_DOMAIN;
+$lic_key_table = SLM_TBL_LICENSE_KEYS;
+$lic_domain_table = SLM_TBL_LIC_DOMAIN;
 
 $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       id int(12) NOT NULL auto_increment,

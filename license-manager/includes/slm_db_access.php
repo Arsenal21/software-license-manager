@@ -14,7 +14,7 @@ class LicMgrDbAccess {
         die();
     }
 
-    function find($inTable, $condition) {
+    static function find($inTable, $condition) {
         global $wpdb;
 
         if (empty($condition)) {
@@ -24,7 +24,7 @@ class LicMgrDbAccess {
         return $resultset;
     }
 
-    function findAll($inTable, $condition = null, $orderby = null) {
+    static function findAll($inTable, $condition = null, $orderby = null) {
         global $wpdb;
         $condition = empty($condition) ? '' : ' WHERE ' . $condition;
         $condition .= empty($orderby) ? '' : ' ORDER BY ' . $orderby;
@@ -32,13 +32,13 @@ class LicMgrDbAccess {
         return $resultSet;
     }
 
-    function delete($fromTable, $condition) {
+    static function delete($fromTable, $condition) {
         global $wpdb;
         $resultSet = $wpdb->query("DELETE FROM $fromTable WHERE $condition ");
         return $resultSet;
     }
 
-    function update($inTable, $condition, $fields) {
+    static function update($inTable, $condition, $fields) {
         global $wpdb;
         $query = " UPDATE $inTable SET ";
         $first = true;
@@ -55,7 +55,7 @@ class LicMgrDbAccess {
         return $results;
     }
 
-    function insert($inTable, $fields) {
+    static function insert($inTable, $fields) {
         global $wpdb;
         $fieldss = '';
         $valuess = '';
@@ -77,7 +77,7 @@ class LicMgrDbAccess {
         return $results;
     }
 
-    function findCount($inTable, $fields = null, $condition = null, $orderby = null, $groupby = null) {
+    static function findCount($inTable, $fields = null, $condition = null, $orderby = null, $groupby = null) {
         global $wpdb;
         $fieldss = '';
         $first = true;
