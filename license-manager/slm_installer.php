@@ -28,7 +28,7 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       id INT NOT NULL AUTO_INCREMENT ,
       lic_key_id INT NOT NULL ,
       lic_key varchar(255) NOT NULL ,
-      registered_domain VARCHAR( 100 ) NOT NULL ,
+      registered_domain text NOT NULL ,
       PRIMARY KEY ( id )
       )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 dbDelta($ld_tbl_sql);

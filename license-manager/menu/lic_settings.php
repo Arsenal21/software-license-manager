@@ -64,19 +64,19 @@ function wp_lic_mgr_general_settings() {
                     <tr valign="top">
                         <th scope="row">Secret Key for License Verification Requests</th>
                         <td><input type="text" name="wp_lic_mgr_verification_secret_key" value="<?php echo $secret_verification_key; ?>" size="30" />
-                            <br />This secret key will be used to authenticate any license verification request from customer's site. Important! Do not change this value once your customer's start to use your product(s)!</td>
+                            <br />This secret key will be used to authenticate any license verification request from customer's site. Important! Do not change this value once your customers start to use your product(s)!</td>
                     </tr>
                     <tr valign="top">
                         <th scope="row">Maximum Allowed Domains</th>
-                        <td><input type="text" name="wp_lic_mgr_max_num_domain" value="<?php echo get_option('wp_lic_mgr_max_num_domain'); ?>" size="30" />
-                            <br />Maximum number of domains which each license is valid for.</td>
+                        <td><input type="text" name="wp_lic_mgr_max_num_domain" value="<?php echo get_option('wp_lic_mgr_max_num_domain'); ?>" size="6" />
+                            <br />Maximum number of domains which each license is valid for (default value).</td>
                     </tr>
 
                 </table>
             </div></div>
 
         <div class="submit">
-            <input type="submit" name="info_update" value="Update Options &raquo;" />
+            <input type="submit" class="button-primary" name="info_update" value="Update Options" />
         </div>
     </form>
     <?php

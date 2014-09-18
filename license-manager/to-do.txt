@@ -1,12 +1,17 @@
 
+//Complete the API functions
 //Language translation
 //Add datepicker on the date fields in add/edit license interface
 //Fix the date time columns so it can save just the "date" value (no time)
 //Add more columns to the manage licenses interface
 //Move the content of the "api" folder to a class and execute it from the front end of the site
-//Convert CURL requests to WordPress's http query functions
+//Convert CURL code to WordPress's http query functions - http://codex.wordpress.org/Function_Reference/wp_remote_get
+//Create a config class for storing the settings options (just like AIOWPS)
+//Refactor WP_LICENSE_MANAGER to SLM
 
 =================
-
+//Logs menu the with a WP list table that lists all the incoming API requests.
+//Have an email settings menu?
+//Remove "api" folder after the new API is coded in?
 
 

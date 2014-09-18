@@ -1,5 +1,7 @@
 <?php
 
+//TODO - change this to activate license
+
 if (isset($_REQUEST['secret_key'])) {
     include_once('../../../../wp-load.php');
     include_once(WP_LICENSE_MANAGER_PATH . 'includes/slm_db_access.php');
