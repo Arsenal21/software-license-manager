@@ -16,6 +16,7 @@ define('WP_LICENSE_MANAGER_VERSION', "1.9");
 define('WP_LICENSE_MANAGER_DB_VERSION', '1.2');
 define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
 define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));
+define('WP_LICENSE_MANAGER_PATH', plugin_dir_path(__FILE__));
 
 include_once('slm_plugin_core.php');
 

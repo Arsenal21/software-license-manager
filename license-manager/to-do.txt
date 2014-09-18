@@ -1,4 +1,5 @@
 
+//Language translation
 //Add datepicker on the date fields in add/edit license interface
 //Fix the date time columns so it can save just the "date" value (no time)
 //Add more columns to the manage licenses interface
@@ -6,6 +7,6 @@
 //Convert CURL requests to WordPress's http query functions
 
 =================
-//Language translation
+
 
 
