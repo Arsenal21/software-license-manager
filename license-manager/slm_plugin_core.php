@@ -9,7 +9,7 @@ define('SLM_MAIN_MENU_SLUG', 'slm');
 
 //Includes
 include_once('includes/slm_init_time_tasks.php');
-include_once('lic_db_access.php');
+include_once('includes/slm_db_access.php');
 //Include admin side only files
 if (is_admin()){
     include_once('menu/slm-admin-init.php');
