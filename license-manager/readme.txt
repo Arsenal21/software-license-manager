@@ -7,7 +7,7 @@ Tested up to: 4.0
 Stable tag: 1.1
 License: GPLv2 or later
 
-Create and manager license keys for your software applications
+Create and manage license keys for your software applications
 
 == Description ==
 

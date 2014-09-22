@@ -94,9 +94,7 @@ class SLM_API_Listener
                 echo "Error\n";
                 echo "Invalid License Key!\n";
             }
-        
-
-            
+ 
         }
     }
     
