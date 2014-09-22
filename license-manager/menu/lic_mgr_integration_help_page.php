@@ -11,15 +11,15 @@ function lic_mgr_integration_help_menu() {
     echo '<div id="poststuff"><div id="post-body">';
     echo '<h2>WP License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
 
-    $LicenseCreationPostURL = WP_LICENSE_MANAGER_URL . '/api/create.php';
+    $LicenseCreationPostURL = SLM_SITE_HOME_URL;
     echo "<strong>The License Creation POST URL For Your Installation</strong>";
     echo '<div class="lic_mgr_code">' . $LicenseCreationPostURL . '</div>';
 
-    $LicenseVerificationPostURL = WP_LICENSE_MANAGER_URL . '/api/verify.php';
-    echo "<strong>The License Verification POST URL For Your Installation</strong>";
+    $LicenseVerificationPostURL = SLM_SITE_HOME_URL;
+    echo "<strong>The License Activation POST URL For Your Installation</strong>";
     echo '<div class="lic_mgr_code">' . $LicenseVerificationPostURL . '</div>';
 
-    $LicenseDeactivationPostURL = WP_LICENSE_MANAGER_URL . '/api/deactivate.php';
+    $LicenseDeactivationPostURL = SLM_SITE_HOME_URL;
     echo "<strong>The License Deactivation POST URL For Your Installation</strong>";
     echo '<div class="lic_mgr_code">' . $LicenseDeactivationPostURL . '</div>';
     ?>

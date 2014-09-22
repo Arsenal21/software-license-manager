@@ -51,8 +51,10 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         $columns = array(
             'cb' => '<input type="checkbox" />', //Render a checkbox
             'id' => 'ID',
-            'license_key' => 'Key',
+            'license_key' => 'License Key',
             'lic_status' => 'Status',
+            'max_allowed_domains' => 'Domains Allowed',
+            'email' => 'Registered Email',
             'date_created' => 'Date Created',
             'date_renewed' => 'Date Renewed',
             'date_expiry' => 'Expiry',
