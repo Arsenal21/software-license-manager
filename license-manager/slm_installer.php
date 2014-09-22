@@ -34,6 +34,7 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 dbDelta($ld_tbl_sql);
 
-// Add default options
 update_option("wp_lic_mgr_db_version", WP_LICENSE_MANAGER_DB_VERSION);
+
+// Add default options
 

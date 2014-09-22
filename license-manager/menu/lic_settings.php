@@ -13,11 +13,14 @@ function wp_lic_mgr_settings_menu() {
 }
 
 function wp_lic_mgr_general_settings() {
+    
     if (isset($_POST['info_update'])) {
+        
         update_option('wp_lic_mgr_reg_secret_key', (string) $_POST["wp_lic_mgr_reg_secret_key"]);
         update_option('wp_lic_mgr_key_prefix', (string) $_POST["wp_lic_mgr_key_prefix"]);
-        if (is_numeric($_POST["wp_lic_mgr_max_num_domain"]))
+        if (is_numeric($_POST["wp_lic_mgr_max_num_domain"])) {
             update_option('wp_lic_mgr_max_num_domain', (string) $_POST["wp_lic_mgr_max_num_domain"]);
+        }
         update_option('wp_lic_mgr_verification_secret_key', (string) $_POST["wp_lic_mgr_verification_secret_key"]);
         //update_option('eStore_enable_wishlist_int', ($_POST['eStore_enable_wishlist_int']=='1') ? '1':'' );
     }
@@ -30,8 +33,7 @@ function wp_lic_mgr_general_settings() {
         $secret_verification_key = uniqid('', true);
     }
     ?>
-    <p>For information, updates and detailed documentation, please visit the <a href="http://www.tipsandtricks-hq.com" target="_blank">WP License Manager Documentation Site</a> or
-        The main plugin page <a href="http://www.tipsandtricks-hq.com/" target="_blank">WP License Manager</a></p>
+    <p>For information, updates and detailed documentation, please visit the <a href="http://www.tipsandtricks-hq.com" target="_blank">License Manager Documentation</a> page.</p>
 
     <div class="postbox">
         <h3><label for="title">Quick Usage Guide</label></h3>
@@ -42,7 +44,7 @@ function wp_lic_mgr_general_settings() {
             <p>3. Integrate the real time online key verification part.</p>
         </div></div>
 
-    <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+    <form method="post" action="">
 
         <div class="postbox">
             <h3><label for="title">General License Manager Settings</label></h3>
@@ -51,19 +53,19 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Secret Key for License Creation</th>
-                        <td><input type="text" name="wp_lic_mgr_reg_secret_key" value="<?php echo $secret_key; ?>" size="30" />
+                        <td><input type="text" name="wp_lic_mgr_reg_secret_key" value="<?php echo $secret_key; ?>" size="40" />
                             <br />This secret key will be used to authenticate any license creation request. You can change it with something random.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">License Key Prefix</th>
-                        <td><input type="text" name="wp_lic_mgr_key_prefix" value="<?php echo get_option('wp_lic_mgr_key_prefix'); ?>" size="30" />
+                        <td><input type="text" name="wp_lic_mgr_key_prefix" value="<?php echo get_option('wp_lic_mgr_key_prefix'); ?>" size="440" />
                             <br />You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Secret Key for License Verification Requests</th>
-                        <td><input type="text" name="wp_lic_mgr_verification_secret_key" value="<?php echo $secret_verification_key; ?>" size="30" />
+                        <td><input type="text" name="wp_lic_mgr_verification_secret_key" value="<?php echo $secret_verification_key; ?>" size="40" />
                             <br />This secret key will be used to authenticate any license verification request from customer's site. Important! Do not change this value once your customers start to use your product(s)!</td>
                     </tr>
                     <tr valign="top">
