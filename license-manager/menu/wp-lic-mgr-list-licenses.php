@@ -21,7 +21,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         $row_id = $item['id'];
         $actions = array(
             'edit' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id),
-            'delete' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&task=delete&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',$row_id),
+            'delete' => sprintf('<a href="admin.php?page=slm-main&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',$row_id),
         );
         return sprintf('%1$s <span style="color:silver"></span>%2$s',
             /*$1%s*/ $item['id'],
@@ -80,33 +80,30 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     }
 
     function process_bulk_action() {
-        //TODO
         if('delete'===$this->current_action()) 
         {
             //Process delete bulk actions
             if(!isset($_REQUEST['item']))
             {
-                $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'WPS').'</p>';
+                $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
                 echo '<div id="message" class="error fade">'.$error_msg.'</div>';
             }else 
             {            
                 $this->delete_licences(($_REQUEST['item']));
             }
         }
-
     }
     
     
     /*
-     * This function will delete the selected coupon entries from the DB.
+     * This function will delete the selected license key entries from the DB.
      * The function accepts either an array of IDs or a single ID
      */
-    function delete_licences($entries)
+    function delete_licenses($entries)
     {
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
-        if (is_array($entries))
-        {
+        if (is_array($entries)){
             //Delete multiple records
             $id_list = "(" .implode(",",$entries) .")"; //Create comma separate list for DB operation
             $delete_command = "DELETE FROM ".$license_table." WHERE id IN ".$id_list;
@@ -120,19 +117,16 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             }else{
                 //TODO - log an error 
             }
-        } 
-        elseif ($entries != NULL)
-        {
+        }elseif ($entries != NULL){
             //Delete single record
             $delete_command = "DELETE FROM ".$license_table." WHERE id = '".absint($entries)."'";
             $result = $wpdb->query($delete_command);
-            if($result != NULL)
-            {
+            if($result != NULL){
                 $success_msg = '<div id="message" class="updated"><p><strong>';
                 $success_msg .= 'The selected entry was deleted successfully!';
                 $success_msg .= '</strong></p></div>';
                 echo $success_msg;
-            } else{
+            }else{
                 //TODO - log an error 
             }
         }

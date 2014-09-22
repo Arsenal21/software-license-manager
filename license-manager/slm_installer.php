@@ -10,16 +10,16 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       id int(12) NOT NULL auto_increment,
       license_key varchar(255) NOT NULL,
       max_allowed_domains int(12) NOT NULL,
-      lic_status ENUM('active', 'blocked', 'expired') NOT NULL DEFAULT 'active',         
+      lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',         
       first_name varchar(32) NOT NULL default '',
       last_name varchar(32) NOT NULL default '',
       email varchar(64) NOT NULL,
       company_name varchar(100) NOT NULL default '',
       txn_id varchar(64) NOT NULL default '',
       manual_reset_count varchar(128) NOT NULL default '',
-      date_created datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-      date_renewed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-      date_expiry datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+      date_created date NOT NULL DEFAULT '0000-00-00',
+      date_renewed date NOT NULL DEFAULT '0000-00-00',
+      date_expiry date NOT NULL DEFAULT '0000-00-00',
       PRIMARY KEY (id)
       )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 dbDelta($lk_tbl_sql);

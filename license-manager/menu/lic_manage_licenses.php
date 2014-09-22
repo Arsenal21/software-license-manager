@@ -13,8 +13,8 @@ function wp_lic_mgr_manage_licenses_menu() {
     include_once( 'wp-lic-mgr-list-licenses.php' ); //For rendering the license List Table
     $license_list = new WPLM_List_Licenses();
     if (isset($_REQUEST['action'])) { //Do list table form row action tasks
-        if (isset($_REQUEST['task']) && $_REQUEST['task'] == 'delete') { //Delete link was clicked for a row in list table
-            $license_list->delete_licnses(strip_tags($_REQUEST['id']));
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete_license') { //Delete link was clicked for a row in list table
+            $license_list->delete_licenses(strip_tags($_REQUEST['id']));
         }
     }
     //Fetch, prepare, sort, and filter our data...

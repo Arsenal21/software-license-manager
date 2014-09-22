@@ -13,7 +13,7 @@ if(!defined('ABSPATH'))exit; //Exit if accessed directly
 //Short name/slug "SLM" or "slm"
 
 define('WP_LICENSE_MANAGER_VERSION', "1.9");
-define('WP_LICENSE_MANAGER_DB_VERSION', '1.2');
+define('WP_LICENSE_MANAGER_DB_VERSION', '1.3');
 define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
 define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));
 define('WP_LICENSE_MANAGER_PATH', plugin_dir_path(__FILE__));
