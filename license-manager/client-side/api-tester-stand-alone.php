@@ -81,5 +81,3 @@ function wp_lic_verify_license()
         echo "<br />".$msg;
     }
 }
-
-?>

@@ -11,5 +11,3 @@ define('WP_LICENSE_MGR_CLIENT_LICENSE_KEY_VAR_NAME', 'wp_lic_mgr_client_product_
 include_once('wp-license-mgr-config.php');
 $wp_lic_mgr_client_config = WP_Lic_Mgr_Client_Config::getInstance();
 include_once('wp-license-mgr-functions.php');
-
-?>

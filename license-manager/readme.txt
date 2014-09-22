@@ -1,5 +1,5 @@
 === Software License Manager ===
-Contributors: Tips and Tricks HQ
+Contributors: Tips and Tricks HQ, Peter Petreski, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com
 Tags: license key, serial key, manager
 Requires at least: 3.0
