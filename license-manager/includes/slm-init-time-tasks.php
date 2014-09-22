@@ -12,7 +12,7 @@ class SLM_Init_Time_Tasks{
     {
         //Load all common scripts and styles only
         wp_enqueue_script('jquery');
-        wp_enqueue_style('jquery-ui-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css');
+
         //Load all admin side scripts and styles only
         if(is_admin())
         {
@@ -22,10 +22,11 @@ class SLM_Init_Time_Tasks{
             wp_enqueue_script('jquery-ui-position');
             wp_enqueue_script('jquery-ui-mouse');
             wp_enqueue_script('jquery-ui-dialog');
-            wp_enqueue_script('thickbox');
-            wp_enqueue_style( 'dialogStylesheet', includes_url().'css/jquery-ui-dialog.css' );
-            
+            wp_enqueue_script('thickbox');                        
             wp_enqueue_script('wplm-custom-admin-js', WP_LICENSE_MANAGER_URL . '/js/wplm-custom-admin.js', array( 'jquery-ui-dialog' ));//admin only custom js code
+            
+            wp_enqueue_style('jquery-ui-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css');
+            wp_enqueue_style('dialogStylesheet', includes_url().'css/jquery-ui-dialog.css');            
         }        
     }
     
