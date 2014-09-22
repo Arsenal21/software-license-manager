@@ -43,7 +43,8 @@ class SLM_API_Listener
     {
         if(isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_activate'){
             //Handle the license activation API query
-            $right_secret_key = get_option('wp_lic_mgr_verification_secret_key');
+            $slm_options = get_option('slm_plugin_options');
+            $right_secret_key = $slm_options['lic_verification_secret'];
             $received_secret_key = $_REQUEST['secret_key'];
             if ($received_secret_key != $right_secret_key) {
                 echo "Error\n";
@@ -103,8 +104,8 @@ class SLM_API_Listener
         if(isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_deactivate'){
             //Handle the license deactivation API query
             if (isset($_REQUEST['secret_key'])) {
-                $right_secret_key = get_option('wp_lic_mgr_verification_secret_key');
-
+                $slm_options = get_option('slm_plugin_options');
+                $right_secret_key = $slm_options['lic_verification_secret'];
                 $received_secret_key = $_REQUEST['secret_key'];
                 if ($received_secret_key != $right_secret_key) {
                     echo "Error\n";

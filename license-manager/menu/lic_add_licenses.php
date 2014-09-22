@@ -17,6 +17,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $renewed_date = '';
     $expiry_date = '';
 
+    $slm_options = get_option('slm_plugin_options');
     
     echo '<div class="wrap">';
     echo '<h2>Add/Edit Licenses</h2>';
@@ -126,7 +127,7 @@ function wp_lic_mgr_add_licenses_menu() {
                             $editing_record = new stdClass();
                         }
                         //Auto generate unique key
-                        $lic_key_prefix = get_option('wp_lic_mgr_key_prefix');
+                        $lic_key_prefix = $slm_options['lic_prefix'];
                         if (!empty($lic_key_prefix)) {
                             $license_key = uniqid($lic_key_prefix);
                         } else {

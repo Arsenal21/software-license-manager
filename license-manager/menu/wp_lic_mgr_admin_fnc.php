@@ -6,9 +6,11 @@ function wp_lic_mgr_admin_fnc_menu() {
     echo '<h2>License Manager Admin Functions</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
+    $slm_options = get_option('slm_plugin_options');
+    
     if (isset($_POST['send_deactivation_request'])) {
         $postURL = $_POST['lic_mgr_deactivation_req_url'];
-        $secretKeyForVerification = get_option('wp_lic_mgr_verification_secret_key');
+        $secretKeyForVerification = $slm_options['lic_verification_secret'];
         $data = array();
         $data['secret_key'] = $secretKeyForVerification;
 

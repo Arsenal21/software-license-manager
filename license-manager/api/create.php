@@ -4,8 +4,9 @@ if (isset($_REQUEST['secret_key'])) {
     include_once('../../../../wp-load.php');
     include_once(WP_LICENSE_MANAGER_PATH . 'includes/slm_db_access.php');
 
-    $right_secret_key = get_option('wp_lic_mgr_reg_secret_key');
-    $lic_key_prefix = get_option('wp_lic_mgr_key_prefix');
+    $options = get_option('slm_plugin_options');
+    $right_secret_key = $options['lic_creation_secret'];
+    $lic_key_prefix = $options['lic_prefix'];
 
     $received_secret_key = $_REQUEST['secret_key'];
     if ($received_secret_key != $right_secret_key) {
@@ -22,7 +23,7 @@ if (isset($_REQUEST['secret_key'])) {
     $fields['company_name'] = $_REQUEST['company_name'];
     $fields['txn_id'] = $_REQUEST['txn_id'];
     if (empty($_REQUEST['max_allowed_domains'])) {
-        $fields['max_allowed_domains'] = get_option('wp_lic_mgr_max_num_domain');
+        $fields['max_allowed_domains'] = $options['default_max_domains'];
     }
 
     $updateDb = LicMgrDbAccess::insert(WP_LICENSE_MANAGER_LICENSE_TABLE_NAME, $fields);

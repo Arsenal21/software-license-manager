@@ -7,6 +7,9 @@ function lic_mgr_integration_help_menu() {
     </style>
     <?php
     
+    $options = get_option('slm_plugin_options');
+    $creation_secret_key = $options['lic_creation_secret'];
+    
     echo '<div class="wrap">';
     echo '<div id="poststuff"><div id="post-body">';
     echo '<h2>WP License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
@@ -81,7 +84,7 @@ function lic_mgr_integration_help_menu() {
         <br />// Post URL
         <br />$postURL = "<?php echo $LicenseCreationPostURL; ?>";
         <br />// The Secret key
-        <br />$secretKey = "<?php echo get_option('wp_lic_mgr_reg_secret_key'); ?>";
+        <br />$secretKey = "<?php echo $creation_secret_key; ?>";
         <br /> 
         <br />/*** Optional Data ***/
         <br />$firstname = "John";

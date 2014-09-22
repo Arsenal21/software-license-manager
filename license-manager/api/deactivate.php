@@ -4,7 +4,8 @@ if (isset($_REQUEST['secret_key'])) {
     include_once('../../../../wp-load.php');
     include_once(WP_LICENSE_MANAGER_PATH . 'includes/slm_db_access.php');
 
-    $right_secret_key = get_option('wp_lic_mgr_verification_secret_key');
+    $slm_options = get_option('slm_plugin_options');
+    $right_secret_key = $slm_options['lic_verification_secret'];
 
     $received_secret_key = $_REQUEST['secret_key'];
     if ($received_secret_key != $right_secret_key) {
