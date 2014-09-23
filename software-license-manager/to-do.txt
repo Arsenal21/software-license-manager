@@ -1,9 +1,9 @@
 
 //Complete the create API function
 //Complete the check API function
+//Add capability for logging to debug file
 //Add a items custom post type to configure license products?
 //Add a simple PayPal integration
-//Add capability for logging to debug file
 //Language translation
 //Add datepicker on the date fields in add/edit license interface [done]
 //Fix the date time columns so it can save just the "date" value (no time) [done]
