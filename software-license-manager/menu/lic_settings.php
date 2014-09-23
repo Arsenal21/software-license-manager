@@ -25,8 +25,13 @@ function wp_lic_mgr_general_settings() {
             'lic_prefix' => trim($_POST["lic_prefix"]),
             'default_max_domains' => trim($_POST["default_max_domains"]),
             'lic_verification_secret' => trim($_POST["lic_verification_secret"]),
+            'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
+        
+        echo '<div id="message" class="updated fade"><p>';        
+        echo 'Options Updated!';
+        echo '</p></div>';
     }
 
     $options = get_option('slm_plugin_options');
@@ -80,6 +85,21 @@ function wp_lic_mgr_general_settings() {
                         <th scope="row">Maximum Allowed Domains</th>
                         <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
                             <br />Maximum number of domains which each license is valid for (default value).</td>
+                    </tr>
+
+                </table>
+            </div></div>
+
+        <div class="postbox">
+            <h3><label for="title">Debugging and Testing Settings</label></h3>
+            <div class="inside">
+                <table class="form-table">
+
+                    <tr valign="top">
+                        <th scope="row">Enable Debug Logging</th>
+                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
+                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
+                        </td>
                     </tr>
 
                 </table>

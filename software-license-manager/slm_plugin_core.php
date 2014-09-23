@@ -9,11 +9,11 @@ define('SLM_MAIN_MENU_SLUG', 'slm-main');
 define('SLM_MENU_ICON', 'dashicons-lock');
 
 //Includes
+include_once('includes/slm-debug-logger.php');
 include_once('includes/slm-init-time-tasks.php');
 include_once('includes/slm-api-utility.php');
 include_once('includes/slm-api-listener.php');
 include_once('includes/slm-third-party-integration.php');
-include_once('includes/slm_db_access.php');
 //Include admin side only files
 if (is_admin()) {
     include_once('menu/slm-admin-init.php');
@@ -23,6 +23,10 @@ if (is_admin()) {
 //Action hooks
 add_action('init', 'slm_init_handler');
 add_action('plugins_loaded', 'slm_plugins_loaded_handler');
+
+//Initialize debug logger
+global $slm_debug_logger;
+$slm_debug_logger = new SLM_Debug_Logger();
 
 //Do init time tasks
 function slm_init_handler() {
@@ -39,6 +43,7 @@ function slm_plugins_loaded_handler() {
             require_once(dirname(__FILE__) . '/slm_installer.php');
         }
     }
+
 }
 
 //TODO - need to move this to an ajax handler file

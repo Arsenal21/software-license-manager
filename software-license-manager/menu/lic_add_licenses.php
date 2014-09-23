@@ -16,6 +16,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $created_date = '';
     $renewed_date = '';
     $expiry_date = '';
+    $current_date = (date ("Y-m-d"));
 
     $slm_options = get_option('slm_plugin_options');
     
@@ -61,6 +62,15 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date = $_POST['date_renewed'];
         $expiry_date = $_POST['date_expiry'];
         
+        if(empty($created_date)){
+            $created_date = $current_date;
+        }
+        if(empty($renewed_date)){
+            $renewed_date = $current_date;
+        }
+        if(empty($expiry_date)){
+            $expiry_date = $current_date;
+        }
         
         //Save the entry to the database
         $fields = array();
@@ -81,6 +91,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $lk_table = SLM_TBL_LICENSE_KEYS;
         if (empty($id)) {//Insert into database
             $result = $wpdb->insert( $lk_table, $fields);
+            $id = $wpdb->insert_id;
             if($result === false){
                 $errors .= __('Record could not be inserted into the database!', 'slm');
             }
@@ -252,7 +263,7 @@ function wp_lic_mgr_add_licenses_menu() {
                 </div>
             </form>
         </div></div>
-    <a href="admin.php?page='.SLM_MAIN_MENU_SLUG.'" class="button">Manage Licenses</a><br /><br />
+    <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="button">Manage Licenses</a><br /><br />
     </div></div>
     </div>
 
