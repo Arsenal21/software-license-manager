@@ -27,9 +27,9 @@ function wp_lic_mgr_add_licenses_menu() {
     if (isset($_GET['edit_record'])) {
         $errors = '';
         $id = $_GET['edit_record'];
-        //$editing_record = LicMgrDbAccess::find(WP_LICENSE_MANAGER_LICENSE_TABLE_NAME, " id = " . $id);
         $lk_table = SLM_TBL_LICENSE_KEYS;
-        $record = $wpdb->get_row("SELECT * FROM ".$lk_table." WHERE id='".$id."'");
+        $sql_prep = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
+        $record = $wpdb->get_row($sql_prep, OBJECT);
         $license_key = $record->license_key;
         $max_domains = $record->max_allowed_domains;
         $license_status = $record->lic_status;
@@ -162,7 +162,8 @@ function wp_lic_mgr_add_licenses_menu() {
                     if ($id != '') {
                         global $wpdb;
                         $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
-                        $reg_domains = $wpdb->get_results(" SELECT * FROM $reg_table WHERE lic_key_id= '$id'", OBJECT);
+                        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
+                        $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
                         ?>
                         <tr valign="top">
                             <th scope="row">Registered Domains</th>

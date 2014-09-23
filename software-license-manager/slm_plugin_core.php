@@ -47,7 +47,8 @@ add_action('wp_ajax_del_dom', 'del_reg_dom');
 function del_reg_dom() {
     $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
     global $wpdb;
-    $ret = $wpdb->query("DELETE FROM $reg_table WHERE id =" . $_GET['id']);
+    $sql_prep = $wpdb->prepare("DELETE FROM $reg_table WHERE id=%s", $_GET['id']);
+    $ret = $wpdb->query($sql_prep);
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }

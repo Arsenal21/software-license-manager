@@ -10,10 +10,10 @@
 
 
 // This is the secret key for API authentication. You configured it in the settings menu of the license manager plugin.
-define('YOUR_SPECIAL_SECRET_KEY', '541fc9967d4bb4.41297561'); //Rename this constant name so it is specific to your plugin or theme.
+define('YOUR_SPECIAL_SECRET_KEY', '5421048138b321.90068894'); //Rename this constant name so it is specific to your plugin or theme.
 
 // This is the URL where API query request will be sent to. This should be the URL of the site where you have installed the main license manager plugin. Get this value from the integration help page.
-define('YOUR_LICENSE_SERVER_URL', 'http://localhost:81/wp/wp7'); //Rename this constant name so it is specific to your plugin or theme.
+define('YOUR_LICENSE_SERVER_URL', 'http://localhost/wp/wp3-beta-testing'); //Rename this constant name so it is specific to your plugin or theme.
 
 // This is a value that will be recorded in the license manager data so you can identify licenses for this item/product.
 define('YOUR_ITEM_REFERENCE', 'My First Plugin'); //Rename this constant name so it is specific to your plugin or theme.

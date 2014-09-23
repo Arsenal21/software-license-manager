@@ -23,10 +23,42 @@ class SLM_API_Listener {
     }
 
     function creation_api_listener() {
-        //TODO - implement this later
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_create_new') {
             //Handle the licene creation API query
-        }
+            if (isset($_REQUEST['secret_key'])) {
+                
+                $options = get_option('slm_plugin_options');
+                $lic_key_prefix = $options['lic_prefix'];
+
+                SLM_API_Utility::verify_secret_key();//Verify the secret key first.
+                $fields = array();
+                $fields['license_key'] = uniqid($lic_key_prefix);
+                $fields['lic_status'] = 'active';
+                $fields['first_name'] = $_REQUEST['first_name'];
+                $fields['last_name'] = $_REQUEST['last_name'];
+                $fields['email'] = $_REQUEST['email'];
+                $fields['company_name'] = $_REQUEST['company_name'];
+                $fields['txn_id'] = $_REQUEST['txn_id'];
+                if (empty($_REQUEST['max_allowed_domains'])) {
+                    $fields['max_allowed_domains'] = $options['default_max_domains'];
+                }
+
+                global $wpdb;
+                $tbl_name = SLM_TBL_LICENSE_KEYS;
+                $result = $wpdb->insert($tbl_name, $fields);
+                if($result === false){
+                    //error inserting
+                    $args = (array('result' => 'error', 'message' => 'License creation failed'));
+                    SLM_API_Utility::output_api_response($args);
+                }else{
+                    $args = (array('result' => 'success', 'message' => 'License successfully created'));
+                    SLM_API_Utility::output_api_response($args);
+                }
+                
+
+            }
+                
+        }            
     }
 
     /*
@@ -41,47 +73,60 @@ class SLM_API_Listener {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_activate') {
             //Handle the license activation API query
             
-            SLM_API_Utility::verify_secret_key();//Verify the secret key first.
-            
-            $fields = array();
-            $fields['lic_key'] = trim($_REQUEST['license_key']);
-            $fields['registered_domain'] = trim($_REQUEST['registered_domain']); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            if (isset($_REQUEST['secret_key'])) {
+                SLM_API_Utility::verify_secret_key();//Verify the secret key first.
 
-            global $wpdb;
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
-            $reg_table = SLM_TBL_LIC_DOMAIN;
-            $key = $fields['lic_key'];
-            $retLic = $wpdb->get_row("SELECT * FROM $tbl_name WHERE license_key = '$key'", OBJECT);
-            $reg_domains = $wpdb->get_results("SELECT * FROM $reg_table WHERE lic_key= '$key'", OBJECT);
-            if ($retLic) {
-                if ($retLic->lic_status == 'blocked') {
-                    $args = (array('result' => 'error', 'message' => 'License key is blocked'));
-                    SLM_API_Utility::output_api_response($args);
-                }
-                if (floor($retLic->max_allowed_domains) > count($reg_domains)) {
-                    foreach ($reg_domains as $reg_domain) {
-                        if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_domain->registered_domain)) {
-                            $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim($_REQUEST['migrate_from'])));
-                            $args = (array('result' => 'success', 'message' => 'Registered domain has been updated'));
-                            SLM_API_Utility::output_api_response($args);
-                        }
-                        if ($fields['registered_domain'] == $reg_domain->registered_domain) {
-                            $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain));
-                            SLM_API_Utility::output_api_response($args);
-                        }
+                $fields = array();
+                $fields['lic_key'] = trim($_REQUEST['license_key']);
+                $fields['registered_domain'] = trim($_REQUEST['registered_domain']); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
+
+                global $wpdb;
+                $tbl_name = SLM_TBL_LICENSE_KEYS;
+                $reg_table = SLM_TBL_LIC_DOMAIN;
+                $key = $fields['lic_key'];
+                $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+                $retLic = $wpdb->get_row($sql_prep1, OBJECT);
+                
+                $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
+                $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
+
+                if ($retLic) {
+                    if ($retLic->lic_status == 'blocked') {
+                        $args = (array('result' => 'error', 'message' => 'Your License key is blocked'));
+                        SLM_API_Utility::output_api_response($args);
+                    }elseif ($retLic->lic_status == 'pending') {
+                        $args = (array('result' => 'error', 'message' => 'Your License key is pending activation'));
+                        SLM_API_Utility::output_api_response($args);
+                    }elseif ($retLic->lic_status == 'expired') {
+                        $args = (array('result' => 'error', 'message' => 'Your License key has expired'));
+                        SLM_API_Utility::output_api_response($args);
                     }
-                    $fields['lic_key_id'] = $retLic->id;
-                    $wpdb->insert($reg_table, $fields);
-                    $args = (array('result' => 'success', 'message' => 'License key activated'));
-                    SLM_API_Utility::output_api_response($args);
+                    if (floor($retLic->max_allowed_domains) > count($reg_domains)) {
+                        foreach ($reg_domains as $reg_domain) {
+                            if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_domain->registered_domain)) {
+                                $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim($_REQUEST['migrate_from'])));
+                                $args = (array('result' => 'success', 'message' => 'Registered domain has been updated'));
+                                SLM_API_Utility::output_api_response($args);
+                            }
+                            if ($fields['registered_domain'] == $reg_domain->registered_domain) {
+                                $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain));
+                                SLM_API_Utility::output_api_response($args);
+                            }
+                        }
+                        $fields['lic_key_id'] = $retLic->id;
+                        $wpdb->insert($reg_table, $fields);
+                        $args = (array('result' => 'success', 'message' => 'License key activated'));
+                        SLM_API_Utility::output_api_response($args);
+                    } else {
+                        $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains'));
+                        SLM_API_Utility::output_api_response($args);
+                    }
                 } else {
-                    $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains'));
+                    $args = (array('result' => 'error', 'message' => 'Invalid license key'));
                     SLM_API_Utility::output_api_response($args);
                 }
-            } else {
-                $args = (array('result' => 'error', 'message' => 'Invalid license key'));
-                SLM_API_Utility::output_api_response($args);
             }
+                
         }
     }
 
@@ -100,8 +145,8 @@ class SLM_API_Listener {
                 $license_key = trim($_REQUEST['license_key']);
                 global $wpdb;
                 $registered_dom_table = SLM_TBL_LIC_DOMAIN;
-                $where = array('lic_key' => $license_key, 'registered_domain' => $registered_domain);
-                $delete = $wpdb->delete($registered_dom_table, $where);
+                $sql_prep = $wpdb->prepare("DELETE FROM $registered_dom_table WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
+                $delete = $wpdb->query($sql_prep);
                 if ($delete === false) {
                     //TODO - log the error
                 } else if ($delete == 0) {
