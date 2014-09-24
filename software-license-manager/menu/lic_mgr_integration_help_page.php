@@ -9,55 +9,55 @@ function lic_mgr_integration_help_menu() {
     
     $options = get_option('slm_plugin_options');
     $creation_secret_key = $options['lic_creation_secret'];
+    $secret_verification_key = $options['lic_verification_secret'];
     
     echo '<div class="wrap">';
     echo '<div id="poststuff"><div id="post-body">';
-    echo '<h2>WP License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
+    echo '<h2>License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
 
-    $LicenseCreationPostURL = SLM_SITE_HOME_URL;
-    echo "<strong>The License Creation POST URL For Your Installation</strong>";
-    echo '<div class="lic_mgr_code">' . $LicenseCreationPostURL . '</div>';
+    $api_query_post_url = SLM_SITE_HOME_URL;
+    echo "<strong>The License API Query POST URL For Your Installation</strong>";
+    echo '<div class="lic_mgr_code">' . $api_query_post_url . '</div>';
 
-    $LicenseVerificationPostURL = SLM_SITE_HOME_URL;
-    echo "<strong>The License Activation POST URL For Your Installation</strong>";
-    echo '<div class="lic_mgr_code">' . $LicenseVerificationPostURL . '</div>';
-
-    $LicenseDeactivationPostURL = SLM_SITE_HOME_URL;
-    echo "<strong>The License Deactivation POST URL For Your Installation</strong>";
-    echo '<div class="lic_mgr_code">' . $LicenseDeactivationPostURL . '</div>';
+    echo "<strong>The License Activation or Deactivation API secret key</strong>";
+    echo '<div class="lic_mgr_code">' . $secret_verification_key . '</div>';
+    
+    echo "<strong>The License Creation API secret key</strong>";
+    echo '<div class="lic_mgr_code">' . $creation_secret_key . '</div>';
     ?>
     <h2>3rd Party Integration</h2>
 
-    Integrating a 3rd party payment system or shopping cart with WP License Manager is possible.
+    Integrating a 3rd party payment system or shopping cart with License Manager is easy.
     <br /><br />
     The integration process can be accomplished in three steps, namely:
     <br />
     <br />1. Generate POST data
-    <br />2. Send POST data to the POST URL
+    <br />2. Send POST data to the API POST URL
     <br />3. Process the returned data
     <br /><br />
     <strong>POST Values</strong>
     <br />
-    WP License Manager expects a certain set of variables to be sent to it via HTTP POST. These variables are:
+    License Manager expects a certain set of variables to be sent to it via HTTP POST or GET. These variables are:
     <br /><br />
     Mandatory Variables
     <br />
     ----------------
-    <br />a. Secret Key: A Secret API key (you can find this value in the settings menu of this plugin)
+    <br />a. secret_key - A Secret API key for authentication (you can find the secret key value in the settings menu of this plugin)
+    <br />b. slm_action - The action being performed. The values can be slm_create_new or slm_activate or slm_deactivate
     <br /><br />
     Optional Variables
     <br />
     ---------------
-    <br />b. Customer First Name: The first name of the customer
-    <br />c. Customer Last Name: The last name of the customer
-    <br />d. Customer Email: The email address of the customer
-    <br />e. Company Name: The customer's company name
-    <br />f. Maximum Domains Allowed: The number of domains this license key can be used on
-    <br />g. Transaction ID: A unique transaction ID to reference the transaction
+    <br />c. Customer First Name: The first name of the customer
+    <br />d. Customer Last Name: The last name of the customer
+    <br />e. Customer Email: The email address of the customer
+    <br />f. Company Name: The customer's company name
+    <br />g. Maximum Domains Allowed: The number of domains this license key can be used on
+    <br />h. Transaction ID: A unique transaction ID to reference the transaction
     <br /><br />
     <strong>Return Value</strong>
     <br />
-    Upon successful processing, WP License Manager will return a plain text message that will have two or three lines similar to the following:
+    Upon successful processing, License Manager will return a plain text message that will have two or three lines similar to the following:
     <br />
     <div class="lic_mgr_code">
         Success 
@@ -76,7 +76,7 @@ function lic_mgr_integration_help_menu() {
     <br /><br />
     <strong>Sample PHP Code</strong>
     <br />
-    Below is a sample PHP code that shows how easy it is to integrate with WP License Manager
+    Below is a sample PHP code that shows how you can create a license via the API
     <br />
 
     <div class="lic_mgr_code">
@@ -94,7 +94,7 @@ function lic_mgr_integration_help_menu() {
         <br />// prepare the data
         <br />$data = array ();
         <br />$data['secret_key'] = $secretKey;
-        <br />$data['source_file'] = $fileURL;
+        <br />$data['slm_action'] = 'slm_create_new';
         <br />$data['first_name'] = $firstname;
         <br />$data['last_name'] = $lastname;
         <br />$data['email'] = $email;
@@ -107,16 +107,7 @@ function lic_mgr_integration_help_menu() {
         <br />$returnValue = curl_exec ($ch);
         <br />
         <br />// Process the return values
-        <br />list ($status, $msg, $additionalMsg) = explode ("\n", $returnValue);
-        <br />if(strpos($status,"Success") !== false)
-        <br />{
-        <br />    $license_key = trim($additionalMsg);
-        <br />    echo "The generated license key is: ".$license_key;
-        <br />}
-        <br />else
-        <br />{
-        <br />    echo "An error occured while trying to create license! Error details: ".$msg;
-        <br />}
+        <br />//var_dump($returnValue);
     </div>
 
     <?php

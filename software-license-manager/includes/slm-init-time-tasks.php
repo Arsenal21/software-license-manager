@@ -17,16 +17,12 @@ class SLM_Init_Time_Tasks{
         if(is_admin())
         {
             wp_enqueue_script('jquery-ui-datepicker');
-            wp_enqueue_script('jquery-ui-core');
-            wp_enqueue_script('jquery-ui-widget');
-            wp_enqueue_script('jquery-ui-position');
-            wp_enqueue_script('jquery-ui-mouse');
-            wp_enqueue_script('jquery-ui-dialog');
-            wp_enqueue_script('thickbox');                        
             wp_enqueue_script('wplm-custom-admin-js', WP_LICENSE_MANAGER_URL . '/js/wplm-custom-admin.js', array( 'jquery-ui-dialog' ));//admin only custom js code
             
-            wp_enqueue_style('jquery-ui-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css');
-            wp_enqueue_style('dialogStylesheet', includes_url().'css/jquery-ui-dialog.css');            
+            if ($_GET['page'] == 'wp_lic_mgr_addedit') {//Only include if we are in the license add/edit interface
+                wp_enqueue_style('jquery-ui-style', WP_LICENSE_MANAGER_URL .'/css/jquery-ui.css');
+            }
+            //wp_enqueue_style('dialogStylesheet', includes_url().'css/jquery-ui-dialog.css');            
         }        
     }
     
