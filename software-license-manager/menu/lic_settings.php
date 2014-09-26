@@ -98,7 +98,8 @@ function wp_lic_mgr_general_settings() {
                     <tr valign="top">
                         <th scope="row">Enable Debug Logging</th>
                         <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
-                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
+                            &nbsp;<a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">View Log File</a>
+                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>                            
                         </td>
                     </tr>
 

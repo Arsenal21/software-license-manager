@@ -37,4 +37,11 @@ dbDelta($ld_tbl_sql);
 update_option("wp_lic_mgr_db_version", WP_LICENSE_MANAGER_DB_VERSION);
 
 // Add default options
-
+$options = array(
+    'lic_creation_secret' => uniqid('', true),
+    'lic_prefix' => '',
+    'default_max_domains' => '1',
+    'lic_verification_secret' => uniqid('', true),
+    'enable_debug' => '',
+);
+add_option('slm_plugin_options', $options);
