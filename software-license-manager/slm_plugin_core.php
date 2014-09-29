@@ -47,13 +47,12 @@ function slm_plugins_loaded_handler() {
 }
 
 //TODO - need to move this to an ajax handler file
-add_action('wp_ajax_del_dom', 'del_reg_dom');
-
-function del_reg_dom() {
-    $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
+add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
+function slm_del_reg_dom() {
     global $wpdb;
-    $sql_prep = $wpdb->prepare("DELETE FROM $reg_table WHERE id=%s", $_GET['id']);
-    $ret = $wpdb->query($sql_prep);
+    $reg_table = SLM_TBL_LIC_DOMAIN;
+    $id = strip_tags($_GET['id']);
+    $ret = $wpdb->query("DELETE FROM $reg_table WHERE id='$id'");
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }

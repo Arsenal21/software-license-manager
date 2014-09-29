@@ -172,7 +172,7 @@ function wp_lic_mgr_add_licenses_menu() {
                     <?php
                     if ($id != '') {
                         global $wpdb;
-                        $reg_table = WP_LICENSE_MANAGER_REG_DOMAIN_TABLE_NAME;
+                        $reg_table = SLM_TBL_LIC_DOMAIN;
                         $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
                         $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
                         ?>
@@ -272,7 +272,7 @@ function wp_lic_mgr_add_licenses_menu() {
             jQuery('.del').click(function() {
                 var $this = this;
                 jQuery('#reg_del_msg').html('Loading ...');
-                jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_dom&id=' + jQuery(this).attr('id'), function(data) {
+                jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
                     if (data == 'success') {
                         jQuery('#reg_del_msg').html('Deleted');
                         jQuery($this).parent().parent().remove();

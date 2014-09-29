@@ -93,7 +93,6 @@ class SLM_API_Listener {
 
             $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
-
             if ($retLic) {
                 if ($retLic->lic_status == 'blocked') {
                     $args = (array('result' => 'error', 'message' => 'Your License key is blocked'));
@@ -103,7 +102,7 @@ class SLM_API_Listener {
                     SLM_API_Utility::output_api_response($args);
                 }
 
-                if (floor($retLic->max_allowed_domains) > count($reg_domains)) {
+                if (count($reg_domains) < floor($retLic->max_allowed_domains)) {
                     foreach ($reg_domains as $reg_domain) {
                         if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_domain->registered_domain)) {
                             $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim(strip_tags($_REQUEST['migrate_from']))));
@@ -117,6 +116,12 @@ class SLM_API_Listener {
                     }
                     $fields['lic_key_id'] = $retLic->id;
                     $wpdb->insert($reg_table, $fields);
+                    
+                    $slm_debug_logger->log_debug("Updating license key status to active.");
+                    $data = array('lic_status' => 'active');
+                    $where = array('id' => $retLic->id);
+                    $updated = $wpdb->update($tbl_name, $data, $where);
+                    
                     $args = (array('result' => 'success', 'message' => 'License key activated'));
                     SLM_API_Utility::output_api_response($args);
                 } else {
