@@ -118,7 +118,7 @@ function sample_license_management_page() {
             //Uncomment the followng line to see the message that returned from the license server
             echo '<br />The following message was returned from the server: '.$license_data->message;
         }
-
+        
     }
     /*** End of sample license deactivation ***/
     

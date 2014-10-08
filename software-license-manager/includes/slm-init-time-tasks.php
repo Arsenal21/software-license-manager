@@ -19,7 +19,7 @@ class SLM_Init_Time_Tasks{
             wp_enqueue_script('jquery-ui-datepicker');
             wp_enqueue_script('wplm-custom-admin-js', WP_LICENSE_MANAGER_URL . '/js/wplm-custom-admin.js', array( 'jquery-ui-dialog' ));//admin only custom js code
             
-            if ($_GET['page'] == 'wp_lic_mgr_addedit') {//Only include if we are in the license add/edit interface
+            if (isset($_GET['page']) && $_GET['page'] == 'wp_lic_mgr_addedit') {//Only include if we are in the license add/edit interface
                 wp_enqueue_style('jquery-ui-style', WP_LICENSE_MANAGER_URL .'/css/jquery-ui.css');
             }
             //wp_enqueue_style('dialogStylesheet', includes_url().'css/jquery-ui-dialog.css');            
