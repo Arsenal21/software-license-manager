@@ -1,25 +1,31 @@
 === Software License Manager ===
 Contributors: Tips and Tricks HQ, Peter Petreski, Ruhul Amin
-Donate link: https://www.tipsandtricks-hq.com
-Tags: license key, serial key, manager
+Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
+Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation
 Requires at least: 3.0
 Tested up to: 4.0
 Stable tag: 1.1
 License: GPLv2 or later
 
-Create and manage license keys for your software applications
+Create and manage license keys for your software applications easily
 
 == Description ==
 
-This plugin is very useful for doing the following via API:
+Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
 
-- Create license keys in your system
-- Check the status of a license key from from your application
-- Activate a license key from your application
-- Deactivate a license key
+This plugin is very useful for creating a license server and doing the following via API:
+
+- Create license keys in your system (license server)
+- Check the status of a license key from from your application (remotely)
+- Activate a license key from your application (remotely)
+- Deactivate a license key (remotely)
 - Track where the license key is being used.
 
 You can also create license keys manually from the admin dashboard of this plugin.
+
+= Please note that this plugin is ONLY for developers =
+
+Check [license manager documentation](https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress) to learn more.
 
 == Installation ==
 
@@ -29,12 +35,11 @@ You can also create license keys manually from the admin dashboard of this plugi
 1. Click Install Now and then activate the plugin
 
 == Frequently Asked Questions ==
-
 None
 
 == Screenshots ==
-
-None
+See the following page:
+https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
@@ -42,5 +47,4 @@ None
 * First commit to wordpress repository.
 
 == Upgrade Notice ==
-
 None

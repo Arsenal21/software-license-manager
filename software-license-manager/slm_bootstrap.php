@@ -2,7 +2,7 @@
 /*
 Plugin Name: Software License Manager
 Version: v1.1
-Plugin URI: https://www.tipsandtricks-hq.com
+Plugin URI: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Author: Tips and Tricks HQ
 Author URI: https://www.tipsandtricks-hq.com/
 Description: Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
