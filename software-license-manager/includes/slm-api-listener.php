@@ -47,6 +47,8 @@ class SLM_API_Listener {
             } else {
                 $fields['max_allowed_domains'] = strip_tags($_REQUEST['max_allowed_domains']);
             }
+            $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
+            $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
