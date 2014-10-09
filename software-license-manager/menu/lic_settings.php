@@ -45,7 +45,7 @@ function wp_lic_mgr_general_settings() {
         $secret_verification_key = uniqid('', true);
     }
     ?>
-    <p>For information, updates and detailed documentation, please visit the <a href="https://www.tipsandtricks-hq.com" target="_blank">License Manager Documentation</a> page.</p>
+    <p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>
 
     <div class="postbox">
         <h3><label for="title">Quick Usage Guide</label></h3>

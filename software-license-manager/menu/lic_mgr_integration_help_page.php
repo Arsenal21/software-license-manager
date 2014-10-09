@@ -15,6 +15,8 @@ function lic_mgr_integration_help_menu() {
     echo '<div id="poststuff"><div id="post-body">';
     echo '<h2>License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
 
+    echo '<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>';
+    
     $api_query_post_url = SLM_SITE_HOME_URL;
     echo "<strong>The License API Query POST URL For Your Installation</strong>";
     echo '<div class="lic_mgr_code">' . $api_query_post_url . '</div>';
