@@ -85,13 +85,20 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         if('delete'===$this->current_action()) 
         {
             //Process delete bulk actions
-            if(!isset($_REQUEST['item']))
-            {
+            if(!isset($_REQUEST['item'])){
                 $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
                 echo '<div id="message" class="error fade">'.$error_msg.'</div>';
-            }else 
-            {            
-                $this->delete_licences(($_REQUEST['item']));
+                return;
+            }else {            
+        	$nvp_key = $this->_args['singular'];                
+        	$records_to_delete = $_GET[$nvp_key];
+                global $wpdb;
+                $record_table_name = SLM_TBL_LICENSE_KEYS;//The table name for the records	
+        	foreach ($records_to_delete as $row){
+                    $sql_query = $wpdb->prepare("DELETE FROM $record_table_name WHERE id=%d", $row);
+                    $results = $wpdb->query($sql_query);
+        	}
+        	echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
             }
         }
     }
