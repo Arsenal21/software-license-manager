@@ -42,7 +42,8 @@ function sample_license_management_page() {
         );
 
         // Send query to the license manager server
-        $response = wp_remote_get(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL), array('timeout' => 20, 'sslverify' => false));
+        $query = esc_url(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL), array('timeout' => 20, 'sslverify' => false));
+        $response = wp_remote_get($query);
 
         // Check for error in the response
         if (is_wp_error($response)){
@@ -89,7 +90,8 @@ function sample_license_management_page() {
         );
 
         // Send query to the license manager server
-        $response = wp_remote_get(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL), array('timeout' => 20, 'sslverify' => false));
+        $query = esc_url(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL), array('timeout' => 20, 'sslverify' => false));
+        $response = wp_remote_get($query);
 
         // Check for error in the response
         if (is_wp_error($response)){
