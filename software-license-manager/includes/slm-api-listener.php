@@ -30,7 +30,7 @@ class SLM_API_Listener {
             $options = get_option('slm_plugin_options');
             $lic_key_prefix = $options['lic_prefix'];
 
-            SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
+            SLM_API_Utility::verify_secret_key_for_creation(); //Verify the secret key first.
 
             $slm_debug_logger->log_debug("API - license creation request received.");
 

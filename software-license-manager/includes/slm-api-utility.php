@@ -26,6 +26,16 @@ class SLM_API_Utility {
             SLM_API_Utility::output_api_response($args);
         }
     }
+    
+    static function verify_secret_key_for_creation() {
+        $slm_options = get_option('slm_plugin_options');
+        $right_secret_key = $slm_options['lic_creation_secret'];
+        $received_secret_key = strip_tags($_REQUEST['secret_key']);
+        if ($received_secret_key != $right_secret_key) {
+            $args = (array('result' => 'error', 'message' => 'License Creation API secret key is invalid'));
+            SLM_API_Utility::output_api_response($args);
+        }
+    }    
 
     static function insert_license_data_internal($fields) {
         /* The fields array should have values for the following keys
