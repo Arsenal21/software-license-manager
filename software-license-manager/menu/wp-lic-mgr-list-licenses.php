@@ -160,10 +160,17 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         
 	/* -- Ordering parameters -- */
 	    //Parameters that are going to be used to order the result
-	$orderby = !empty($_GET["orderby"]) ? mysql_real_escape_string($_GET["orderby"]) : 'id';
-	$order = !empty($_GET["order"]) ? mysql_real_escape_string($_GET["order"]) : 'DESC';
+	$orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
+	$order = !empty($_GET["order"]) ? strip_tags($_GET["order"]) : 'DESC';
 
-        $data = $wpdb->get_results("SELECT * FROM $license_table ORDER BY $orderby $order", ARRAY_A);
+        if (isset($_POST['slm_search'])) {
+            $search_term = trim(strip_tags($_POST['slm_search']));
+            $prepare_query = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `txn_id` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
+            $data = $wpdb->get_results($prepare_query, ARRAY_A);
+        }else{
+            $data = $wpdb->get_results("SELECT * FROM $license_table ORDER BY $orderby $order", ARRAY_A);
+        }
+        
         $current_page = $this->get_pagenum();
         $total_items = count($data);
         $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
