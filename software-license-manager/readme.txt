@@ -27,6 +27,9 @@ You can also create license keys manually from the admin dashboard of this plugi
 
 Check [license manager documentation](https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress) to learn more.
 
+= Integration with WP eStore =
+Check [WP eStore integration documentation](https://www.tipsandtricks-hq.com/ecommerce/integrate-wp-estore-with-software-license-manager-plugin-3731)
+
 == Installation ==
 
 1. Go to the Add New plugins screen in your WordPress admin area
