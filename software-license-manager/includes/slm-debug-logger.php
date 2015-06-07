@@ -55,6 +55,18 @@ class SLM_Debug_Logger
         return "";
     }
     
+    function reset_log_file($file_name='')
+    {
+        if(empty($file_name)){
+            $file_name = $this->default_log_file;
+        }
+        $debug_log_file = $this->log_folder_path.'/'.$file_name;
+        $content = $this->get_debug_timestamp().$this->log_reset_marker;
+        $fp=fopen($debug_log_file,'w');
+        fwrite($fp, $content);
+        fclose($fp);
+    }
+    
     function append_to_file($content,$file_name)
     {
         if(empty($file_name))$file_name = $this->default_log_file;
@@ -63,17 +75,7 @@ class SLM_Debug_Logger
         fwrite($fp, $content);
         fclose($fp);
     }
-    
-    function reset_log_file($file_name='')
-    {
-        if(empty($file_name))$file_name = $this->default_log_file;
-        $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $content = $this->get_debug_timestamp().$this->log_reset_marker;
-        $fp=fopen($debug_log_file,'w');
-        fwrite($fp, $content);
-        fclose($fp);
-    }
-    
+        
     function log_debug($message,$level=0,$section_break=false,$file_name='')
     {
         if (!$this->debug_enabled) return;
@@ -109,4 +111,5 @@ class SLM_Debug_Logger
         fwrite($fp, $content);
         fclose($fp);
     }
+   
 }

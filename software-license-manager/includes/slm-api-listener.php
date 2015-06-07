@@ -84,6 +84,7 @@ class SLM_API_Listener {
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
             $fields['registered_domain'] = trim(strip_tags($_REQUEST['registered_domain'])); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            $fields['item_reference'] = trim(strip_tags($_REQUEST['item_reference']));
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $fields['registered_domain']);
 
             global $wpdb;

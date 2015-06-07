@@ -14,6 +14,14 @@ function wp_lic_mgr_settings_menu() {
 
 function wp_lic_mgr_general_settings() {
 
+    if (isset($_REQUEST['slm_reset_log'])){
+        //$slm_logger = new SLM_Debug_Logger();
+        global $slm_debug_logger;
+        $slm_debug_logger->reset_log_file("log.txt");
+        $slm_debug_logger->reset_log_file("log-cron-job.txt");
+        echo '<div id="message" class="updated fade"><p>Debug log files have been reset!</p></div>';
+    }
+
     if (isset($_POST['slm_save_settings'])) {
 
         if (!is_numeric($_POST["default_max_domains"])) {//Set it to one by default if incorrect value is entered
@@ -97,9 +105,10 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Enable Debug Logging</th>
-                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
-                            &nbsp;<a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">View Log File</a>
+                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>                            
                             <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>                            
+                            <br />- View debug log file by clicking <a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">here</a>.
+                            <br />- Reset debug log file by clicking <a href="admin.php?page=wp_lic_mgr_settings&slm_reset_log=1" target="_blank">here</a>.
                         </td>
                     </tr>
 

@@ -46,6 +46,10 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= TODO 1.6 =
+* Added the ability to reset the debug log file from the plugin settings interface.
+* The item_reference value will be stored in the database (if sent via the activation API query).
+
 = 1.5 =
 * Added the option to search a license key from the manage licenses interface.
 
