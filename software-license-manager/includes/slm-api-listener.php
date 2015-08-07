@@ -32,7 +32,10 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key_for_creation(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license creation request received.");
+            $slm_debug_logger->log_debug("API - license creation (slm_create_new) request received.");
+            
+            //Action hook
+            do_action('slm_api_listener_slm_create_new');            
 
             $fields = array();
             if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
@@ -83,7 +86,10 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license activation request received.");
+            $slm_debug_logger->log_debug("API - license activation (slm_activate) request received.");
+            
+            //Action hook
+            do_action('slm_api_listener_slm_activate');             
 
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
@@ -149,7 +155,10 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license deactivation request received.");
+            $slm_debug_logger->log_debug("API - license deactivation (slm_deactivate) request received.");
+            
+            //Action hook
+            do_action('slm_api_listener_slm_deactivate');            
 
             if (empty($_REQUEST['registered_domain'])) {
                 $args = (array('result' => 'error', 'message' => 'Registered domain information is missing'));
@@ -178,6 +187,43 @@ class SLM_API_Listener {
     function check_api_listener() {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_check') {
             //Handle the license check API query
+            global $slm_debug_logger;
+
+            SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
+
+            $slm_debug_logger->log_debug("API - license check (slm_check) request received.");
+            
+            $fields = array();
+            $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
+            $slm_debug_logger->log_debug("License key: " . $fields['lic_key']);
+
+            //Action hook
+            do_action('slm_api_listener_slm_check');
+            
+            global $wpdb;
+            $tbl_name = SLM_TBL_LICENSE_KEYS;
+            $reg_table = SLM_TBL_LIC_DOMAIN;
+            $key = $fields['lic_key'];
+            $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+            $retLic = $wpdb->get_row($sql_prep1, OBJECT);
+
+            $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
+            $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
+            if ($retLic) {//A license key exists
+                $args = (array(
+                    'result' => 'success', 
+                    'message' => 'License key details retrieved.', 
+                    'status' => $retLic->lic_status, 
+                    'max_allowed_domains' => $retLic->max_allowed_domains,
+                    'email' => $retLic->email,
+                    'registered_domains' => $reg_domains,
+                ));
+                //Output the license details
+                SLM_API_Utility::output_api_response($args);
+            } else {
+                $args = (array('result' => 'error', 'message' => 'Invalid license key'));
+                SLM_API_Utility::output_api_response($args);
+            }            
         }
     }
 

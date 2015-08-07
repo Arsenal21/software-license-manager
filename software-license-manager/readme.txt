@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Peter Petreski, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 3.0
-Tested up to: 4.2
-Stable tag: 1.7
+Tested up to: 4.3
+Stable tag: 1.8
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -19,6 +19,7 @@ This plugin is very useful for creating a license server and doing the following
 - Check the status of a license key from from your application (remotely)
 - Activate a license key from your application (remotely)
 - Deactivate a license key (remotely)
+- Check a license key (remotely)
 - Track where the license key is being used.
 
 You can also create license keys manually from the admin dashboard of this plugin.
@@ -45,6 +46,11 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 1.8 =
+- Added new hooks before the API query is executed. This allows a developer to override the API query and do custom stuff.
+- Added a new API to check the details of an existing license key.
+
 = 1.7 =
 * The license key is also included with the response sent to the new license creation request. Below is an example response:
 {"result":"success","message":"License successfully created","key":"5580effe188d3"}
