@@ -47,6 +47,11 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= TODO 1.9 =
+- Replaced "esc_url()" with "esc_url_raw()" in the sample plugin. 
+TODO - [Sample plugin test required]
+
+
 = 1.8 =
 - Added new hooks before the API query is executed. This allows a developer to override the API query and do custom stuff.
 - Added a new API to check the details of an existing license key.

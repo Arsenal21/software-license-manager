@@ -42,7 +42,7 @@ function sample_license_management_page() {
         );
 
         // Send query to the license manager server
-        $query = esc_url(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL));
+        $query = esc_url_raw(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL));
         $response = wp_remote_get($query, array('timeout' => 20, 'sslverify' => false));
 
         // Check for error in the response
@@ -90,7 +90,7 @@ function sample_license_management_page() {
         );
 
         // Send query to the license manager server
-        $query = esc_url(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL));
+        $query = esc_url_raw(add_query_arg($api_params, YOUR_LICENSE_SERVER_URL));
         $response = wp_remote_get($query, array('timeout' => 20, 'sslverify' => false));
 
         // Check for error in the response
