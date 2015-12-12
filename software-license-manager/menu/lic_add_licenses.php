@@ -124,7 +124,7 @@ function wp_lic_mgr_add_licenses_menu() {
     <br /><br />
 
     <div class="postbox">
-        <h3><label for="title">License Details </label></h3>
+        <h3 class="hndle"><label for="title">License Details </label></h3>
         <div class="inside">
 
             <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">

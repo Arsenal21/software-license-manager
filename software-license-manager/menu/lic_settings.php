@@ -56,7 +56,7 @@ function wp_lic_mgr_general_settings() {
     <p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>
 
     <div class="postbox">
-        <h3><label for="title">Quick Usage Guide</label></h3>
+        <h3 class="hndle"><label for="title">Quick Usage Guide</label></h3>
         <div class="inside">
 
             <p>1. First register a key at purchase time.</p>
@@ -67,7 +67,7 @@ function wp_lic_mgr_general_settings() {
     <form method="post" action="">
 
         <div class="postbox">
-            <h3><label for="title">General License Manager Settings</label></h3>
+            <h3 class="hndle"><label for="title">General License Manager Settings</label></h3>
             <div class="inside">
                 <table class="form-table">
 
@@ -99,7 +99,7 @@ function wp_lic_mgr_general_settings() {
             </div></div>
 
         <div class="postbox">
-            <h3><label for="title">Debugging and Testing Settings</label></h3>
+            <h3 class="hndle"><label for="title">Debugging and Testing Settings</label></h3>
             <div class="inside">
                 <table class="form-table">
 

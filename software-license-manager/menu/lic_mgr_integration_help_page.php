@@ -11,9 +11,9 @@ function lic_mgr_integration_help_menu() {
     $creation_secret_key = $options['lic_creation_secret'];
     $secret_verification_key = $options['lic_verification_secret'];
     
-    echo '<div class="wrap">';
-    echo '<div id="poststuff"><div id="post-body">';
     echo '<h2>License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
+    echo '<div class="wrap">';
+    echo '<div id="poststuff"><div id="post-body">';    
 
     echo '<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>';
     

@@ -32,7 +32,7 @@ function wp_lic_mgr_admin_fnc_menu() {
     ?>
     <br />
     <div class="postbox">
-        <h3><label for="title">Send Deactivation Message for a License</label></h3>
+        <h3 class="hndle"><label for="title">Send Deactivation Message for a License</label></h3>
         <div class="inside">
             <br /><strong>Enter the URL where the license deactivation message will be sent to</strong>
             <br /><br />
@@ -40,7 +40,7 @@ function wp_lic_mgr_admin_fnc_menu() {
 
                 <input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php echo $_POST['lic_mgr_deactivation_req_url']; ?>"/>
                 <div class="submit">
-                    <input type="submit" name="send_deactivation_request" value="Send Request" />
+                    <input type="submit" name="send_deactivation_request" value="Send Request" class="button" />
                 </div>
             </form>
         </div></div>    

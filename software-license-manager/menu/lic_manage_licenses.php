@@ -7,7 +7,7 @@ function wp_lic_mgr_manage_licenses_menu() {
     ?>
 
     <div class="postbox">
-        <h3><label for="title">License Search</label></h3>
+        <h3 class="hndle"><label for="title">License Search</label></h3>
         <div class="inside">
             Search for a license by using email, name, key or transaction ID
             <br /><br />
@@ -19,7 +19,7 @@ function wp_lic_mgr_manage_licenses_menu() {
 
 
     <div class="postbox">
-        <h3><label for="title">Software Licenses</label></h3>
+        <h3 class="hndle"><label for="title">Software Licenses</label></h3>
         <div class="inside">
             <?php
             include_once( 'wp-lic-mgr-list-licenses.php' ); //For rendering the license List Table
