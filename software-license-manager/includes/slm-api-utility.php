@@ -50,6 +50,7 @@ class SLM_API_Utility {
          */
         global $wpdb;
         $tbl_name = SLM_TBL_LICENSE_KEYS;
+        $fields = array_filter($fields);//Remove any null values.
         $result = $wpdb->insert($tbl_name, $fields);
     }
 

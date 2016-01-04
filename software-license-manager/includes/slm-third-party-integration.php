@@ -65,6 +65,7 @@ function slm_estore_create_license($payment_data, $cart_items) {
     $fields['max_allowed_domains'] = $options['default_max_domains']; //TODO - later take from estore's product configuration
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
+    $fields = array_filter($fields);//Remove any null values.
     SLM_API_Utility::insert_license_data_internal($fields);
 
     return $fields['license_key'];
