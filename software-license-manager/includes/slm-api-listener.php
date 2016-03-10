@@ -217,6 +217,9 @@ class SLM_API_Listener {
                     'max_allowed_domains' => $retLic->max_allowed_domains,
                     'email' => $retLic->email,
                     'registered_domains' => $reg_domains,
+                    'date_created' => $retLic->date_created,
+                    'date_renewed' => $retLic->date_renewed,
+                    'date_expiry' => $retLic->date_expiry,
                 ));
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);
