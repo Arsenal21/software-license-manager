@@ -47,6 +47,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= TODO 2.1 =
+- Improvement for the WP eStore integration.
+
 = 2.0 =
 - Added a filter to remove any null values from the DB insert query parameter of the API Utility class.
 
