@@ -1,4 +1,5 @@
 <?php
+
 class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     
     function __construct(){

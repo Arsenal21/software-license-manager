@@ -22,7 +22,7 @@ function wp_lic_mgr_manage_licenses_menu() {
         <h3 class="hndle"><label for="title">Software Licenses</label></h3>
         <div class="inside">
             <?php
-            include_once( 'wp-lic-mgr-list-licenses.php' ); //For rendering the license List Table
+            include_once( 'slm-list-licenses-class.php' ); //For rendering the license List Table
             $license_list = new WPLM_List_Licenses();
             if (isset($_REQUEST['action'])) { //Do list table form row action tasks
                 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete_license') { //Delete link was clicked for a row in list table
