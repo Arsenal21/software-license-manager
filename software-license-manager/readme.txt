@@ -57,6 +57,7 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 - Added a new feature to enable auto expiry of the license keys. You can enable this option from the settings.
 - If you don't specify a expiry date, when adding a manual license key, it will use the current date plus 1 year as the expiry date.
 - Increased the width and height of the "Registered Domains" box in the edit license interface.
+- Added a new table column product_ref in the license keys table.
 - Added couple of new hooks in the plugin.
 
 = 2.2 =
