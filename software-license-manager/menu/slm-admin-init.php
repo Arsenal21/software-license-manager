@@ -9,8 +9,8 @@ add_action('admin_menu', 'wp_lic_mgr_add_admin_menu');
 
 //Include menu handling files
 require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_manage_licenses.php');
-require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_add_licenses.php');
-require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_settings.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/slm-add-licenses.php');
+require_once(WP_LICENSE_MANAGER_PATH . '/menu/slm-lic-settings.php');
 require_once(WP_LICENSE_MANAGER_PATH . '/menu/wp_lic_mgr_admin_fnc.php');
 require_once(WP_LICENSE_MANAGER_PATH . '/menu/lic_mgr_integration_help_page.php');
 

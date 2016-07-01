@@ -10,6 +10,7 @@ define('SLM_MENU_ICON', 'dashicons-lock');
 
 //Includes
 include_once('includes/slm-debug-logger.php');
+include_once('includes/slm-utility.php');
 include_once('includes/slm-init-time-tasks.php');
 include_once('includes/slm-api-utility.php');
 include_once('includes/slm-api-listener.php');

@@ -4,8 +4,9 @@ class SLM_Init_Time_Tasks{
     
     function __construct(){
         $this->load_scripts();
-        //Add other init time operations here        
         
+        //Add other init time operations here        
+        add_action ('slm_daily_cron_event', array(&$this, 'slm_daily_cron_event_handler'));
     }
     
     function load_scripts()
@@ -24,6 +25,22 @@ class SLM_Init_Time_Tasks{
             }
             //wp_enqueue_style('dialogStylesheet', includes_url().'css/jquery-ui-dialog.css');            
         }        
+    }
+    
+    function slm_daily_cron_event_handler()
+    {
+        $options = get_option('slm_plugin_options');
+        
+        do_action('slm_daily_cron_event_triggered');
+        
+        if ($options['enable_auto_key_expiry'] == '1'){
+            //Do the auto key expiry task
+            SLM_Debug_Logger::log_debug_st("SLM daily cronjob - auto expiry of license key is enabled.");
+            SLM_Utility::do_auto_key_expiry();
+        }
+        
+        //Do any ohter daily cronjob tasks.
+        
     }
     
 }//End of class

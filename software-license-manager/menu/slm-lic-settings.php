@@ -33,6 +33,7 @@ function wp_lic_mgr_general_settings() {
             'lic_prefix' => trim($_POST["lic_prefix"]),
             'default_max_domains' => trim($_POST["default_max_domains"]),
             'lic_verification_secret' => trim($_POST["lic_verification_secret"]),
+            'enable_auto_key_expiry' => isset($_POST['enable_auto_key_expiry']) ? '1':'',
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
@@ -94,6 +95,15 @@ function wp_lic_mgr_general_settings() {
                         <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
                             <br />Maximum number of domains which each license is valid for (default value).</td>
                     </tr>
+                    
+                    <tr valign="top">
+                        <th scope="row">Auto Expire License Keys</th>
+                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if ($options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>                            
+                            <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached. 
+                                It doesn't remotely deactivate a key. It simply changes the status of the key in your database to expired.</p>
+                        </td>
+                    </tr>
+                    
 
                 </table>
             </div></div>

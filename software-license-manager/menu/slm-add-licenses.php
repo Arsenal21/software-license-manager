@@ -17,6 +17,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $renewed_date = '';
     $expiry_date = '';
     $current_date = (date ("Y-m-d"));
+    $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
 
     $slm_options = get_option('slm_plugin_options');
     
@@ -69,7 +70,7 @@ function wp_lic_mgr_add_licenses_menu() {
             $renewed_date = $current_date;
         }
         if(empty($expiry_date)){
-            $expiry_date = $current_date;
+            $expiry_date = $current_date_plus_1year;
         }
         
         //Save the entry to the database
@@ -182,7 +183,7 @@ function wp_lic_mgr_add_licenses_menu() {
                                 if (count($reg_domains) > 0) {
                                     ?>
                                     <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                    <div style="overflow:auto; height:157px;width:250px;border:1px solid #ccc;">
+                                    <div style="overflow:auto; height:200px;width:400px;border:1px solid #ccc;">
                                         <table cellpadding="0" cellspacing="0">
                                             <?php
                                             $count = 0;
