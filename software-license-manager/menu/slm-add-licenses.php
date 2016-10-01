@@ -49,6 +49,14 @@ function wp_lic_mgr_add_licenses_menu() {
     
     if (isset($_POST['save_record'])) {
         
+        //Check nonce
+        if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )){
+            //Nonce check failed.
+            wp_die("Error! Nonce verification failed for license save action.");
+        }
+        
+        do_action('slm_add_edit_interface_save_submission');
+        
         //TODO - do some validation
         $license_key = $_POST['license_key'];
         $max_domains = $_POST['max_allowed_domains'];
@@ -111,7 +119,12 @@ function wp_lic_mgr_add_licenses_menu() {
             echo $message;
             echo '</p></div>';
         }else{
-            echo '<div id="message" class="error">' . $errors . '</div>';        }
+            echo '<div id="message" class="error">' . $errors . '</div>';            
+        }
+        
+        $data = array('row_id' => $id, 'key' => $license_key);
+        do_action('slm_add_edit_interface_save_record_processed',$data);
+        
     }
 
 ?>    
@@ -129,6 +142,7 @@ function wp_lic_mgr_add_licenses_menu() {
         <div class="inside">
 
             <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+                <?php wp_nonce_field('slm_add_edit_nonce_action', 'slm_add_edit_nonce_val' ) ?>
                 <table class="form-table">
 
                     <?php
@@ -259,6 +273,14 @@ function wp_lic_mgr_add_licenses_menu() {
 
                 </table>
 
+                <?php
+                $data = array('row_id' => $id, 'key' => $license_key);
+                $extra_output = apply_filters('slm_add_edit_interface_above_submit','', $data);
+                if(!empty($extra_output)){
+                    echo $extra_output;
+                }
+                ?>
+                
                 <div class="submit">
                     <input type="submit" class="button-primary" name="save_record" value="Save Record" />
                 </div>

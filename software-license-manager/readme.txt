@@ -2,9 +2,9 @@
 Contributors: Tips and Tricks HQ, Peter Petreski, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
-Requires at least: 3.0
+Requires at least: 4.0
 Tested up to: 4.6
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,10 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 2.4 =
+- Added new action and filter hooks in the add/edit interface so an addon can extend the functionality of that interface.
+- Added nonce check in the add/edit license interface.
 
 = 2.3 = 
 - Added a new feature to enable auto expiry of the license keys. You can enable this option from the settings.
