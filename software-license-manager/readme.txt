@@ -1,5 +1,5 @@
 === Software License Manager ===
-Contributors: Tips and Tricks HQ, Peter Petreski, Ruhul Amin
+Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
