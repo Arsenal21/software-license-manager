@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 2.4
+Stable tag: 2.5
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 2.5 =
+- Updated the eStore plugin integration so a custom "Maximum Allowed Domains" value can be specified in the eStore product configuration.
 
 = 2.4 =
 - Added new action and filter hooks in the add/edit interface so an addon can extend the functionality of that interface.

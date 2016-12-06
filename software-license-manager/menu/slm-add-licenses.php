@@ -170,7 +170,7 @@ function wp_lic_mgr_add_licenses_menu() {
 
                     <tr valign="top">
                         <th scope="row">Maximum Allowed Domains</th>
-                        <td><input name="max_allowed_domains" type="text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" size="5" /><br/>Number of domains in which this license can be used.</td>
+                        <td><input name="max_allowed_domains" type="text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" size="5" /><br/>Number of domains/installs in which this license can be used.</td>
                     </tr>
 
                     <tr valign="top">

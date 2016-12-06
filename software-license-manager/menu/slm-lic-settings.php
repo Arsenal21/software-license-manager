@@ -93,7 +93,7 @@ function wp_lic_mgr_general_settings() {
                     <tr valign="top">
                         <th scope="row">Maximum Allowed Domains</th>
                         <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
-                            <br />Maximum number of domains which each license is valid for (default value).</td>
+                            <br />Maximum number of domains/installs which each license is valid for (default value).</td>
                     </tr>
                     
                     <tr valign="top">
