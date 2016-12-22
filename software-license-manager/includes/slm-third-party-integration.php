@@ -65,8 +65,19 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
         //Found product specific SLM config data.
         $max_domains = $product_meta->meta_value;
     } else {
-        //Use the default value from settings
-    }    
+        //Use the default value from settings (the $max_domains variable contains the default value already).
+    }
+    //Lets check if any product specific expiry date is set
+    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+    if ($product_meta) {
+        //Found product specific SLM config data.
+        $slm_date_of_expiry = $product_meta->meta_value;
+    } else {
+        //Use the default value (1 year from today).
+        $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+        $slm_date_of_expiry = $current_date_plus_1year;
+    }
+    
     
     $fields = array();
     $fields['license_key'] = uniqid($lic_key_prefix);
@@ -76,8 +87,9 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['email'] = $payment_data['payer_email'];
     $fields['company_name'] = $payment_data['company_name'];
     $fields['txn_id'] = $payment_data['txn_id'];
-    $fields['date_created'] = date("Y-m-d"); //Today's date
     $fields['max_allowed_domains'] = $max_domains;
+    $fields['date_created'] = date("Y-m-d"); //Today's date    
+    $fields['date_expiry'] = $slm_date_of_expiry;
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
     $fields = array_filter($fields); //Remove any null values.
@@ -118,14 +130,26 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     if (empty($prod_id)) {
         //New product add
         $slm_max_allowed_domains = "";
+        $slm_date_of_expiry = "";
     } else {
         //Existing product edit
+        
+        //Retrieve the max domain value
         $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
         if ($product_meta) {
             $slm_max_allowed_domains = $product_meta->meta_value;
         } else {
             $slm_max_allowed_domains = "";
         }
+        
+        //Retrieve the expiry date value
+        $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+        if ($product_meta) {
+            $slm_date_of_expiry = $product_meta->meta_value;
+        } else {
+            $slm_date_of_expiry = "";
+        }
+
     }
 
     $product_config_html .= '<div class="msg_head">Software License Manager Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
@@ -135,6 +159,11 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     $product_config_html .= '<p class="description">Number of domains/installs in which this license can be used. Leave blank if you wish to use the default value set in the license manager plugin settings.</p>';
     $product_config_html .= '</td></tr>';
 
+    $product_config_html .= '<tr valign="top"><th scope="row">Date of Expiry</th><td>';
+    $product_config_html .= '<input name="slm_date_of_expiry" type="text" id="slm_date_of_expiry" value="' . $slm_date_of_expiry . '" size="10" />';
+    $product_config_html .= '<p class="description">The expiry date value that you want to sent for the license key. The date value should be in the yyyy-mm-dd format. Example value: 2025-01-30</p>';
+    $product_config_html .= '</td></tr>';
+    
     $product_config_html .= '</table></div>';
 
     return $product_config_html;
@@ -144,29 +173,33 @@ function slm_estore_new_product_added($prod_dat_array, $prod_id) {
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
+    //Save max domain value
     $fields = array();
     $fields['prod_id'] = $prod_id;
     $fields['meta_key'] = 'slm_max_allowed_domains';
     $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
-
     $result = $wpdb->insert($product_meta_table_name, $fields);
     if (!$result) {
         //insert query failed
     }
+    
+    //Save expiry date value
+    $fields = array();
+    $fields['prod_id'] = $prod_id;
+    $fields['meta_key'] = 'slm_date_of_expiry';
+    $fields['meta_value'] = $prod_dat_array['slm_date_of_expiry'];
+    $result = $wpdb->insert($product_meta_table_name, $fields);
+    if (!$result) {
+        //insert query failed
+    }
+    
 }
 
 function slm_estore_product_updated($prod_dat_array, $prod_id) {
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
-    $slm_max_allowed_domains = $prod_dat_array['slm_max_allowed_domains'];
-    if (empty($slm_max_allowed_domains)) {
-        //If blank value was submitted then delete the data from the table 
-        $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_max_allowed_domains'));
-        return;
-    }
-
-    //Find the existing value for this field (for the given product)
+    //Find the existing value for the max domains field (for the given product)
     $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
     if ($product_meta) {
         //Found existing value so lets update it
@@ -183,12 +216,33 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
         $result = $wpdb->insert($product_meta_table_name, $fields);        
     }
+    
+    //Find the existing value for the expiry date field (for the given product)
+    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+    if ($product_meta) {
+        //Found existing value so lets update it
+        $fields = array();
+        $fields['meta_key'] = 'slm_date_of_expiry';
+        $fields['meta_value'] = $prod_dat_array['slm_date_of_expiry'];
+        $result = $wpdb->update($product_meta_table_name, $fields, array('prod_id' => $prod_id));   
+        
+    } else {
+        //No value for this field was there so lets insert one.
+        $fields = array();
+        $fields['prod_id'] = $prod_id;
+        $fields['meta_key'] = 'slm_date_of_expiry';
+        $fields['meta_value'] = $prod_dat_array['slm_date_of_expiry'];
+        $result = $wpdb->insert($product_meta_table_name, $fields);        
+    }
+    
 }
 
 function slm_estore_product_deleted($prod_id) {
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
+    
     $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_max_allowed_domains'));
+    $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_date_of_expiry'));
 }
 
 /************************************/
