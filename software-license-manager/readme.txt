@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 2.6
+Stable tag: 2.7
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 2.7 =
+- eStore integration update: changed expiry date field to accept number of days so the plugin can dynamically calculate the expiry date for the key.
 
 = 2.6 = 
 - Updated the eStore integration so a custom "Expiry Date" value can be set in the product configuration.

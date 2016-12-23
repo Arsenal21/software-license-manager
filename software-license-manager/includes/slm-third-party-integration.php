@@ -71,7 +71,8 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
     if ($product_meta) {
         //Found product specific SLM config data.
-        $slm_date_of_expiry = $product_meta->meta_value;
+        $num_days_before_expiry = $product_meta->meta_value;
+        $slm_date_of_expiry = date('Y-m-d', strtotime('+'.$num_days_before_expiry.' days'));
     } else {
         //Use the default value (1 year from today).
         $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
@@ -159,11 +160,11 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     $product_config_html .= '<p class="description">Number of domains/installs in which this license can be used. Leave blank if you wish to use the default value set in the license manager plugin settings.</p>';
     $product_config_html .= '</td></tr>';
 
-    $product_config_html .= '<tr valign="top"><th scope="row">Date of Expiry</th><td>';
-    $product_config_html .= '<input name="slm_date_of_expiry" type="text" id="slm_date_of_expiry" value="' . $slm_date_of_expiry . '" size="10" />';
-    $product_config_html .= '<p class="description">The expiry date value that you want to sent for the license key. The date value should be in the yyyy-mm-dd format. Example value: 2025-01-30</p>';
+    $product_config_html .= '<tr valign="top"><th scope="row">Number of Days before Expiry</th><td>';
+    $product_config_html .= '<input name="slm_date_of_expiry" type="text" id="slm_date_of_expiry" value="' . $slm_date_of_expiry . '" size="10" /> Days';
+    $product_config_html .= '<p class="description">Number of days before expiry. The expiry date of the license will be set based on this value. For example, if you want the key to expire in 6 months then enter a value of 180.</p>';
     $product_config_html .= '</td></tr>';
-    
+
     $product_config_html .= '</table></div>';
 
     return $product_config_html;
