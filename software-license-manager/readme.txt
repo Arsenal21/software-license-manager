@@ -53,6 +53,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= TODO 2.8 =
+- Added wp_unslash() for firstname, lastname, registered domain and company name. Thanks to @sgehrman.
+
 = 2.7 =
 - eStore integration update: changed expiry date field to accept number of days so the plugin can dynamically calculate the expiry date for the key.
 
