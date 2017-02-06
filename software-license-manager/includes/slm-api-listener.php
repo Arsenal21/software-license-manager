@@ -44,10 +44,10 @@ class SLM_API_Listener {
                 $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
             }
             $fields['lic_status'] = 'pending';
-            $fields['first_name'] = strip_tags($_REQUEST['first_name']);
-            $fields['last_name'] = strip_tags($_REQUEST['last_name']);
+            $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
+            $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
             $fields['email'] = strip_tags($_REQUEST['email']);
-            $fields['company_name'] = strip_tags($_REQUEST['company_name']);
+            $fields['company_name'] = wp_unslash(strip_tags($_REQUEST['company_name']));
             $fields['txn_id'] = strip_tags($_REQUEST['txn_id']);
             if (empty($_REQUEST['max_allowed_domains'])) {
                 $fields['max_allowed_domains'] = $options['default_max_domains'];
@@ -93,7 +93,7 @@ class SLM_API_Listener {
 
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
-            $fields['registered_domain'] = trim(strip_tags($_REQUEST['registered_domain'])); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            $fields['registered_domain'] = trim(wp_unslash(strip_tags($_REQUEST['registered_domain']))); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
             $fields['item_reference'] = trim(strip_tags($_REQUEST['item_reference']));
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $fields['registered_domain']);
 
@@ -164,7 +164,7 @@ class SLM_API_Listener {
                 $args = (array('result' => 'error', 'message' => 'Registered domain information is missing'));
                 SLM_API_Utility::output_api_response($args);
             }
-            $registered_domain = trim(strip_tags($_REQUEST['registered_domain']));
+            $registered_domain = trim(wp_unslash(strip_tags($_REQUEST['registered_domain'])));
             $license_key = trim(strip_tags($_REQUEST['license_key']));
             $slm_debug_logger->log_debug("License key: " . $license_key . " Domain: " . $registered_domain);
 
