@@ -33,8 +33,8 @@ class SLM_Utility {
                 $data = array('lic_status' => 'expired');
                 $where = array('id' => $license->id);
                 $updated = $wpdb->update($tbl_name, $data, $where);
+                do_action('slm_license_key_expired',$license->id);//Trigger the license expired action hook.
             }
-
             
         }
     }
