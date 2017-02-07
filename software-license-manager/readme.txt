@@ -54,6 +54,7 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 == Changelog ==
 
 = 2.8 =
+
 - The registered domains (if any) of a license key will get deleted when that key is deleted from the manage licenses menu.
 - Added wp_unslash() for firstname, lastname, registered domain and company name. Thanks to @sgehrman.
 - Added a new action hook (slm_license_key_expired) that gets triggered when a license key expires.
