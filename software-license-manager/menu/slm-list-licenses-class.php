@@ -93,11 +93,8 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             }else {            
         	$nvp_key = $this->_args['singular'];                
         	$records_to_delete = $_GET[$nvp_key];
-                global $wpdb;
-                $record_table_name = SLM_TBL_LICENSE_KEYS;//The table name for the records	
         	foreach ($records_to_delete as $row){
-                    $sql_query = $wpdb->prepare("DELETE FROM $record_table_name WHERE id=%d", $row);
-                    $results = $wpdb->query($sql_query);
+                    SLM_Utility::delete_license_key_by_row_id($row);
         	}
         	echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
             }
@@ -107,39 +104,14 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     
     /*
      * This function will delete the selected license key entries from the DB.
-     * The function accepts either an array of IDs or a single ID
      */
-    function delete_licenses($entries)
+    function delete_license_key($key_row_id)
     {
-        global $wpdb;
-        $license_table = SLM_TBL_LICENSE_KEYS;
-        if (is_array($entries)){
-            //Delete multiple records
-            $id_list = "(" .implode(",",$entries) .")"; //Create comma separate list for DB operation
-            $delete_command = "DELETE FROM ".$license_table." WHERE id IN ".$id_list;
-            $result = $wpdb->query($delete_command);
-            if($result != NULL)
-            {
-                $success_msg = '<div id="message" class="updated"><p><strong>';
-                $success_msg .= 'The selected entries were deleted successfully!';
-                $success_msg .= '</strong></p></div>';
-                echo $success_msg;
-            }else{
-                //TODO - log an error 
-            }
-        }elseif ($entries != NULL){
-            //Delete single record
-            $delete_command = "DELETE FROM ".$license_table." WHERE id = '".absint($entries)."'";
-            $result = $wpdb->query($delete_command);
-            if($result != NULL){
-                $success_msg = '<div id="message" class="updated"><p><strong>';
-                $success_msg .= 'The selected entry was deleted successfully!';
-                $success_msg .= '</strong></p></div>';
-                echo $success_msg;
-            }else{
-                //TODO - log an error 
-            }
-        }
+        SLM_Utility::delete_license_key_by_row_id($key_row_id);
+        $success_msg = '<div id="message" class="updated"><p><strong>';
+        $success_msg .= 'The selected entry was deleted successfully!';
+        $success_msg .= '</strong></p></div>';
+        echo $success_msg;
     }
 
 

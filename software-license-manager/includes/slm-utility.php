@@ -38,6 +38,37 @@ class SLM_Utility {
             
         }
     }
+    
+    /*
+     * Deletes a license key from the licenses table
+     */
+    static function delete_license_key_by_row_id($key_row_id) {
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+        
+        //First delete the registered domains entry of this key (if any).
+        SLM_Utility::delete_registered_domains_of_key($key_row_id);
+        
+        //Now, delete the key from the licenses table.
+        $wpdb->delete( $license_table, array( 'id' => $key_row_id ) );
+        
+    }
+    
+    /*
+     * Deletes any registered domains info from the domain table for the given key's row id.
+     */
+    static function delete_registered_domains_of_key($key_row_id) {
+        global $slm_debug_logger;
+        global $wpdb;
+        $reg_table = SLM_TBL_LIC_DOMAIN;
+        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $key_row_id);
+        $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
+        foreach ($reg_domains as $domain) {
+            $row_to_delete = $domain->id;
+            $wpdb->delete( $reg_table, array( 'id' => $row_to_delete ) );
+            //$slm_debug_logger->log_debug("Registered domain with row id (".$row_to_delete.") deleted.");
+        }
+    }
 
 }
 

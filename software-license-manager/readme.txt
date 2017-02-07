@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 2.7
+Stable tag: 2.8
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -53,7 +53,8 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
-= TODO 2.8 =
+= 2.8 =
+- The registered domains (if any) of a license key will get deleted when that key is deleted from the manage licenses menu.
 - Added wp_unslash() for firstname, lastname, registered domain and company name. Thanks to @sgehrman.
 - Added a new action hook (slm_license_key_expired) that gets triggered when a license key expires.
 

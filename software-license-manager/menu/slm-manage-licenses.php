@@ -26,7 +26,7 @@ function wp_lic_mgr_manage_licenses_menu() {
             $license_list = new WPLM_List_Licenses();
             if (isset($_REQUEST['action'])) { //Do list table form row action tasks
                 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete_license') { //Delete link was clicked for a row in list table
-                    $license_list->delete_licenses(strip_tags($_REQUEST['id']));
+                    $license_list->delete_license_key(sanitize_text_field($_REQUEST['id']));
                 }
             }
             //Fetch, prepare, sort, and filter our data...
