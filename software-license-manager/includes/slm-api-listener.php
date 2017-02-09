@@ -62,10 +62,10 @@ class SLM_API_Listener {
             $result = $wpdb->insert($tbl_name, $fields);
             if ($result === false) {
                 //error inserting
-                $args = (array('result' => 'error', 'message' => 'License creation failed'));
+                $args = (array('result' => 'error', 'message' => 'License creation failed', 'error_code' => SLM_Error_Codes::CREATE_FAILED));
                 SLM_API_Utility::output_api_response($args);
             } else {
-                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key']));
+                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key'], 'error_code' => SLM_Error_Codes::CREATE_FAILED));
                 SLM_API_Utility::output_api_response($args);
             }
         }
@@ -108,10 +108,10 @@ class SLM_API_Listener {
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {
                 if ($retLic->lic_status == 'blocked') {
-                    $args = (array('result' => 'error', 'message' => 'Your License key is blocked'));
+                    $args = (array('result' => 'error', 'message' => 'Your License key is blocked', 'error_code' => SLM_Error_Codes::LICENSE_BLOCKED));
                     SLM_API_Utility::output_api_response($args);
                 } elseif ($retLic->lic_status == 'expired') {
-                    $args = (array('result' => 'error', 'message' => 'Your License key has expired'));
+                    $args = (array('result' => 'error', 'message' => 'Your License key has expired', 'error_code' => SLM_Error_Codes::LICENSE_EXPIRED));
                     SLM_API_Utility::output_api_response($args);
                 }
 
@@ -123,7 +123,7 @@ class SLM_API_Listener {
                             SLM_API_Utility::output_api_response($args);
                         }
                         if ($fields['registered_domain'] == $reg_domain->registered_domain) {
-                            $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain));
+                            $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE));
                             SLM_API_Utility::output_api_response($args);
                         }
                     }
@@ -138,11 +138,11 @@ class SLM_API_Listener {
                     $args = (array('result' => 'success', 'message' => 'License key activated'));
                     SLM_API_Utility::output_api_response($args);
                 } else {
-                    $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains'));
+                    $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains', 'error_code' => SLM_Error_Codes::REACHED_MAX_DOMAINS));
                     SLM_API_Utility::output_api_response($args);
                 }
             } else {
-                $args = (array('result' => 'error', 'message' => 'Invalid license key'));
+                $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
             }
         }
@@ -161,7 +161,7 @@ class SLM_API_Listener {
             do_action('slm_api_listener_slm_deactivate');            
 
             if (empty($_REQUEST['registered_domain'])) {
-                $args = (array('result' => 'error', 'message' => 'Registered domain information is missing'));
+                $args = (array('result' => 'error', 'message' => 'Registered domain information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
                 SLM_API_Utility::output_api_response($args);
             }
             $registered_domain = trim(wp_unslash(strip_tags($_REQUEST['registered_domain'])));
@@ -175,7 +175,7 @@ class SLM_API_Listener {
             if ($delete === false) {
                 $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
             } else if ($delete == 0) {
-                $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive'));
+                $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
                 SLM_API_Utility::output_api_response($args);
             } else {
                 $args = (array('result' => 'success', 'message' => 'The license key has been deactivated for this domain'));
@@ -224,7 +224,7 @@ class SLM_API_Listener {
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);
             } else {
-                $args = (array('result' => 'error', 'message' => 'Invalid license key'));
+                $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
             }            
         }
