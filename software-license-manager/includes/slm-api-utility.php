@@ -1,5 +1,18 @@
 <?php
 
+class SLM_Error_Codes {
+	const CREATE_FAILED = 10;
+	const LICENSE_BLOCKED = 20;
+	const LICENSE_EXPIRED = 30;
+	const LICENSE_IN_USE = 40;
+	const REACHED_MAX_DOMAINS = 50;
+	const LICENSE_INVALID = 60;
+	const DOMAIN_MISSING = 70;
+	const DOMAIN_ALREADY_INACTIVE = 80;
+	const VERIFY_KEY_INVALID = 90;
+	const CREATE_KEY_INVALID = 100;
+}
+
 class SLM_API_Utility {
     /*
      * The args array can contain the following:
@@ -22,7 +35,7 @@ class SLM_API_Utility {
         $right_secret_key = $slm_options['lic_verification_secret'];
         $received_secret_key = strip_tags($_REQUEST['secret_key']);
         if ($received_secret_key != $right_secret_key) {
-            $args = (array('result' => 'error', 'message' => 'Verification API secret key is invalid'));
+            $args = (array('result' => 'error', 'message' => 'Verification API secret key is invalid', 'error_code' => SLM_Error_Codes::VERIFY_KEY_INVALID));
             SLM_API_Utility::output_api_response($args);
         }
     }
@@ -32,7 +45,7 @@ class SLM_API_Utility {
         $right_secret_key = $slm_options['lic_creation_secret'];
         $received_secret_key = strip_tags($_REQUEST['secret_key']);
         if ($received_secret_key != $right_secret_key) {
-            $args = (array('result' => 'error', 'message' => 'License Creation API secret key is invalid'));
+            $args = (array('result' => 'error', 'message' => 'License Creation API secret key is invalid', 'error_code' => SLM_Error_Codes::CREATE_KEY_INVALID));
             SLM_API_Utility::output_api_response($args);
         }
     }    
