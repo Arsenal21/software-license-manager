@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 2.9
+Stable tag: 3.0
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 3.0 =
+- The integration with WP eStore cart will create multiple licenses when a customer purchases more than 1 quantity of a product.
 
 = 2.9 =
 - The API response will now include a numeric error code (in the event of an error). Thanks to Steve Gehrman.
