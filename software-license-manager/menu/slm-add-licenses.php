@@ -133,10 +133,11 @@ function wp_lic_mgr_add_licenses_menu() {
 
 ?>
     <style type="text/css">
-        .del{
+        .del, .del_device{
             cursor: pointer;
             color:red;
         }
+
     </style>
     You can add a new license or edit an existing one from this interface.
     <br /><br />
@@ -219,6 +220,44 @@ function wp_lic_mgr_add_licenses_menu() {
                                                 <?php
                                                 $count++;
                                             }
+                                            ?>
+                                        </table>
+                                    </div>
+                                    <?php
+                                } else {
+                                    echo "Not Registered Yet.";
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+
+                    <?php
+                    if ($id != '') {
+                        global $wpdb;
+                        $devices_table = SLM_TBL_LIC_DEVICES;
+                        $sql_prep2 = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
+                        $reg_devices = $wpdb->get_results($sql_prep2, OBJECT);
+                        ?>
+                        <tr valign="top">
+                            <th scope="row">Registered Devices</th>
+                            <td><?php
+                                if (count($reg_devices) > 0) {
+                                    ?>
+                                    <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_device_del_msg"></div>
+                                    <div style="overflow:auto; height:200px;width:400px;border:1px solid #ccc;">
+                                        <table cellpadding="0" cellspacing="0">
+                                            <?php
+                                                $count_ = 0;
+                                                foreach ($reg_devices as $reg_device) {
+                                                    ?>
+                                                        <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
+                                                            <td height="5"><?php echo $reg_device->registered_devices; ?></td>
+                                                            <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
+                                                        </tr>
+                                                    <?php
+                                                    $count_++;
+                                                }
                                             ?>
                                         </table>
                                     </div>
@@ -314,6 +353,21 @@ function wp_lic_mgr_add_licenses_menu() {
                     }
                 });
             });
+
+            jQuery('.del_device').click(function() {
+                var $this = this;
+                jQuery('#reg_device_del_msg').html('Loading ...');
+                jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_devices&id=' + jQuery(this).attr('id'), function(data) {
+                    if (data == 'success') {
+                        jQuery('#reg_device_del_msg').html('Deleted');
+                        jQuery($this).parent().parent().remove();
+                    }
+                    else {
+                        jQuery('#reg_device_del_msg').html('Failed');
+                    }
+                });
+            });
+            // del_device
         });
     </script>
 <?php

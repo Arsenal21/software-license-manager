@@ -6,6 +6,7 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 //***Installer variables***
 $lic_key_table      = SLM_TBL_LICENSE_KEYS;
 $lic_domain_table   = SLM_TBL_LIC_DOMAIN;
+$lic_devices_table   = SLM_TBL_LIC_DEVICES;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)){
@@ -47,13 +48,24 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       )" . $charset_collate . ";";
 dbDelta($ld_tbl_sql);
 
+$ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
+      id INT NOT NULL AUTO_INCREMENT ,
+      lic_key_id INT NOT NULL ,
+      lic_key varchar(255) NOT NULL ,
+      registered_devices text NOT NULL ,
+      item_reference varchar(255) NOT NULL,
+      PRIMARY KEY ( id )
+      )" . $charset_collate . ";";
+dbDelta($ldv_tbl_sql);
+
+
 update_option("wp_lic_mgr_db_version", WP_LICENSE_MANAGER_DB_VERSION);
 
 // Add default options
 $options = array(
     'lic_creation_secret' => uniqid('', true),
     'lic_prefix' => '',
-    'default_max_domains' => '1',
+    'default_max_domains' => '2',
     'default_max_devices' => '1',
     'lic_verification_secret' => uniqid('', true),
     'enable_debug' => '',
