@@ -6,6 +6,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $id = '';
     $license_key = '';
     $max_domains = 1;
+    $max_devices = 1;
     $license_status = '';
     $first_name = '';
     $last_name = '';
@@ -20,7 +21,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
 
     $slm_options = get_option('slm_plugin_options');
-    
+
     echo '<div class="wrap">';
     echo '<h2>Add/Edit Licenses</h2>';
     echo '<div id="poststuff"><div id="post-body">';
@@ -34,6 +35,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $record = $wpdb->get_row($sql_prep, OBJECT);
         $license_key = $record->license_key;
         $max_domains = $record->max_allowed_domains;
+        $max_devices = $record->max_allowed_devices;
         $license_status = $record->lic_status;
         $first_name = $record->first_name;
         $last_name = $record->last_name;
@@ -45,21 +47,22 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date = $record->date_renewed;
         $expiry_date = $record->date_expiry;
     }
-    
-    
+
+
     if (isset($_POST['save_record'])) {
-        
+
         //Check nonce
         if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )){
             //Nonce check failed.
             wp_die("Error! Nonce verification failed for license save action.");
         }
-        
+
         do_action('slm_add_edit_interface_save_submission');
-        
+
         //TODO - do some validation
         $license_key = $_POST['license_key'];
         $max_domains = $_POST['max_allowed_domains'];
+        $max_devices = $_POST['max_allowed_devices'];
         $license_status = $_POST['lic_status'];
         $first_name = $_POST['first_name'];
         $last_name = $_POST['last_name'];
@@ -70,7 +73,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $created_date = $_POST['date_created'];
         $renewed_date = $_POST['date_renewed'];
         $expiry_date = $_POST['date_expiry'];
-        
+
         if(empty($created_date)){
             $created_date = $current_date;
         }
@@ -80,11 +83,12 @@ function wp_lic_mgr_add_licenses_menu() {
         if(empty($expiry_date)){
             $expiry_date = $current_date_plus_1year;
         }
-        
+
         //Save the entry to the database
         $fields = array();
         $fields['license_key'] = $license_key;
         $fields['max_allowed_domains'] = $max_domains;
+        $fields['max_allowed_devices'] = $max_devices;
         $fields['lic_status'] = $license_status;
         $fields['first_name'] = $first_name;
         $fields['last_name'] = $last_name;
@@ -119,19 +123,19 @@ function wp_lic_mgr_add_licenses_menu() {
             echo $message;
             echo '</p></div>';
         }else{
-            echo '<div id="message" class="error">' . $errors . '</div>';            
+            echo '<div id="message" class="error">' . $errors . '</div>';
         }
-        
+
         $data = array('row_id' => $id, 'key' => $license_key);
         do_action('slm_add_edit_interface_save_record_processed',$data);
-        
+
     }
 
-?>    
+?>
     <style type="text/css">
         .del{
             cursor: pointer;
-            color:red;	
+            color:red;
         }
     </style>
     You can add a new license or edit an existing one from this interface.
@@ -174,9 +178,14 @@ function wp_lic_mgr_add_licenses_menu() {
                     </tr>
 
                     <tr valign="top">
+                        <th scope="row">Maximum Allowed Devices</th>
+                        <td><input name="max_allowed_devices" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" size="5" /><br/>Number of domains/installs in which this license can be used.</td>
+                    </tr>
+
+                    <tr valign="top">
                         <th scope="row">License Status</th>
                         <td>
-                            <select name="lic_status">    
+                            <select name="lic_status">
                                 <option value="pending" <?php if ($license_status == 'pending') echo 'selected="selected"'; ?> >Pending</option>
                                 <option value="active" <?php if ($license_status == 'active') echo 'selected="selected"'; ?> >Active</option>
                                 <option value="blocked" <?php if ($license_status == 'blocked') echo 'selected="selected"'; ?> >Blocked</option>
@@ -204,14 +213,14 @@ function wp_lic_mgr_add_licenses_menu() {
                                             foreach ($reg_domains as $reg_domain) {
                                                 ?>
                                                 <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
-                                                    <td height="5"><?php echo $reg_domain->registered_domain; ?></td> 
+                                                    <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
                                                     <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
                                                 </tr>
                                                 <?php
                                                 $count++;
                                             }
                                             ?>
-                                        </table>         
+                                        </table>
                                     </div>
                                     <?php
                                 } else {
@@ -280,7 +289,7 @@ function wp_lic_mgr_add_licenses_menu() {
                     echo $extra_output;
                 }
                 ?>
-                
+
                 <div class="submit">
                     <input type="submit" class="button-primary" name="save_record" value="Save Record" />
                 </div>

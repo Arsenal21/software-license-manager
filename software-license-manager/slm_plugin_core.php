@@ -16,6 +16,8 @@ include_once('includes/slm-init-time-tasks.php');
 include_once('includes/slm-api-utility.php');
 include_once('includes/slm-api-listener.php');
 include_once('includes/slm-third-party-integration.php');
+// support for meta boxes (variations only, this can be applied to single prodicts as well)
+include_once('includes/slm-meta-boxes.php');
 //Include admin side only files
 if (is_admin()) {
     include_once('menu/slm-admin-init.php');

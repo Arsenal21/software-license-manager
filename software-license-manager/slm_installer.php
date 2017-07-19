@@ -1,11 +1,11 @@
 <?php
 //***** Installer *****
 global $wpdb;
-require_once(ABSPATH . 'wp-admin/includes/upgrade.php');	
+require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 //***Installer variables***
-$lic_key_table = SLM_TBL_LICENSE_KEYS;
-$lic_domain_table = SLM_TBL_LIC_DOMAIN;
+$lic_key_table      = SLM_TBL_LICENSE_KEYS;
+$lic_domain_table   = SLM_TBL_LIC_DOMAIN;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)){
@@ -16,12 +16,13 @@ if (!empty($wpdb->charset)){
 if (!empty($wpdb->collate)){
     $charset_collate .= " COLLATE $wpdb->collate";
 }
-        
+
 $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       id int(12) NOT NULL auto_increment,
       license_key varchar(255) NOT NULL,
-      max_allowed_domains int(12) NOT NULL,
-      lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',         
+      max_allowed_domains int(40) NOT NULL,
+      max_allowed_devices int(40) NOT NULL,
+      lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',
       first_name varchar(32) NOT NULL default '',
       last_name varchar(32) NOT NULL default '',
       email varchar(64) NOT NULL,
@@ -53,6 +54,7 @@ $options = array(
     'lic_creation_secret' => uniqid('', true),
     'lic_prefix' => '',
     'default_max_domains' => '1',
+    'default_max_devices' => '1',
     'lic_verification_secret' => uniqid('', true),
     'enable_debug' => '',
 );
