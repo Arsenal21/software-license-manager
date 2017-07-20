@@ -1,23 +1,23 @@
 <?php
 
 class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
-    
+
     function __construct(){
         global $status, $page;
-                
+
         //Set parent defaults
         parent::__construct( array(
             'singular'  => 'item',     //singular name of the listed records
             'plural'    => 'items',    //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
-        
+
     }
 
     function column_default($item, $column_name){
     	return $item[$column_name];
     }
-        
+
     function column_id($item){
         $row_id = $item['id'];
         $actions = array(
@@ -30,7 +30,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         );
     }
 
-    
+
     function column_cb($item){
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
@@ -38,7 +38,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             /*$2%s*/ $item['id']                //The value of the checkbox should be the record's id
        );
     }
-    
+
     function column_active($item){
         if ($item['active'] == 1){
             return 'active';
@@ -47,7 +47,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         }
     }
 
-    
+
     function get_columns(){
         $columns = array(
             'cb' => '<input type="checkbox" />', //Render a checkbox
@@ -62,7 +62,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         );
         return $columns;
     }
-    
+
     function get_sortable_columns() {
         $sortable_columns = array(
             'id' => array('id',false),
@@ -74,7 +74,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         );
         return $sortable_columns;
     }
-    
+
     function get_bulk_actions() {
         $actions = array(
             'delete' => 'Delete',
@@ -83,15 +83,15 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     }
 
     function process_bulk_action() {
-        if('delete'===$this->current_action()) 
+        if('delete'===$this->current_action())
         {
             //Process delete bulk actions
             if(!isset($_REQUEST['item'])){
                 $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
                 echo '<div id="message" class="error fade">'.$error_msg.'</div>';
                 return;
-            }else {            
-        	$nvp_key = $this->_args['singular'];                
+            }else {
+        	$nvp_key = $this->_args['singular'];
         	$records_to_delete = $_GET[$nvp_key];
         	foreach ($records_to_delete as $row){
                     SLM_Utility::delete_license_key_by_row_id($row);
@@ -100,8 +100,8 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             }
         }
     }
-    
-    
+
+
     /*
      * This function will delete the selected license key entries from the DB.
      */
@@ -125,12 +125,12 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         $sortable = $this->get_sortable_columns();
 
         $this->_column_headers = array($columns, $hidden, $sortable);
-        
+
         $this->process_bulk_action();
-    	
+
     	global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
-        
+
 	/* -- Ordering parameters -- */
 	    //Parameters that are going to be used to order the result
 	$orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
@@ -143,7 +143,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
         }else{
             $data = $wpdb->get_results("SELECT * FROM $license_table ORDER BY $orderby $order", ARRAY_A);
         }
-        
+
         $current_page = $this->get_pagenum();
         $total_items = count($data);
         $data = array_slice($data,(($current_page-1)*$per_page),$per_page);

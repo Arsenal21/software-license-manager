@@ -27,18 +27,22 @@ function wp_lic_mgr_general_settings() {
         if (!is_numeric($_POST["default_max_domains"])) {//Set it to one by default if incorrect value is entered
             $_POST["default_max_domains"] = '1';
         }
+        if (!is_numeric($_POST["default_max_devices"])) {//Set it to one by default if incorrect value is entered
+            $_POST["default_max_devices"] = '1';
+        }
 
         $options = array(
             'lic_creation_secret' => trim($_POST["lic_creation_secret"]),
             'lic_prefix' => trim($_POST["lic_prefix"]),
             'default_max_domains' => trim($_POST["default_max_domains"]),
+            'default_max_devices' => trim($_POST["default_max_devices"]),
             'lic_verification_secret' => trim($_POST["lic_verification_secret"]),
             'enable_auto_key_expiry' => isset($_POST['enable_auto_key_expiry']) ? '1':'',
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
-        
-        echo '<div id="message" class="updated fade"><p>';        
+
+        echo '<div id="message" class="updated fade"><p>';
         echo 'Options Updated!';
         echo '</p></div>';
     }
@@ -95,15 +99,21 @@ function wp_lic_mgr_general_settings() {
                         <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
                             <br />Maximum number of domains/installs which each license is valid for (default value).</td>
                     </tr>
-                    
+
+                    <tr valign="top">
+                        <th scope="row">Maximum Allowed Devices</th>
+                        <td><input type="text" name="default_max_devices" value="<?php echo $options['default_max_devices']; ?>" size="6" />
+                            <br />Maximum number of devices which each license is valid for (default value).</td>
+                    </tr>
+
                     <tr valign="top">
                         <th scope="row">Auto Expire License Keys</th>
-                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if ($options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>                            
-                            <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached. 
+                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if ($options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>
+                            <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached.
                                 It doesn't remotely deactivate a key. It simply changes the status of the key in your database to expired.</p>
                         </td>
                     </tr>
-                    
+
 
                 </table>
             </div></div>
@@ -115,8 +125,8 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Enable Debug Logging</th>
-                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>                            
-                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>                            
+                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
+                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
                             <br />- View debug log file by clicking <a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">here</a>.
                             <br />- Reset debug log file by clicking <a href="admin.php?page=wp_lic_mgr_settings&slm_reset_log=1" target="_blank">here</a>.
                         </td>
