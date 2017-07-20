@@ -229,51 +229,53 @@ class SLM_API_Listener {
 
             global $wpdb;
 
-            if (empty($_REQUEST['registered_domain'])) {
-                $args = (array('result' => 'error', 'message' => 'Registered domain information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
-                SLM_API_Utility::output_api_response($args);
-            }
-            else {
-                $registered_dom_table = SLM_TBL_LIC_DOMAIN;
-                $sql_prep = $wpdb->prepare("DELETE FROM $registered_dom_table WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
-                $delete = $wpdb->query($sql_prep);
-
-                if ($delete === false) {
-                    $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
-                }
-                else if ($delete == 0) {
-                    $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
+            if (isset($_REQUEST['registered_domain']) && !empty($_REQUEST['registered_domain'])) {
+                if (empty($_REQUEST['registered_domain'])) {
+                    $args = (array('result' => 'error', 'message' => 'Registered domain information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
                     SLM_API_Utility::output_api_response($args);
                 }
                 else {
-                    $args = (array('result' => 'success', 'message' => 'The license key has been deactivated for this domain'));
-                    SLM_API_Utility::output_api_response($args);
+                    $registered_dom_table = SLM_TBL_LIC_DOMAIN;
+                    $sql_prep = $wpdb->prepare("DELETE FROM $registered_dom_table WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
+                    $delete = $wpdb->query($sql_prep);
+
+                    if ($delete === false) {
+                        $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
+                    }
+                    else if ($delete == 0) {
+                        $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
+                        SLM_API_Utility::output_api_response($args);
+                    }
+                    else {
+                        $args = (array('result' => 'success', 'message' => 'The license key has been deactivated for this domain'));
+                        SLM_API_Utility::output_api_response($args);
+                    }
                 }
             }
-
-            // devices deactivation
-            if (empty($_REQUEST['registered_devices'])) {
-                $args_ = (array('result' => 'error', 'message' => 'Registered device information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
-                SLM_API_Utility::output_api_response($args_);
-            }
-            else {
-                $registered_device_table = SLM_TBL_LIC_DEVICES;
-                $sql_prep2 = $wpdb->prepare("DELETE FROM $registered_device_table WHERE lic_key=%s AND registered_devices=%s", $license_key, $registered_domain);
-                $delete2 = $wpdb->query($sql_prep2);
-
-                if ($delete2 === false) {
-                    $slm_debug_logger->log_debug("Error - failed to delete the registered device from the database.");
-                }
-                else if ($delete2 == 0) {
-                    $args_ = (array('result' => 'error', 'message' => 'The license key on this device is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
+            if (isset($_REQUEST['registered_devices']) && !empty($_REQUEST['registered_devices'])) {
+                // devices deactivation
+                if (empty($_REQUEST['registered_devices'])) {
+                    $args_ = (array('result' => 'error', 'message' => 'Registered device information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
                     SLM_API_Utility::output_api_response($args_);
                 }
                 else {
-                    $args_ = (array('result' => 'success', 'message' => 'The license key has been deactivated for this device'));
-                    SLM_API_Utility::output_api_response($args_);
+                    $registered_device_table = SLM_TBL_LIC_DEVICES;
+                    $sql_prep2 = $wpdb->prepare("DELETE FROM $registered_device_table WHERE lic_key=%s AND registered_devices=%s", $license_key, $registered_devices);
+                    $delete2 = $wpdb->query($sql_prep2);
+
+                    if ($delete2 === false) {
+                        $slm_debug_logger->log_debug("Error - failed to delete the registered device from the database.");
+                    }
+                    else if ($delete2 == 0) {
+                        $args_ = (array('result' => 'error', 'message' => 'The license key on this device is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
+                        SLM_API_Utility::output_api_response($args_);
+                    }
+                    else {
+                        $args_ = (array('result' => 'success', 'message' => 'The license key has been deactivated for this device'));
+                        SLM_API_Utility::output_api_response($args_);
+                    }
                 }
             }
-
         }
     }
 
@@ -326,7 +328,8 @@ class SLM_API_Listener {
                 ));
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);
-            } else {
+            }
+            else {
                 $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
             }

@@ -1,2 +1,0 @@
-[07/20/2017 2:32 PM] - SUCCESS : API - license creation (slm_create_new) request received.
-[07/20/2017 2:32 PM] - SUCCESS : API Response - Result: success Message: License successfully created
