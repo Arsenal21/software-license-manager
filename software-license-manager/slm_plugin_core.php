@@ -2,9 +2,9 @@
 
 //Defines
 global $wpdb;
-define('SLM_TBL_LICENSE_KEYS', $wpdb->prefix . "lic_key_tbl");
-define('SLM_TBL_LIC_DOMAIN', $wpdb->prefix . "lic_reg_domain_tbl");
-define('SLM_TBL_LIC_DEVICES', $wpdb->prefix . "lic_reg_devices_tbl");
+define('SLM_TBL_LICENSE_KEYS',  $wpdb->prefix . "lic_key_tbl");
+define('SLM_TBL_LIC_DOMAIN',    $wpdb->prefix . "lic_reg_domain_tbl");
+define('SLM_TBL_LIC_DEVICES',   $wpdb->prefix . "lic_reg_devices_tbl");
 define('SLM_MANAGEMENT_PERMISSION', 'manage_options');
 define('SLM_MAIN_MENU_SLUG', 'slm-main');
 define('SLM_MENU_ICON', 'dashicons-lock');

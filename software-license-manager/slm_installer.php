@@ -43,6 +43,7 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       lic_key_id INT NOT NULL ,
       lic_key varchar(255) NOT NULL ,
       registered_domain text NOT NULL ,
+      registered_devices text NOT NULL ,
       item_reference varchar(255) NOT NULL,
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
@@ -53,6 +54,7 @@ $ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
       lic_key_id INT NOT NULL ,
       lic_key varchar(255) NOT NULL ,
       registered_devices text NOT NULL ,
+      registered_domain text NOT NULL ,
       item_reference varchar(255) NOT NULL,
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
