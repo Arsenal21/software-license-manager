@@ -138,6 +138,17 @@ class SLM_API_Listener {
                     $args = (array('result' => 'success', 'message' => 'License key activated'));
                     SLM_API_Utility::output_api_response($args);
                 } else {
+
+                    //Lets loop through the domains to see if it is being used on an existing domain or not.
+                    foreach ($reg_domains as $reg_domain) {
+                        if ($fields['registered_domain'] == $reg_domain->registered_domain) {
+                            //Not used on an existing domain. Return error: LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED
+                            $args = (array('result' => 'error', 'message' => 'Reached maximum activation. License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED));
+                            SLM_API_Utility::output_api_response($args);
+                        }
+                    }
+                    
+                    //Not used on an existing domain. Return error: REACHED_MAX_DOMAINS
                     $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains', 'error_code' => SLM_Error_Codes::REACHED_MAX_DOMAINS));
                     SLM_API_Utility::output_api_response($args);
                 }

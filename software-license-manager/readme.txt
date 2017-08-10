@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 3.0
+Stable tag: 3.1
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,10 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 3.1 =
+- Added a new error code for the following condition:
+If maximum activation has reached and the license key is used on the domain (where the request came from) then it will return a new error: LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED
 
 = 3.0 =
 - The integration with WP eStore cart will create multiple licenses when a customer purchases more than 1 quantity of a product.

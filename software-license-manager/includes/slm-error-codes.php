@@ -15,5 +15,6 @@ class SLM_Error_Codes {
     const DOMAIN_ALREADY_INACTIVE = 80;
     const VERIFY_KEY_INVALID = 90;
     const CREATE_KEY_INVALID = 100;
+    const LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED = 110;
 
 }
