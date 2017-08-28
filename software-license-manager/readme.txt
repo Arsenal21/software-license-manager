@@ -53,6 +53,10 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= TODO 3.2 =
+- Fixed undefined index warning "enable_auto_key_expiry"
+
+
 = 3.1 =
 - Added a new error code for the following condition:
 If maximum activation has reached and the license key is used on the domain (where the request came from) then it will return a new error: LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED
