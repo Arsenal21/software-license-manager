@@ -84,7 +84,7 @@ function lic_mgr_integration_help_menu() {
     <div class="lic_mgr_code">
         /*** Mandatory data ***/
         <br />// Post URL
-        <br />$postURL = "<?php echo $LicenseCreationPostURL; ?>";
+        <br />$postURL = "<?php echo isset($LicenseCreationPostURL) ? $LicenseCreationPostURL : ''; ?>";
         <br />// The Secret key
         <br />$secretKey = "<?php echo $creation_secret_key; ?>";
         <br /> 
