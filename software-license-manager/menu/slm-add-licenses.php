@@ -18,6 +18,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $expiry_date = '';
     $current_date = (date ("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+    $product_ref = '';
 
     $slm_options = get_option('slm_plugin_options');
     
@@ -44,6 +45,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $created_date = $record->date_created;
         $renewed_date = $record->date_renewed;
         $expiry_date = $record->date_expiry;
+        $product_ref = $record->product_ref;
     }
     
     
@@ -70,6 +72,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $created_date = $_POST['date_created'];
         $renewed_date = $_POST['date_renewed'];
         $expiry_date = $_POST['date_expiry'];
+        $product_ref = $_POST['product_ref'];
         
         if(empty($created_date)){
             $created_date = $current_date;
@@ -95,6 +98,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['date_created'] = $created_date;
         $fields['date_renewed'] = $renewed_date;
         $fields['date_expiry'] = $expiry_date;
+        $fields['product_ref'] = $product_ref;
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -269,6 +273,12 @@ function wp_lic_mgr_add_licenses_menu() {
                         <th scope="row">Date of Expiry</th>
                         <td><input name="date_expiry" type="text" id="date_expiry" class="wplm_pick_date" value="<?php echo $expiry_date; ?>" size="10" />
                             <br/>Expiry date of license.</td>
+                    </tr>
+                    
+                    <tr valign="top">
+                        <th scope="row">Product</th>
+                        <td><input name="product_ref" type="text" id="product_ref" value="<?php echo $product_ref; ?>" size="30" />
+                            <br/>The product that this license gives access to.</td>
                     </tr>
 
                 </table>
