@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.8
-Stable tag: 3.1
+Stable tag: 3.2
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -53,9 +53,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
-= TODO 3.2 =
+= 3.2 =
 - Fixed undefined index warning "enable_auto_key_expiry"
-
+- The product_ref field is now available in the add/edit license menu. Also, this value is output with the "slm_check" API call. Thanks to Tobias Hildebrandt for implementing this.
 
 = 3.1 =
 - Added a new error code for the following condition:

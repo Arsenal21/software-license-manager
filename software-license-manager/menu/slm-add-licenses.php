@@ -276,9 +276,9 @@ function wp_lic_mgr_add_licenses_menu() {
                     </tr>
                     
                     <tr valign="top">
-                        <th scope="row">Product</th>
+                        <th scope="row">Product Reference</th>
                         <td><input name="product_ref" type="text" id="product_ref" value="<?php echo $product_ref; ?>" size="30" />
-                            <br/>The product that this license gives access to.</td>
+                            <br/>The product that this license applies to (if any).</td>
                     </tr>
 
                 </table>
