@@ -231,6 +231,7 @@ class SLM_API_Listener {
                     'date_created' => $retLic->date_created,
                     'date_renewed' => $retLic->date_renewed,
                     'date_expiry' => $retLic->date_expiry,
+                    'product_ref' => $retLic->product_ref
                 ));
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);
