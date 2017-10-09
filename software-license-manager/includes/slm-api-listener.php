@@ -47,7 +47,7 @@ class SLM_API_Listener {
             $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
             $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
             $fields['email'] = strip_tags($_REQUEST['email']);
-            $fields['company_name'] = wp_unslash(strip_tags($_REQUEST['company_name']));
+            $fields['company_name'] = isset( $_REQUEST['company_name'] ) ? wp_unslash( strip_tags( $_REQUEST['company_name'] ) ) : '';
             $fields['txn_id'] = strip_tags($_REQUEST['txn_id']);
             if (empty($_REQUEST['max_allowed_domains'])) {
                 $fields['max_allowed_domains'] = $options['default_max_domains'];
@@ -56,6 +56,7 @@ class SLM_API_Listener {
             }
             $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
             $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
+            $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
