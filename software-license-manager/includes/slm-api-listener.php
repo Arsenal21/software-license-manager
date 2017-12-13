@@ -71,7 +71,7 @@ class SLM_API_Listener {
                 $args = (array('result' => 'error', 'message' => 'License creation failed', 'error_code' => SLM_Error_Codes::CREATE_FAILED));
                 SLM_API_Utility::output_api_response($args);
             } else {
-                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key'], 'error_code' => SLM_Error_Codes::CREATE_FAILED));
+                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key']));
                 SLM_API_Utility::output_api_response($args);
             }
         }
