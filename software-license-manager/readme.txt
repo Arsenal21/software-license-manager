@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.0
 Tested up to: 4.9
-Stable tag: 3.4
+Stable tag: 3.5
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 3.5 =
+- Updated slm-api-utility.php to add Content-Type header to the API response.
 
 = 3.4 =
 - The slm_create_new api call will no longer show an error code incorrectly.
