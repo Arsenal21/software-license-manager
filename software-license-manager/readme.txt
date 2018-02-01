@@ -2,7 +2,7 @@
 Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
-Requires at least: 4.0
+Requires at least: 4.7
 Tested up to: 4.9
 Stable tag: 3.5
 License: GPLv2 or later
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= WIP 3.6 =
+- The check license query now outputs all the db column values.
 
 = 3.5 =
 - Updated slm-api-utility.php to add Content-Type header to the API response.
