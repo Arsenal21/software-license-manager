@@ -6,12 +6,13 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 //***Installer variables***
 $lic_key_table      = SLM_TBL_LICENSE_KEYS;
 $lic_domain_table   = SLM_TBL_LIC_DOMAIN;
-$lic_devices_table   = SLM_TBL_LIC_DEVICES;
+$lic_devices_table  = SLM_TBL_LIC_DEVICES;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)){
     $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-}else{
+}
+else{
     $charset_collate = "DEFAULT CHARSET=utf8";
 }
 if (!empty($wpdb->collate)){
@@ -30,6 +31,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       company_name varchar(100) NOT NULL default '',
       txn_id varchar(64) NOT NULL default '',
       manual_reset_count varchar(128) NOT NULL default '',
+      purchase_id_ varchar(255) NOT NULL default '',
       date_created date NOT NULL DEFAULT '0000-00-00',
       date_renewed date NOT NULL DEFAULT '0000-00-00',
       date_expiry date NOT NULL DEFAULT '0000-00-00',
@@ -59,8 +61,6 @@ $ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
 dbDelta($ldv_tbl_sql);
-
-
 update_option("wp_lic_mgr_db_version", WP_LICENSE_MANAGER_DB_VERSION);
 
 // Add default options

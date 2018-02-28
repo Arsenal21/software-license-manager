@@ -6,24 +6,24 @@ function lic_mgr_integration_help_menu() {
         .lic_mgr_code{border:1px solid #C2D7EF; background-color:#E2EDFF; margin:10px 0; padding:10px; width:800px; font-family:"Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace !important; font-size:13px;}
     </style>
     <?php
-    
+
     $options = get_option('slm_plugin_options');
     $creation_secret_key = $options['lic_creation_secret'];
     $secret_verification_key = $options['lic_verification_secret'];
-    
+
     echo '<h2>License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
     echo '<div class="wrap">';
-    echo '<div id="poststuff"><div id="post-body">';    
+    echo '<div id="poststuff"><div id="post-body">';
 
     echo '<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>';
-    
+
     $api_query_post_url = SLM_SITE_HOME_URL;
     echo "<strong>The License API Query POST URL For Your Installation</strong>";
     echo '<div class="lic_mgr_code">' . $api_query_post_url . '</div>';
 
     echo "<strong>The License Activation or Deactivation API secret key</strong>";
     echo '<div class="lic_mgr_code">' . $secret_verification_key . '</div>';
-    
+
     echo "<strong>The License Creation API secret key</strong>";
     echo '<div class="lic_mgr_code">' . $creation_secret_key . '</div>';
     ?>
@@ -62,7 +62,7 @@ function lic_mgr_integration_help_menu() {
     Upon successful processing, License Manager will return a plain text message that will have two or three lines similar to the following:
     <br />
     <div class="lic_mgr_code">
-        Success 
+        Success
         <br />License key
         <br />WPLICMGR4bc29fd61e471
     </div>
@@ -84,10 +84,10 @@ function lic_mgr_integration_help_menu() {
     <div class="lic_mgr_code">
         /*** Mandatory data ***/
         <br />// Post URL
-        <br />$postURL = "<?php echo $LicenseCreationPostURL; ?>";
+        <br />$postURL = "<?php echo isset($LicenseCreationPostURL) ? $LicenseCreationPostURL : ''; ?>";
         <br />// The Secret key
         <br />$secretKey = "<?php echo $creation_secret_key; ?>";
-        <br /> 
+        <br />
         <br />/*** Optional Data ***/
         <br />$firstname = "John";
         <br />$lastname = "Doe";

@@ -108,7 +108,7 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Auto Expire License Keys</th>
-                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if ($options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>
+                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if (isset($options['enable_auto_key_expiry']) && $options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>
                             <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached.
                                 It doesn't remotely deactivate a key. It simply changes the status of the key in your database to expired.</p>
                         </td>

@@ -14,11 +14,13 @@ function wp_lic_mgr_add_licenses_menu() {
     $company_name = '';
     $txn_id = '';
     $reset_count = '';
+    $purchaseid = '';
     $created_date = '';
     $renewed_date = '';
     $expiry_date = '';
     $current_date = (date ("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+    $product_ref = '';
 
     $slm_options = get_option('slm_plugin_options');
 
@@ -43,9 +45,11 @@ function wp_lic_mgr_add_licenses_menu() {
         $company_name = $record->company_name;
         $txn_id = $record->txn_id;
         $reset_count = $record->manual_reset_count;
+        $purchaseid = $record->purchase_id_;
         $created_date = $record->date_created;
         $renewed_date = $record->date_renewed;
         $expiry_date = $record->date_expiry;
+        $product_ref = $record->product_ref;
     }
 
 
@@ -70,9 +74,11 @@ function wp_lic_mgr_add_licenses_menu() {
         $company_name = $_POST['company_name'];
         $txn_id = $_POST['txn_id'];
         $reset_count = $_POST['manual_reset_count'];
+        $purchaseid = $_POST['purchase_id_'];
         $created_date = $_POST['date_created'];
         $renewed_date = $_POST['date_renewed'];
         $expiry_date = $_POST['date_expiry'];
+        $product_ref = $_POST['product_ref'];
 
         if(empty($created_date)){
             $created_date = $current_date;
@@ -96,9 +102,11 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['company_name'] = $company_name;
         $fields['txn_id'] = $txn_id;
         $fields['manual_reset_count'] = $reset_count;
+        $fields['purchase_id_'] = $purchaseid;
         $fields['date_created'] = $created_date;
         $fields['date_renewed'] = $renewed_date;
         $fields['date_expiry'] = $expiry_date;
+        $fields['product_ref'] = $product_ref;
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -302,6 +310,12 @@ function wp_lic_mgr_add_licenses_menu() {
                     </tr>
 
                     <tr valign="top">
+                        <th scope="row">Purchase Order #</th>
+                        <td><input name="purchase_id_" type="text" id="purchase_id_" value="<?php echo $purchaseid; ?>" size="8" />
+                            <br/>This is associated with the purchase ID woocommerce support</td>
+                    </tr>
+
+                    <tr valign="top">
                         <th scope="row">Date Created</th>
                         <td><input name="date_created" type="text" id="date_created" class="wplm_pick_date" value="<?php echo $created_date; ?>" size="10" />
                             <br/>Creation date of license.</td>
@@ -318,6 +332,12 @@ function wp_lic_mgr_add_licenses_menu() {
                         <td><input name="date_expiry" type="text" id="date_expiry" class="wplm_pick_date" value="<?php echo $expiry_date; ?>" size="10" />
                             <br/>Expiry date of license.</td>
                     </tr>
+
+                    <tr valign="top">
+                       <th scope="row">Product</th>
+                         <td><input name="product_ref" type="text" id="product_ref" value="<?php echo $product_ref; ?>" size="30" />
+                            <br/>The product that this license gives access to.</td>
+                     </tr>
 
                 </table>
 

@@ -40,28 +40,32 @@ class SLM_API_Listener {
             $fields = array();
             if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
                 $fields['license_key'] = strip_tags($_REQUEST['license_key']);//Use the key you pass via the request
-            }else{
+            }
+            else{
                 $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
             }
             $fields['lic_status'] = 'pending';
             $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
             $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
             $fields['email'] = strip_tags($_REQUEST['email']);
-            $fields['company_name'] = wp_unslash(strip_tags($_REQUEST['company_name']));
+            $fields['company_name'] = isset( $_REQUEST['company_name'] ) ? wp_unslash( strip_tags( $_REQUEST['company_name'] ) ) : '';
             $fields['txn_id'] = strip_tags($_REQUEST['txn_id']);
 
             if (empty($_REQUEST['max_allowed_domains'])) {
                 $fields['max_allowed_domains'] = $options['default_max_domains'];
-            } else {
+            }
+            else {
                 $fields['max_allowed_domains'] = strip_tags($_REQUEST['max_allowed_domains']);
             }
             if (empty($_REQUEST['max_allowed_devices'])) {
                 $fields['max_allowed_devices'] = $options['default_max_devices'];
-            } else {
+            }
+            else {
                 $fields['max_allowed_devices'] = strip_tags($_REQUEST['max_allowed_devices']);
             }
             $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
             $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
+            $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
@@ -71,7 +75,7 @@ class SLM_API_Listener {
                 $args = (array('result' => 'error', 'message' => 'License creation failed', 'error_code' => SLM_Error_Codes::CREATE_FAILED));
                 SLM_API_Utility::output_api_response($args);
             } else {
-                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key'], 'error_code' => SLM_Error_Codes::CREATE_FAILED));
+                $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key']));
                 SLM_API_Utility::output_api_response($args);
             }
         }
@@ -305,6 +309,7 @@ class SLM_API_Listener {
 
             $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $sql_prep3 = $wpdb->prepare("SELECT * FROM $reg_table_devices WHERE lic_key = %s", $key);
+
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             $reg_devices = $wpdb->get_results($sql_prep3, OBJECT);
             if ($retLic) {//A license key exists
@@ -325,6 +330,12 @@ class SLM_API_Listener {
                     'date_created' => $retLic->date_created,
                     'date_renewed' => $retLic->date_renewed,
                     'date_expiry' => $retLic->date_expiry,
+                    'product_ref' => $retLic->product_ref,
+                    'first_name' => $retLic->first_name,
+                    'last_name' => $retLic->last_name,
+                    'company_name' => $retLic->company_name,
+                    'txn_id' => $retLic->txn_id,
+
                 ));
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);

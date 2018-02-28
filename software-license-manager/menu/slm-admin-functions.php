@@ -7,7 +7,7 @@ function wp_lic_mgr_admin_fnc_menu() {
     echo '<div id="poststuff"><div id="post-body">';
 
     $slm_options = get_option('slm_plugin_options');
-    
+
     if (isset($_POST['send_deactivation_request'])) {
         $postURL = $_POST['lic_mgr_deactivation_req_url'];
         $secretKeyForVerification = $slm_options['lic_verification_secret'];
@@ -38,12 +38,12 @@ function wp_lic_mgr_admin_fnc_menu() {
             <br /><br />
             <form method="post" action="">
 
-                <input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php echo $_POST['lic_mgr_deactivation_req_url']; ?>"/>
+                <input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php isset($_POST['lic_mgr_deactivation_req_url']) ? $_POST['lic_mgr_deactivation_req_url'] : ''; ?>"/>
                 <div class="submit">
                     <input type="submit" name="send_deactivation_request" value="Send Request" class="button" />
                 </div>
             </form>
-        </div></div>    
+        </div></div>
     <?php
     echo '</div></div>';
     echo '</div>';
