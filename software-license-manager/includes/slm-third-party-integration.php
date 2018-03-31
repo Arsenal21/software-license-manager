@@ -14,7 +14,6 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
 
     foreach ($cart_items as $current_cart_item) {
         $prod_id = $current_cart_item['item_number'];
-        $qty = $current_cart_item['quantity'];
         $retrieved_product = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$prod_id'", OBJECT);
         $package_product = eStore_is_package_product($retrieved_product);
         if ($package_product) {
@@ -23,11 +22,11 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
             foreach ($product_ids as $id) {
                 $id = trim($id);
                 $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$id'", OBJECT);
-                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $qty);
+                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items);
             }
         } else {
             $slm_debug_logger->log_debug('Checking license key generation for single item product.');
-            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $qty);
+            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items);
         }
     }
 
@@ -35,26 +34,14 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     return $body;
 }
 
-function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $qty=1) {
+function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items) {
     global $slm_debug_logger;
     $license_data = '';
 
     if ($retrieved_product->create_license == 1) {
-        $requested_qty = (int)$qty;
-        $slm_debug_logger->log_debug('Need to create a license key for this product: ' . $retrieved_product->id . '. Requested qty: ' . $requested_qty);
-        if($requested_qty > 1){
-            //More than 1 qty of the same product
-            for($i=0; $i < $requested_qty; $i++){
-                $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
-                $license_data .= "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key '.($i+1).': ', 'slm') . $slm_key;                
-            }
-        }
-        else {
-            //Standard 1 qty
-            $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
-            $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
-        }
-        
+        $slm_debug_logger->log_debug('Need to create a license key for this product (' . $retrieved_product->id . ')');
+        $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
+        $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
         $slm_debug_logger->log_debug('Liense data: ' . $license_data);
         $license_data = apply_filters('slm_estore_item_license_data', $license_data);
     }
@@ -104,6 +91,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['max_allowed_domains'] = $max_domains;
     $fields['date_created'] = date("Y-m-d"); //Today's date    
     $fields['date_expiry'] = $slm_date_of_expiry;
+    $fields['product_ref'] = $prod_id;//WP eStore product ID
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
     $fields = array_filter($fields); //Remove any null values.

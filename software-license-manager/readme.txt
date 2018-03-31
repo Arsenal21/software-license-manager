@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 3.5
+Stable tag: 3.6
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -53,8 +53,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
-= WIP 3.6 =
+= 3.6 =
 - The check license query now outputs all the db column values.
+- It now captures the WP eStore product ID in the "Product Reference" column of the license manager (if the license is created by eStore).
 
 = 3.5 =
 - Updated slm-api-utility.php to add Content-Type header to the API response.
