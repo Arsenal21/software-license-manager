@@ -53,6 +53,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= WIP 3.8 =
+- The manage licenses admin interface improvements for mobile devices.
+
 = 3.7 =
 - Added couple of filters to the API response args.
 
