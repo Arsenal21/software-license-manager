@@ -63,6 +63,7 @@ class WPLM_List_Licenses extends WP_List_Table {
             'date_created' => 'Date Created',
             'date_renewed' => 'Date Renewed',
             'date_expiry' => 'Expiry',
+            'product_ref' => 'Product Reference',
         );
         return $columns;
     }
