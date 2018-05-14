@@ -1,6 +1,10 @@
 <?php
 
-class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
+if (!class_exists('WP_List_Table')) {
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
+class WPLM_List_Licenses extends WP_List_Table {
     
     function __construct(){
         global $status, $page;
@@ -59,6 +63,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             'date_created' => 'Date Created',
             'date_renewed' => 'Date Renewed',
             'date_expiry' => 'Expiry',
+            'product_ref' => 'Product Reference',
         );
         return $columns;
     }

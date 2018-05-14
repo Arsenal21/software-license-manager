@@ -43,7 +43,7 @@ class SLM_API_Listener {
             }else{
                 $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
             }
-            $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
+            $fields['lic_status'] = 'pending';
             $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
             $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
             $fields['email'] = strip_tags($_REQUEST['email']);
@@ -222,7 +222,7 @@ class SLM_API_Listener {
             $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {//A license key exists
-                $args = (array(
+                $args = apply_filters( 'slm_check_response_args', array(
                     'result' => 'success', 
                     'message' => 'License key details retrieved.', 
                     'status' => $retLic->lic_status, 
