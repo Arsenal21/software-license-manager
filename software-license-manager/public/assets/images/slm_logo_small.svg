@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <defs>
+    <linearGradient id="slm_logo_small-a" x1="50%" x2="50%" y1="3.579%" y2="100%">
+      <stop offset="0%" stop-color="#F78CA0"/>
+      <stop offset="100%" stop-color="#FE9A8B"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <circle cx="11" cy="11" r="11" fill="url(#slm_logo_small-a)"/>
+    <g stroke="#FFF" stroke-linecap="square" stroke-width=".5" transform="translate(5.94 5.94)">
+      <path d="M8.12425934,0 L3.71690496,4.53399554 C2.73188514,4.27156196 1.63780164,4.52390194 0.865246729,5.29667775 C-0.288415576,6.45030228 -0.288415576,8.32081855 0.865246729,9.47468928 C2.01890903,10.62856 3.88948654,10.6283138 5.04339504,9.47468928 C5.81619615,8.70191347 6.06854439,7.60811197 5.80610222,6.6231244 L6.64709889,5.66226299 L6.64709889,4.1851509 L8.12425934,4.1851509 L8.12425934,2.70803882 L9.60141978,2.70803882 L10.34,1.96948278 L10.34,0 L8.12425934,0 Z"/>
+      <circle cx="2.75" cy="7.59" r="1"/>
+    </g>
+  </g>
+</svg>

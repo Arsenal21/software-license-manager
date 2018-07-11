@@ -1,0 +1,125 @@
+body.license-manager_page_wp_lic_mgr_addedit {
+    background: #f1f1f1 url(../images/bg.png) scroll repeat 0 0;
+}
+.logo {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.slm-container  {
+    max-width: 768px;
+    margin: 0 auto;
+    float: none;
+}
+.slm-container .postbox {
+    border-top: 0;
+}
+.slm-container #order_data {
+    padding: 24px;
+    -webkit-box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
+    -moz-box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
+    box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
+}
+.slm-container h1 {
+    font-size: 32px;
+    color: #444;
+    padding-bottom: 8px;
+    font-weight: 300;
+}
+.slm-container .center {
+    text-align: center;
+}
+.imgh2 img {
+    vertical-align: middle;
+    max-height: 40px;
+    margin-right: 24px;
+}
+.slm-container button, .slm-container input, .slm-container select, .slm-container textarea {
+    font-size: 16px;
+}
+.set-pd {
+    padding: 24px;
+}
+.devices-info {
+    overflow:auto;
+    height:200px;
+    width:280px;
+    border:1px solid #ccc;
+    padding: 8px;
+}
+.del_device, .del {
+    color: red;
+    margin: 0 8px;
+    display: block;
+    background: #ccc;
+    padding: 4px;
+    border-radius: 12px;
+    width: 16px;
+    height: 16px;
+    vertical-align: 1px;
+    line-height: 8px;
+    text-align: center;
+}
+.del_device:hover, .del:hover {
+background: red;
+color: #fff;
+cursor: pointer;
+}
+.slm-container .nav-tabs {
+    padding:0;
+    margin-top: 40px;
+}
+.slm-container h2, .slm-container h3 {
+    font-size: 1.3em;
+    margin: 1em 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 16px;
+    color: #111;
+}
+.slm-container h3 span {
+    font-weight: 300;
+    color: #666;
+}
+.slm-container .form-field {
+    line-height: 1.5;
+    margin: 1em 0;
+    font-size: 11px;
+    color: #72777c;
+}
+.slm-container .form-field label {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+    display: block;
+    padding-bottom: 4px;
+}
+.col-f {
+    padding: 8px;
+}
+.col {
+    padding: 16px;
+}
+.col-half {
+    float: left;
+    width: 48%;
+    padding: 5px;
+}
+.col-4{
+    float: left;
+    width: 31.66%;
+    padding: 5px;
+}
+.clear  {
+    clear: both;
+    display: block;
+    float: none;
+}
+
+.table tr:hover {
+    opacity: 0.8
+}
+.postbox.product_info.col {
+    min-height: 347px;
+}
+.error.stripe-apple-pay-message {
+    display: none;
+}

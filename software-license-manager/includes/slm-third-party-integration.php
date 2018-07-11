@@ -14,7 +14,6 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
 
     foreach ($cart_items as $current_cart_item) {
         $prod_id = $current_cart_item['item_number'];
-        $qty = $current_cart_item['quantity'];
         $retrieved_product = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$prod_id'", OBJECT);
         $package_product = eStore_is_package_product($retrieved_product);
         if ($package_product) {
@@ -23,11 +22,11 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
             foreach ($product_ids as $id) {
                 $id = trim($id);
                 $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$id'", OBJECT);
-                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $qty);
+                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items);
             }
         } else {
             $slm_debug_logger->log_debug('Checking license key generation for single item product.');
-            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $qty);
+            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items);
         }
     }
 
@@ -35,26 +34,14 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     return $body;
 }
 
-function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $qty=1) {
+function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items) {
     global $slm_debug_logger;
     $license_data = '';
 
     if ($retrieved_product->create_license == 1) {
-        $requested_qty = (int)$qty;
-        $slm_debug_logger->log_debug('Need to create a license key for this product: ' . $retrieved_product->id . '. Requested qty: ' . $requested_qty);
-        if($requested_qty > 1){
-            //More than 1 qty of the same product
-            for($i=0; $i < $requested_qty; $i++){
-                $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
-                $license_data .= "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key '.($i+1).': ', 'slm') . $slm_key;
-            }
-        }
-        else {
-            //Standard 1 qty
-            $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
-            $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
-        }
-
+        $slm_debug_logger->log_debug('Need to create a license key for this product (' . $retrieved_product->id . ')');
+        $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
+        $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
         $slm_debug_logger->log_debug('Liense data: ' . $license_data);
         $license_data = apply_filters('slm_estore_item_license_data', $license_data);
     }
@@ -70,7 +57,6 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $options = get_option('slm_plugin_options');
     $lic_key_prefix = $options['lic_prefix'];
     $max_domains = $options['default_max_domains'];
-    $max_devices = $options['default_max_devices'];
 
     //Lets check any product specific configuration.
     $prod_id = $retrieved_product->id;
@@ -81,22 +67,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     } else {
         //Use the default value from settings (the $max_domains variable contains the default value already).
     }
-
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_devices'", OBJECT);
-    if ($product_meta) {
-        //Found product specific SLM config data.
-        $max_devices = $product_meta->meta_value;
-    } else {
-        //Use the default value from settings (the $max_domains variable contains the default value already).
-    }
-
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_devices'", OBJECT);
-    if ($product_meta) {
-        //Found product specific SLM config data.
-        $max_devices = $product_meta->meta_value;
-    } else {
-        //Use the default value from settings (the $max_domains variable contains the default value already).
-    }    //Lets check if any product specific expiry date is set
+    //Lets check if any product specific expiry date is set
     $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
     if ($product_meta) {
         //Found product specific SLM config data.
@@ -118,9 +89,9 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['company_name'] = $payment_data['company_name'];
     $fields['txn_id'] = $payment_data['txn_id'];
     $fields['max_allowed_domains'] = $max_domains;
-    $fields['max_allowed_devices'] = $max_devices;
     $fields['date_created'] = date("Y-m-d"); //Today's date
     $fields['date_expiry'] = $slm_date_of_expiry;
+    $fields['product_ref'] = $prod_id;//WP eStore product ID
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
     $fields = array_filter($fields); //Remove any null values.
@@ -161,7 +132,6 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     if (empty($prod_id)) {
         //New product add
         $slm_max_allowed_domains = "";
-        $slm_max_allowed_devices = "";
         $slm_date_of_expiry = "";
     } else {
         //Existing product edit
@@ -172,13 +142,6 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
             $slm_max_allowed_domains = $product_meta->meta_value;
         } else {
             $slm_max_allowed_domains = "";
-        }
-
-        $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_devices'", OBJECT);
-        if ($product_meta) {
-            $slm_max_allowed_devices = $product_meta->meta_value;
-        } else {
-            $slm_max_allowed_devices = "";
         }
 
         //Retrieve the expiry date value
@@ -196,11 +159,6 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     $product_config_html .= '<tr valign="top"><th scope="row">Maximum Allowed Domains</th><td>';
     $product_config_html .= '<input name="slm_max_allowed_domains" type="text" id="slm_max_allowed_domains" value="' . $slm_max_allowed_domains . '" size="10" />';
     $product_config_html .= '<p class="description">Number of domains/installs in which this license can be used. Leave blank if you wish to use the default value set in the license manager plugin settings.</p>';
-    $product_config_html .= '</td></tr>';
-
-    $product_config_html .= '<tr valign="top"><th scope="row">Maximum Allowed Devices</th><td>';
-    $product_config_html .= '<input name="slm_max_allowed_devices" type="text" id="slm_max_allowed_devices" value="' . $slm_max_allowed_devices . '" size="10" />';
-    $product_config_html .= '<p class="description">Number of devices in which this license can be used. Leave blank if you wish to use the default value set in the license manager plugin settings.</p>';
     $product_config_html .= '</td></tr>';
 
     $product_config_html .= '<tr valign="top"><th scope="row">Number of Days before Expiry</th><td>';
@@ -222,8 +180,6 @@ function slm_estore_new_product_added($prod_dat_array, $prod_id) {
     $fields['prod_id'] = $prod_id;
     $fields['meta_key'] = 'slm_max_allowed_domains';
     $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
-    $fields['meta_key'] = 'slm_max_allowed_devices';
-    $fields['meta_value'] = $prod_dat_array['slm_max_allowed_devices'];
     $result = $wpdb->insert($product_meta_table_name, $fields);
     if (!$result) {
         //insert query failed
@@ -251,9 +207,7 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         //Found existing value so lets update it
         $fields = array();
         $fields['meta_key'] = 'slm_max_allowed_domains';
-        $fields['meta_key'] = 'slm_max_allowed_devices';
         $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
-        $fields['meta_value'] = $prod_dat_array['slm_max_allowed_devices'];
         $result = $wpdb->update($product_meta_table_name, $fields, array('prod_id' => $prod_id));
 
     } else {
@@ -261,9 +215,7 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         $fields = array();
         $fields['prod_id'] = $prod_id;
         $fields['meta_key'] = 'slm_max_allowed_domains';
-        $fields['meta_key'] = 'slm_max_allowed_devices';
         $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
-        $fields['meta_value'] = $prod_dat_array['slm_max_allowed_devices'];
         $result = $wpdb->insert($product_meta_table_name, $fields);
     }
 
@@ -292,7 +244,6 @@ function slm_estore_product_deleted($prod_id) {
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
     $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_max_allowed_domains'));
-    $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_max_allowed_devices'));
     $result = $wpdb->delete($product_meta_table_name, array('prod_id' => $prod_id, 'meta_key' => 'slm_date_of_expiry'));
 }
 

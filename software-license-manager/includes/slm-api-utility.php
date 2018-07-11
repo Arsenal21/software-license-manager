@@ -11,8 +11,12 @@ class SLM_API_Utility {
         //Log to debug file (if enabled)
         global $slm_debug_logger;
         $slm_debug_logger->log_debug('API Response - Result: ' . $args['result'] . ' Message: ' . $args['message']);
+
         //Send response
-        header('Content-Type: application/json'); //ERICH
+        $args = apply_filters( 'slm_ap_response_args', $args);
+        $args = apply_filters( 'slm_api_response_args', $args);
+
+        header('Content-Type: application/json');
         echo json_encode($args);
         exit(0);
     }

@@ -44,9 +44,12 @@ class SLM_API_Listener {
             else{
                 $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
             }
-            $fields['lic_status'] = 'pending';
-            $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
-            $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
+            $fields['lic_status']   = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
+            $fields['first_name']   = wp_unslash(strip_tags($_REQUEST['first_name']));
+            $fields['last_name']    = wp_unslash(strip_tags($_REQUEST['last_name']));
+
+            $fields['purchase_id_'] = wp_unslash(strip_tags($_REQUEST['purchase_id_']));
+
             $fields['email'] = strip_tags($_REQUEST['email']);
             $fields['company_name'] = isset( $_REQUEST['company_name'] ) ? wp_unslash( strip_tags( $_REQUEST['company_name'] ) ) : '';
             $fields['txn_id'] = strip_tags($_REQUEST['txn_id']);
@@ -74,7 +77,8 @@ class SLM_API_Listener {
                 //error inserting
                 $args = (array('result' => 'error', 'message' => 'License creation failed', 'error_code' => SLM_Error_Codes::CREATE_FAILED));
                 SLM_API_Utility::output_api_response($args);
-            } else {
+            }
+            else {
                 $args = (array('result' => 'success', 'message' => 'License successfully created', 'key' => $fields['license_key']));
                 SLM_API_Utility::output_api_response($args);
             }
@@ -147,7 +151,7 @@ class SLM_API_Listener {
                                 SLM_API_Utility::output_api_response($args);
                             }
                             if ($fields['registered_domain'] == $reg_domain->registered_domain) {
-                                $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE));
+                                $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE, 'device' => $reg_domain->registered_domain));
                                 SLM_API_Utility::output_api_response($args);
                             }
                         }
@@ -182,7 +186,7 @@ class SLM_API_Listener {
                                 SLM_API_Utility::output_api_response($devices_args);
                             }
                             if ($fields['registered_devices'] == $reg_devices->registered_devices) {
-                                $devices_args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_devices->registered_devices, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE));
+                                $devices_args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_devices->registered_devices, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE, 'device' => $reg_devices->registered_devices));
                                 SLM_API_Utility::output_api_response($devices_args);
                             }
                         }
@@ -195,7 +199,7 @@ class SLM_API_Listener {
                         $where = array('id' => $retLic->id);
                         $updated = $wpdb->update($tbl_name, $data, $where);
 
-                        $args = (array('result' => 'success', 'message' => 'License key activated'));
+                        $args = (array('result' => 'success', 'code' => '200', 'message' => 'License key activated', ));
                         SLM_API_Utility::output_api_response($args);
                     }
 
@@ -247,11 +251,11 @@ class SLM_API_Listener {
                         $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
                     }
                     else if ($delete == 0) {
-                        $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
+                        $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE, 'device' => $reg_devices->registered_devices));
                         SLM_API_Utility::output_api_response($args);
                     }
                     else {
-                        $args = (array('result' => 'success', 'message' => 'The license key has been deactivated for this domain'));
+                        $args = (array('result' => 'success', 'code' => '200', 'message' => 'The license key has been deactivated for this domain'));
                         SLM_API_Utility::output_api_response($args);
                     }
                 }
@@ -313,7 +317,7 @@ class SLM_API_Listener {
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             $reg_devices = $wpdb->get_results($sql_prep3, OBJECT);
             if ($retLic) {//A license key exists
-                $args = (array(
+                $args = apply_filters( 'slm_check_response_args', array(
                     'result' => 'success',
                     'code' => '200',
                     'message' => 'License key details retrieved.',
