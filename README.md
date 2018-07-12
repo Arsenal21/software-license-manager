@@ -1,7 +1,7 @@
-
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/software-license-manager/public/assets/images/slm_logo.png" height=100 alt="Software License Manager" />
 
-# Software License Manager [![license][license-badge]][LICENSE]
+# Software License Manager
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
 
