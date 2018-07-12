@@ -1,7 +1,7 @@
-
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/software-license-manager/public/assets/images/slm_logo.png" height=100 alt="Software License Manager" />
 
-# Software License Manager [![license][license-badge]][LICENSE]
+# Software License Manager
+[![license][license-badge]][LICENSE]
 
 Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
 
