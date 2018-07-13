@@ -11,8 +11,7 @@
  * SLM_Debug_Logger::log_debug_st("Some debug message");
  */
 
-class SLM_Debug_Logger
-{
+class SLM_Debug_Logger{
     var $log_folder_path;
     var $default_log_file = 'log.txt';
     var $default_log_file_cron = 'log-cron-job.txt';

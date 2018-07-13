@@ -43,6 +43,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       date_renewed date NOT NULL DEFAULT '0000-00-00',
       date_expiry date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
+      until varchar(255) NOT NULL default '',
       PRIMARY KEY (id)
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);
@@ -75,7 +76,7 @@ $options = array(
     'lic_creation_secret' => uniqid('', true),
     'lic_prefix' => '',
     'default_max_domains' => '2',
-    'default_max_devices' => '1',
+    'default_max_devices' => '2',
     'lic_verification_secret' => uniqid('', true),
     'enable_debug' => '',
     'slm_woo' => '',

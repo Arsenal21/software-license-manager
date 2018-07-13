@@ -61,6 +61,7 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             'date_created'          => 'Date Created',
             'date_renewed'          => 'Date Renewed',
             'date_expiry'           => 'Expiration',
+            'until'                 => 'Supported Until',
         );
         return $columns;
     }
@@ -71,6 +72,8 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
             'license_key'   => array('license_key',false),
             'lic_status'    => array('lic_status',false),
             'purchase_id_'  => array('purchase_id_',false),
+            'until'         => array('until',false),
+            'email'         => array('email',false),
             'date_created'  => array('date_created',false),
             'date_renewed'  => array('date_renewed',false),
             'date_expiry'   => array('date_expiry',false),

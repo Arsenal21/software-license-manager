@@ -3,25 +3,26 @@
 function wp_lic_mgr_add_licenses_menu() {
     global $wpdb;
     //initialise some variables
-    $id = '';
-    $license_key = '';
-    $max_domains = 1;
-    $max_devices = 1;
+    $id             = '';
+    $license_key    = '';
+    $max_domains    = 2;
+    $max_devices    = 2;
     $license_status = '';
-    $first_name = '';
-    $last_name = '';
-    $email = '';
-    $company_name = '';
-    $txn_id = '';
-    $reset_count = '';
-    $purchase_id_ = '';
-    $created_date = '';
-    $renewed_date = '';
-    $expiry_date = '';
-    $current_date = (date ("Y-m-d"));
+    $first_name     = '';
+    $last_name      = '';
+    $email          = '';
+    $company_name   = '';
+    $txn_id         = '';
+    $reset_count    = '';
+    $purchase_id_   = '';
+    $created_date   = '';
+    $renewed_date   = '';
+    $expiry_date    = '';
+    $until          = '';
+    $product_ref    = '';
+    $current_date   = (date ("Y-m-d"));
+    $slm_options    = get_option('slm_plugin_options');
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
-    $product_ref = '';
-    $slm_options = get_option('slm_plugin_options');
 
     echo '<div class="wrap">';
     // echo '<h2>Add/Edit Licenses</h2>';
@@ -49,6 +50,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date = $record->date_renewed;
         $expiry_date = $record->date_expiry;
         $product_ref = $record->product_ref;
+        $until = $record->until;
     }
     if (isset($_POST['save_record'])) {
 
@@ -76,6 +78,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date   = $_POST['date_renewed'];
         $expiry_date    = $_POST['date_expiry'];
         $product_ref    = $_POST['product_ref'];
+        $until          = $_POST['until'];
 
         if(empty($created_date)){
             $created_date = $current_date;
@@ -104,6 +107,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['date_renewed'] = $renewed_date;
         $fields['date_expiry'] = $expiry_date;
         $fields['product_ref'] = $product_ref;
+        $fields['until'] = $until;
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -171,6 +175,9 @@ function wp_lic_mgr_add_licenses_menu() {
                                     <form method="post" class="form-inline" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 
                                         <?php
+                                            function hyphenate($str) {
+                                                return implode("-", str_split($str, 5));
+                                            }
                                             wp_nonce_field('slm_add_edit_nonce_action', 'slm_add_edit_nonce_val' );
 
                                             if ($id != '') {
@@ -183,10 +190,12 @@ function wp_lic_mgr_add_licenses_menu() {
 
                                                 $lic_key_prefix = $slm_options['lic_prefix'];
                                                 if (!empty($lic_key_prefix)) {
-                                                    $license_key = uniqid($lic_key_prefix);
+                                                    // $license_key = uniqid($lic_key_prefix);
+                                                    $license_key = strtoupper($lic_key_prefix . get_current_user_id() .'-' . hyphenate(md5(uniqid(rand(4,8), true) . time() )) . get_current_user_id());
                                                 }
                                                 else {
-                                                    $license_key = uniqid();
+                                                    // $license_key = uniqid();
+                                                    $license_key =  get_current_user_id() . strtoupper(hyphenate(md5(uniqid(rand(4,8), true) . time() )));
                                                 }
                                             }
                                         ?>
@@ -218,20 +227,20 @@ function wp_lic_mgr_add_licenses_menu() {
                                                     <h3>User Information</h3>
                                                     <div class="form-field form-field-wide col-half">
                                                         <label for="first_name">First Name</label>
-                                                        <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" size="20" />
+                                                        <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" size="20" required />
                                                         <br/>License user's first name
                                                     </div>
 
                                                    <div class="form-field form-field-wide col-half">
                                                         <label for="last_name"> Last Name</label>
-                                                        <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" size="20" />
+                                                        <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" size="20" required  />
                                                         <br/>License user's last name
                                                     </div>
                                                     <div class="clear"></div>
 
                                                     <div class="form-field form-field-wide">
                                                         <label for="email">Email Address</label>
-                                                        <input name="email" type="text" id="email" value="<?php echo $email; ?>" size="30" />
+                                                        <input name="email" type="text" id="email" value="<?php echo $email; ?>" size="30" required  />
                                                         <br/>License user's email address
                                                     </div>
                                                     <div class="clear"></div>
@@ -363,7 +372,7 @@ function wp_lic_mgr_add_licenses_menu() {
                                                             <br/>The product that this license gives access to.
                                                     </div>
 
-                                                     <div class="form-field form-field-wide col-half">
+                                                    <div class="form-field form-field-wide col-half">
                                                         <label for="txn_id">Unique Transaction ID</label>
                                                         <input name="txn_id" type="text" id="txn_id" value="<?php echo $txn_id; ?>" size="30" /><br/>The unique transaction ID associated with this license key
                                                     </div>
@@ -373,6 +382,15 @@ function wp_lic_mgr_add_licenses_menu() {
                                                         <input name="purchase_id_" type="text" id="purchase_id_" value="<?php echo $purchase_id_; ?>" size="8" />
                                                         <br/>This is associated with the purchase ID woocommerce support. <a href="<?php echo admin_url().'post.php?post='.$purchase_id_; ?>&action=edit">View Order #<?php echo $purchase_id_; ?></a>
                                                     </div>
+                                                    <div class="clear"></div>
+
+                                                    <div class="form-field form-field-wide">
+                                                        <label for="until">Supported Until</label>
+                                                        <input name="until" type="text" id="until" value="<?php echo $until; ?>" size="30" />
+                                                            <br/>Until what version this product is supported
+                                                    </div>
+                                                    <div class="clear"></div>
+
                                                 </div>
                                                 <div class="clear"></div>
                                             </div>

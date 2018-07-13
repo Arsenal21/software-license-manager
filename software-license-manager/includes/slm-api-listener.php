@@ -69,6 +69,7 @@ class SLM_API_Listener {
             $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
             $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
             $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
+            $fields['until'] = isset( $_REQUEST['until'] ) ? wp_unslash( strip_tags( $_REQUEST['until'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
@@ -327,7 +328,6 @@ class SLM_API_Listener {
                     'email' => $retLic->email,
                     'first_name' => $retLic->first_name,
                     'last_name' => $retLic->last_name,
-                    // 'until' => $retLic->until, //until what version license is supported
                     'registered_domains' => $reg_domains,
                     'registered_devices' => $reg_devices,
                     'license_key' => $retLic->license_key,
@@ -339,6 +339,7 @@ class SLM_API_Listener {
                     'last_name' => $retLic->last_name,
                     'company_name' => $retLic->company_name,
                     'txn_id' => $retLic->txn_id,
+                    'until' => $retLic->until,
 
                 ));
                 //Output the license details
@@ -350,5 +351,4 @@ class SLM_API_Listener {
             }
         }
     }
-
 }

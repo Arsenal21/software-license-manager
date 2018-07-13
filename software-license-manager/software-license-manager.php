@@ -7,6 +7,7 @@ Author: Tips and Tricks HQ
 Author URI: https://www.tipsandtricks-hq.com/
 Description: Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce and Subscriptio Plugin.
 Author2: <a href="https://epikly.com/">Michel Velis</a>
+Text Domain: slm
 */
 
 // If this file is called directly, abort.

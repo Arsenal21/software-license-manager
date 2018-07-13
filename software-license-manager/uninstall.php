@@ -21,6 +21,7 @@ global $wpdb;
 // Delete Options
 $slm_options = array(
     'wp_lic_mgr_db_version',
+    'slm_plugin_options',
 );
 
 foreach ( $slm_options as $option ) {
