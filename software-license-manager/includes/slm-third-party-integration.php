@@ -14,6 +14,7 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
 
     foreach ($cart_items as $current_cart_item) {
         $prod_id = $current_cart_item['item_number'];
+        $item_name = $current_cart_item['item_name'];
         $retrieved_product = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$prod_id'", OBJECT);
         $package_product = eStore_is_package_product($retrieved_product);
         if ($package_product) {
@@ -22,11 +23,11 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
             foreach ($product_ids as $id) {
                 $id = trim($id);
                 $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$id'", OBJECT);
-                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items);
+                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name);
             }
         } else {
             $slm_debug_logger->log_debug('Checking license key generation for single item product.');
-            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items);
+            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);
         }
     }
 
@@ -34,13 +35,13 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     return $body;
 }
 
-function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items) {
+function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name) {
     global $slm_debug_logger;
     $license_data = '';
 
     if ($retrieved_product->create_license == 1) {
         $slm_debug_logger->log_debug('Need to create a license key for this product (' . $retrieved_product->id . ')');
-        $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items);
+        $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name);
         $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
         $slm_debug_logger->log_debug('Liense data: ' . $license_data);
         $license_data = apply_filters('slm_estore_item_license_data', $license_data);
@@ -48,7 +49,7 @@ function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $c
     return $license_data;
 }
 
-function slm_estore_create_license($retrieved_product, $payment_data, $cart_items) {
+function slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name) {
     global $slm_debug_logger;
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
@@ -116,6 +117,9 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     }
     //SLM_API_Utility::insert_license_data_internal($fields);
 
+    $prod_args = array('estore_prod_id' => $prod_id, 'estore_item_name' => $item_name);
+    do_action('slm_estore_license_created', $prod_args, $payment_data, $cart_items, $fields);
+    
     return $fields['license_key'];
 }
 
