@@ -55,6 +55,7 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 = 4.0 =
 - Fixed a typo with the slm_api_response_args filter
+- The license key is also included in the license check API query's JSON output.
 
 = 3.9 =
 - The license status parameter can now be passed when executing the license create API query.

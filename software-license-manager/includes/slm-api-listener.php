@@ -224,8 +224,9 @@ class SLM_API_Listener {
             if ($retLic) {//A license key exists
                 $args = apply_filters( 'slm_check_response_args', array(
                     'result' => 'success', 
-                    'message' => 'License key details retrieved.', 
-                    'status' => $retLic->lic_status, 
+                    'message' => 'License key details retrieved.',
+                    'license_key' => $retLic->license_key,
+                    'status' => $retLic->lic_status,
                     'max_allowed_domains' => $retLic->max_allowed_domains,
                     'email' => $retLic->email,
                     'registered_domains' => $reg_domains,
