@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 #### 4.1
-- Added: New action hookFadded a new action hook
+- Added: New action hook added.
 
 #### 4.0
 - Fixed a typo with the slm_api_response_args filter
