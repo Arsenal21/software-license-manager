@@ -156,10 +156,8 @@ class SLM_API_Listener {
                                 SLM_API_Utility::output_api_response($args);
                             }
                         }
-
                         $fields['lic_key_id'] = $retLic->id;
                         $wpdb->insert($reg_table, $fields);
-
                         $slm_debug_logger->log_debug("Updating license key status to active for domain.");
                         $data = array('lic_status' => 'active');
                         $where = array('id' => $retLic->id);
@@ -174,11 +172,8 @@ class SLM_API_Listener {
                     }
                 }
 
-
                 if (isset($_REQUEST['registered_devices']) && !empty($_REQUEST['registered_devices'])) {
-
                     if (count($reg_devices) < floor($retLic->max_allowed_devices)) {
-
                         foreach ($reg_devices as $reg_devices) {
                             if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_devices->registered_devices)) {
 
@@ -203,21 +198,18 @@ class SLM_API_Listener {
                         $args = (array('result' => 'success', 'code' => '200', 'message' => 'License key activated', ));
                         SLM_API_Utility::output_api_response($args);
                     }
-
                     else {
                         $args = (array('result' => 'error', 'message' => 'Reached maximum allowable devices', 'error_code' => SLM_Error_Codes::REACHED_MAX_DEVICES));
                         SLM_API_Utility::output_api_response($args);
                     }
                 }
-
-            } else {
+            }
+            else {
                 $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
             }
         }
     }
-
-    // TODO : add support for devices deactivation
 
     function deactivation_api_listener() {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_deactivate') {
@@ -317,29 +309,30 @@ class SLM_API_Listener {
 
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             $reg_devices = $wpdb->get_results($sql_prep3, OBJECT);
-            if ($retLic) {//A license key exists
+
+            if ($retLic) { //A license key exists
                 $args = apply_filters( 'slm_check_response_args', array(
-                    'result' => 'success',
-                    'code' => '200',
-                    'message' => 'License key details retrieved.',
-                    'status' => $retLic->lic_status,
-                    'max_allowed_domains' => $retLic->max_allowed_domains,
-                    'max_allowed_devices' => $retLic->max_allowed_devices,
-                    'email' => $retLic->email,
-                    'first_name' => $retLic->first_name,
-                    'last_name' => $retLic->last_name,
-                    'registered_domains' => $reg_domains,
-                    'registered_devices' => $reg_devices,
-                    'license_key' => $retLic->license_key,
-                    'date_created' => $retLic->date_created,
-                    'date_renewed' => $retLic->date_renewed,
-                    'date_expiry' => $retLic->date_expiry,
-                    'product_ref' => $retLic->product_ref,
-                    'first_name' => $retLic->first_name,
-                    'last_name' => $retLic->last_name,
-                    'company_name' => $retLic->company_name,
-                    'txn_id' => $retLic->txn_id,
-                    'until' => $retLic->until,
+                    'result'                => 'success',
+                    'code'                  => '200',
+                    'message'               => 'License key details retrieved.',
+                    'status'                => $retLic->lic_status,
+                    'max_allowed_domains'   => $retLic->max_allowed_domains,
+                    'max_allowed_devices'   => $retLic->max_allowed_devices,
+                    'email'                 => $retLic->email,
+                    'first_name'            => $retLic->first_name,
+                    'last_name'             => $retLic->last_name,
+                    'registered_domains'    => $reg_domains,
+                    'registered_devices'    => $reg_devices,
+                    'license_key'           => $retLic->license_key,
+                    'date_created'          => $retLic->date_created,
+                    'date_renewed'          => $retLic->date_renewed,
+                    'date_expiry'           => $retLic->date_expiry,
+                    'product_ref'           => $retLic->product_ref,
+                    'first_name'            => $retLic->first_name,
+                    'last_name'             => $retLic->last_name,
+                    'company_name'          => $retLic->company_name,
+                    'txn_id'                => $retLic->txn_id,
+                    'until'                 => $retLic->until,
 
                 ));
                 //Output the license details
