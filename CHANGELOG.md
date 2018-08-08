@@ -1,7 +1,7 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
-#### 4.1
+#### 4.2
 - Added: Support for license removal using api (slm_action=slm_remove)
 
 #### 4.1
