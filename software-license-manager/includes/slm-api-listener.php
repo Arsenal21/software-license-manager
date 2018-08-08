@@ -14,11 +14,13 @@ class SLM_API_Listener {
     function __construct() {
 
         if (isset($_REQUEST['slm_action']) && isset($_REQUEST['secret_key'])) {
+
             //This is an API query for the license manager. Handle the query.
             $this->creation_api_listener();
             $this->activation_api_listener();
             $this->deactivation_api_listener();
             $this->check_api_listener();
+            $this->removal_api_listener();
         }
     }
 
@@ -277,6 +279,47 @@ class SLM_API_Listener {
                     }
                 }
             }
+        }
+    }
+
+    function removal_api_listener(){
+        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_remove') {
+            //Handle the license activation API query
+            global $slm_debug_logger;
+
+            SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
+
+            $slm_debug_logger->log_debug("API - license removal (slm_remove) request received.");
+
+            //Action hook
+            do_action('slm_api_listener_slm_remove');
+
+            global $wpdb;
+            $tbl_name           = SLM_TBL_LICENSE_KEYS;
+            $reg_table          = SLM_TBL_LIC_DOMAIN;
+            $reg_table_devices  = SLM_TBL_LIC_DEVICES;
+
+            $fields             = array();
+            $fields['lic_key']  = trim(strip_tags($_REQUEST['license_key']));
+            $key                = $fields['lic_key'];
+
+            $sql_query        = $wpdb->delete( $tbl_name, array( 'license_key' => $key ) );
+
+            // TODO: cleanup devices and domain table
+
+            if ( $sql_query ) {
+                $args = (array('result' => 'success', 'code' => SLM_Error_Codes::KEY_CANCELED, 'message' => 'License key removed', 'key' => $key, 'found_in' => $tbl_name ));
+                SLM_API_Utility::output_api_response($args);
+            }
+            else {
+                $args = (array('result' => 'error', 'code' => SLM_Error_Codes::KEY_CANCELED_FAILED, 'message' => 'License key was not removed', 'key' => $key, 'reason' => 'not found' ));
+                SLM_API_Utility::output_api_response($args);
+            }
+
+        }
+        else {
+            $args = (array('result' => 'error', 'message' => 'License key not found.', 'error_code' => SLM_Error_Codes::KEY_CANCELED_FAILED));
+            SLM_API_Utility::output_api_response($args);
         }
     }
 

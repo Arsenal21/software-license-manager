@@ -42,16 +42,6 @@ class SLM_API_Utility {
     }
 
     static function insert_license_data_internal($fields) {
-        /* The fields array should have values for the following keys
-          //$fields['license_key']
-          //$fields['lic_status']
-          //$fields['first_name']
-          //$fields['last_name']
-          //$fields['email']
-          //$fields['company_name']
-          //$fields['txn_id']
-          //$fields['max_allowed_domains']
-         */
         global $wpdb;
         $tbl_name = SLM_TBL_LICENSE_KEYS;
         $fields = array_filter($fields);//Remove any null values.

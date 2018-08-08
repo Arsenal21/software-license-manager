@@ -4,7 +4,6 @@
  * Contains the API error codes
  */
 class SLM_Error_Codes {
-
     const CREATE_FAILED = 10;
     const LICENSE_BLOCKED = 20;
     const LICENSE_EXPIRED = 30;
@@ -15,6 +14,8 @@ class SLM_Error_Codes {
     const DOMAIN_ALREADY_INACTIVE = 80;
     const VERIFY_KEY_INVALID = 90;
     const CREATE_KEY_INVALID = 100;
-    const REACHED_MAX_DEVICES = 100;
-
+    const REACHED_MAX_DEVICES = 120;
+    const KEY_DELETED = 130;
+    const KEY_CANCELED = 130;
+    const KEY_CANCELED_FAILED = 140;
 }
