@@ -70,7 +70,6 @@ include_once( SLM_LIB .'slm-utility.php');
 include_once( SLM_LIB .'slm-init-time-tasks.php');
 include_once( SLM_LIB .'slm-api-utility.php');
 include_once( SLM_LIB .'slm-api-listener.php');
-include_once( SLM_LIB .'slm-third-party-integration.php');
 
 // Front end-menu
 // TODO check for optional plugins
@@ -78,18 +77,24 @@ include_once( SLM_LIB .'slm-third-party-integration.php');
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
     include_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
+
     // WordPress Plugin :: wc-software-license-manager
     include_once( SLM_ADMIN  . 'includes/woocommerce/wc-software-license-manager.php');
+
+    // support for meta boxes (variations only, this can be applied to single prodicts as well)
+    include_once( SLM_LIB . 'slm-meta-boxes.php');
 }
 
 if (null !== SLM_Helper_Class::slm_get_option('slm_subscriptio') && SLM_Helper_Class::slm_get_option('slm_subscriptio') == 1) {
     // Subscriptio PLugin Intergration
-    // TODO - check for plugin exist
-    include_once( SLM_LIB . 'slm-subscriptio.php');
+    include_once( SLM_ADMIN  . 'includes/subscriptio/slm-subscriptio.php');
 }
 
-// support for meta boxes (variations only, this can be applied to single prodicts as well)
-include_once( SLM_LIB . 'slm-meta-boxes.php');
+if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
+    // wpestores PLugin Intergration
+    include_once( SLM_ADMIN  . 'includes/wpestores/slm-wpestores.php');
+}
+
 
 //Include admin side only files
 if (is_admin()) {
@@ -112,6 +117,7 @@ function slm_init_handler() {
     $init_task      = new SLM_Init_Time_Tasks();
     $api_listener   = new SLM_API_Listener();
 }
+
 //Do plugins loaded time tasks
 function slm_plugins_loaded_handler() {
     //Runs when plugins_loaded action gets fired
@@ -123,6 +129,7 @@ function slm_plugins_loaded_handler() {
         }
     }
 }
+
 //TODO - need to move this to an ajax handler file
 function slm_del_reg_dom() {
     global $wpdb;

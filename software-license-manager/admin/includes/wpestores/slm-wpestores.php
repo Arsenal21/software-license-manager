@@ -1,7 +1,9 @@
 <?php
+
 /* * ********************************* */
 /* * * WP eStore Plugin Integration ** */
 /* * ********************************* */
+
 add_filter('eStore_notification_email_body_filter', 'slm_handle_estore_email_body_filter', 10, 3); //Standard sale notification email
 add_filter('eStore_squeeze_form_email_body_filter', 'slm_handle_estore_email_body_filter', 10, 3); //Squeeze form email
 function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) {
