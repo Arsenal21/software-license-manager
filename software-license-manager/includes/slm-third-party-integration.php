@@ -12,6 +12,16 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     $products_table_name = $wpdb->prefix . "wp_eStore_tbl";
     $slm_data = "";
 
+    //Check if this is a recurring payment.
+    if ( function_exists('is_paypal_recurring_payment') ) {
+        $recurring_payment = is_paypal_recurring_payment($payment_data);
+        if( $recurring_payment ){
+            $slm_debug_logger->log_debug("This is a recurring payment. No need to create a new license key.");
+            do_action('slm_estore_recurring_payment_received', $payment_data, $cart_items);
+            return $body;
+        }
+    }
+    
     foreach ($cart_items as $current_cart_item) {
         $prod_id = $current_cart_item['item_number'];
         $item_name = $current_cart_item['item_name'];
