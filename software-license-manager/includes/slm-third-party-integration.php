@@ -103,6 +103,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['date_created'] = date("Y-m-d"); //Today's date    
     $fields['date_expiry'] = $slm_date_of_expiry;
     $fields['product_ref'] = $prod_id;//WP eStore product ID
+    $fields['subscr_id'] = isset($payment_data['subscr_id']) ? $payment_data['subscr_id'] : '';
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
     $fields = array_filter($fields); //Remove any null values.

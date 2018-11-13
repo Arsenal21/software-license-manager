@@ -238,6 +238,7 @@ class SLM_API_Listener {
 		    'last_name' => $retLic->last_name,
 		    'company_name' => $retLic->company_name,
 		    'txn_id' => $retLic->txn_id,
+                    'subscr_id' => $retLic->subscr_id,
                 ));
                 //Output the license details
                 SLM_API_Utility::output_api_response($args);

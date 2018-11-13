@@ -19,6 +19,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $current_date = (date ("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
     $product_ref = '';
+    $subscr_id = '';
 
     $slm_options = get_option('slm_plugin_options');
     
@@ -46,6 +47,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date = $record->date_renewed;
         $expiry_date = $record->date_expiry;
         $product_ref = $record->product_ref;
+        $subscr_id = $record->subscr_id;
     }
     
     
@@ -73,6 +75,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $renewed_date = $_POST['date_renewed'];
         $expiry_date = $_POST['date_expiry'];
         $product_ref = $_POST['product_ref'];
+        $subscr_id = $_POST['subscr_id'];
         
         if(empty($created_date)){
             $created_date = $current_date;
@@ -99,6 +102,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['date_renewed'] = $renewed_date;
         $fields['date_expiry'] = $expiry_date;
         $fields['product_ref'] = $product_ref;
+        $fields['subscr_id'] = $subscr_id;
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -281,6 +285,12 @@ function wp_lic_mgr_add_licenses_menu() {
                             <br/>The product that this license applies to (if any).</td>
                     </tr>
 
+                    <tr valign="top">
+                        <th scope="row">Subscriber ID</th>
+                        <td><input name="subscr_id" type="text" id="subscr_id" value="<?php echo $subscr_id; ?>" size="50" />
+                            <br/>The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</td>
+                    </tr>
+                    
                 </table>
 
                 <?php

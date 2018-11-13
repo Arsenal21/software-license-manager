@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 4.7
-Tested up to: 4.9
-Stable tag: 4.1
+Tested up to: 5.0
+Stable tag: 4.2
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,10 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.2 =
+- Added a new optional column "subscr_id" to the license keys table. This can be used to store the subsriber ID value (if any) for recurring payment plans.
+- The "subscr_id" will also be present in the license query API output.
 
 = 4.1 =
 - Added a new action hook for estore recurring payments.
