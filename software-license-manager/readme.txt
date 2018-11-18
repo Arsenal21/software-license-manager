@@ -53,6 +53,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= WIP 4.3 =
+- The product quantity of WP eStore product is taken into account when creating a new license key.
+
 = 4.2 =
 - Added a new optional column "subscr_id" to the license keys table. This can be used to store the subsriber ID value (if any) for recurring payment plans.
 - The "subscr_id" will also be present in the license query API output.

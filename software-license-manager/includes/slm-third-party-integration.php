@@ -25,6 +25,12 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     foreach ($cart_items as $current_cart_item) {
         $prod_id = $current_cart_item['item_number'];
         $item_name = $current_cart_item['item_name'];
+        $quantity = $current_cart_item['quantity'];
+        if(empty($quantity)){
+            $quantity = 1;
+        }
+        $slm_debug_logger->log_debug('License Manager - Item Number: ' . $prod_id . ', Quantity: ' . $quantity . ', Item Name: ' . $item_name);
+        
         $retrieved_product = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$prod_id'", OBJECT);
         $package_product = eStore_is_package_product($retrieved_product);
         if ($package_product) {
@@ -33,16 +39,25 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
             foreach ($product_ids as $id) {
                 $id = trim($id);
                 $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$id'", OBJECT);
-                $slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name);
+                //$slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name);
+                $slm_data .= slm_estore_check_and_create_key_for_qty($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name, $quantity);
             }
         } else {
             $slm_debug_logger->log_debug('Checking license key generation for single item product.');
-            $slm_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);
+            $slm_data .= slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity);
         }
     }
 
     $body = str_replace("{slm_data}", $slm_data, $body);
     return $body;
+}
+
+function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity){
+    $prod_key_data = "";
+    for ($i = 0; $i < $quantity; $i++) {
+        $prod_key_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);
+    }
+    return $prod_key_data;
 }
 
 function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name) {
