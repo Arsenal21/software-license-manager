@@ -120,8 +120,8 @@ function woocom_custom_product_data_fields() {
               // Text Field
   woocommerce_wp_text_input(
     array(
-      'id' => 'amount_of_licenses_devices',
-      'label' => __( 'Amount of devices', 'woocommerce' ),
+      'id' => '_text_field',
+      'label' => __( 'Custom Text Field', 'woocommerce' ),
       'wrapper_class' => 'show_if_simple', //show_if_simple or show_if_variable
       'placeholder' => 'Custom text field',
       'desc_tip' => 'true',
