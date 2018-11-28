@@ -32,17 +32,14 @@ function wc_slm_on_complete_purchase($order_id) {
  */
 function wc_slm_create_license_keys($order_id) {
 
-	$_order =  new WC_Order($order_id);
-	$order_id =  new WC_Order( $order_id );
-
-	// write_log('order info '. $order_id);
-	// die();
+	$_order 	=  new WC_Order($order_id);
+	$order_id 	=  new WC_Order( $order_id );
 
 	global $purchase_id;
-	$purchase_id_ = $order_id->id;
-	$user_id = $_order->get_user_id();
-	$user_info = get_userdata($user_id);
-	$get_user_meta = get_user_meta($user_id);
+	$purchase_id_ 	= $order_id->id;
+	$user_id 		= $_order->get_user_id();
+	$user_info 		= get_userdata($user_id);
+	$get_user_meta 	= get_user_meta($user_id);
 	$payment_meta['user_info']['first_name'] = $get_user_meta['billing_first_name'][0];
 	$payment_meta['user_info']['last_name']  = $get_user_meta['billing_last_name'][0];
 	$payment_meta['user_info']['email'] 	 = $get_user_meta['billing_email'][0];
@@ -51,6 +48,7 @@ function wc_slm_create_license_keys($order_id) {
 	// Collect license keys
 	$licenses = array();
 	$items = $_order->get_items();
+
 
 	foreach ($items as $item => $values) {
 		$download_id 	= $product_id = $values['product_id'];
@@ -123,47 +121,33 @@ function wc_slm_create_license_keys($order_id) {
 
 					// Build parameters
 					$api_params = array();
-					$api_params['slm_action'] 		= 'slm_create_new';
-					$api_params['secret_key'] 		= KEY_API;
-					$api_params['first_name'] 		= (isset($payment_meta['user_info']['first_name'])) ? $payment_meta['user_info']['first_name'] : '';
-					$api_params['last_name'] 		= (isset($payment_meta['user_info']['last_name'])) ? $payment_meta['user_info']['last_name'] : '';
-					$api_params['email'] 			= (isset($payment_meta['user_info']['email'])) ? $payment_meta['user_info']['email'] : '';
-					$api_params['company_name'] 	= $payment_meta['user_info']['company'];
-					$api_params['purchase_id_'] 	= $purchase_id_;
-					$api_params['product_ref'] 		= 	'16';
-
-					/**
-					 * set product id as txn
-					 * @since 1.0.2
-					 * can be set to order id by $order_id var instead of $product_id
-                     * @since 1.0.7 txn_id change from $product_id to $order_id
-                     * @ref https://wordpress.org/support/topic/qty-1-generates-same-license
-					 */
-					$api_params['txn_id'] 				=  $purchase_id_;
-					// $api_params['max_allowed_domains'] 	= $sites_allowed; //unique per product
-					$api_params['max_allowed_domains'] 	= $amount_of_licenses; //unique per product
-					$api_params['max_allowed_devices'] 	= $amount_of_licenses_devices; //unique per product
+					$api_params['slm_action'] 			= 'slm_create_new';
+					$api_params['secret_key'] 			= KEY_API;
+					$api_params['first_name'] 			= (isset($payment_meta['user_info']['first_name'])) ? $payment_meta['user_info']['first_name'] : '';
+					$api_params['last_name'] 			= (isset($payment_meta['user_info']['last_name'])) ? $payment_meta['user_info']['last_name'] : '';
+					$api_params['email'] 				= (isset($payment_meta['user_info']['email'])) ? $payment_meta['user_info']['email'] : '';
+					$api_params['company_name'] 		= $payment_meta['user_info']['company'];
+					$api_params['purchase_id_'] 		= $purchase_id_;
+					$api_params['product_ref'] 			= $product_id; // TODO: get product id
+					$api_params['txn_id'] 				= $purchase_id_;
+					$api_params['max_allowed_domains'] 	= $amount_of_licenses;
+					$api_params['max_allowed_devices'] 	= $amount_of_licenses_devices;
 					$api_params['date_created'] 		= date('Y-m-d');
 					$api_params['date_expiry'] 			= $renewal_period;
 
 					// Send query to the license manager server
-					$url = 'http://' . WOO_SLM_API_URL . '?' . http_build_query($api_params);
-					$url = str_replace(array('http://', 'https://'), '', $url);
-					$url = 'http://' . $url;
-					$response = wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
-					$license_key = wc_slm_get_license_key($response);
+					$url 			= 'http://' . WOO_SLM_API_URL . '?' . http_build_query($api_params);
+					$url 			= str_replace(array('http://', 'https://'), '', $url);
+					$url 			= 'http://' . $url;
+					$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
+					$license_key 	= wc_slm_get_license_key($response);
 
 					// Collect license keys
 					if ($license_key) {
 						$licenses[] = array(
-							'item' => $item_name,
-							'key' => $license_key,
-							/**
-							 * Add Expire Date
-							 * @since       1.0.7
-							 * @author      AvdP (Albert van der Ploeg)
-							 */
-							'expires' => $renewal_period,
+							'item' 		=> $item_name,
+							'key' 		=> $license_key,
+							'expires' 	=> $renewal_period,
 						);
 					}
 				}
@@ -213,12 +197,11 @@ function wc_slm_payment_note($order_id, $licenses) {
 
 	if ($licenses && count($licenses) != 0) {
 		$message = __('License Key(s) generated', 'wc-slm');
-
 		foreach ($licenses as $license) {
-
 			$message .= '<br />' . $license['item'] . ': ' . $license['key'];
 		}
-	} else {
+	}
+	else {
 		$message = __('License Key(s) could not be created.', 'wc-slm');
 	}
 
@@ -228,10 +211,7 @@ function wc_slm_payment_note($order_id, $licenses) {
 
 /**
  * Assign generated license keys to payments
- *
- * @since 1.0.0
- * @return void
- */
+*/
 function wc_slm_assign_licenses($order_id, $licenses) {
 
 	if (count($licenses) != 0) {
@@ -311,35 +291,3 @@ function wc_get_payment_transaction_id($order_id) {
 	return get_post_meta($order_id, '_transaction_id', true);
 }
 
-/**
- * add license details to user account details
- * @since 1.0.3
- */
-//add_action('woocommerce_order_details_after_order_table', 'wc_slm_lic_order_meta', 10, 1);
-
-function wc_slm_lic_order_meta($order) {
-	$licenses = get_post_meta($order->post->ID, '_wc_slm_payment_licenses', true);
-
-	if ($licenses && count($licenses) != 0) {
-		$output = '<h3>' . __('Your Licenses', 'wc-slm') . ':</h3><table class="shop_table shop_table_responsive"><tr><th class="td">' . __('Item', 'wc-slm') . '</th><th class="td">' . __('License', 'wc-slm') . '</th></tr>';
-		foreach ($licenses as $license) {
-			$output .= '<tr>';
-			if (isset($license['item']) && isset($license['key'])) {
-
-				if ($output) {
-					$output .= '<br />';
-				}
-				$output .= '<td class="td">' . $license['item'] . '</td>';
-				$output .= '<td class="td">' . $license['key'] . '</td>';
-			} else {
-				$output .= 'No item and key assigned';
-			}
-			$output .= '</tr>';
-		}
-		$output .= '</table>';
-	}
-
-	if (isset($output)) {
-		echo $output;
-	}
-}

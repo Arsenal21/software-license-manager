@@ -41,6 +41,7 @@ function wp_lic_mgr_general_settings() {
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
             'slm_woo' => isset($_POST['slm_woo']) ? '1':'',
             'slm_subscriptio' => isset($_POST['slm_subscriptio']) ? '1':'',
+            'slm_wpestores' => isset($_POST['slm_wpestores']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
 
@@ -138,8 +139,15 @@ function wp_lic_mgr_general_settings() {
                             <input name="slm_subscriptio" type="checkbox"<?php if ($options['slm_subscriptio'] != '') echo ' checked="checked"'; ?> value="1"/>
 
                             <br />Subscriptio is a WooCommerce extension that allows you to sell subscriptions. Subscriptio adds recurring payments capability to WooCommerce so you can sell products like magazine subscriptions, online memberships, e-learning packages and any other tangible or intangible products. <a href="https://codecanyon.net/item/subscriptio-woocommerce-subscriptions/8754068">Learn More</a></td>
-                    </tr>
+                    </tr
+                    <tr valign="top">
+                        <th scope="row">WP eStores Support</th>
+                        <td>
+                            <input name="slm_wpestores" type="checkbox"<?php if ($options['slm_wpestores'] != '') echo ' checked="checked"'; ?> value="1"/> <br>
+                            WordPress eStore Plugin – Complete Solution to Sell Digital Products from Your WordPress Blog Securely
 
+                            </td>
+                    </tr>
 
 
 
