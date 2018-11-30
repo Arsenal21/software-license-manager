@@ -4,9 +4,11 @@
  * This class listens for API query and executes the API requests
  * Available API Actions
  * 1) slm_create_new
- * 2) slm_activate
- * 3) slm_deactivate
- * 4) slm_check
+ * 2) slm_update
+ * 3) slm_activate
+ * 4) slm_deactivate
+ * 5) slm_remove
+ * 6) slm_check
  */
 
 class SLM_API_Listener {
@@ -375,6 +377,7 @@ class SLM_API_Listener {
                     'last_name'             => $retLic->last_name,
                     'company_name'          => $retLic->company_name,
                     'txn_id'                => $retLic->txn_id,
+                    'subscr_id'             => $retLic->subscr_id,
                     'until'                 => $retLic->until,
 
                 ));
@@ -385,6 +388,148 @@ class SLM_API_Listener {
                 $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
             }
+        }
+    }
+
+    function update_api_listener() {
+
+        if ( ! isset( $_REQUEST['slm_action'] ) ) {
+            return;
+        }
+
+        if ( isset( $_REQUEST['slm_action'] ) &&
+             'slm_remove' != trim( sanitize_text_field( $_REQUEST['slm_action'] ) ) ) {
+            return;
+        }
+
+        global $slm_debug_logger;
+
+        $options = get_option( 'slm_plugin_options' );
+
+        SLM_API_Utility::verify_secret_key_for_creation(); //Verify the secret key first.
+
+        $slm_debug_logger->log_debug( "API - license creation (slm_update) request received." );
+
+        //Action hook
+        do_action( 'slm_api_listener_slm_update' );
+
+        $fields = array();
+        if ( isset( $_REQUEST['license_key'] ) && ! empty( $_REQUEST['license_key'] ) ) {
+
+            //Use the key received in the request
+            $fields['license_key'] = strip_tags( sanitize_text_field( $_REQUEST['license_key'] ) );
+
+        } else {
+
+            $slm_debug_logger->log_debug( "API - License update failed. No license key supplied!" );
+
+            $args = ( array(
+                'result'  => 'error',
+                'message' => 'License update failed. No license key provided',
+            ) );
+
+            SLM_API_Utility::output_api_response( $args );
+        }
+
+        if ( isset( $_REQUEST['lic_status'] ) ) {
+            $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( sanitize_text_field( $_REQUEST['lic_status'] ) ) ) : 'active';
+        }
+
+        if ( isset( $_REQUEST['txn_id'] ) ) {
+            $fields['txn_id'] = strip_tags( sanitize_text_field( $_REQUEST['txn_id'] ) );
+        }
+
+        if ( empty( $_REQUEST['max_allowed_domains'] ) ) {
+
+            $fields['max_allowed_domains'] = $options['default_max_domains'];
+        } else {
+
+            $fields['max_allowed_domains'] = strip_tags( $_REQUEST['max_allowed_domains'] );
+        }
+
+        $fields['date_expiry'] = isset( $_REQUEST['date_expiry'] ) ? strip_tags( sanitize_text_field( $_REQUEST['date_expiry'] ) ) : '';
+        $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( sanitize_text_field( $_REQUEST['product_ref'] ) ) ) : '';
+
+        $where = array(
+            'license_key' => $fields['license_key'],
+        );
+
+        global $wpdb;
+
+        $tbl_name = SLM_TBL_LICENSE_KEYS;
+
+        $result = $wpdb->update( $tbl_name, $fields, $where );
+
+        if ( $result === false ) {
+
+            //error updating the license
+            $args = ( array(
+                'result'  => 'error',
+                'message' => 'License update failed',
+            ) );
+            SLM_API_Utility::output_api_response( $args );
+        } else {
+            $args = ( array(
+                'result'  => 'success',
+                'message' => 'License successfully updated',
+                'key'     => $fields['license_key'],
+            ) );
+            SLM_API_Utility::output_api_response( $args );
+        }
+    }
+
+
+    function deletion_api_listener() {
+
+        if ( ! isset( $_REQUEST['slm_action'] ) ) {
+            return;
+        }
+
+        if ( isset( $_REQUEST['slm_action'] ) &&
+             'slm_remove' != trim( sanitize_text_field( $_REQUEST['slm_action'] ) ) ) {
+            return;
+        }
+
+        global $slm_debug_logger;
+
+        SLM_API_Utility::verify_secret_key();
+
+        $slm_debug_logger->log_debug( "API - license deletion (slm_remove) request received." );
+
+        do_action( 'slm_api_listener_remove' );
+
+        if ( empty( $_REQUEST['license_key'] ) ) {
+            $args = ( array(
+                'result'     => 'error',
+                'message'    => 'License key is missing',
+            ) );
+            SLM_API_Utility::output_api_response( $args );
+        }
+
+        $license_key = trim( sanitize_text_field( $_REQUEST['license_key'] ) );
+
+        $slm_debug_logger->log_debug( "License key: {$license_key}" );
+
+        global $wpdb;
+
+        if ( false === $wpdb->delete( SLM_TBL_LIC_DOMAIN, array( 'lic_key' => $license_key ), array( '%s' ) ) ) {
+
+            $slm_debug_logger->log_debug( sprintf( "Error - failed to delete the registered license key (key: %s) from the database." ), $license_key );
+
+            $args = ( array(
+                'result'     => 'error',
+                'message'    => 'Error removing license key from the server',
+            ) );
+
+            SLM_API_Utility::output_api_response( $args );
+        } else {
+
+            $args = ( array(
+                'result'  => 'success',
+                'message' => sprintf( 'The %s license key has been removed from the license server', $license_key ),
+            ) );
+
+            SLM_API_Utility::output_api_response( $args );
         }
     }
 }

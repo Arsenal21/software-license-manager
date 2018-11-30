@@ -44,6 +44,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       date_expiry date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
       until varchar(255) NOT NULL default '',
+      subscr_id varchar(128) NOT NULL default '',
       PRIMARY KEY (id)
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);

@@ -20,6 +20,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $expiry_date    = '';
     $until          = '';
     $product_ref    = '';
+    $subscr_id      = '';
     $current_date   = (date ("Y-m-d"));
     $slm_options    = get_option('slm_plugin_options');
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
@@ -51,6 +52,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $expiry_date = $record->date_expiry;
         $product_ref = $record->product_ref;
         $until = $record->until;
+        $subscr_id = $record->subscr_id;
     }
     if (isset($_POST['save_record'])) {
 
@@ -79,6 +81,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $expiry_date    = $_POST['date_expiry'];
         $product_ref    = $_POST['product_ref'];
         $until          = $_POST['until'];
+        $subscr_id      = $_POST['subscr_id'];
 
         if(empty($created_date)){
             $created_date = $current_date;
@@ -92,22 +95,23 @@ function wp_lic_mgr_add_licenses_menu() {
 
         //Save the entry to the database
         $fields = array();
-        $fields['license_key'] = $license_key;
+        $fields['license_key']  = $license_key;
         $fields['max_allowed_domains'] = $max_domains;
         $fields['max_allowed_devices'] = $max_devices;
-        $fields['lic_status'] = $license_status;
-        $fields['first_name'] = $first_name;
-        $fields['last_name'] = $last_name;
-        $fields['email'] = $email;
+        $fields['lic_status']   = $license_status;
+        $fields['first_name']   = $first_name;
+        $fields['last_name']    = $last_name;
+        $fields['email']        = $email;
         $fields['company_name'] = $company_name;
-        $fields['txn_id'] = $txn_id;
+        $fields['txn_id']       = $txn_id;
         $fields['manual_reset_count'] = $reset_count;
         $fields['purchase_id_'] = $purchase_id_;
         $fields['date_created'] = $created_date;
         $fields['date_renewed'] = $renewed_date;
-        $fields['date_expiry'] = $expiry_date;
-        $fields['product_ref'] = $product_ref;
-        $fields['until'] = $until;
+        $fields['date_expiry']  = $expiry_date;
+        $fields['product_ref']  = $product_ref;
+        $fields['until']        = $until;
+        $subscr_id              = $_POST['subscr_id'];
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -235,6 +239,13 @@ function wp_lic_mgr_add_licenses_menu() {
                                                         <label for="last_name"> Last Name</label>
                                                         <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" size="20" required  />
                                                         <br/>License user's last name
+                                                    </div>
+                                                    <div class="clear"></div>
+
+                                                    <div class="form-field form-field-wide">
+                                                        <label for="email">Subscriber ID</label>
+                                                        <input name="subscr_id" type="text" id="subscr_id" value="<?php echo $subscr_id; ?>" />
+                                                        <br/>The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.
                                                     </div>
                                                     <div class="clear"></div>
 

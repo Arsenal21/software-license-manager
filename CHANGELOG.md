@@ -1,6 +1,14 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.3
+- Added a new action hook for estore recurring payments.
+- BUG FIX: Sanitize DB query value before using (injection) thanks to @eighty20results
+- ENHANCEMENT: Added slm_update action handler - update_api_listener() thanks to @eighty20results
+- Added a new optional column "subscr_id" to the license keys table. This can be used to store the subsriber ID value (if any) for recurring payment plans.
+- The "subscr_id" will also be present in the license query API output.
+- The product quantity of WP eStore product is taken into account when creating a new license key.
+
 #### 4.2
 - Added: Support for license removal using api (slm_action=slm_remove)
 

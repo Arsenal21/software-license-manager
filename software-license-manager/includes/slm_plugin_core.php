@@ -135,7 +135,7 @@ function slm_del_reg_dom() {
     global $wpdb;
     $reg_table = SLM_TBL_LIC_DOMAIN;
     $id = strip_tags($_GET['id']);
-    $ret = $wpdb->query("DELETE FROM $reg_table WHERE id='$id'");
+    $ret = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }
@@ -144,7 +144,7 @@ function slm_del_reg_devices() {
     global $wpdb;
     $reg_table = SLM_TBL_LIC_DEVICES;
     $id = strip_tags($_GET['id']);
-    $ret = $wpdb->query("DELETE FROM $reg_table WHERE id='$id'");
+    $ret = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.2
+Version: 4.3
 Plugin URI: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Author: Tips and Tricks HQ
 Author URI: https://www.tipsandtricks-hq.com/
@@ -16,8 +16,8 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION', "4.2");
-define('SLM_DB_VERSION', '1.8');
+define('SLM_VERSION', "4.3");
+define('SLM_DB_VERSION', '1.9');
 define('SLM_FOLDER', dirname(plugin_basename(__FILE__)));
 define('SLM_URL', plugins_url('',__FILE__));
 define('SLM_ASSETS_URL', plugins_url('',__FILE__).'/public/assets/');
