@@ -23,6 +23,8 @@ class SLM_API_Listener {
             $this->deactivation_api_listener();
             $this->check_api_listener();
             $this->removal_api_listener();
+            $this->update_api_listener();
+            $this->deletion_api_listener();
         }
     }
 
