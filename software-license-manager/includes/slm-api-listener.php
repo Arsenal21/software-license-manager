@@ -45,10 +45,11 @@ class SLM_API_Listener {
 
             $fields = array();
             if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
-                $fields['license_key'] = strip_tags($_REQUEST['license_key']);//Use the key you pass via the request
+                $fields['license_key'] = strip_tags($_REQUEST['license_key']); //Use the key you pass via the request
             }
             else{
-                $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
+                // $fields['license_key'] = uniqid($lic_key_prefix); //Use random generated key
+                $fields['license_key'] = strtoupper($lic_key_prefix . hyphenate(md5(uniqid(rand(4,8), true) . time() )));
             }
             $fields['lic_status']   = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
             $fields['first_name']   = wp_unslash(strip_tags($_REQUEST['first_name']));
@@ -76,6 +77,8 @@ class SLM_API_Listener {
             $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
             $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
             $fields['until'] = isset( $_REQUEST['until'] ) ? wp_unslash( strip_tags( $_REQUEST['until'] ) ) : '';
+            $fields['subscr_id'] = isset( $_REQUEST['subscr_id'] ) ? wp_unslash( strip_tags( $_REQUEST['subscr_id'] ) ) : '';
+            $fields['lic_type'] = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_type'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
@@ -380,6 +383,7 @@ class SLM_API_Listener {
                     'company_name'          => $retLic->company_name,
                     'txn_id'                => $retLic->txn_id,
                     'subscr_id'             => $retLic->subscr_id,
+                    'lic_type'              => $retLic->lic_type,
                     'until'                 => $retLic->until,
 
                 ));
@@ -392,6 +396,25 @@ class SLM_API_Listener {
             }
         }
     }
+
+    /**
+     * Update the specified License Key
+     *
+     * @action slm_update
+     *
+     * Required parameter(s):
+     *
+     *    slm_action - Must have the value 'slm_update' to trigger this feature
+     *    license_key - The key for the license to update
+     *
+     * Supported parameter(s):
+     *
+     *         lic_status
+     *         txn_id
+     *         max_allowed_domains
+     *         date_expiry
+     *         product_ref
+     */
 
     function update_api_listener() {
 
@@ -437,6 +460,10 @@ class SLM_API_Listener {
             $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( sanitize_text_field( $_REQUEST['lic_status'] ) ) ) : 'active';
         }
 
+        if ( isset( $_REQUEST['lic_type'] ) ) {
+            $fields['lic_type'] = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( sanitize_text_field( $_REQUEST['lic_type'] ) ) ) : 'subscription';
+        }
+
         if ( isset( $_REQUEST['txn_id'] ) ) {
             $fields['txn_id'] = strip_tags( sanitize_text_field( $_REQUEST['txn_id'] ) );
         }
@@ -447,6 +474,14 @@ class SLM_API_Listener {
         } else {
 
             $fields['max_allowed_domains'] = strip_tags( $_REQUEST['max_allowed_domains'] );
+        }
+
+        if ( empty( $_REQUEST['max_allowed_devices'] ) ) {
+
+            $fields['max_allowed_devices'] = $options['default_max_devices'];
+        } else {
+
+            $fields['max_allowed_devices'] = strip_tags( $_REQUEST['max_allowed_devices'] );
         }
 
         $fields['date_expiry'] = isset( $_REQUEST['date_expiry'] ) ? strip_tags( sanitize_text_field( $_REQUEST['date_expiry'] ) ) : '';
@@ -480,6 +515,17 @@ class SLM_API_Listener {
         }
     }
 
+    /**
+     * Delete the specified License Key
+     *
+     * @action slm_remove
+     *
+     * Required parameter(s):
+     *
+     *         slm_action - Must have the value 'slm_remove' to trigger this feature
+     *         license_key - The key for the license to remove
+     *
+     */
 
     function deletion_api_listener() {
 

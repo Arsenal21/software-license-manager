@@ -21,6 +21,9 @@ function wp_lic_mgr_add_licenses_menu() {
     $until          = '';
     $product_ref    = '';
     $subscr_id      = '';
+    $lic_type       = '';
+    $reg_domains    = '';
+    $reg_devices    = '';
     $current_date   = (date ("Y-m-d"));
     $slm_options    = get_option('slm_plugin_options');
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
@@ -33,26 +36,27 @@ function wp_lic_mgr_add_licenses_menu() {
     if (isset($_GET['edit_record'])) {
         $errors = '';
         $id = $_GET['edit_record'];
-        $lk_table = SLM_TBL_LICENSE_KEYS;
-        $sql_prep = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
-        $record = $wpdb->get_row($sql_prep, OBJECT);
-        $license_key = $record->license_key;
-        $max_domains = $record->max_allowed_domains;
-        $max_devices = $record->max_allowed_devices;
+        $lk_table       = SLM_TBL_LICENSE_KEYS;
+        $sql_prep       = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
+        $record         = $wpdb->get_row($sql_prep, OBJECT);
+        $license_key    = $record->license_key;
+        $max_domains    = $record->max_allowed_domains;
+        $max_devices    = $record->max_allowed_devices;
         $license_status = $record->lic_status;
-        $first_name = $record->first_name;
-        $last_name = $record->last_name;
-        $email = $record->email;
-        $company_name = $record->company_name;
-        $txn_id = $record->txn_id;
-        $reset_count = $record->manual_reset_count;
-        $purchase_id_ = $record->purchase_id_;
-        $created_date = $record->date_created;
-        $renewed_date = $record->date_renewed;
-        $expiry_date = $record->date_expiry;
-        $product_ref = $record->product_ref;
-        $until = $record->until;
-        $subscr_id = $record->subscr_id;
+        $first_name     = $record->first_name;
+        $last_name      = $record->last_name;
+        $email          = $record->email;
+        $company_name   = $record->company_name;
+        $txn_id         = $record->txn_id;
+        $reset_count    = $record->manual_reset_count;
+        $purchase_id_   = $record->purchase_id_;
+        $created_date   = $record->date_created;
+        $renewed_date   = $record->date_renewed;
+        $expiry_date    = $record->date_expiry;
+        $product_ref    = $record->product_ref;
+        $until          = $record->until;
+        $subscr_id      = $record->subscr_id;
+        $lic_type       = $record->lic_type;
     }
     if (isset($_POST['save_record'])) {
 
@@ -82,6 +86,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $product_ref    = $_POST['product_ref'];
         $until          = $_POST['until'];
         $subscr_id      = $_POST['subscr_id'];
+        $lic_type       = $_POST['lic_type'];
 
         if(empty($created_date)){
             $created_date = $current_date;
@@ -112,6 +117,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['product_ref']  = $product_ref;
         $fields['until']        = $until;
         $subscr_id              = $_POST['subscr_id'];
+        $lic_type               = $_POST['lic_type'];
 
         $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
         $lk_table = SLM_TBL_LICENSE_KEYS;
@@ -179,9 +185,7 @@ function wp_lic_mgr_add_licenses_menu() {
                                     <form method="post" class="form-inline" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 
                                         <?php
-                                            function hyphenate($str) {
-                                                return implode("-", str_split($str, 5));
-                                            }
+
                                             wp_nonce_field('slm_add_edit_nonce_action', 'slm_add_edit_nonce_val' );
 
                                             if ($id != '') {
@@ -195,11 +199,11 @@ function wp_lic_mgr_add_licenses_menu() {
                                                 $lic_key_prefix = $slm_options['lic_prefix'];
                                                 if (!empty($lic_key_prefix)) {
                                                     // $license_key = uniqid($lic_key_prefix);
-                                                    $license_key = strtoupper($lic_key_prefix . get_current_user_id() .'-' . hyphenate(md5(uniqid(rand(4,8), true) . time() )) . get_current_user_id());
+                                                    $license_key = strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4,8), true) . time() )));
                                                 }
                                                 else {
                                                     // $license_key = uniqid();
-                                                    $license_key =  get_current_user_id() . strtoupper(hyphenate(md5(uniqid(rand(4,8), true) . time() )));
+                                                    $license_key =  strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4,8), true) . time() )));
                                                 }
                                             }
                                         ?>
@@ -214,7 +218,7 @@ function wp_lic_mgr_add_licenses_menu() {
                                                         <br/>The unique license key.
                                                     </div>
 
-                                                    <div class="form-field form-field-wide">
+                                                    <div class="form-field form-field-wide col-md-6">
                                                         <label for="lic_status">License Status</label>
                                                         <select name="lic_status" class="form-control">
                                                             <option value="pending" <?php if ($license_status == 'pending') { echo 'selected="selected"';} ?> >Pending</option>
@@ -223,6 +227,19 @@ function wp_lic_mgr_add_licenses_menu() {
                                                             <option value="expired" <?php if ($license_status == 'expired') {  echo 'selected="selected"'; } ?> >Expired</option>
                                                         </select>
                                                     </div>
+
+                                                    <div class="form-field form-field-wide col-md-6">
+                                                        <label for="email">License type</label>
+                                                        <!-- <input name="lic_type" type="text" id="lic_type" value="<?php //echo $lic_type; ?>" /> -->
+                                                        <select name="lic_type" class="form-control">
+                                                            <option value="pending" <?php if ($lic_type == 'subscription') { echo 'selected="selected"';} ?> >Subscription</option>
+                                                            <option value="active" <?php if ($lic_type == 'lifetime') {  echo 'selected="selected"'; } ?> >Life-time</option>
+                                                        </select>
+
+                                                        <br/>type of license: subscription base or lifetime
+                                                    </div>
+                                                    <div class="clear"></div>
+
                                                 </div>
                                             </div>
 

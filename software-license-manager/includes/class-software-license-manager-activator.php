@@ -9,7 +9,7 @@
  */
 class Software_License_Manager_Activator {
 
-    public function slm_db_install{
+    public static function slm_db_install{
         //Installer function
         require_once( SLM_LIB . 'class-software-license-manager-slm-installer.php');
     }
@@ -23,3 +23,4 @@ class Software_License_Manager_Activator {
         do_action('slm_activation_complete');
     }
 }
+$slm_activator = new Software_License_Manager_Activator();

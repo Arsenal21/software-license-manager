@@ -32,6 +32,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       max_allowed_domains int(40) NOT NULL,
       max_allowed_devices int(40) NOT NULL,
       lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',
+      lic_type ENUM('none', 'subscription', 'lifetime') NOT NULL DEFAULT 'subscription',
       first_name varchar(32) NOT NULL default '',
       last_name varchar(32) NOT NULL default '',
       email varchar(64) NOT NULL,
@@ -82,5 +83,6 @@ $options = array(
     'enable_debug' => '',
     'slm_woo' => '',
     'slm_subscriptio' => '',
+    'slm_wpestores' => '',
 );
 add_option('slm_plugin_options', $options);

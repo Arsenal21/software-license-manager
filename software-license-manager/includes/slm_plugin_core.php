@@ -19,12 +19,26 @@ define('SLM_MENU_ICON', 'dashicons-lock');
 
 // Helper Class
 class SLM_Helper_Class {
-    public function slm_get_option($option){
+    public static function slm_get_option($option){
+        $option_name = '';
         $slm_opts       = get_option('slm_plugin_options');
         $option_name    = $slm_opts[$option];
         return $option_name;
     }
+
+
+    public static function write_log ( $log )  {
+        if ( true === WP_DEBUG ) {
+            if ( is_array( $log ) || is_object( $log ) ) {
+                error_log( print_r( $log, true ) );
+            } else {
+                error_log( $log );
+            }
+        }
+    }
 }
+
+$slm_helper = new SLM_Helper_Class();
 
 add_filter('extra_plugin_headers', 'add_extra_headers');
 add_filter('plugin_row_meta', 'filter_authors_row_meta', 1, 4);
@@ -32,6 +46,10 @@ add_filter('plugin_row_meta', 'filter_authors_row_meta', 1, 4);
 function add_extra_headers(){
     return array('Author2');
 }
+function hyphenate($str) {
+    return implode("-", str_split($str, 5));
+}
+
 function filter_authors_row_meta($plugin_meta, $plugin_file, $plugin_data, $status ){
     if(empty($plugin_data['Author'])){
         return $plugin_meta;
@@ -48,7 +66,7 @@ function filter_authors_row_meta($plugin_meta, $plugin_file, $plugin_data, $stat
  */
 function activate_software_license_manager() {
     require_once SLM_LIB . 'class-software-license-manager-activator.php';
-    Software_License_Manager_Activator::activate();
+    $slm_activator->activate();
 }
 
 /**
@@ -57,49 +75,49 @@ function activate_software_license_manager() {
  */
 function deactivate_software_license_manager() {
     require_once SLM_LIB . 'class-software-license-manager-deactivator.php';
-    Software_License_Manager_Deactivator::deactivate();
+    $slm_deactivator->deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_software_license_manager' );
 register_deactivation_hook( __FILE__, 'deactivate_software_license_manager' );
 
 //Includes
-include_once( SLM_LIB .'slm-debug-logger.php');
-include_once( SLM_LIB .'slm-error-codes.php');
-include_once( SLM_LIB .'slm-utility.php');
-include_once( SLM_LIB .'slm-init-time-tasks.php');
-include_once( SLM_LIB .'slm-api-utility.php');
-include_once( SLM_LIB .'slm-api-listener.php');
+require_once( SLM_LIB .'slm-debug-logger.php');
+require_once( SLM_LIB .'slm-error-codes.php');
+require_once( SLM_LIB .'slm-utility.php');
+require_once( SLM_LIB .'slm-init-time-tasks.php');
+require_once( SLM_LIB .'slm-api-utility.php');
+require_once( SLM_LIB .'slm-api-listener.php');
 
 // Front end-menu
 // TODO check for optional plugins
 
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
-    include_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
+    require_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
 
     // WordPress Plugin :: wc-software-license-manager
-    include_once( SLM_ADMIN  . 'includes/woocommerce/wc-software-license-manager.php');
+    require_once( SLM_ADMIN  . 'includes/woocommerce/wc-software-license-manager.php');
 
-    // support for meta boxes (variations only, this can be applied to single prodicts as well)
-    include_once( SLM_LIB . 'slm-meta-boxes.php');
+    // support for meta boxes (variations only, this can be applied to single products as well)
+    require_once( SLM_LIB . 'slm-meta-boxes.php');
 }
 
-if (null !== SLM_Helper_Class::slm_get_option('slm_subscriptio') && SLM_Helper_Class::slm_get_option('slm_subscriptio') == 1) {
-    // Subscriptio PLugin Intergration
-    include_once( SLM_ADMIN  . 'includes/subscriptio/slm-subscriptio.php');
-}
+// if (null !== SLM_Helper_Class::slm_get_option('slm_subscriptio') && SLM_Helper_Class::slm_get_option('slm_subscriptio') == 1) {
+//     // Subscriptio PLugin Integration
+//     require_once( SLM_ADMIN  . 'includes/subscriptio/slm-subscriptio.php');
+// }
 
-if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
-    // wpestores PLugin Intergration
-    include_once( SLM_ADMIN  . 'includes/wpestores/slm-wpestores.php');
-}
+// if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
+//     // wpestores PLugin Integration
+//     require_once( SLM_ADMIN  . 'includes/wpestores/slm-wpestores.php');
+// }
 
 
 //Include admin side only files
 if (is_admin()) {
-    include_once( SLM_ADMIN . 'slm-admin-init.php');
-    include_once( SLM_ADMIN . 'includes/slm-list-table-class.php'); //Load our own WP List Table class
+    require_once( SLM_ADMIN . 'slm-admin-init.php');
+    require_once( SLM_ADMIN . 'includes/slm-list-table-class.php'); //Load our own WP List Table class
 }
 
 //Action hooks
@@ -125,7 +143,7 @@ function slm_plugins_loaded_handler() {
         //Check if db update needed
         if (get_option('wp_lic_mgr_db_version') != SLM_DB_VERSION) {
              require_once( SLM_LIB . 'class-software-license-manager-slm-installer.php');
-            // TODO - Software_License_Manager_Activator::slm_db_install();
+            // TODO - $slm_activator->slm_db_install();
         }
     }
 }

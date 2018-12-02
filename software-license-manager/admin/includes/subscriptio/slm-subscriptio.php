@@ -19,9 +19,9 @@ function subscriptio_check_status( $schedules ) {
 }
 
 // Schedule an action if it's not already scheduled
-if ( ! wp_next_scheduled( 'subscriptio_check_status' ) ) {
-    wp_schedule_event( time(), 'subcriptio_interval_check', 'subscriptio_check_status' );
-}
+// if ( ! wp_next_scheduled( 'subscriptio_check_status' ) ) {
+//     wp_schedule_event( time(), 'subcriptio_interval_check', 'subscriptio_check_status' );
+// }
 
 // Hook into that action that'll fire every three minutes
 add_action( 'subscriptio_check_status', 'subcriptio_interval_check_event_func' );

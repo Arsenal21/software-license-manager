@@ -22,7 +22,7 @@ require_once(SLM_ADMIN . 'slm-integration-help-page.php');
 function wp_lic_mgr_add_admin_menu() {
     $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
 
-    add_menu_page("License Manager", "License Manager", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu", $icon_svg);
+    add_menu_page("License", "License", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu", $icon_svg);
     add_submenu_page(SLM_MAIN_MENU_SLUG, "All Licenses", "All Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "wp_lic_mgr_manage_licenses_menu");
     add_submenu_page(SLM_MAIN_MENU_SLUG, "New License", "New Licenses", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_addedit', "wp_lic_mgr_add_licenses_menu");
     add_submenu_page(SLM_MAIN_MENU_SLUG, "Admin Tools", "Admin Tools", SLM_MANAGEMENT_PERMISSION, 'wp_lic_mgr_admin_fnc', "wp_lic_mgr_admin_fnc_menu");
