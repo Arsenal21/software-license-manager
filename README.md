@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/software-license-manager/public/assets/images/slm_logo.png" height=100 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/slm_logo.png" height=100 alt="Software License Manager" />
 
 # Software License Manager
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -37,14 +37,14 @@ This plugin is very useful for creating a license server and doing the following
 - [] WIP: Woocommerce subscriptions
 
 ## Screenshots
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-0.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-0.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-1.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-1.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-2.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-2.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-3.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-3.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-4.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-4.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/software-license-manager/public/assets/images/Screen-Shot-5.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-5.png?raw=true" width=800 alt="Software License Manager" />
