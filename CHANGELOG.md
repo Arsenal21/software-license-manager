@@ -1,6 +1,18 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.4
+- improved: simple product meta boxes
+- added license manager as product type
+- added support for "subscr_id" from version 4.3
+- added support for version number
+- added license type (lifetime or subscription) :: "lic_type"
+- improved license key generator
+- fixed minor bug and performance issues
+- update wp icon and menu name
+- updated meta boxes (simple products)
+- [] WIP: support for variations
+
 #### 4.3
 - Added a new action hook for estore recurring payments.
 - BUG FIX: Sanitize DB query value before using (injection) thanks to @eighty20results
