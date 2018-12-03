@@ -20,6 +20,7 @@ This plugin is very useful for creating a license server and doing the following
 - Activate a license key from your application (remotely)
 - Deactivate a license key (remotely)
 - Delete a license key (remotely)
+- Update a license key (remotely)
 - Check a license key (remotely)
 - Track where the license key is being used.
 - You can also create license keys manually from the admin dashboard of this plugin.
