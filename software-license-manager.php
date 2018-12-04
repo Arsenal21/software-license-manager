@@ -32,3 +32,12 @@ define('SLM_SITE_URL', site_url());
 if( file_exists( SLM_LIB . 'slm_plugin_core.php') ) {
     require_once( SLM_LIB . 'slm_plugin_core.php');
 }
+
+// check for updates from github
+require_once SLM_ADMIN . 'plugin-update-checker.php';
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'https://github.com/michelve/software-license-manager/',
+    __FILE__,
+    'software-license-manager'
+);
+$myUpdateChecker->setBranch('master');

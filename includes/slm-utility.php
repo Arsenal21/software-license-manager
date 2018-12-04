@@ -27,6 +27,7 @@ class SLM_Utility {
 
             $today_dt = new DateTime($current_date);
             $expire_dt = new DateTime($expiry_date);
+
             if ($today_dt > $expire_dt) {
                 //This key has reached the expiry. So expire this key.
                 SLM_Debug_Logger::log_debug_st("This key (".$key.") has expired. Expiry date: ".$expiry_date.". Setting license key status to expired.");

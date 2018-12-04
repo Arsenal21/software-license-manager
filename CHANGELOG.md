@@ -1,6 +1,9 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.5
+- added: plugin updater helper
+
 #### 4.4
 - improved: simple product meta boxes
 - added license manager as product type
