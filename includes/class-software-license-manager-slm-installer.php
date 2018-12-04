@@ -75,14 +75,13 @@ update_option("wp_lic_mgr_db_version", SLM_DB_VERSION);
 
 // Add default options
 $options = array(
-    'lic_creation_secret' => uniqid('', true),
-    'lic_prefix' => '',
-    'default_max_domains' => '2',
-    'default_max_devices' => '2',
+    'lic_creation_secret'     => uniqid('', true),
+    'lic_prefix'              => '',
+    'default_max_domains'     => '2',
+    'default_max_devices'     => '2',
     'lic_verification_secret' => uniqid('', true),
-    'enable_debug' => '',
-    'slm_woo' => '',
-    'slm_subscriptio' => '',
-    'slm_wpestores' => '',
+    'enable_debug'            => '',
+    'slm_woo'                 => '',
+    'slm_wpestores'           => '',
 );
 add_option('slm_plugin_options', $options);

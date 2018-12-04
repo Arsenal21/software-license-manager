@@ -19,7 +19,7 @@ function add_wc_slm_data_tab_enabled_product_option( $product_type_options ) {
         'wrapper_class' => 'show_if_simple show_if_variable',
         'label'         => __( 'License Manager', 'woocommerce' ),
         'default'       => 'no',
-        'description' => __( 'Enables the license creation api.', 'woocommerce' )
+        'description'   => __( 'Enables the license creation api.', 'woocommerce' )
     );
     return $product_type_options;
 }
@@ -142,14 +142,17 @@ function wc_slm_save_data($post_id) {
     if (!empty($_license_type)) {
         update_post_meta($post_id, '_license_type', esc_attr($_license_type));
     }
+
     $_devices_licenses = $_POST['_devices_licenses'];
     if (!empty($_devices_licenses)) {
         update_post_meta($post_id, '_devices_licenses', esc_attr($_devices_licenses));
     }
+
     $_license_renewal_period = $_POST['_license_renewal_period'];
     if (!empty($_license_renewal_period)) {
         update_post_meta($post_id, '_license_renewal_period', esc_attr($_license_renewal_period));
     }
+
     $_license_current_version = $_POST['_license_current_version'];
     if (!empty($_license_current_version)) {
         update_post_meta($post_id, '_license_current_version', esc_attr($_license_current_version));

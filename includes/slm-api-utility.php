@@ -22,30 +22,37 @@ class SLM_API_Utility {
     }
 
     static function verify_secret_key() {
-        $slm_options = get_option('slm_plugin_options');
-        $right_secret_key = $slm_options['lic_verification_secret'];
-        $received_secret_key = strip_tags($_REQUEST['secret_key']);
-        if ($received_secret_key != $right_secret_key) {
-            $args = (array('result' => 'error', 'message' => 'Verification API secret key is invalid', 'error_code' => SLM_Error_Codes::VERIFY_KEY_INVALID));
+        $slm_options                = get_option('slm_plugin_options');
+        $right_secret_key           = $slm_options['lic_verification_secret'];
+        $received_secret_key        = strip_tags($_REQUEST['secret_key']);
+        if ($received_secret_key    != $right_secret_key) {
+            $args = (array(
+                'result'        => 'error',
+                'message'       => 'Verification API secret key is invalid',
+                'error_code'    => SLM_Error_Codes::VERIFY_KEY_INVALID
+            ));
             SLM_API_Utility::output_api_response($args);
         }
     }
 
     static function verify_secret_key_for_creation() {
-        $slm_options = get_option('slm_plugin_options');
-        $right_secret_key = $slm_options['lic_creation_secret'];
-        $received_secret_key = strip_tags($_REQUEST['secret_key']);
-        if ($received_secret_key != $right_secret_key) {
-            $args = (array('result' => 'error', 'message' => 'License Creation API secret key is invalid', 'error_code' => SLM_Error_Codes::CREATE_KEY_INVALID));
+        $slm_options                = get_option('slm_plugin_options');
+        $right_secret_key           = $slm_options['lic_creation_secret'];
+        $received_secret_key        = strip_tags($_REQUEST['secret_key']);
+        if ($received_secret_key    != $right_secret_key) {
+            $args = (array(
+                'result'        => 'error',
+                'message'       => 'License Creation API secret key is invalid',
+                'error_code'    => SLM_Error_Codes::CREATE_KEY_INVALID
+            ));
             SLM_API_Utility::output_api_response($args);
         }
     }
 
     static function insert_license_data_internal($fields) {
         global $wpdb;
-        $tbl_name = SLM_TBL_LICENSE_KEYS;
-        $fields = array_filter($fields);//Remove any null values.
-        $result = $wpdb->insert($tbl_name, $fields);
+        $tbl_name   = SLM_TBL_LICENSE_KEYS;
+        $fields     = array_filter($fields);//Remove any null values.
+        $result     = $wpdb->insert($tbl_name, $fields);
     }
-
 }

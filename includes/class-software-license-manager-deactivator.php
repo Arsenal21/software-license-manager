@@ -15,5 +15,4 @@ class Software_License_Manager_Deactivator {
         do_action('slm_deactivation_complete');
     }
 }
-
 $slm_deactivator = new Software_License_Manager_Deactivator();

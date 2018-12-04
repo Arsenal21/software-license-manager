@@ -9,7 +9,8 @@
  */
 
 //Defines
-global $wpdb;
+global $wpdb, $slm_debug_logger;
+
 define('SLM_TBL_LICENSE_KEYS',  $wpdb->prefix . "lic_key_tbl");
 define('SLM_TBL_LIC_DOMAIN',    $wpdb->prefix . "lic_reg_domain_tbl");
 define('SLM_TBL_LIC_DEVICES',   $wpdb->prefix . "lic_reg_devices_tbl");
@@ -20,13 +21,11 @@ define('SLM_MENU_ICON', 'dashicons-lock');
 // Helper Class
 class SLM_Helper_Class {
     public static function slm_get_option($option){
-        $option_name = '';
+        $option_name    = '';
         $slm_opts       = get_option('slm_plugin_options');
         $option_name    = $slm_opts[$option];
         return $option_name;
     }
-
-
     public static function write_log ( $log )  {
         if ( true === WP_DEBUG ) {
             if ( is_array( $log ) || is_object( $log ) ) {
@@ -37,7 +36,6 @@ class SLM_Helper_Class {
         }
     }
 }
-
 $slm_helper = new SLM_Helper_Class();
 
 add_filter('extra_plugin_headers', 'add_extra_headers');
@@ -95,24 +93,16 @@ require_once( SLM_LIB .'slm-api-listener.php');
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
     require_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
-
     // WordPress Plugin :: wc-software-license-manager
     require_once( SLM_ADMIN  . 'includes/woocommerce/wc-software-license-manager.php');
-
-    // support for meta boxes (variations only, this can be applied to single products as well)
+    // support for meta boxes
     require_once( SLM_LIB . 'slm-meta-boxes.php');
 }
 
-// if (null !== SLM_Helper_Class::slm_get_option('slm_subscriptio') && SLM_Helper_Class::slm_get_option('slm_subscriptio') == 1) {
-//     // Subscriptio PLugin Integration
-//     require_once( SLM_ADMIN  . 'includes/subscriptio/slm-subscriptio.php');
-// }
-
-// if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
-//     // wpestores PLugin Integration
-//     require_once( SLM_ADMIN  . 'includes/wpestores/slm-wpestores.php');
-// }
-
+if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
+    // wpestores PLugin Integration
+    require_once( SLM_ADMIN  . 'includes/wpestores/slm-wpestores.php');
+}
 
 //Include admin side only files
 if (is_admin()) {
@@ -127,7 +117,6 @@ add_action('wp_ajax_del_reistered_devices', 'slm_del_reg_devices');
 add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
 
 //Initialize debug logger
-global $slm_debug_logger;
 $slm_debug_logger   = new SLM_Debug_Logger();
 
 //Do init time tasks
@@ -151,18 +140,18 @@ function slm_plugins_loaded_handler() {
 //TODO - need to move this to an ajax handler file
 function slm_del_reg_dom() {
     global $wpdb;
-    $reg_table = SLM_TBL_LIC_DOMAIN;
-    $id = strip_tags($_GET['id']);
-    $ret = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
+    $reg_table  = SLM_TBL_LIC_DOMAIN;
+    $id         = strip_tags($_GET['id']);
+    $ret        = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }
 
 function slm_del_reg_devices() {
     global $wpdb;
-    $reg_table = SLM_TBL_LIC_DEVICES;
-    $id = strip_tags($_GET['id']);
-    $ret = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
+    $reg_table  = SLM_TBL_LIC_DEVICES;
+    $id         = strip_tags($_GET['id']);
+    $ret        = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }

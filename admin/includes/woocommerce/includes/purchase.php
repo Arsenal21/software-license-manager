@@ -35,8 +35,9 @@ if ( ! function_exists( 'write_log' ) ) {
 	}
 }
 
-
+//add_action('woocommerce_email_after_order_table', 'wc_slm_email_content', 10, 2 );
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
+
 function wc_slm_on_complete_purchase($order_id) {
 	//write_log('loading wc_slm_on_complete_purchase');
 
@@ -45,13 +46,6 @@ function wc_slm_on_complete_purchase($order_id) {
 	}
 }
 
-
-/**
- * Create license key
- *
- * @since 1.0.0
- * @return void
- */
 function wc_slm_create_license_keys($order_id) {
 
 	// write_log('loading wc_slm_create_license_keys');
@@ -264,7 +258,6 @@ function wc_slm_payment_note($order_id, $licenses) {
  * Assign generated license keys to payments
 */
 function wc_slm_assign_licenses($order_id, $licenses) {
-
 	if (count($licenses) != 0) {
 		update_post_meta($order_id, '_wc_slm_payment_licenses', $licenses);
 	}
@@ -346,4 +339,50 @@ function wc_insert_payment_note($order_id, $msg) {
 
 function wc_get_payment_transaction_id($order_id) {
 	return get_post_meta($order_id, '_transaction_id', true);
+}
+
+function wc_slm_email_content($order, $is_admin_email) {
+
+	$order = new WC_Order($order_id);
+	$order_id = $order->get_id();
+	get_post_meta( $product_id, '_license_current_version', true );
+
+	write_log('-- wc_slm_email_content -- ');
+	write_log('-- wc_slm_email_content -- ' . $order );
+
+	if ($order->post->post_status == 'wc-completed') {
+		$output = '';
+
+		// Check if licenses were generated
+		$licenses = get_post_meta($product_id, '_wc_slm_payment_licenses', true);
+
+		if ($licenses && count($licenses) != 0) {
+			$output = '<h3>' . __('Your Licenses', 'wc-slm') . ':</h3><table><tr><th class="td">' . __('Item', 'wc-slm') . '</th><th class="td">' . __('License', 'wc-slm') . '</th><th class="td">' . __('Expire Date', 'wc-slm') . '</th></tr>';
+			foreach ($licenses as $license) {
+				$output .= '<tr>';
+				if (isset($license['item']) && isset($license['key'])) {
+
+					if ($output) {
+						$output .= '<br />';
+					}
+					$output .= '<td class="td">' . $license['item'] . '</td>';
+					$output .= '<td class="td">' . $license['key'] . '</td>';
+				}
+				else {
+					// $output .= 'No item and key assigned';
+				}
+
+				if (isset($license['expires'])) {
+                    $output .= '<td class="td">' . $license['expires'] . '</td>';
+				}
+				$output .= '</tr>';
+			}
+			$output .= '</table>';
+		}
+		else {
+			// $output .= 'No License Generatred';
+		}
+
+		echo $output;
+	}
 }
