@@ -72,11 +72,12 @@ class Epikly_Woo_Account {
         $get_subscription = $wpdb->get_results ("SELECT * FROM ". $wpdb->prefix."postmeta WHERE meta_value = '273' LIMIT 0,1000", ARRAY_A);
         $lic_order_id = array();
 
-        $table_start = '
-            <table class="table table-condensed" style="border-collapse:collapse;">
+        ?>
+
+            <table id="slm_licenses_table" class="table table-condensed" style="border-collapse:collapse;">
                 <thead>
                     <tr>
-                        <th>Order ID</th>
+                        <th>Order</th>
                         <th>Status</th>
                         <th>License Key</th>
                         <th>Expiration</th>
@@ -84,30 +85,9 @@ class Epikly_Woo_Account {
                     </tr>
                 </thead>
                 <tbody>
-        ';
-        $table_end = "
-            </tbody>
-            </table>
+        <?php
 
-            <script>
-            jQuery(document).ready(function($) {
-                $('.collapse').on('show.bs.collapse', function () {
-                    $('.collapse.in').collapse('hide');
-                });
-            });
-            </script>
-            <style>
-            ul.list-unstyled {
-                padding: 0;
-                margin: 0;
-            }
-            .row-p {
-                padding: 25px;
-            }
-            </style>
-        ";
 
-        echo $table_start;
         foreach ( $result as $license_info ) : ?>
             <?php
                 $get_subscription = $wpdb->get_results ("SELECT * FROM ". $wpdb->prefix."postmeta WHERE meta_value = $license_info->purchase_id_ LIMIT 0,1000", ARRAY_A);
@@ -169,29 +149,40 @@ class Epikly_Woo_Account {
                 </td>
             </tr>
         <?php endforeach;
-        echo $table_end;
+        ?>
+        </tbody>
+            </table>
+        <?php
 
         $licenses_status_array = array();
         foreach ( $result_array as $license_is_active ) {
             $licenses_status_array[] = $license_is_active["lic_status"];
         }
 
-        //print_r($licenses_status_array);
-        // check if Download Manager is active
-        if( function_exists( 'add_wdm_settings_tab' ) ) {
-            if (in_array("pending", $licenses_status_array) || in_array("active", $licenses_status_array)) {
-                echo '
-                    <div class="clear"></div>
-                    <header class="entry-header">
-                        <h2 class="entry-title" itemprop="name">My Downloads</h2>
-                    </header>';
-                echo do_shortcode('[wpdm_all_packages]');
-            }
-            else {
-                echo " <p> No active subscriptions found. Renew or reactivate your subscription. </p> ";
+
+        if (null !== SLM_Helper_Class::slm_get_option('slm_dl_manager') && SLM_Helper_Class::slm_get_option('slm_dl_manager') == 1) {
+
+            //print_r($licenses_status_array);
+            // check if Download Manager is active
+            if( function_exists( 'add_wdm_settings_tab' ) ) {
+
+
+                if (in_array("pending", $licenses_status_array) || in_array("active", $licenses_status_array)) {
+                    echo '
+                        <div class="clear"></div>
+                        <header class="entry-header">
+                            <h2 class="entry-title" itemprop="name">My Downloads</h2>
+                        </header>';
+                    echo do_shortcode('[wpdm_all_packages]');
+                }
+                else {
+                    echo " <p> No active subscriptions found. Renew or reactivate your subscription. </p> ";
+                }
             }
         }
+
     }
+
     /**
      * Plugin install action.
      * Flush rewrite rules to make our custom endpoint available.

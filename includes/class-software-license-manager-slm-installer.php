@@ -83,5 +83,6 @@ $options = array(
     'enable_debug'            => '',
     'slm_woo'                 => '',
     'slm_wpestores'           => '',
+    'slm_dl_manager'          => '', //Download Manager
 );
 add_option('slm_plugin_options', $options);

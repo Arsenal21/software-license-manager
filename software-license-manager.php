@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.5
+Version: 4.6
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -16,16 +16,16 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',       '4.5');
-define('SLM_DB_VERSION',    '2.1');
+define('SLM_VERSION',       '4.6');
+define('SLM_DB_VERSION',    '2.2');
 define('SLM_FOLDER',        dirname(plugin_basename(__FILE__)));
-define('SLM_URL',           plugins_url('',__FILE__));
-define('SLM_ASSETS_URL',    plugins_url('',__FILE__).'/public/assets/');
+define('SLM_URL',           plugins_url('' ,__FILE__));
+define('SLM_ASSETS_URL',    plugins_url('' ,__FILE__) . '/public/assets/');
 define('SLM_PATH',          plugin_dir_path(__FILE__));
-define('SLM_LIB',           SLM_PATH .'includes/');
-define('SLM_ADMIN',         SLM_PATH .'admin/');
-define('SLM_ADMIN_ADDONS',  SLM_PATH .'admin/includes/');
-define('SLM_PUBLIC',        SLM_PATH .'public/');
+define('SLM_LIB',           SLM_PATH . 'includes/');
+define('SLM_ADMIN',         SLM_PATH . 'admin/');
+define('SLM_ADMIN_ADDONS',  SLM_PATH . 'admin/includes/');
+define('SLM_PUBLIC',        SLM_PATH . 'public/');
 define('SLM_SITE_HOME_URL', home_url());
 define('SLM_SITE_URL',      site_url());
 

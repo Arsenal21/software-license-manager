@@ -7,5 +7,5 @@ jQuery(document).ready(function($){
     }
 
     //Add other admin side only jquery code below
-    
+
 });

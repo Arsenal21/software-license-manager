@@ -34,7 +34,8 @@ This plugin is very useful for creating a license server and doing the following
 ## Compatibility
 - Woocommerce
 - WP eStore
-- [] WIP: Woocommerce subscriptions
+- WP Download Manager
+- [ ] WIP: Woocommerce Subscriptions
 
 ## Screenshots
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-0.png?raw=true" width=800 alt="Software License Manager" />
@@ -43,8 +44,12 @@ This plugin is very useful for creating a license server and doing the following
 
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-2.png?raw=true" width=800 alt="Software License Manager" />
 
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-6.png?raw=true" width=800 alt="Software License Manager" />
+
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-3.png?raw=true" width=800 alt="Software License Manager" />
 
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-4.png?raw=true" width=800 alt="Software License Manager" />
 
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-5.png?raw=true" width=800 alt="Software License Manager" />
+
+<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-7.png?raw=true" width=800 alt="Software License Manager" />

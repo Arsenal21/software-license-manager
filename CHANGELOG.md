@@ -1,6 +1,13 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.6
+- added: new error codes to api listener
+- added: export functionality for license
+- added: form validation when creating a new license in wp admin
+- fixes: cleaned code and improved ui
+
+
 #### 4.5
 - added: plugin updater helper
 

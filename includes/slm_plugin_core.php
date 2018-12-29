@@ -86,6 +86,7 @@ require_once( SLM_LIB .'slm-utility.php');
 require_once( SLM_LIB .'slm-init-time-tasks.php');
 require_once( SLM_LIB .'slm-api-utility.php');
 require_once( SLM_LIB .'slm-api-listener.php');
+require_once( SLM_LIB .'slm-scripts.php');
 
 // Front end-menu
 // TODO check for optional plugins

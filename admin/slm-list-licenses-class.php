@@ -42,7 +42,8 @@ class WPLM_List_Licenses extends WP_License_Mgr_List_Table {
     function column_active($item){
         if ($item['active'] == 1){
             return 'active';
-        } else{
+        }
+        else{
             return 'inactive';
         }
     }

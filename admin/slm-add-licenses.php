@@ -24,6 +24,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $lic_type       = '';
     $reg_domains    = '';
     $reg_devices    = '';
+    $class_hide     = '';
     $current_date   = (date ("Y-m-d"));
     $slm_options    = get_option('slm_plugin_options');
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
@@ -119,15 +120,20 @@ function wp_lic_mgr_add_licenses_menu() {
         $subscr_id              = $_POST['subscr_id'];
         $lic_type               = $_POST['lic_type'];
 
-        $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
-        $lk_table = SLM_TBL_LICENSE_KEYS;
-        if (empty($id)) {//Insert into database
+
+        $id                     = isset($_POST['edit_record'])?$_POST['edit_record']:'';
+        $lk_table               = SLM_TBL_LICENSE_KEYS;
+
+        if (empty($id)) {
+            //Insert into database
             $result = $wpdb->insert( $lk_table, $fields);
             $id = $wpdb->insert_id;
             if($result === false){
                 $errors .= __('Record could not be inserted into the database!', 'slm');
             }
-        } else { //Update record
+        }
+        else {
+            //Update record
             $where = array('id'=>$id);
             $updated = $wpdb->update($lk_table, $fields, $where);
             if($updated === false){
@@ -150,8 +156,11 @@ function wp_lic_mgr_add_licenses_menu() {
 
     }
 ?>
+
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <div id="postbox-container-2" class="postbox-container slm-container">
@@ -171,18 +180,43 @@ function wp_lic_mgr_add_licenses_menu() {
                             <p class="woocommerce-order-data__meta order_number center">
                                 You can add a new license or edit an existing one from this interface.
                             </p>
+
+                            <div class="clear"></div>
+                            <div id="error_box">
+                                <div id="summary">
+                                    <div class="error_slm alert alert-info" style="display:none">
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+
+
                             <div class="order_data_column_container">
                                 <div class="order_data_column">
                                     <ul class="nav nav-tabs">
-                                      <li class="active"><a data-toggle="tab" href="#license"><i class="glyphicon glyphicon-lock"></i> License</a></li>
+                                        <li class="active"><a data-toggle="tab" href="#license"><i class="glyphicon glyphicon-lock"></i> License</a></li>
+
                                       <li><a data-toggle="tab" href="#user_info"><i class="glyphicon glyphicon-user"></i> User</a></li>
-                                      <li><a data-toggle="tab" href="#devices_info"><i class="glyphicon glyphicon-modal-window"></i> Devices & Domains</a></li>
-                                      <li><a data-toggle="tab" href="#company"><i class="glyphicon glyphicon-globe"></i> Company</a></li>
-                                      <li><a data-toggle="tab" href="#transaction"><i class="glyphicon glyphicon-shopping-cart"></i> Transaction</a></li>
-                                      <li><a data-toggle="tab" href="#product_info"><i class="glyphicon glyphicon-gift"></i> Product</a></li>
+
+                                        <?php
+                                            if (isset($_GET['edit_record'])) :?>
+                                                <li class="<?php echo $class_hide; ?>"><a data-toggle="tab" href="#devices_info"><i class="glyphicon glyphicon-modal-window"></i> Devices & Domains</a></li>
+                                        <?php endif; ?>
+
+                                        <li><a data-toggle="tab" href="#company"><i class="glyphicon glyphicon-globe"></i> Company</a></li>
+
+                                        <li><a data-toggle="tab" href="#transaction"><i class="glyphicon glyphicon-shopping-cart"></i> Transaction</a></li>
+
+                                        <li><a data-toggle="tab" href="#product_info"><i class="glyphicon glyphicon-gift"></i> Product</a></li>
+
+                                        <?php
+                                            if (isset($_GET['edit_record'])) :?>
+                                                <li><a data-toggle="tab" href="#license_info"><i class="glyphicon glyphicon-export"></i> Export</a></li>
+                                            <?php endif;?>
                                     </ul>
 
-                                    <form method="post" class="form-inline" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+                                    <form method="post" class="form-inline slm_license_form" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
 
                                         <?php
 
@@ -230,7 +264,6 @@ function wp_lic_mgr_add_licenses_menu() {
 
                                                     <div class="form-field form-field-wide col-md-6">
                                                         <label for="email">License type</label>
-                                                        <!-- <input name="lic_type" type="text" id="lic_type" value="<?php //echo $lic_type; ?>" /> -->
                                                         <select name="lic_type" class="form-control">
                                                             <option value="pending" <?php if ($lic_type == 'subscription') { echo 'selected="selected"';} ?> >Subscription</option>
                                                             <option value="active" <?php if ($lic_type == 'lifetime') {  echo 'selected="selected"'; } ?> >Life-time</option>
@@ -239,7 +272,6 @@ function wp_lic_mgr_add_licenses_menu() {
                                                         <br/>type of license: subscription base or lifetime
                                                     </div>
                                                     <div class="clear"></div>
-
                                                 </div>
                                             </div>
 
@@ -248,13 +280,13 @@ function wp_lic_mgr_add_licenses_menu() {
                                                     <h3>User Information</h3>
                                                     <div class="form-field form-field-wide col-half">
                                                         <label for="first_name">First Name</label>
-                                                        <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" size="20" required />
+                                                        <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" size="20" class="required" required />
                                                         <br/>License user's first name
                                                     </div>
 
                                                    <div class="form-field form-field-wide col-half">
                                                         <label for="last_name"> Last Name</label>
-                                                        <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" size="20" required  />
+                                                        <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" size="20"  class="required" required  />
                                                         <br/>License user's last name
                                                     </div>
                                                     <div class="clear"></div>
@@ -268,84 +300,83 @@ function wp_lic_mgr_add_licenses_menu() {
 
                                                     <div class="form-field form-field-wide">
                                                         <label for="email">Email Address</label>
-                                                        <input name="email" type="text" id="email" value="<?php echo $email; ?>" size="30" required  />
+                                                        <input name="email" type="text" id="email" value="<?php echo $email; ?>" size="30" class="required"  required  />
                                                         <br/>License user's email address
                                                     </div>
                                                     <div class="clear"></div>
                                                 </div>
                                             </div>
-
                                             <div id="devices_info" class="tab-pane fade">
-                                                <div class="postbox devices_info col">
-                                                    <h3>Allowed Activations</h3>
-                                                    <div class="form-field form-field-wide col-half">
-                                                        <label for="max_allowed_domains">Maximum Allowed Domains</label>
-                                                        <input name="max_allowed_domains" type="text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" size="5" /><br/>Number of domains/installs in which this license can be used
+                                                        <div class="postbox devices_info col">
+                                                            <h3>Allowed Activations</h3>
+                                                            <div class="form-field form-field-wide col-half">
+                                                                <label for="max_allowed_domains">Maximum Allowed Domains</label>
+                                                                <input name="max_allowed_domains" type="text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" size="5" /><br/>Number of domains/installs in which this license can be used
 
-                                                        <div class="table">
+                                                                <div class="table">
 
-                                                            <label class="form-field form-field-wide">Registered Domains</label>
+                                                                    <label class="form-field form-field-wide">Registered Domains</label>
 
-                                                            <?php
-                                                                if($id != '') {
-                                                                    global $wpdb;
-                                                                    $reg_table = SLM_TBL_LIC_DOMAIN;
-                                                                    $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
-                                                                    $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
-                                                                }
-                                                                if(count($reg_domains) > 0) : ?>
-                                                                    <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                                                    <div class="devices-info">
-                                                                        <table cellpadding="0" cellspacing="0" class="table">
-                                                                            <?php
-                                                                                $count = 0;
-                                                                                foreach ($reg_domains as $reg_domain) :?>
-                                                                                    <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                        <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
-                                                                                        <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
-                                                                                    </tr>
-                                                                            <?php $count++; ?>
-                                                                            <?php endforeach; ?>
-                                                                        </table>
-                                                                    </div>
-                                                               <?php else: ?>
-                                                                   <?php echo "Not Registered Yet.";?>
-                                                                <?php endif; ?>
+                                                                    <?php
+                                                                        if($id != '') {
+                                                                            global $wpdb;
+                                                                            $reg_table = SLM_TBL_LIC_DOMAIN;
+                                                                            $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
+                                                                            $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
+                                                                        }
+                                                                        if(count($reg_domains) > 0) : ?>
+                                                                            <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
+                                                                            <div class="devices-info">
+                                                                                <table cellpadding="0" cellspacing="0" class="table">
+                                                                                    <?php
+                                                                                        $count = 0;
+                                                                                        foreach ($reg_domains as $reg_domain) :?>
+                                                                                            <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
+                                                                                                <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
+                                                                                                <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
+                                                                                            </tr>
+                                                                                    <?php $count++; ?>
+                                                                                    <?php endforeach; ?>
+                                                                                </table>
+                                                                            </div>
+                                                                       <?php else: ?>
+                                                                           <?php echo "Not Registered Yet.";?>
+                                                                        <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-field form-field-wide col-half">
+                                                                <label for="max_allowed_devices">Maximum Allowed Devices</label>
+                                                                <input name="max_allowed_devices" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" size="5" /><br/>Number of domains/installs in which this license can be used <br><br>
+                                                                    <label for="order_date">Registered Devices</label>
+                                                                    <?php
+                                                                        if ($id != '') {
+                                                                            global $wpdb;
+                                                                            $devices_table  = SLM_TBL_LIC_DEVICES;
+                                                                            $sql_prep2      = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
+                                                                            $reg_devices    = $wpdb->get_results($sql_prep2, OBJECT);
+                                                                        }
+                                                                        if (count($reg_devices) > 0): ?>
+                                                                            <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
+                                                                            <div class="devices-info">
+                                                                                <table cellpadding="0" cellspacing="0" class="table">
+                                                                                    <?php
+                                                                                        $count_ = 0;
+                                                                                        foreach ($reg_devices as $reg_device): ?>
+                                                                                            <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
+                                                                                                <td height="5"><?php echo $reg_device->registered_devices; ?></td>
+                                                                                                <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
+                                                                                            </tr>
+                                                                                    <?php $count_++; ?>
+                                                                                    <?php endforeach; ?>
+                                                                                </table>
+                                                                            </div>
+                                                                        <?php else: ?>
+                                                                           <?php echo "Not Registered Yet."; ?>
+                                                                        <?php endif; ?>
+                                                            </div>
+                                                            <div class="clear"></div>
                                                         </div>
-                                                    </div>
-                                                    <div class="form-field form-field-wide col-half">
-                                                        <label for="max_allowed_devices">Maximum Allowed Devices</label>
-                                                        <input name="max_allowed_devices" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" size="5" /><br/>Number of domains/installs in which this license can be used <br><br>
-                                                            <label for="order_date">Registered Devices</label>
-                                                            <?php
-                                                                if ($id != '') {
-                                                                    global $wpdb;
-                                                                    $devices_table  = SLM_TBL_LIC_DEVICES;
-                                                                    $sql_prep2      = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
-                                                                    $reg_devices    = $wpdb->get_results($sql_prep2, OBJECT);
-                                                                }
-                                                                if (count($reg_devices) > 0): ?>
-                                                                    <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                                                    <div class="devices-info">
-                                                                        <table cellpadding="0" cellspacing="0" class="table">
-                                                                            <?php
-                                                                                $count_ = 0;
-                                                                                foreach ($reg_devices as $reg_device): ?>
-                                                                                    <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                        <td height="5"><?php echo $reg_device->registered_devices; ?></td>
-                                                                                        <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
-                                                                                    </tr>
-                                                                            <?php $count_++; ?>
-                                                                            <?php endforeach; ?>
-                                                                        </table>
-                                                                    </div>
-                                                                <?php else: ?>
-                                                                   <?php echo "Not Registered Yet."; ?>
-                                                                <?php endif; ?>
-                                                    </div>
-                                                    <div class="clear"></div>
-                                                </div>
-                                                <div class="clear"></div>
+                                                        <div class="clear"></div>
                                             </div>
 
                                             <div id="company" class="tab-pane fade">
@@ -423,6 +454,44 @@ function wp_lic_mgr_add_licenses_menu() {
                                                 <div class="clear"></div>
                                             </div>
 
+                                            <?php
+                                            if (isset($_GET['edit_record'])) :?>
+                                                <div id="license_info" class="tab-pane fade">
+                                                    <div class="postbox license_info col">
+                                                        <div class="license_export_info" style="min-width: 100%; max-width: 900px">
+                                                        <?php
+                                                            $api_params = array(
+                                                            'slm_action'    =>  'slm_check',
+                                                            'secret_key'    =>  SLM_Helper_Class::slm_get_option('lic_verification_secret'),
+                                                            'license_key'   =>  $license_key,
+                                                            );
+                                                            // Send query to the license manager server
+                                                            $response = wp_remote_get(add_query_arg($api_params, SLM_SITE_URL), array('timeout' => 20, 'sslverify' => false));
+                                                            echo '<pre>';
+
+
+                                                            $data = $response['body'];
+
+                                                            // parsing json
+                                                            $arr = json_decode($data, true);
+
+                                                            // removing the value
+                                                            unset($arr['result']);
+                                                            unset($arr['code']);
+                                                            unset($arr['message']);
+
+                                                            // and back to json
+                                                            $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+                                                            echo $response;
+                                                            echo '</pre>';
+                                                        ?>
+                                                        <!-- <button class="button-primary">Export License</button> -->
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            <?php endif; ?>
+
                                             <div class="output-msg">
                                                 <?php
                                                     $data = array('row_id' => $id, 'key' => $license_key);
@@ -457,26 +526,25 @@ function wp_lic_mgr_add_licenses_menu() {
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery('.del').click(function() {
-            var $this = this;
             jQuery('#reg_del_msg').html('Loading ...');
-            jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
-                if (data == 'success') {
-                    jQuery('#reg_del_msg').html('Deleted');
-                    jQuery($this).parent().parent().remove();
-                }
-                else {
-                    jQuery('#reg_del_msg').html('Failed');
-                }
-            });
+
+            jQuery.get('<?php echo get_bloginfo("wpurl"); ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
+                    if (data == 'success') {
+                        jQuery('#reg_del_msg').html('Deleted');
+                        jQuery(this).parent().parent().remove();
+                    }
+                    else {
+                        jQuery('#reg_del_msg').html('Failed');
+                    }
+                });
         });
 
         jQuery('.del_device').click(function() {
-            var $this = this;
             jQuery('#reg_device_del_msg').html('Loading ...');
-            jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_devices&id=' + jQuery(this).attr('id'), function(data) {
+            jQuery.get('<?php echo get_bloginfo("wpurl"); ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_devices&id=' + jQuery(this).attr('id'), function(data) {
                 if (data == 'success') {
                     jQuery('#reg_device_del_msg').html('Deleted');
-                    jQuery($this).parent().parent().remove();
+                    jQuery(this).parent().parent().remove();
                 }
                 else {
                     jQuery('#reg_device_del_msg').html('Failed');

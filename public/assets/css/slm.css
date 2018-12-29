@@ -1,12 +1,27 @@
 body.license-manager_page_wp_lic_mgr_addedit {
-    background: #f1f1f1 url(../images/bg.png) scroll repeat 0 0;
+    background: #f1f1f1;
+    background-color: #f1f1f1;
 }
 .logo {
     text-align: center;
     margin-bottom: 32px;
 }
+.required.invalid {
+    border: 1px solid red !important;
+}
+#order_data .invalid{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    margin: 5px 0;
+}
 .slm-container  {
-    max-width: 768px;
+    max-width: 847px;
     margin: 0 auto;
     float: none;
 }

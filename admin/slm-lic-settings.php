@@ -42,6 +42,7 @@ function wp_lic_mgr_general_settings() {
             'slm_woo' => isset($_POST['slm_woo']) ? '1':'',
             // 'slm_subscriptio' => isset($_POST['slm_subscriptio']) ? '1':'',
             'slm_wpestores' => isset($_POST['slm_wpestores']) ? '1':'',
+            'slm_dl_manager' => isset($_POST['slm_dl_manager']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
 
@@ -119,7 +120,10 @@ function wp_lic_mgr_general_settings() {
 
 
                 </table>
-            </div></div>
+            </div>
+
+
+        </div>
 
         <div class="postbox">
             <h3 class="hndle"><label for="title">Third Party Support</label></h3>
@@ -133,13 +137,13 @@ function wp_lic_mgr_general_settings() {
                             <br />A fully customizable, open source eCommerce platform built for WordPress.</td>
                     </tr>
 
-                    <!-- <tr valign="top">
-                        <th scope="row">Subscriptio Support</th>
+                    <tr valign="top">
+                        <th scope="row">Download Manager Support</th>
                         <td>
-                            <input name="slm_subscriptio" type="checkbox"<?php //if ($options['slm_subscriptio'] != '') echo ' checked="checked"'; ?> value="1"/>
-
-                            <br />Subscriptio is a WooCommerce extension that allows you to sell subscriptions. Subscriptio adds recurring payments capability to WooCommerce so you can sell products like magazine subscriptions, online memberships, e-learning packages and any other tangible or intangible products. <a href="https://codecanyon.net/item/subscriptio-woocommerce-subscriptions/8754068">Learn More</a></td>
-                    </tr -->
+                            <input name="slm_dl_manager" type="checkbox"<?php if ($options['slm_dl_manager'] != '') echo ' checked="checked"'; ?> value="1"/> <br>
+                            Download Manager Plugin – Adds a simple download manager to your WordPress blog.
+                            </td>
+                    </tr>
                     <tr valign="top">
                         <th scope="row">WP eStores Support</th>
                         <td>
@@ -148,8 +152,6 @@ function wp_lic_mgr_general_settings() {
 
                             </td>
                     </tr>
-
-
 
                 </table>
             </div></div>
