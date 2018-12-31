@@ -32,9 +32,9 @@ This plugin is very useful for creating a license server and doing the following
 1. Click Install Now and then activate the plugin
 
 ## Compatibility
-- Woocommerce
-- WP eStore
-- WP Download Manager
+- [-] Woocommerce
+- [-] WP eStore
+- [-] WP Download Manager
 - [ ] WIP: Woocommerce Subscriptions
 
 ## Screenshots

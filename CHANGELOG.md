@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 - added: export functionality for license
 - added: form validation when creating a new license in wp admin
 - fixes: cleaned code and improved ui
+- added: license key is saved inside wc order as a custom field value
+- added: license key added as a click-able note
+- fixed: email notification when order is completed
+- added: my subscriptions table to thank you order page
+- fixed: license generation for wp-stores
 
 
 #### 4.5

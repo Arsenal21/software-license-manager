@@ -1,7 +1,7 @@
 <?php
 /**
  * Runs on Uninstall of Software License Manager
- *
+ * https://businessbloomer.com/woocommerce-easily-get-order-info-total-items-etc-from-order-object/
  * @package   Software License Manager
  * @author    Michel Velis
  * @license   GPL-2.0+
@@ -12,7 +12,6 @@
 if (!defined('ABSPATH')) {
 	exit;
 }
-
 
 global $post, $woocommerce, $product;
 
@@ -35,12 +34,12 @@ if ( ! function_exists( 'write_log' ) ) {
 	}
 }
 
-//add_action('woocommerce_email_after_order_table', 'wc_slm_email_content', 10, 2 );
+add_action( 'woocommerce_order_status_completed', 'slm_order_completed', 1);
+add_action( 'woocommerce_thankyou', 'slm_show_msg', 80 );
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
 
 function wc_slm_on_complete_purchase($order_id) {
 	//write_log('loading wc_slm_on_complete_purchase');
-
 	if (WOO_SLM_API_URL != '' && WOO_SLM_API_SECRET != '') {
 		wc_slm_create_license_keys($order_id);
 	}
@@ -142,7 +141,7 @@ function wc_slm_create_license_keys($order_id) {
 				    $line_total_tax 	= $item_data['total_tax'];
 				    // $post_object 		= get_post($variation_id);
 
-				    $amount_of_licenses 		= wc_slm_get_sites_allowed($product_id);;
+				    $amount_of_licenses 		= wc_slm_get_sites_allowed($product_id);
 				    $_license_current_version 	= get_post_meta( $product_id, '_license_current_version', true );
 				    $amount_of_licenses_devices = wc_slm_get_devices_allowed($product_id);
 				    $current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
@@ -202,12 +201,6 @@ function wc_slm_create_license_keys($order_id) {
 	wc_slm_assign_licenses($order_id, $licenses);
 }
 
-/**
- * Get generated license key
- *
- * @since 1.0.0
- * @return mixed
- */
 function wc_slm_get_license_key($response) {
 	// Check for error in the response
 	if (is_wp_error($response)) {
@@ -224,13 +217,6 @@ function wc_slm_get_license_key($response) {
 	return $license_data->key;
 }
 
-/**
- * Leave payment not for license creation
- *
- * @since 1.0.0
- * @return void
- */
-
 function wc_slm_get_license_id($license){
 	global $wpdb;
 	$license_id = $wpdb->get_row("SELECT ID, license_key FROM ". $wpdb->prefix . "lic_key_tbl" . " WHERE license_key = '".$license."' ORDER BY id DESC LIMIT 0,1");
@@ -244,6 +230,8 @@ function wc_slm_payment_note($order_id, $licenses) {
 		foreach ($licenses as $license) {
 			$license_key = $license['key'];
 			$message .= '<br />' . $license['item'] . ': <a href="'. get_admin_url() . 'admin.php?page=wp_lic_mgr_addedit&edit_record=' . wc_slm_get_license_id($license_key).'">' . $license_key . '</a>';
+			add_post_meta($order_id, 'slm_wc_license_order_key', $license_key);
+			//write_log($license_key);
 		}
 	}
 	else {
@@ -254,21 +242,12 @@ function wc_slm_payment_note($order_id, $licenses) {
 	$int = wc_insert_payment_note($order_id, $message);
 }
 
-/**
- * Assign generated license keys to payments
-*/
 function wc_slm_assign_licenses($order_id, $licenses) {
 	if (count($licenses) != 0) {
-		update_post_meta($order_id, '_wc_slm_payment_licenses', $licenses);
+		add_post_meta($order_id, '_wc_slm_payment_licenses', $licenses);
 	}
 }
 
-/**
- * Get sites allowed from download.
- *
- * @since  1.0.0
- * @return mixed
- */
 function wc_slm_get_sites_allowed($product_id) {
 	$wc_slm_sites_allowed = absint(get_post_meta($product_id, '_domain_licenses', true));
 	if (empty($wc_slm_sites_allowed)) {
@@ -301,12 +280,6 @@ function wc_slm_get_licenses_qty($product_id) {
 	return $amount_of_licenses;
 }
 
-/**
- * Get sites allowed from download.
- *
- * @since  1.0.0
- * @return mixed
- */
 function wc_slm_get_licensing_renewal_period($product_id) {
 	$_license_renewal_period = absint(get_post_meta($product_id, '_license_renewal_period', true));
 	if (empty($_license_renewal_period)) {
@@ -315,12 +288,6 @@ function wc_slm_get_licensing_renewal_period($product_id) {
 	return $_license_renewal_period;
 }
 
-/**
- * Check if licensing for a certain download is enabled
- *
- * @since  1.0.0
- * @return bool
- */
 function wc_slm_is_licensing_enabled($download_id) {
 	$licensing_enabled = absint(get_post_meta($download_id, '_wc_slm_licensing_enabled', true));
 	// Set defaults
@@ -341,48 +308,73 @@ function wc_get_payment_transaction_id($order_id) {
 	return get_post_meta($order_id, '_transaction_id', true);
 }
 
-function wc_slm_email_content($order, $is_admin_email) {
+function slm_order_completed( $order_id ) {
+    $order_id 		=  new WC_Order( $order_id );
+	$purchase_id_ 	= $order_id->get_id();
+	$order 			= wc_get_order( $order_id );
+	$items 			= $order->get_items();
+	$message 		= 'ddd'; //get license
 
-	$order = new WC_Order($order_id);
-	$order_id = $order->get_id();
-	get_post_meta( $product_id, '_license_current_version', true );
+	$user_id 									= $order_id->get_user_id();
+	$user_info 									= get_userdata($user_id);
+	$get_user_meta 								= get_user_meta($user_id);
+	$payment_meta['user_info']['email'] 	 	= $get_user_meta['billing_email'][0];
 
-	write_log('-- wc_slm_email_content -- ');
-	write_log('-- wc_slm_email_content -- ' . $order );
+    $to_email = $payment_meta['user_info']['email'];
+    $headers = 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
+    wp_mail($to_email, 'License details', $message, $headers );
 
-	if ($order->post->post_status == 'wc-completed') {
-		$output = '';
+	// The text for the note
+	$note = __("Order confirmation email sent to: <a href='mailto:". $to_email ."'>" . $to_email . "</a>" );
+	// Add the note
+	$order->add_order_note( $note );
+	// Save the data
+	$order->save();
+	//write_log($to_email . 'License details'. $message . $headers );
+}
 
-		// Check if licenses were generated
-		$licenses = get_post_meta($product_id, '_wc_slm_payment_licenses', true);
+function slm_show_msg( $order_id ) {
+	$order_id 		=  new WC_Order( $order_id );
+	$purchase_id_ 	= $order_id->get_id();
+	$order 			= wc_get_order( $order_id );
+	$items 			= $order->get_items();
 
-		if ($licenses && count($licenses) != 0) {
-			$output = '<h3>' . __('Your Licenses', 'wc-slm') . ':</h3><table><tr><th class="td">' . __('Item', 'wc-slm') . '</th><th class="td">' . __('License', 'wc-slm') . '</th><th class="td">' . __('Expire Date', 'wc-slm') . '</th></tr>';
-			foreach ($licenses as $license) {
-				$output .= '<tr>';
-				if (isset($license['item']) && isset($license['key'])) {
+	foreach ( $items as $item ) {
+	    $product_name 			= $item->get_name();
+	    $product_id 			= $item->get_product_id();
+	    $product_variation_id 	= $item->get_variation_id();
+	    $amount_of_licenses     = wc_slm_get_sites_allowed($product_id);
 
-					if ($output) {
-						$output .= '<br />';
-					}
-					$output .= '<td class="td">' . $license['item'] . '</td>';
-					$output .= '<td class="td">' . $license['key'] . '</td>';
-				}
-				else {
-					// $output .= 'No item and key assigned';
-				}
+	    // is a licensed product
+	    //var_dump(get_post_meta($product_id));
 
-				if (isset($license['expires'])) {
-                    $output .= '<td class="td">' . $license['expires'] . '</td>';
-				}
-				$output .= '</tr>';
-			}
-			$output .= '</table>';
+	    if ($amount_of_licenses) {
+
+			echo '<div class="woocommerce-order-details">
+				<h2 class="woocommerce-order-details__title">My subscriptions</h2>
+				<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
+
+					<thead>
+						<tr>
+							<th class="woocommerce-table__product-name product-name">My Account</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr class="woocommerce-table__line-item order_item">
+
+							<td class="woocommerce-table__product-name product-name" >
+								You can see and manage your licenses inside your account. <a href="/my-account/my-licenses/">Manage Licenses</a></td>
+
+						</tr>
+					</tbody>
+
+				</table>
+			</div>';
+
 		}
-		else {
-			// $output .= 'No License Generatred';
-		}
 
-		echo $output;
+
+
 	}
 }

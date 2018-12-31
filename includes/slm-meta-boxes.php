@@ -8,10 +8,8 @@
 add_filter('woocommerce_product_data_tabs', 'wc_slm_add_tab' );
 add_action('woocommerce_process_product_meta_simple', 'wc_slm_save_data');
 add_action('woocommerce_product_data_panels', 'wc_slm_data_panel');
-
-
 /**
- * Add 'Gift Card' product option
+ * Add 'License' product option
  */
 function add_wc_slm_data_tab_enabled_product_option( $product_type_options ) {
     $product_type_options['wc_slm_data_tab_enabled'] = array(
@@ -27,7 +25,6 @@ add_filter( 'product_type_options', 'add_wc_slm_data_tab_enabled_product_option'
 
 
 /** CSS To Add Custom tab Icon */
-
 function wcpp_custom_style() {
     ?><style>
        #woocommerce-product-data ul.wc-tabs li.wc_slm_data_tab_options a:before { font-family: Dashicons; content: "\f160"; }

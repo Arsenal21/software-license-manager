@@ -107,7 +107,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
 
 
     $fields = array();
-    $fields['license_key'] = uniqid($lic_key_prefix);
+    $fields['license_key'] = $license_key = strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4,8), true) . time() )));;
     $fields['lic_status'] = 'pending';
     $fields['first_name'] = $payment_data['first_name'];
     $fields['last_name'] = $payment_data['last_name'];

@@ -110,6 +110,7 @@ class SLM_API_Listener {
      * 2) secret_key
      * 3) license_key
      * 4) registered_domain (optional)
+     * 5) registered_devices (optional)
      */
 
     function activation_api_listener() {
