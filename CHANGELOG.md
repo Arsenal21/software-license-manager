@@ -1,6 +1,12 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.7 - WIP
+- The product quantity of WP eStore product is taken into account when creating a new license key.
+- Added a new action hook in the listener API (can be used to override the API query).
+
+
+
 #### 4.6
 - added: new error codes to api listener
 - added: export functionality for license

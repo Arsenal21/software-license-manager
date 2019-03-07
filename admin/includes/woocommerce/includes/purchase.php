@@ -34,8 +34,8 @@ if ( ! function_exists( 'write_log' ) ) {
 	}
 }
 
-add_action( 'woocommerce_order_status_completed', 'slm_order_completed', 1);
-add_action( 'woocommerce_thankyou', 'slm_show_msg', 80 );
+add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
+add_action('woocommerce_thankyou', 'slm_show_msg', 80 );
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
 
 function wc_slm_on_complete_purchase($order_id) {
@@ -349,32 +349,22 @@ function slm_show_msg( $order_id ) {
 	    //var_dump(get_post_meta($product_id));
 
 	    if ($amount_of_licenses) {
-
 			echo '<div class="woocommerce-order-details">
 				<h2 class="woocommerce-order-details__title">My subscriptions</h2>
 				<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
-
 					<thead>
 						<tr>
 							<th class="woocommerce-table__product-name product-name">My Account</th>
 						</tr>
 					</thead>
-
 					<tbody>
 						<tr class="woocommerce-table__line-item order_item">
-
 							<td class="woocommerce-table__product-name product-name" >
 								You can see and manage your licenses inside your account. <a href="/my-account/my-licenses/">Manage Licenses</a></td>
-
 						</tr>
 					</tbody>
-
 				</table>
 			</div>';
-
 		}
-
-
-
 	}
 }

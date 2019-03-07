@@ -157,3 +157,29 @@ function slm_del_reg_devices() {
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }
+
+/**
+ * The permalink structure definition for API calls.
+ */
+
+// WIP
+//add_action('init', 'slm_add_api_endpoint_rules', 10, 0);
+
+function slm_add_api_endpoint_rules() {
+
+    add_rewrite_rule( '^license/api/slm_action/check/([^/]*)/?',
+        'index.php?slm_action=slm_check&secret_key=$matches[1]&license_key=$matches[2]',
+        'top' );
+
+    add_rewrite_rule(
+        '^license/api/([^/]*)/?',
+        'index.php?pagename=$matches[1]&param=foo',
+        'top'
+    );
+
+    // If this was the first time, flush rules
+    if ( get_option( 'slm_rewrite_rules' ) != SLM_REWRITE_VERSION ) {
+        flush_rewrite_rules();
+        update_option( 'slm_rewrite_rules', SLM_REWRITE_VERSION );
+    }
+}

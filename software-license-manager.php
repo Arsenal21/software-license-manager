@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.6
+Version: 4.7
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -16,18 +16,20 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',       '4.6');
-define('SLM_DB_VERSION',    '2.2');
-define('SLM_FOLDER',        dirname(plugin_basename(__FILE__)));
-define('SLM_URL',           plugins_url('' ,__FILE__));
-define('SLM_ASSETS_URL',    plugins_url('' ,__FILE__) . '/public/assets/');
-define('SLM_PATH',          plugin_dir_path(__FILE__));
-define('SLM_LIB',           SLM_PATH . 'includes/');
-define('SLM_ADMIN',         SLM_PATH . 'admin/');
-define('SLM_ADMIN_ADDONS',  SLM_PATH . 'admin/includes/');
-define('SLM_PUBLIC',        SLM_PATH . 'public/');
-define('SLM_SITE_HOME_URL', home_url());
-define('SLM_SITE_URL',      site_url());
+define('SLM_VERSION',           '4.7');
+define('SLM_DB_VERSION',        '2.4');
+define('SLM_REWRITE_VERSION',   '1.0.10');
+define('SLM_FOLDER',            dirname(plugin_basename(__FILE__)));
+define('SLM_URL',               plugins_url('' ,__FILE__));
+define('SLM_ASSETS_URL',        plugins_url('' ,__FILE__) . '/public/assets/');
+define('SLM_PATH',              plugin_dir_path(__FILE__));
+define('SLM_LIB',               SLM_PATH . 'includes/');
+define('SLM_ADMIN',             SLM_PATH . 'admin/');
+define('SLM_ADMIN_ADDONS',      SLM_PATH . 'admin/includes/');
+define('SLM_PUBLIC',            SLM_PATH . 'public/');
+define('SLM_TEAMPLATES',        SLM_PATH . 'templates/');
+define('SLM_SITE_HOME_URL',     home_url());
+define('SLM_SITE_URL',          site_url());
 
 if( file_exists( SLM_LIB .  'slm_plugin_core.php') ) {
     require_once( SLM_LIB . 'slm_plugin_core.php');
@@ -35,8 +37,4 @@ if( file_exists( SLM_LIB .  'slm_plugin_core.php') ) {
 
 // check for updates from github
 require_once SLM_ADMIN . 'update-checker/plugin-update-checker.php';
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-    'https://github.com/michelve/software-license-manager/',
-    __FILE__,
-    'software-license-manager'
-);
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker('https://github.com/michelve/software-license-manager/',__FILE__,'software-license-manager');

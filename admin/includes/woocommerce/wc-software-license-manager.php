@@ -24,6 +24,7 @@ if (!class_exists('WOO_SLM')) {
 			define('KEY_API_PREFIX',  	   SLM_Helper_Class::slm_get_option('lic_prefix'));
 		}
 		private function includes() {
+			require_once SLM_ADMIN_ADDONS . 'emails/class.php';
 			require_once SLM_ADMIN_ADDONS . 'woocommerce/includes/helper.php';
 			require_once SLM_ADMIN_ADDONS . 'woocommerce/includes/purchase.php';
 		}
