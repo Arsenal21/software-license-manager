@@ -14,6 +14,10 @@ class SLM_API_Listener {
     function __construct() {
 
         if (isset($_REQUEST['slm_action']) && isset($_REQUEST['secret_key'])) {
+            
+            //Trigger an action hook
+            do_action('slm_api_listener_init');  
+            
             //This is an API query for the license manager. Handle the query.
             $this->creation_api_listener();
             $this->activation_api_listener();
