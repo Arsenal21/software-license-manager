@@ -22,8 +22,8 @@ function slm_processing_notification( $order_id ) {
     // load the mailer class
     $mailer = WC()->mailer();
 
-    $recipient = 'mvelis90@gmail.com';
-    $subject = __('Some Subject', 'iconicwp');
+    $recipient =  $order->billing_email;
+    $subject = __('Order Confirmation', 'slm');
     $content = slm_get_processing_notification_content( $order, $subject, $mailer );
     $headers = "Content-Type: text/html\r\n";
 
