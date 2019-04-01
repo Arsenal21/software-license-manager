@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.7
+Version: 4.8
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -16,9 +16,9 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',           '4.7');
-define('SLM_DB_VERSION',        '2.4');
-define('SLM_REWRITE_VERSION',   '1.0.10');
+define('SLM_VERSION',           '4.8');
+define('SLM_DB_VERSION',        '2.5');
+define('SLM_REWRITE_VERSION',   '1.0.11');
 define('SLM_FOLDER',            dirname(plugin_basename(__FILE__)));
 define('SLM_URL',               plugins_url('' ,__FILE__));
 define('SLM_ASSETS_URL',        plugins_url('' ,__FILE__) . '/public/assets/');
