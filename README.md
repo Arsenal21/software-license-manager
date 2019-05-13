@@ -35,7 +35,7 @@ This plugin is very useful for creating a license server and doing the following
 - [-] Woocommerce
 - [-] WP eStore
 - [-] WP Download Manager
-- [ ] WIP: Woocommerce Subscriptions
+
 
 ## Screenshots
 <img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/images/Screen-Shot-0.png?raw=true" width=800 alt="Software License Manager" />

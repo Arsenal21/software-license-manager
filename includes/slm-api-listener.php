@@ -50,7 +50,7 @@ class SLM_API_Listener {
                 $fields['license_key']  = strip_tags($_REQUEST['license_key']); //Use the key you pass via the request
             }
             else{
-                $fields['license_key']  = strtoupper($lic_key_prefix . hyphenate(md5(uniqid(rand(4,8), true) . time() )));
+                $fields['license_key']  = slm_get_license($lic_key_prefix);
             }
 
             $fields['lic_status']       = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
@@ -269,17 +269,17 @@ class SLM_API_Listener {
                     }
                     else if ($delete == 0) {
                         $args = (array(
-                            'result' => 'error',
-                            'message' => 'The license key on this domain is already inactive',
-                            'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE,
-                            'device' => $reg_devices->registered_devices));
+                            'result'            => 'error',
+                            'message'           => 'The license key on this domain is already inactive',
+                            'error_code'        => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE,
+                            'registered_domain' => $registered_domain->registered_domain));
                         SLM_API_Utility::output_api_response($args);
                     }
                     else {
                         $args = (array(
-                            'result' => 'success',
-                            'error_code' => SLM_Error_Codes::KEY_DEACTIVATE_DOMAIN_SUCCESS,
-                            'message' => 'The license key has been deactivated for this domain'));
+                            'result'        => 'success',
+                            'error_code'    => SLM_Error_Codes::KEY_DEACTIVATE_DOMAIN_SUCCESS,
+                            'message'       => 'The license key has been deactivated for this domain'));
                         SLM_API_Utility::output_api_response($args);
                     }
                 }

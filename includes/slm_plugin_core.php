@@ -8,35 +8,9 @@
  * @link      http://epikly.com
  */
 
-//Defines
-global $wpdb, $slm_debug_logger;
 
-define('SLM_TBL_LICENSE_KEYS',  $wpdb->prefix . "lic_key_tbl");
-define('SLM_TBL_LIC_DOMAIN',    $wpdb->prefix . "lic_reg_domain_tbl");
-define('SLM_TBL_LIC_DEVICES',   $wpdb->prefix . "lic_reg_devices_tbl");
-define('SLM_MANAGEMENT_PERMISSION', 'manage_options');
-define('SLM_MAIN_MENU_SLUG', 'slm-main');
-define('SLM_MENU_ICON', 'dashicons-lock');
+require_once(SLM_LIB . 'slm-utility.php');
 
-// Helper Class
-class SLM_Helper_Class {
-    public static function slm_get_option($option){
-        $option_name    = '';
-        $slm_opts       = get_option('slm_plugin_options');
-        $option_name    = $slm_opts[$option];
-        return $option_name;
-    }
-    public static function write_log ( $log )  {
-        if ( true === WP_DEBUG ) {
-            if ( is_array( $log ) || is_object( $log ) ) {
-                error_log( print_r( $log, true ) );
-            } else {
-                error_log( $log );
-            }
-        }
-    }
-}
-$slm_helper = new SLM_Helper_Class();
 
 add_filter('extra_plugin_headers', 'add_extra_headers');
 add_filter('plugin_row_meta', 'filter_authors_row_meta', 1, 4);
@@ -58,12 +32,22 @@ function filter_authors_row_meta($plugin_meta, $plugin_file, $plugin_data, $stat
     return $plugin_meta;
 }
 
+//Includes
+require_once( SLM_LIB .'slm-debug-logger.php');
+require_once( SLM_LIB .'slm-error-codes.php');
+
+require_once( SLM_LIB .'slm-init-time-tasks.php');
+require_once( SLM_LIB .'slm-api-utility.php');
+require_once( SLM_LIB .'slm-api-listener.php');
+require_once( SLM_LIB .'slm-scripts.php');
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-software-license-manager-activator.php
  */
-function activate_software_license_manager() {
-    require_once SLM_LIB . 'class-software-license-manager-activator.php';
+function activate_software_license_manager()
+{
+    require_once SLM_LIB . 'class-slm-activator.php';
     $slm_activator->activate();
 }
 
@@ -71,22 +55,21 @@ function activate_software_license_manager() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-software-license-manager-deactivator.php
  */
-function deactivate_software_license_manager() {
-    require_once SLM_LIB . 'class-software-license-manager-deactivator.php';
+function deactivate_software_license_manager()
+{
+    require_once SLM_LIB . 'class-slm-deactivator.php';
     $slm_deactivator->deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_software_license_manager' );
-register_deactivation_hook( __FILE__, 'deactivate_software_license_manager' );
+function slm_get_license($lic_key_prefix)
+{
+    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 8), true) . time())));
+}
 
-//Includes
-require_once( SLM_LIB .'slm-debug-logger.php');
-require_once( SLM_LIB .'slm-error-codes.php');
-require_once( SLM_LIB .'slm-utility.php');
-require_once( SLM_LIB .'slm-init-time-tasks.php');
-require_once( SLM_LIB .'slm-api-utility.php');
-require_once( SLM_LIB .'slm-api-listener.php');
-require_once( SLM_LIB .'slm-scripts.php');
+register_activation_hook(__FILE__, 'activate_software_license_manager');
+register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
+
+// require_once SLM_LIB . 'admin-page-framework.php';
 
 // Front end-menu
 // TODO check for optional plugins
@@ -95,7 +78,7 @@ require_once( SLM_LIB .'slm-scripts.php');
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
     require_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
     // WordPress Plugin :: wc-software-license-manager
-    require_once( SLM_ADMIN  . 'includes/woocommerce/wc-software-license-manager.php');
+    require_once( SLM_WOO  . 'includes/wc-slm.php');
     // support for meta boxes
     require_once( SLM_LIB . 'slm-meta-boxes.php');
     require_once( SLM_LIB . 'slm-wc-order-post-type.php');
@@ -109,7 +92,7 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Cla
 //Include admin side only files
 if (is_admin()) {
     require_once( SLM_ADMIN . 'slm-admin-init.php');
-    require_once( SLM_ADMIN . 'includes/slm-list-table-class.php'); //Load our own WP List Table class
+    // require_once( SLM_ADMIN . 'includes/slm-list-table-class.php'); //Load our own WP List Table class
 }
 
 //Action hooks
@@ -117,6 +100,8 @@ add_action('init', 'slm_init_handler');
 add_action('plugins_loaded', 'slm_plugins_loaded_handler');
 add_action('wp_ajax_del_reistered_devices', 'slm_del_reg_devices');
 add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
+
+
 
 //Initialize debug logger
 $slm_debug_logger   = new SLM_Debug_Logger();
@@ -132,8 +117,8 @@ function slm_plugins_loaded_handler() {
     //Runs when plugins_loaded action gets fired
     if (is_admin()) {
         //Check if db update needed
-        if (get_option('wp_lic_mgr_db_version') != SLM_DB_VERSION) {
-             require_once( SLM_LIB . 'class-software-license-manager-slm-installer.php');
+        if (get_option('slm_db_version') != SLM_DB_VERSION) {
+             require_once( SLM_LIB . 'class-slm-installer.php');
             // TODO - $slm_activator->slm_db_install();
         }
     }
@@ -158,28 +143,14 @@ function slm_del_reg_devices() {
     exit(0);
 }
 
-/**
- * The permalink structure definition for API calls.
- */
+function wc_print_pretty($args) {
+    echo '<pre>';
+    print_r($args);
+    echo '</pre>';
+}
 
-// WIP
-//add_action('init', 'slm_add_api_endpoint_rules', 10, 0);
-
-function slm_add_api_endpoint_rules() {
-
-    add_rewrite_rule( '^license/api/slm_action/check/([^/]*)/?',
-        'index.php?slm_action=slm_check&secret_key=$matches[1]&license_key=$matches[2]',
-        'top' );
-
-    add_rewrite_rule(
-        '^license/api/([^/]*)/?',
-        'index.php?pagename=$matches[1]&param=foo',
-        'top'
-    );
-
-    // If this was the first time, flush rules
-    if ( get_option( 'slm_rewrite_rules' ) != SLM_REWRITE_VERSION ) {
-        flush_rewrite_rules();
-        update_option( 'slm_rewrite_rules', SLM_REWRITE_VERSION );
-    }
+function wc_log($msg) {
+    $log = ABSPATH . DIRECTORY_SEPARATOR . 'slm_log.txt';
+    file_put_contents($log, $msg . '
+', FILE_APPEND);
 }
