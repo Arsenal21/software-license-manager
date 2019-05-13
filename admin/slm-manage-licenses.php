@@ -1,49 +1,47 @@
 <?php
 
-function wp_lic_mgr_manage_licenses_menu() {
-    echo '<div class="wrap">';
-    echo '<h2>Manage Licenses</h2>';
-    echo '<div id="poststuff"><div id="post-body">';
+function slm_manage_licenses_menu()
+{
+
+    //include_once('slm-list-licenses-class.php');
+    $license_list = new SLM_List_Licenses();
+
+    if (isset($_REQUEST['action'])) { //Do list table form row action tasks
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete_license') { //Delete link was clicked for a row in list table
+            $license_list->delete_license_key(sanitize_text_field($_REQUEST['id']));
+        }
+    }
+
     ?>
-
-    <div class="postbox">
-        <h3 class="hndle"><label for="title">License Search</label></h3>
-        <div class="inside">
-            Search for a license by using email, name, key or transaction ID
-            <br /><br />
-            <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-                <input name="slm_search" type="text" size="40" value=""/>
-                <input type="submit" name="slm_search_btn" class="button" value="Search" />
-            </form>
-        </div></div>
+    <div class="wrap">
+        <h1>Overview - Manage licenses</h1>
+        <br>
+        <a href="admin.php?page=slm_manage_license" class="page-title-action aria-button-if-js" role="button" aria-expanded="false">Add New</a>
+        <hr class="wp-header-end">
 
 
-    <div class="postbox">
-        <h3 class="hndle"><label for="title">Software Licenses</label></h3>
-        <div class="inside">
-            <?php
-            include_once( 'slm-list-licenses-class.php' ); //For rendering the license List Table
-            $license_list = new WPLM_List_Licenses();
-            if (isset($_REQUEST['action'])) { //Do list table form row action tasks
-                if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete_license') { //Delete link was clicked for a row in list table
-                    $license_list->delete_license_key(sanitize_text_field($_REQUEST['id']));
-                }
-            }
-            //Fetch, prepare, sort, and filter our data...
-            $license_list->prepare_items();
-            //echo "put table of locked entries here"; 
-            ?>
-            <form id="tables-filter" method="get" onSubmit="return confirm('Are you sure you want to perform this bulk operation on the selected entries?');">
-                <!-- For plugins, we also need to ensure that the form posts back to our current page -->
-                <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
-                <!-- Now we can render the completed list table -->
-                <?php $license_list->display(); ?>
-            </form>
+        <div id="poststuff">
+            <div id="post-body" class="metabox-holder columns-1">
+                <div id="post-body-content">
+                    <div class="meta-box-sortables ui-sortable">
+                        <form method="post">
 
-        </div></div>
+                            <?php
+                            $license_list->prepare_items();
+                            $license_list->search_box(__('Search'), 'search-box-id');
+                            $license_list->views();
+                            $license_list->display(); ?>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br class="clear">
+            <div id="post-body" class="metabox-holder columns-1">
 
-    <?php
-    echo '</div></div>';
-    echo '</div>';
+            </div>
+        </div>
+    </div>
+<?php
+
+
 }
-

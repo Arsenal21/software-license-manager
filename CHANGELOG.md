@@ -1,6 +1,9 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.9
+- Removed hard coded email from woocommerce templates
+
 #### 4.8
 - Removed hard coded email from woocommerce templates
 

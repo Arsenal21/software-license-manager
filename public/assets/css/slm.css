@@ -1,4 +1,4 @@
-body.license-manager_page_wp_lic_mgr_addedit {
+body.slm_page_slm_manage_license {
     background: #f1f1f1;
     background-color: #f1f1f1;
 }
@@ -30,9 +30,8 @@ body.license-manager_page_wp_lic_mgr_addedit {
 }
 .slm-container #order_data {
     padding: 24px;
-    -webkit-box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
-    -moz-box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
-    box-shadow: 0px 0px 24px -5px rgba(0,0,0,0.38);
+    background: #fff;;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
 }
 .slm-container h1 {
     font-size: 32px;
@@ -70,7 +69,6 @@ body.license-manager_page_wp_lic_mgr_addedit {
     border-radius: 12px;
     width: 16px;
     height: 16px;
-    vertical-align: 1px;
     line-height: 8px;
     text-align: center;
 }
@@ -115,8 +113,14 @@ cursor: pointer;
 }
 .col-half {
     float: left;
-    width: 48%;
-    padding: 5px;
+    width: 50%;
+}
+.slm-container .tab-pane {
+    padding: 16px;
+    background: #f3faff;
+    border-radius: 4px;
+    border: 1px dashed #adf;
+    margin-top: 16px;
 }
 .col-4{
     float: left;
@@ -137,4 +141,26 @@ cursor: pointer;
 }
 .error.stripe-apple-pay-message {
     display: none;
+}
+
+.save_lic, .wp-core-ui .button.save_lic {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    height: auto;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #fff;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
 }

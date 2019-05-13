@@ -1,6 +1,6 @@
 <?php
 
-function wp_lic_mgr_admin_fnc_menu() {
+function slm_admin_tools_menu() {
 
     echo '<div class="wrap">';
     echo '<h2 class="imgh2"><img src="'. SLM_ASSETS_URL.'images/slm_logo.svg" alt="slm logo"> Software License Manager Admin Tools</h2>';
@@ -9,7 +9,7 @@ function wp_lic_mgr_admin_fnc_menu() {
     $slm_options = get_option('slm_plugin_options');
 
     if (isset($_POST['send_deactivation_request'])) {
-        $postURL = $_POST['lic_mgr_deactivation_req_url'];
+        $postURL = $_POST['slm_deactivation_req_url'];
         $secretKeyForVerification = $slm_options['lic_verification_secret'];
         $data = array();
         $data['secret_key'] = $secretKeyForVerification;
@@ -38,7 +38,7 @@ function wp_lic_mgr_admin_fnc_menu() {
             <br /><br />
             <form method="post" action="">
 
-                <input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php isset($_POST['lic_mgr_deactivation_req_url']) ? $_POST['lic_mgr_deactivation_req_url'] : ''; ?>"/>
+                <input name="slm_deactivation_req_url" type="text" size="100" value="<?php isset($_POST['slm_deactivation_req_url']) ? $_POST['slm_deactivation_req_url'] : ''; ?>"/>
                 <div class="submit">
                     <input type="submit" name="send_deactivation_request" value="Send Request" class="button" />
                 </div>

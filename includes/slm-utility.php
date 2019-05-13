@@ -55,6 +55,32 @@ class SLM_Utility {
 
     }
 
+    static function block_license_key_by_row_id($key_row_id){
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+
+        //Now, delete the key from the licenses table.
+        $wpdb->update( $license_table, array('lic_status' => 'blocked'), array('id' => $key_row_id));
+
+    }
+
+    static function expire_license_key_by_row_id($key_row_id){
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+
+        //Now, delete the key from the licenses table.
+        $wpdb->update($license_table, array('lic_status' => 'expired'), array('id' => $key_row_id));
+    }
+
+    static function active_license_key_by_row_id($key_row_id)
+    {
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+
+        //Now, delete the key from the licenses table.
+        $wpdb->update($license_table, array('lic_status' => 'active'), array('id' => $key_row_id));
+    }
+
     /*
      * Deletes any registered domains info from the domain table for the given key's row id.
      */
@@ -71,4 +97,31 @@ class SLM_Utility {
         }
     }
 
+    static function create_secret_keys() {
+        $key = strtoupper(implode('-', str_split(substr(strtolower(md5(microtime() . rand(1000, 9999))), 0, 32), 8)));
+        return hash('sha256', $key);
+    }
+
 }
+
+// Helper Class
+class SLM_Helper_Class{
+    public static function slm_get_option($option)
+    {
+        $option_name    = '';
+        $slm_opts       = get_option('slm_plugin_options');
+        $option_name    = $slm_opts[$option];
+        return $option_name;
+    }
+    public static function write_log($log)
+    {
+        if (true === WP_DEBUG) {
+            if (is_array($log) || is_object($log)) {
+                error_log(print_r($log, true));
+            } else {
+                error_log($log);
+            }
+        }
+    }
+}
+$slm_helper = new SLM_Helper_Class();

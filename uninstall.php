@@ -20,7 +20,7 @@ global $wpdb;
 
 // Delete Options
 $slm_options = array(
-    'wp_lic_mgr_db_version',
+    'slm_db_version',
     'slm_plugin_options',
 );
 
@@ -31,7 +31,7 @@ foreach ( $slm_options as $option ) {
 }
 
 // Delete Custom Post Type posts
-$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'wp_lic_mgr_addedit' );" );
+$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'slm_manage_license' );" );
 $wpdb->query( "DELETE FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE wp.ID IS NULL;" );
 
 
