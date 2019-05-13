@@ -71,15 +71,15 @@ $ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
 dbDelta($ldv_tbl_sql);
-update_option("wp_lic_mgr_db_version", SLM_DB_VERSION);
+update_option("slm_db_version", SLM_DB_VERSION);
 
 // Add default options
 $options = array(
-    'lic_creation_secret'     => uniqid('', true),
-    'lic_prefix'              => '',
+    'lic_creation_secret'     => SLM_Utility::create_secret_keys(),
+    'lic_prefix'              => 'SLM-',
     'default_max_domains'     => '2',
     'default_max_devices'     => '2',
-    'lic_verification_secret' => uniqid('', true),
+    'lic_verification_secret' => SLM_Utility::create_secret_keys(),
     'enable_debug'            => '',
     'slm_woo'                 => '',
     'slm_wpestores'           => '',
