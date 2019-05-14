@@ -1,13 +1,24 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file.
 
+#### 4.10.3 - WIP
+- removed auto update helper
+- added activation date to license key
+- deleted unnecessary code and files
+- renamed some functions to keep consistancy
+- fixed sql warnings and updated some classes
+- improved api key and secret key
+- added screen options to license list table
+- added new utility classes and functions
+
+
 #### 4.9
 - Removed hard coded email from woocommerce templates
 
 #### 4.8
 - Removed hard coded email from woocommerce templates
 
-#### 4.7 - WIP
+#### 4.7
 - The product quantity of WP eStore product is taken into account when creating a new license key.
 - Added a new action hook in the listener API (can be used to override the API query).
 

@@ -55,6 +55,7 @@ function slm_add_licenses_menu()
         $purchase_id_   = $record->purchase_id_;
         $created_date   = $record->date_created;
         $renewed_date   = $record->date_renewed;
+        $activated_date = $record->date_activated;
         $expiry_date    = $record->date_expiry;
         $product_ref    = $record->product_ref;
         $until          = $record->until;
@@ -85,6 +86,7 @@ function slm_add_licenses_menu()
         $purchase_id_   = $_POST['purchase_id_'];
         $created_date   = $_POST['date_created'];
         $renewed_date   = $_POST['date_renewed'];
+        $activated_date = $_POST['date_activated'];
         $expiry_date    = $_POST['date_expiry'];
         $product_ref    = $_POST['product_ref'];
         $until          = $_POST['until'];
@@ -116,6 +118,7 @@ function slm_add_licenses_menu()
         $fields['purchase_id_'] = $purchase_id_;
         $fields['date_created'] = $created_date;
         $fields['date_renewed'] = $renewed_date;
+        $fields['date_activated'] = $activated_date;
         $fields['date_expiry']  = $expiry_date;
         $fields['product_ref']  = $product_ref;
         $fields['until']        = $until;
@@ -238,7 +241,7 @@ function slm_add_licenses_menu()
                                             <?php
                                             if (isset($_GET['edit_record'])) : ?>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="license_info-tab" data-toggle="tab" href="#license_info" role="tab" aria-controls="license_info" aria-selected="false">Export</a>
+                                                    <a class="nav-link" id="export-license-tab" data-toggle="tab" href="#export-license" role="tab" aria-controls="export-license" aria-selected="false">Export</a>
                                                 </li>
                                             <?php endif; ?>
                                         </ul>
@@ -445,24 +448,31 @@ function slm_add_licenses_menu()
                                                         </div>
 
                                                         <div class="row">
-                                                            <div class="form-group col-md-4">
+                                                            <div class="form-group col-md-6">
                                                                 <label for="order_date">Date Created</label>
                                                                 <input type="date" name="date_created" id="date_created" class="form-control wplm_pick_date" value="<?php echo $created_date; ?>">
 
                                                                 <small class="form-text text-muted">Creation date of license</small>
                                                             </div>
 
-                                                            <div class="form-group col-md-4">
+                                                            <div class="form-group col-md-6">
                                                                 <label for="date_expiry">Expiration Date</label>
                                                                 <input name="date_expiry" class="form-control" type="text" id="date_expiry" class="wplm_pick_date" value="<?php echo $expiry_date; ?>" />
                                                                 <small class="form-text text-muted">Expiry date of license</small>
                                                             </div>
 
-                                                            <div class="form-group col-md-4">
+                                                            <div class="form-group col-md-6">
                                                                 <label for="date_renewed">Date Renewed</label>
                                                                 <input name="date_renewed" class="form-control" type="text" id="date_renewed" class="wplm_pick_date" value="<?php echo $renewed_date; ?>" />
                                                                 <small class="form-text text-muted">Renewal date of license</small>
                                                             </div>
+
+                                                            <div class="form-group col-md-6">
+                                                                <label for="date_activated">Date activated</label>
+                                                                <input name="date_activated" class="form-control" type="text" id="date_activated" class="wplm_pick_date" value="<?php echo $activated_date; ?>" />
+                                                                <small class="form-text text-muted">Activation date</small>
+                                                            </div>
+
                                                             <div class="clear"></div>
                                                         </div>
                                                     </div>
@@ -513,9 +523,9 @@ function slm_add_licenses_menu()
 
                                                 <?php
                                                 if (isset($_GET['edit_record'])) : ?>
-                                                    <div class="tab-pane fade show " id="license_info" role="tabpanel" aria-labelledby="license_info-tab">
+                                                    <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
 
-                                                        <div class="license_info col-full">
+                                                        <div class="export-license col-full">
                                                             <div class="license_export_info" style="min-width: 100%; max-width: 900px">
                                                                 <?php
                                                                 $api_params = array(
@@ -538,10 +548,10 @@ function slm_add_licenses_menu()
 
                                                                 // and back to json
                                                                 $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-                                                                echo '<figure class="highlight"><pre><code>' . $response . '</code></pre></figure>';
+                                                                echo '<figure class="highlight"><pre><code id="lic-json-data">' . $response . '</code></pre></figure>';
 
                                                                 ?>
-                                                                <!-- <button class="button-primary">Export License</button> -->
+                                                                <a href="#" class="button-secondary" id="btn-lic-export">Export License</a>
                                                             </div>
                                                         </div>
 

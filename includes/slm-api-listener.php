@@ -135,7 +135,7 @@ class SLM_API_Listener {
             $fields['item_reference']       = trim(strip_tags($_REQUEST['item_reference']));
 
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $fields['registered_domain']);
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Device: " . $fields['registered_devices']);
+           $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Device: " . $fields['registered_devices']);
 
             global $wpdb;
             $tbl_name           = SLM_TBL_LICENSE_KEYS;
@@ -181,7 +181,9 @@ class SLM_API_Listener {
                         $fields['lic_key_id'] = $retLic->id;
                         $wpdb->insert($reg_table, $fields);
                         $slm_debug_logger->log_debug("Updating license key status to active for domain.");
-                        $data = array('lic_status' => 'active');
+
+                        $current_date = date('Y/m/d');
+                        $data = array('lic_status' => 'active', 'date_activated' => ''.$current_date.'');
                         $where = array('id' => $retLic->id);
                         $updated = $wpdb->update($tbl_name, $data, $where);
 
@@ -213,7 +215,9 @@ class SLM_API_Listener {
                         $wpdb->insert($reg_table_devices, $fields);
 
                         $slm_debug_logger->log_debug("Updating license key status to active for device.");
-                        $data       = array('lic_status' => 'active');
+                        $current_date = date('Y/m/d');
+                        $data       = array('lic_status' => 'active', 'date_activated' => '' . $current_date . '');
+                        // $data       = array('lic_status' => 'active');
                         $where      = array('id' => $retLic->id);
                         $updated    = $wpdb->update($tbl_name, $data, $where);
 
@@ -340,16 +344,22 @@ class SLM_API_Listener {
             // TODO: cleanup devices and domain table
 
             if ( $sql_query ) {
-                $args = (array('result' => 'success', 'code' => SLM_Error_Codes::KEY_CANCELED, 'message' => 'License key removed', 'key' => $key, 'found_in' => $tbl_name ));
+                $args = (array(
+                    'result' => 'success',
+                    'code' => SLM_Error_Codes:: KEY_DELETE_SUCCESS,
+                    'message' => 'License key removed',
+                    'key' => $key
+                    // 'found_in' => $tbl_name
+                ));
                 SLM_API_Utility::output_api_response($args);
             }
             else {
-                $args = (array('result' => 'error', 'code' => SLM_Error_Codes::KEY_CANCELED_FAILED, 'message' => 'License key was not removed', 'key' => $key, 'reason' => 'not found' ));
+                $args = (array('result' => 'error', 'code' => SLM_Error_Codes:: KEY_DELETE_FAILED, 'message' => 'License key ('. $key .') was not removed', 'key' => $key, 'reason' => 'not found' ));
                 SLM_API_Utility::output_api_response($args);
             }
         }
         else {
-            $args = (array('result' => 'error', 'message' => 'License key not found.', 'error_code' => SLM_Error_Codes::KEY_CANCELED_FAILED));
+            $args = (array('result' => 'error', 'message' => 'License key not found.', 'error_code' => SLM_Error_Codes:: KEY_DELETE_FAILED));
             SLM_API_Utility::output_api_response($args);
         }
     }
@@ -475,7 +485,6 @@ class SLM_API_Listener {
                 'message' => 'License update failed. No license key provided',
                 'error_code'    => SLM_Error_Codes::MISSING_KEY_UPDATE_FAILED
             ) );
-
             SLM_API_Utility::output_api_response( $args );
         }
 

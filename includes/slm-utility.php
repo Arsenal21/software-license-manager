@@ -76,9 +76,11 @@ class SLM_Utility {
     {
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
+        $current_date = date('Y/m/d');
+        // 'lic_status' => ''. $current_date.''
 
-        //Now, delete the key from the licenses table.
         $wpdb->update($license_table, array('lic_status' => 'active'), array('id' => $key_row_id));
+        $wpdb->update($license_table, array('date_activated' => '' . $current_date . ''), array('id' => $key_row_id));
     }
 
     /*

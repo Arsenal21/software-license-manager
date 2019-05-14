@@ -24,8 +24,8 @@ function slm_manage_licenses_menu()
             <div id="post-body" class="metabox-holder columns-1">
                 <div id="post-body-content">
                     <div class="meta-box-sortables ui-sortable">
-                        <form method="post">
-
+                        <form id="licenses-filter" method="get">
+                            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
                             <?php
                             $license_list->prepare_items();
                             $license_list->search_box(__('Search'), 'search-box-id');

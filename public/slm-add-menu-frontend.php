@@ -29,7 +29,7 @@ class SLM_Woo_Account
         // Change the My Accout page title.
         add_filter('the_title', array($this, 'endpoint_title'));
         // Insering your new tab/page into the My Account page.
-        add_filter('woocommerce_account_menu_items', array($this, 'new_menu_items'));
+        add_filter('woocommerce_account_menu_items', array($this, 'slm_woo_menu_list'));
         add_action('woocommerce_account_' . self::$endpoint .  '_endpoint', array($this, 'endpoint_content'));
     }
 
@@ -56,13 +56,15 @@ class SLM_Woo_Account
         return $title;
     }
 
-    public function new_menu_items($items)
+    public function slm_woo_menu_list($items)
     {
         // Remove the logout menu item.
         $logout = $items['customer-logout'];
         unset($items['customer-logout']);
+
         // Insert your custom endpoint.
         $items[self::$endpoint] = __('My Licenses', 'woocommerce');
+
         // Insert back the logout item.
         $items['customer-logout'] = $logout;
         return $items;
@@ -83,7 +85,7 @@ class SLM_Woo_Account
         $get_subscription = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta WHERE meta_value = '273' LIMIT 0,1000", ARRAY_A);
         $lic_order_id = array();
 
-?>
+        ?>
 
     <table id="slm_licenses_table" class="table table-condensed" style="border-collapse:collapse;">
         <thead>
@@ -97,13 +99,13 @@ class SLM_Woo_Account
         </thead>
         <tbody>
             <?php
-
+            global $wp_query;
 
             foreach ($result as $license_info) : ?>
                 <?php
-                    global $wpdb;
+                global $wpdb;
 
-                    $get_subscription = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta WHERE `meta_value` = '" . $license_info->purchase_id_ . "' LIMIT 0,1000;", ARRAY_A);
+                $get_subscription = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta WHERE `meta_value` = '" . $license_info->purchase_id_ . "' LIMIT 0,1000;", ARRAY_A);
                 ?>
 
                 <tr data-toggle="collapse" data-target=".demo<?php echo $class_++; ?>">
@@ -117,10 +119,13 @@ class SLM_Woo_Account
                     <td colspan="5" class="hiddenRow">
                         <div class="row row-p collapse demo<?php echo $class_id_++; ?>">
                             <?php
-                                global $wpdb;
-                                $detailed_domain_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_domain_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
+                            global $wpdb;
 
-                                $detailed_devices_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_devices_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
+                            $detailed_license_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE `license_key` = '" . $license_info->license_key . "' ORDER BY `id` LIMIT 0,1000;", ARRAY_A);
+
+                            $detailed_domain_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_domain_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
+
+                            $detailed_devices_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_devices_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
                             ?>
 
                             <div class="domains-list col-md-6">
@@ -137,7 +142,14 @@ class SLM_Woo_Account
                                             echo "<li>no data available</li>";
                                         }
                                     }
+                                    $out                    = array_values($detailed_license_info);
+                                    $license_key_json_data  = json_encode($out);
+
                                     ?>
+
+                                    <div class="clear"></div>
+                                    <input type="button" id="export-lic-key" data-licdata='<?php echo $license_key_json_data; ?>' value="Export license" />
+
                                 </ul>
                             </div>
                             <div class="devices-list col-md-6">
@@ -173,17 +185,11 @@ class SLM_Woo_Account
 
 
     if (null !== SLM_Helper_Class::slm_get_option('slm_dl_manager') && SLM_Helper_Class::slm_get_option('slm_dl_manager') == 1) {
-
         //print_r($licenses_status_array);
         // check if Download Manager is active
         if (function_exists('add_wdm_settings_tab')) {
-
             if (in_array("pending", $licenses_status_array) || in_array("active", $licenses_status_array)) {
-                echo '
-                        <div class="clear"></div>
-                        <header class="entry-header">
-                            <h2 class="entry-title" itemprop="name">My Downloads</h2>
-                        </header>';
+                echo ' <div class="clear"></div> <header class="entry-header"> <h2 class="entry-title" itemprop="name">My Downloads</h2> </header>';
                 echo do_shortcode('[wpdm_all_packages]');
             }
             else {

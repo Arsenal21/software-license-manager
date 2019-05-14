@@ -4,7 +4,7 @@ if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
 
-class SLM_List_Licenses extends WP_List_Table{
+class SLM_List_Licenses extends WP_List_Table {
 
     function __construct()
     {
@@ -18,67 +18,10 @@ class SLM_List_Licenses extends WP_List_Table{
         ));
     }
 
-    // TODO
-    // protected function get_views()
-    // {
-    //     $status_links = array(
-    //         "all"           => __("<a href='#'>All</a>", 'slm'),
-    //         "pending"       => __("<a href='#'>Pending</a>", 'slm'),
-    //         "active"        => __("<a href='#'>Active</a>", 'slm'),
-    //         "expired"       => __("<a href='#'>Expired</a>", 'slm'),
-    //     );
-    //     return $status_links;
-    // }
-
     public function no_items()
     {
         _e('No licenses avaliable.', 'slm');
     }
-
-    function column_default($item, $column_name)
-    {
-        return $item[$column_name];
-    }
-
-
-    function column_id($item)
-    {
-        $row_id = $item['id'];
-        $actions = array(
-            'edit'      => sprintf('<a class="left" href="admin.php?page=slm_manage_license&edit_record=%s">Edit</a>', $row_id),
-            // 'delete'    => sprintf('<a href="admin.php?page=slm_overview&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>', $row_id),
-            // 'block_license'    => sprintf( '<a href="admin.php?page=slm_overview&action=block&id=%s" onclick="return confirm(\'Are you sure you want to block this license?\')">Block</a>', $row_id),
-        );
-        return sprintf(
-            ' <span style="color:black"> %1$s </span>%2$s',
-            /*$1%s*/
-            $item['id'],
-            /*$2%s*/
-            $this->row_actions($actions)
-        );
-    }
-
-
-    function column_cb($item)
-    {
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/
-            $this->_args['singular'],  //Let's simply repurpose the table's singular label
-            /*$2%s*/
-            $item['id']                //The value of the checkbox should be the record's id
-        );
-    }
-
-    function column_active($item)
-    {
-        if ($item['active'] == 1) {
-            return 'active';
-        } else {
-            return 'inactive';
-        }
-    }
-
 
     function get_columns()
     {
@@ -91,12 +34,61 @@ class SLM_List_Licenses extends WP_List_Table{
             'max_allowed_domains'   => 'Domains',
             'max_allowed_devices'   => 'Devices',
             'purchase_id_'          => 'Purchase #',
-            'date_created'          => 'Created pn',
-            // 'date_renewed'          => 'Date Renewed',
+            'date_created'          => 'Created on',
+            'date_renewed'          => 'Date Renewed',
+            'date_activated'        => 'Date activated',
             'date_expiry'           => 'Expiration',
             'until'                 => 'Until Ver.',
         );
         return $columns;
+    }
+
+    function column_default($item, $column_name)
+    {
+        return $item[$column_name];
+    }
+
+    function column_id($item)
+    {
+        $row_id = $item['id'];
+        $actions = array(
+            'edit'      => sprintf('<a class="left" href="admin.php?page=slm_manage_license&edit_record=%s">Edit</a>', $row_id),
+            'delete'    => sprintf('<a href="admin.php?page=slm_overview&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>', $row_id),
+        );
+        return sprintf(
+            ' <span style="color:black"> %1$s </span>%2$s',
+            /*$1%s*/
+            $item['id'],
+            /*$2%s*/
+            $this->row_actions($actions)
+        );
+    }
+
+
+
+
+    function column_active($item)
+    {
+        if ($item['active'] == 1) {
+            return 'active';
+        } else {
+            return 'inactive';
+        }
+    }
+
+
+
+
+    function column_cb($item)
+    {
+
+        return sprintf(
+            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
+            /*$1%s*/
+            $this->_args['singular'],  //Let's simply repurpose the table's singular label
+            /*$2%s*/
+            $item['id']                //The value of the checkbox should be the record's id
+        );
     }
 
 
@@ -111,6 +103,7 @@ class SLM_List_Licenses extends WP_List_Table{
         //     'email'         => array('email', false),
         //     'date_created'  => array('date_created', false),
         //     'date_renewed'  => array('date_renewed', false),
+        //     'date_activated'  => array('date_activated', false),
         //     'date_expiry'   => array('date_expiry', false),
         // );
         $sortable_columns = array(
@@ -178,9 +171,9 @@ class SLM_List_Licenses extends WP_List_Table{
                 return;
             } else {
                 $nvp_key            = $this->_args['singular'];
-                $licenses_to_block  = $_GET[$nvp_key];
+                $licenses_to_expire  = $_GET[$nvp_key];
 
-                foreach ($licenses_to_block as $row) {
+                foreach ($licenses_to_expire as $row) {
                     SLM_Utility::expire_license_key_by_row_id($row);
                 }
 
@@ -193,11 +186,14 @@ class SLM_List_Licenses extends WP_List_Table{
                 $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm') . '</p>';
                 echo '<div id="message" class="error fade">' . $error_msg . '</div>';
                 return;
-            } else {
-                $nvp_key            = $this->_args['singular'];
-                $licenses_to_block  = $_GET[$nvp_key];
+            }
+            else {
+                $nvp_key                = $this->_args['singular'];
+                $liceses_to_activate    = $_GET[$nvp_key];
 
-                foreach ($licenses_to_block as $row) {
+                // var_dump( $liceses_to_activate);
+
+                foreach ($liceses_to_activate as $row) {
                     SLM_Utility::active_license_key_by_row_id($row);
                 }
 

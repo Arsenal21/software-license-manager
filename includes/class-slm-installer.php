@@ -41,6 +41,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       manual_reset_count varchar(128) NOT NULL default '',
       purchase_id_ varchar(255) NOT NULL default '',
       date_created date NOT NULL DEFAULT '0000-00-00',
+      date_activated date NOT NULL DEFAULT '0000-00-00',
       date_renewed date NOT NULL DEFAULT '0000-00-00',
       date_expiry date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
