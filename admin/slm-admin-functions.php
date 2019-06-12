@@ -1,9 +1,15 @@
 <?php
 
-function slm_admin_tools_menu() {
+if (!defined('WPINC')) {
+    die;
+}
+
+
+function slm_admin_tools_menu()
+{
 
     echo '<div class="wrap">';
-    echo '<h2 class="imgh2"><img src="'. SLM_ASSETS_URL.'images/slm_logo.svg" alt="slm logo"> Software License Manager Admin Tools</h2>';
+    echo '<h2 class="imgh2"><img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> Software License Manager Admin Tools</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
     $slm_options = get_option('slm_plugin_options');
@@ -38,12 +44,13 @@ function slm_admin_tools_menu() {
             <br /><br />
             <form method="post" action="">
 
-                <input name="slm_deactivation_req_url" type="text" size="100" value="<?php isset($_POST['slm_deactivation_req_url']) ? $_POST['slm_deactivation_req_url'] : ''; ?>"/>
+                <input name="slm_deactivation_req_url" type="text" size="100" value="<?php isset($_POST['slm_deactivation_req_url']) ? $_POST['slm_deactivation_req_url'] : ''; ?>" />
                 <div class="submit">
                     <input type="submit" name="send_deactivation_request" value="Send Request" class="button" />
                 </div>
             </form>
-        </div></div>
+        </div>
+    </div>
     <?php
     echo '</div></div>';
     echo '</div>';

@@ -8,11 +8,11 @@
  * @link      http://epikly.com
  */
 //Deactivation handler
-class Software_License_Manager_Deactivator {
+class SLM_Deactivator {
     public static function deactivate() {
         //Clear the daily cron event
         wp_clear_scheduled_hook('slm_daily_cron_event');
         do_action('slm_deactivation_complete');
     }
 }
-$slm_deactivator = new Software_License_Manager_Deactivator();
+$slm_deactivator = new SLM_Deactivator();

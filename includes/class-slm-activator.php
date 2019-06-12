@@ -7,7 +7,7 @@
  * @license   GPL-2.0+
  * @link      http://epikly.com
  */
-class Software_License_Manager_Activator {
+class SLM_Activator {
 
     public static function slm_db_install(){
         //Installer function
@@ -23,4 +23,4 @@ class Software_License_Manager_Activator {
         do_action('slm_activation_complete');
     }
 }
-$slm_activator = new Software_License_Manager_Activator();
+$slm_activator = new SLM_Activator();

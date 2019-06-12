@@ -39,3 +39,4 @@ $wpdb->query( "DELETE FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts
 $wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_key_tbl" );
 $wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_domain_tbl" );
 $wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_devices_tbl" );
+$wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_log_tbl");

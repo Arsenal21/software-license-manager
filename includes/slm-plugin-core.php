@@ -10,6 +10,7 @@
 
 
 require_once(SLM_LIB . 'slm-utility.php');
+require_once( SLM_CRONS . 'slm-tasks.php');
 
 
 add_filter('extra_plugin_headers', 'add_extra_headers');
@@ -61,9 +62,9 @@ function deactivate_software_license_manager()
     $slm_deactivator->deactivate();
 }
 
-function slm_get_license($lic_key_prefix)
+function slm_get_license($lic_key_prefix ='')
 {
-    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 8), true) . time())));
+    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 8), true) . date('Y-m-d') . time())));
 }
 
 register_activation_hook(__FILE__, 'activate_software_license_manager');
@@ -76,12 +77,14 @@ register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
 
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
-    require_once( SLM_PUBLIC . 'slm-add-menu-frontend.php');
+
     // WordPress Plugin :: wc-software-license-manager
+    require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
     require_once( SLM_WOO  . 'includes/wc-slm.php');
+
     // support for meta boxes
     require_once( SLM_LIB . 'slm-meta-boxes.php');
-    require_once( SLM_LIB . 'slm-wc-order-post-type.php');
+
 }
 
 if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
@@ -91,8 +94,7 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Cla
 
 //Include admin side only files
 if (is_admin()) {
-    require_once( SLM_ADMIN . 'slm-admin-init.php');
-    // require_once( SLM_ADMIN . 'includes/slm-list-table-class.php'); //Load our own WP List Table class
+    require_once SLM_ADMIN . 'slm-admin-init.php';
 }
 
 //Action hooks
@@ -100,8 +102,6 @@ add_action('init', 'slm_init_handler');
 add_action('plugins_loaded', 'slm_plugins_loaded_handler');
 add_action('wp_ajax_del_reistered_devices', 'slm_del_reg_devices');
 add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
-
-
 
 //Initialize debug logger
 $slm_debug_logger   = new SLM_Debug_Logger();

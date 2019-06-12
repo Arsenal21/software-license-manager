@@ -1,5 +1,10 @@
 <?php
 
+if (!defined('WPINC')) {
+    die;
+}
+
+
 function slm_settings_menu()
 {
 

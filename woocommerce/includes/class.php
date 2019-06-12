@@ -17,15 +17,16 @@
 
 function slm_processing_notification( $order_id ) {
 
-    $order = wc_get_order( $order_id );
-
     // load the mailer class
-    $mailer = WC()->mailer();
-
-    $recipient =  $order->billing_email;
-    $subject = __('Order Confirmation', 'slm');
-    $content = slm_get_processing_notification_content( $order, $subject, $mailer );
-    $headers = "Content-Type: text/html\r\n";
+    $mailer         = WC()->mailer();
+    $order          = wc_get_order($order_id);
+    $purchase_id_   = $order->get_id();
+    $order_data     = $order->get_data(); // The Order data
+    $order_billing_email = $order_data['billing']['email'];
+    $recipient      = $order_billing_email;
+    $subject        = __('Order Confirmation', 'slm');
+    $content        = slm_get_processing_notification_content( $order, $subject, $mailer );
+    $headers        = "Content-Type: text/html\r\n";
 
     $mailer->send( $recipient, $subject, $content, $headers );
 
@@ -44,7 +45,7 @@ add_action( 'woocommerce_order_status_processing', 'slm_processing_notification'
  */
 function slm_get_processing_notification_content( $order, $heading = false, $mailer ) {
 
-    $template = 'customer-completed-order.php';
+    $template = 'emails/customer-completed-order.php';
 
     return wc_get_template_html( $template, array(
         'order'         => $order,

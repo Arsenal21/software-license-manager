@@ -8,11 +8,19 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
-document.getElementById("btn-lic-export").addEventListener("click", function () {
-    // Generate download of hello.txt file with some content
-    var license_data    = document.getElementById("lic-json-data").textContent;
-    var text            = license_data;
-    var filename        = "license.json";
+// document.getElementById("btn-lic-export").addEventListener("click", function () {
+//     // Generate download of hello.txt file with some content
+//     var license_data    = document.getElementById("lic-json-data").textContent;
+//     var text            = license_data;
+//     var filename        = "license.json";
 
+//     download(filename, text);
+// }, false);
+
+
+function slm_exportlicense(){
+    var license_data = document.getElementById("lic-json-data").textContent;
+    var text = license_data;
+    var filename = "license.json";
     download(filename, text);
-}, false);
+}

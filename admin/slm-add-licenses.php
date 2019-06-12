@@ -160,14 +160,9 @@ function slm_add_licenses_menu()
     }
     ?>
 
-
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <!-- Bootstrap Date-Picker Plugin -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
-
 
     <style>
         .wp-admin select {
@@ -192,6 +187,20 @@ function slm_add_licenses_menu()
             </div>
         </div>
 
+        <?php
+        //save_record - messages
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            echo '<div class="alert alert-primary" role="alert"> <strong>Done!</strong> License was successfully generated <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div>';
+        }
+        //edit
+        elseif (isset($_GET['edit_record'])) {
+            echo '<div class="alert alert-warning" role="alert"> Edit the information below to update your license key </div>';
+        }
+        // new
+        else {
+            echo '<div class="alert alert-info" role="alert"> Fill the information below to generate your license key </div>';
+        }
+        ?>
         <div id="normal-sortables" class="meta-box-sortables ui-sortable">
             <div id="woocommerce-order-data">
                 <div id="woocommerce-order-data">
@@ -211,184 +220,235 @@ function slm_add_licenses_menu()
 
 
                                 <div class="order_data_column_container">
-                                    <div class="order_data_column">
+                                    <div class="order_data_column row">
 
-                                        <ul class="nav nav-pills justify-content-center" id="slm_manage_license" role="tablist">
+                                        <div class="col-3 sml-col-right">
 
-                                            <li class="nav-item">
-                                                <a class="nav-link active" id="license-tab" data-toggle="tab" href="#license" role="tab" aria-controls="license" aria-selected="false">License</a>
-                                            </li>
+                                            <ul class="nav flex-column nav-pills" aria-orientation="vertical" id="slm_manage_license" role="tablist">
 
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false">User</a>
-                                            </li>
-
-                                            <?php
-                                            if (isset($_GET['edit_record'])) : ?>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="devicesinfo-tab" data-toggle="tab" href="#devicesinfo" role="tab" aria-controls="devicesinfo" aria-selected="false">Devices & Domains</a>
+                                                    <a class="nav-link active" id="license-tab" data-toggle="tab" href="#license" role="tab" aria-controls="license" aria-selected="false"><span class="dashicons dashicons-lock"></span> License key and status</a>
                                                 </li>
-                                            <?php endif; ?>
 
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false">Transaction</a>
-                                            </li>
-
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="productinfo-tab" data-toggle="tab" href="#productinfo" role="tab" aria-controls="productinfo" aria-selected="false">Product</a>
-                                            </li>
-
-                                            <?php
-                                            if (isset($_GET['edit_record'])) : ?>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="export-license-tab" data-toggle="tab" href="#export-license" role="tab" aria-controls="export-license" aria-selected="false">Export</a>
+                                                    <a class="nav-link" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false"><span class="dashicons dashicons-admin-users"></span> User information</a>
                                                 </li>
-                                            <?php endif; ?>
-                                        </ul>
 
-                                        <form method="post" class="slm_license_form row" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-                                            <?php
-                                            wp_nonce_field('slm_add_edit_nonce_action', 'slm_add_edit_nonce_val');
+                                                <?php
+                                                if (isset($_GET['edit_record'])) : ?>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="devicesinfo-tab" data-toggle="tab" href="#devicesinfo" role="tab" aria-controls="devicesinfo" aria-selected="false"><span class="dashicons dashicons-admin-site-alt2"></span> Devices & Domains</a>
+                                                    </li>
+                                                <?php endif; ?>
 
-                                            if ($id != '') {
-                                                echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
-                                            } else {
-                                                if (!isset($editing_record)) {
-                                                    $editing_record = new stdClass();
-                                                }
-                                                $lic_key_prefix = $slm_options['lic_prefix'];
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false"><span class="dashicons dashicons-media-text"></span> Transaction</a>
+                                                </li>
 
-                                                if (!empty($lic_key_prefix)) {
-                                                    $license_key = slm_get_license($lic_key_prefix);
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="productinfo-tab" data-toggle="tab" href="#productinfo" role="tab" aria-controls="productinfo" aria-selected="false"><span class="dashicons dashicons-store"></span> Product</a>
+                                                </li>
+
+                                                <?php
+                                                if (isset($_GET['edit_record'])) : ?>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="activity-log-tab" data-toggle="tab" href="#activity-log" role="tab" aria-controls="activity-log" aria-selected="false"><span class="dashicons dashicons-media-text"></span> Activity log</a>
+                                                    </li>
+                                                <?php endif; ?>
+
+                                                <?php
+                                                if (isset($_GET['edit_record'])) : ?>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="export-license-tab" data-toggle="tab" href="#export-license" role="tab" aria-controls="export-license" aria-selected="false"><span class="dashicons dashicons-external"></span> Export</a>
+                                                    </li>
+                                                <?php endif; ?>
+                                            </ul>
+                                        </div>
+
+                                        <div class="col-9 sml-col-left">
+                                            <form method="post" class="slm_license_form row" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+                                                <?php
+                                                wp_nonce_field('slm_add_edit_nonce_action', 'slm_add_edit_nonce_val');
+
+                                                if ($id != '') {
+                                                    echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
                                                 } else {
-                                                    $license_key =  slm_get_license($lic_key_prefix);
+                                                    if (!isset($editing_record)) {
+                                                        $editing_record = new stdClass();
+                                                    }
+                                                    $lic_key_prefix = $slm_options['lic_prefix'];
+
+                                                    if (!empty($lic_key_prefix)) {
+                                                        $license_key = slm_get_license($lic_key_prefix);
+                                                    } else {
+                                                        $license_key =  slm_get_license($lic_key_prefix);
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                            <div class="tab-content col-md-12" id="slm_manage_licenseContent">
-                                                <div class="tab-pane fade show active" id="license" role="tabpanel" aria-labelledby="license-tab">
-                                                    <div class="license col-full">
-                                                        <div class="alert alert-info mt-2" role="alert">
-                                                            <b>License Details for:</b> <span><?php echo $license_key; ?></span>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="license_key">License Key</label>
-                                                            <input name="license_key" class="form-control" aria-describedby="licInfo" type="text" id="license_key" value="<?php echo $license_key; ?>" readonly />
-                                                            <small id="licInfo" class="form-text text-muted">The unique license key.</small>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="lic_status">License Status</label>
-                                                                <select name="lic_status" class="form-control">
-                                                                    <option value="pending" <?php if ($license_status == 'pending') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Pending</option>
-                                                                    <option value="active" <?php if ($license_status == 'active') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Active</option>
-                                                                    <option value="blocked" <?php if ($license_status == 'blocked') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Blocked</option>
-                                                                    <option value="expired" <?php if ($license_status == 'expired') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Expired</option>
-                                                                </select>
+                                                ?>
+                                                <div class="tab-content col-md-12" id="slm_manage_licenseContent">
+                                                    <div class="tab-pane fade show active" id="license" role="tabpanel" aria-labelledby="license-tab">
+                                                        <div class="license col-full">
+                                                            <h3>License key and status</h3>
+                                                            <div class="form-group">
+                                                                <label for="license_key">License Key</label>
+                                                                <input name="license_key" class="form-control" aria-describedby="licInfo" type="text" id="license_key" value="<?php echo $license_key; ?>" readonly />
+                                                                <small id="licInfo" class="form-text text-muted">The unique license key.</small>
                                                             </div>
 
-                                                            <div class="form-group col-md-6">
-                                                                <label for="email">License type</label>
-                                                                <select name="lic_type" class="form-control">
-                                                                    <option value="pending" <?php if ($lic_type == 'subscription') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Subscription</option>
-                                                                    <option value="active" <?php if ($lic_type == 'lifetime') {
-                                                                                                echo 'selected="selected"';
-                                                                                            } ?>>Life-time</option>
-                                                                </select>
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="lic_status">License Status</label>
+                                                                    <select name="lic_status" class="form-control">
+                                                                        <option value="pending" <?php if ($license_status == 'pending') {
+                                                                                                    echo 'selected="selected"';
+                                                                                                } ?>>Pending</option>
+                                                                        <option value="active" <?php if ($license_status == 'active') {
+                                                                                                    echo 'selected="selected"';
+                                                                                                } ?>>Active</option>
+                                                                        <?php
+                                                                        if (isset($_GET['edit_record'])) : ?>
+                                                                            <option value="blocked" <?php if ($license_status == 'blocked') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } ?>>Blocked</option>
+                                                                            <option value="expired" <?php if ($license_status == 'expired') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } ?>>Expired</option>
+                                                                        <?php endif; ?>
 
-                                                                <small class="form-text text-muted">type of license: subscription base or lifetime</small>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="email">License type</label>
+                                                                    <select name="lic_type" class="form-control">
+                                                                        <option value="subscription" <?php if ($lic_type == 'subscription') {
+                                                                                                            echo 'selected="selected"';
+                                                                                                        } ?>>Subscription</option>
+                                                                        <option value="lifetime" <?php if ($lic_type == 'lifetime') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } ?>>Life-time</option>
+                                                                    </select>
+
+                                                                    <small class="form-text text-muted">type of license: subscription base or lifetime</small>
+                                                                </div>
                                                             </div>
+                                                            <div class="clear"></div>
                                                         </div>
-                                                        <div class="clear"></div>
                                                     </div>
-                                                </div>
 
 
-                                                <div class="tab-pane fade show" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
-                                                    <div class="col-full">
-                                                        <h3>User Information</h3>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="first_name">First Name</label>
-                                                                <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" class="form-control required" required />
-                                                                <small class="form-text text-muted">License user's first name </small>
-                                                            </div>
+                                                    <div class="tab-pane fade show" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
+                                                        <div class="col-full">
+                                                            <h3>User Information</h3>
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="first_name">First Name</label>
+                                                                    <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" class="form-control required" required />
+                                                                    <small class="form-text text-muted">License user's first name </small>
+                                                                </div>
 
-                                                            <div class="form-group col-md-6">
-                                                                <label for="last_name"> Last Name</label>
-                                                                <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" class="form-control required" required />
-                                                                <small class="form-text text-muted">License user's last name </small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="clear"></div>
-
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="email">Subscriber ID</label>
-                                                                <input name="subscr_id" class="form-control" type=" text" id="subscr_id" value="<?php echo $subscr_id; ?>" />
-                                                                <small class="form-text text-muted">The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</small>
-                                                            </div>
-
-
-                                                            <div class="form-group col-md-6">
-                                                                <label for="email">Email Address</label>
-                                                                <input name="email" type="email" class="form-control" id="email" value="<?php echo $email; ?>" class="form-control required" required />
-                                                                <small class="form-text text-muted">License user's email address</small>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="last_name"> Last Name</label>
+                                                                    <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" class="form-control required" required />
+                                                                    <small class="form-text text-muted">License user's last name </small>
+                                                                </div>
                                                             </div>
                                                             <div class="clear"></div>
 
-                                                            <div class="form-group col-md-12">
-                                                                <label for="company_name">Company Name</label>
-                                                                <input name="company_name" class="form-control" type="text" id="company_name" value="<?php echo $company_name; ?>" />
-                                                                <small class="form-text text-muted">License user's company name</small>
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="email">Subscriber ID</label>
+                                                                    <input name="subscr_id" class="form-control" type=" text" id="subscr_id" value="<?php echo $subscr_id; ?>" />
+                                                                    <small class="form-text text-muted">The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</small>
+                                                                </div>
+
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="email">Email Address</label>
+                                                                    <input name="email" type="email" class="form-control" id="email" value="<?php echo $email; ?>" class="form-control required" required />
+                                                                    <?php
+                                                                    if (isset($_GET['edit_record'])) : ?>
+                                                                        <small class="form-text text-muted">License user's email address. <a href="<?php echo admin_url('admin.php?page=slm_subscribers&slm_subscriber_edit=true&manage_subscriber=' . $subscr_id . '&email=' . $email . '') ?>">View all licenses</a> registered to this email address.</small>
+                                                                    <?php else : ?>
+                                                                        <small class="form-text text-muted">License user's email address</small>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                                <div class="clear"></div>
+
+                                                                <div class="form-group col-md-12">
+                                                                    <label for="company_name">Company Name</label>
+                                                                    <input name="company_name" class="form-control" type="text" id="company_name" value="<?php echo $company_name; ?>" />
+                                                                    <small class="form-text text-muted">License user's company name</small>
+                                                                </div>
                                                             </div>
+                                                            <div class="clear"></div>
+
                                                         </div>
-                                                        <div class="clear"></div>
-
                                                     </div>
-                                                </div>
 
-                                                <div class="tab-pane fade show " id="devicesinfo" role="tabpanel" aria-labelledby="devicesinfo-tab">
-                                                    <div class="devicesinfo col-full">
-                                                        <h3>Allowed Activations</h3>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="max_allowed_domains">Maximum Allowed Domains</label>
-                                                                <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
-                                                                <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
+                                                    <div class="tab-pane fade show " id="devicesinfo" role="tabpanel" aria-labelledby="devicesinfo-tab">
+                                                        <div class="devicesinfo col-full">
+                                                            <h3>Allowed Activations</h3>
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="max_allowed_domains">Maximum Allowed Domains</label>
+                                                                    <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
+                                                                    <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
 
-                                                                <div class="table">
+                                                                    <div class="table">
+                                                                        <?php
+                                                                        if ($id != '') {
+                                                                            global $wpdb;
+                                                                            $reg_table = SLM_TBL_LIC_DOMAIN;
+                                                                            $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
+                                                                            $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
+                                                                        }
+                                                                        if (count($reg_domains) > 0) : ?>
+                                                                            <label>Registered Domains</label>
+                                                                            <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
+                                                                            <div class="devices-info">
+                                                                                <table cellpadding="0" cellspacing="0" class="table">
+                                                                                    <?php
+                                                                                    $count = 0;
+                                                                                    foreach ($reg_domains as $reg_domain) : ?>
+                                                                                        <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
+                                                                                            <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
+                                                                                            <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
+                                                                                        </tr>
+                                                                                        <?php $count++; ?>
+                                                                                    <?php endforeach; ?>
+                                                                                </table>
+                                                                            </div>
+                                                                        <?php else : ?>
+                                                                            <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
+                                                                        <?php endif; ?>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="max_allowed_devices">Maximum Allowed Devices</label>
+                                                                    <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
+                                                                    <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
+
                                                                     <?php
                                                                     if ($id != '') {
                                                                         global $wpdb;
-                                                                        $reg_table = SLM_TBL_LIC_DOMAIN;
-                                                                        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
-                                                                        $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
+                                                                        $devices_table  = SLM_TBL_LIC_DEVICES;
+                                                                        $sql_prep2      = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
+                                                                        $reg_devices    = $wpdb->get_results($sql_prep2, OBJECT);
                                                                     }
-                                                                    if (count($reg_domains) > 0) : ?>
-                                                                        <label>Registered Domains</label>
+                                                                    if (count($reg_devices) > 0) : ?>
+                                                                        <label for="order_date">Registered Devices</label>
                                                                         <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
                                                                         <div class="devices-info">
                                                                             <table cellpadding="0" cellspacing="0" class="table">
                                                                                 <?php
-                                                                                $count = 0;
-                                                                                foreach ($reg_domains as $reg_domain) : ?>
-                                                                                    <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                        <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
-                                                                                        <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
+                                                                                $count_ = 0;
+                                                                                foreach ($reg_devices as $reg_device) : ?>
+                                                                                    <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
+                                                                                        <td height="5"><?php echo $reg_device->registered_devices; ?></td>
+                                                                                        <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
                                                                                     </tr>
-                                                                                    <?php $count++; ?>
+                                                                                    <?php $count_++; ?>
                                                                                 <?php endforeach; ?>
                                                                             </table>
                                                                         </div>
@@ -397,183 +457,165 @@ function slm_add_licenses_menu()
                                                                     <?php endif; ?>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label for="max_allowed_devices">Maximum Allowed Devices</label>
-                                                                <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
-                                                                <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
-
-                                                                <?php
-                                                                if ($id != '') {
-                                                                    global $wpdb;
-                                                                    $devices_table  = SLM_TBL_LIC_DEVICES;
-                                                                    $sql_prep2      = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
-                                                                    $reg_devices    = $wpdb->get_results($sql_prep2, OBJECT);
-                                                                }
-                                                                if (count($reg_devices) > 0) : ?>
-                                                                    <label for="order_date">Registered Devices</label>
-                                                                    <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                                                    <div class="devices-info">
-                                                                        <table cellpadding="0" cellspacing="0" class="table">
-                                                                            <?php
-                                                                            $count_ = 0;
-                                                                            foreach ($reg_devices as $reg_device) : ?>
-                                                                                <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                    <td height="5"><?php echo $reg_device->registered_devices; ?></td>
-                                                                                    <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
-                                                                                </tr>
-                                                                                <?php $count_++; ?>
-                                                                            <?php endforeach; ?>
-                                                                        </table>
-                                                                    </div>
-                                                                <?php else : ?>
-                                                                    <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="clear"></div>
-                                                    </div>
-                                                    <div class="clear"></div>
-                                                </div>
-
-
-                                                <div class="tab-pane fade show " id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
-
-                                                    <div class="col-full">
-                                                        <h3>Advanced Details</h3>
-                                                        <div class="form-group">
-                                                            <label for="order_date">Manual Reset Count</label>
-                                                            <input name="manual_reset_count" class="form-control" type="text" id="manual_reset_count" value="<?php echo $reset_count; ?>" />
-                                                            <small class="form-text text-muted">The number of times this license has been manually reset by the admin (use it if you want to keep track of it). It can be helpful for the admin to keep track of manual reset counts</small>
-
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="order_date">Date Created</label>
-                                                                <input type="date" name="date_created" id="date_created" class="form-control wplm_pick_date" value="<?php echo $created_date; ?>">
-
-                                                                <small class="form-text text-muted">Creation date of license</small>
-                                                            </div>
-
-                                                            <div class="form-group col-md-6">
-                                                                <label for="date_expiry">Expiration Date</label>
-                                                                <input name="date_expiry" class="form-control" type="text" id="date_expiry" class="wplm_pick_date" value="<?php echo $expiry_date; ?>" />
-                                                                <small class="form-text text-muted">Expiry date of license</small>
-                                                            </div>
-
-                                                            <div class="form-group col-md-6">
-                                                                <label for="date_renewed">Date Renewed</label>
-                                                                <input name="date_renewed" class="form-control" type="text" id="date_renewed" class="wplm_pick_date" value="<?php echo $renewed_date; ?>" />
-                                                                <small class="form-text text-muted">Renewal date of license</small>
-                                                            </div>
-
-                                                            <div class="form-group col-md-6">
-                                                                <label for="date_activated">Date activated</label>
-                                                                <input name="date_activated" class="form-control" type="text" id="date_activated" class="wplm_pick_date" value="<?php echo $activated_date; ?>" />
-                                                                <small class="form-text text-muted">Activation date</small>
-                                                            </div>
-
                                                             <div class="clear"></div>
                                                         </div>
+                                                        <div class="clear"></div>
                                                     </div>
-                                                    <div class="clear"></div>
-                                                </div>
 
-                                                <div class="tab-pane fade show " id="productinfo" role="tabpanel" aria-labelledby="productinfo-tab">
 
-                                                    <div class="col-full">
-                                                        <h3>Product Information</h3>
-                                                        <div class="form-group">
-                                                            <label for="product_ref">Product</label>
-                                                            <input name="product_ref" class="form-control" type="text" id="product_ref" value="<?php echo $product_ref; ?>" />
-                                                            <small class="form-text text-muted">The product that this license gives access to</small>
-                                                        </div>
+                                                    <div class="tab-pane fade show " id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
 
-                                                        <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="txn_id">Unique Transaction ID</label>
-                                                                <input name="txn_id" type="text" class="form-control" id="txn_id" value="<?php echo $txn_id; ?>" />
-                                                                <small class="form-text text-muted">The unique transaction ID associated with this license key</small>
+                                                        <div class="col-full">
+                                                            <h3>Advanced Details</h3>
+                                                            <div class="form-group">
+                                                                <label for="order_date">Manual Reset Count</label>
+                                                                <input name="manual_reset_count" class="form-control" type="text" id="manual_reset_count" value="<?php echo $reset_count; ?>" />
+                                                                <small class="form-text text-muted">The number of times this license has been manually reset by the admin (use it if you want to keep track of it). It can be helpful for the admin to keep track of manual reset counts</small>
+
                                                             </div>
 
-                                                            <div class="form-group  col-md-6">
-                                                                <label for="purchase_id_">Purchase Order ID #</label>
-                                                                <input name="purchase_id_" class="form-control" type="text" id="purchase_id_" value="<?php echo $purchase_id_; ?>" size="8" />
-                                                                <?php
-                                                                if (!empty($purchase_id_)) : ?>
-                                                                    <small class="form-text text-muted">This is associated with the purchase ID woocommerce support. <a href="<?php echo admin_url() . 'post.php?post=' . $purchase_id_; ?>&action=edit">View Order </a></small>
-                                                                <?php else : ?>
-                                                                    <small class="form-text text-muted"> No order found yet</small>
-                                                                <?php endif; ?>
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="order_date">Date Created</label>
+                                                                    <input type="date" name="date_created" id="date_created" class="form-control wplm_pick_date" value="<?php echo $created_date; ?>">
 
+                                                                    <small class="form-text text-muted">Creation date of license</small>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="date_expiry">Expiration Date</label>
+                                                                    <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" />
+                                                                    <small class="form-text text-muted">Expiry date of license</small>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="date_renewed">Date Renewed</label>
+                                                                    <input name="date_renewed" type="date" id="date_renewed" class="form-control wplm_pick_date" value="<?php echo $renewed_date; ?>" />
+                                                                    <small class="form-text text-muted">Renewal date of license</small>
+                                                                </div>
+
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="date_activated">Date activated</label>
+                                                                    <input name="date_activated" type="date" id="date_activated" class="form-control wplm_pick_date" value="form-control <?php echo $activated_date; ?>" />
+                                                                    <small class="form-text text-muted">Activation date</small>
+                                                                </div>
+
+                                                                <div class="clear"></div>
                                                             </div>
                                                         </div>
                                                         <div class="clear"></div>
+                                                    </div>
 
-                                                        <div class="form-group">
-                                                            <label for="until">Supported Until</label>
-                                                            <input name="until" type="text" class="form-control" id="until" value="<?php echo $until; ?>" />
-                                                            <small class="form-text text-muted">Until what version this product is supported</small>
+                                                    <div class="tab-pane fade show " id="productinfo" role="tabpanel" aria-labelledby="productinfo-tab">
+
+                                                        <div class="col-full">
+                                                            <h3>Product Information</h3>
+                                                            <div class="form-group">
+                                                                <label for="product_ref">Product</label>
+                                                                <input name="product_ref" class="form-control" type="text" id="product_ref" value="<?php echo $product_ref; ?>" />
+                                                                <small class="form-text text-muted">The product that this license gives access to</small>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="txn_id">Unique Transaction ID</label>
+                                                                    <input name="txn_id" type="text" class="form-control" id="txn_id" value="<?php echo $txn_id; ?>" />
+                                                                    <small class="form-text text-muted">The unique transaction ID associated with this license key</small>
+                                                                </div>
+
+                                                                <div class="form-group  col-md-6">
+                                                                    <label for="purchase_id_">Purchase Order ID #</label>
+                                                                    <input name="purchase_id_" class="form-control" type="text" id="purchase_id_" value="<?php echo $purchase_id_; ?>" size="8" />
+                                                                    <?php
+                                                                    if (!empty($purchase_id_)) : ?>
+                                                                        <small class="form-text text-muted">This is associated with the purchase ID woocommerce support. <a href="<?php echo admin_url() . 'post.php?post=' . $purchase_id_; ?>&action=edit">View Order </a></small>
+                                                                    <?php else : ?>
+                                                                        <small class="form-text text-muted"> No order found yet</small>
+                                                                    <?php endif; ?>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+
+                                                            <div class="form-group">
+                                                                <label for="until">Supported Until</label>
+                                                                <input name="until" type="text" class="form-control" id="until" value="<?php echo $until; ?>" />
+                                                                <small class="form-text text-muted">Until what version this product is supported</small>
+                                                            </div>
+                                                            <div class="clear"></div>
+
                                                         </div>
                                                         <div class="clear"></div>
-
                                                     </div>
-                                                    <div class="clear"></div>
-                                                </div>
 
-                                                <?php
-                                                if (isset($_GET['edit_record'])) : ?>
-                                                    <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
-
-                                                        <div class="export-license col-full">
-                                                            <div class="license_export_info" style="min-width: 100%; max-width: 900px">
-                                                                <?php
-                                                                $api_params = array(
-                                                                    'slm_action'    =>  'slm_check',
-                                                                    'secret_key'    =>  SLM_Helper_Class::slm_get_option('lic_verification_secret'),
-                                                                    'license_key'   =>  $license_key,
-                                                                );
-                                                                // Send query to the license manager server
-                                                                $response = wp_remote_get(add_query_arg($api_params, SLM_SITE_URL), array('timeout' => 20, 'sslverify' => false));
-
-                                                                $data = $response['body'];
-
-                                                                // parsing json
-                                                                $arr = json_decode($data, true);
-
-                                                                // removing the value
-                                                                unset($arr['result']);
-                                                                unset($arr['code']);
-                                                                unset($arr['message']);
-
-                                                                // and back to json
-                                                                $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-                                                                echo '<figure class="highlight"><pre><code id="lic-json-data">' . $response . '</code></pre></figure>';
-
-                                                                ?>
-                                                                <a href="#" class="button-secondary" id="btn-lic-export">Export License</a>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                <?php endif; ?>
-
-                                                <div class="output-msg">
                                                     <?php
-                                                    $data = array('row_id' => $id, 'key' => $license_key);
-                                                    $extra_output = apply_filters('slm_add_edit_interface_above_submit', '', $data);
-                                                    if (!empty($extra_output)) {
-                                                        echo $extra_output;
-                                                    }
-                                                    ?>
-                                                </div>
+                                                    if (isset($_GET['edit_record'])) : ?>
+                                                        <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
 
-                                                <div class="submit form_actions">
-                                                    <input type="submit" class="button btn btn-primary save_lic" name="save_record" value="Save License" />
-                                                    <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="btn btn-link">Manage Licenses</a>
+                                                            <div class="export-license col-full">
+                                                                <div class="license_export_info" style="min-width: 100%; max-width: 900px">
+                                                                    <?php
+                                                                    $api_params = array(
+                                                                        'slm_action'    =>  'slm_check',
+                                                                        'secret_key'    =>  SLM_Helper_Class::slm_get_option('lic_verification_secret'),
+                                                                        'license_key'   =>  $license_key,
+                                                                    );
+                                                                    // Send query to the license manager server
+                                                                    $response = wp_remote_get(add_query_arg($api_params, SLM_SITE_URL), array('timeout' => 20, 'sslverify' => false));
+
+                                                                    $data = $response['body'];
+
+                                                                    // parsing json
+                                                                    $arr = json_decode($data, true);
+
+                                                                    // removing the value
+                                                                    unset($arr['result']);
+                                                                    unset($arr['code']);
+                                                                    unset($arr['message']);
+
+                                                                    // and back to json
+                                                                    $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+                                                                    echo '<figure class="highlight"><pre><code id="lic-json-data">' . $response . '</code></pre></figure>';
+
+                                                                    ?>
+                                                                    <a href="#" class="button-secondary" onclick="slm_exportlicense()">Export License</a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="tab-pane fade show " id="activity-log" role="tabpanel" aria-labelledby="activity-log-tab">
+
+                                                            <div class="activity-log col-full">
+                                                                <div class="lic-activity-log" style="min-height: 325px; min-width: 100%; max-width: 900px">
+                                                                    <?php
+                                                                    SLM_Utility::get_lic_activity($license_key);
+                                                                    ?>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    <?php endif; ?>
+
+                                                    <div class="output-msg">
+                                                        <?php
+                                                        $data = array('row_id' => $id, 'key' => $license_key);
+                                                        $extra_output = apply_filters('slm_add_edit_interface_above_submit', '', $data);
+                                                        if (!empty($extra_output)) {
+                                                            echo $extra_output;
+                                                        }
+                                                        ?>
+                                                    </div>
+
+                                                    <div class="submit form_actions">
+                                                        <input type="submit" class="button btn btn-primary save_lic" name="save_record" value="Save License" />
+                                                        <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="btn btn-link">Manage Licenses</a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </form>
+                                            </form>
+                                        </div>
+
                                         <!-- end of form -->
                                         <div class="clear"></div>
 

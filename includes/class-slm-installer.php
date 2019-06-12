@@ -14,6 +14,7 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 $lic_key_table      = SLM_TBL_LICENSE_KEYS;
 $lic_domain_table   = SLM_TBL_LIC_DOMAIN;
 $lic_devices_table  = SLM_TBL_LIC_DEVICES;
+$lic_log_tbl        = SLM_TBL_LIC_LOG;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)){
@@ -44,6 +45,8 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       date_activated date NOT NULL DEFAULT '0000-00-00',
       date_renewed date NOT NULL DEFAULT '0000-00-00',
       date_expiry date NOT NULL DEFAULT '0000-00-00',
+      reminder_sent varchar(255) NOT NULL default '0',
+      reminder_sent_date date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
       until varchar(255) NOT NULL default '',
       subscr_id varchar(128) NOT NULL default '',
@@ -61,6 +64,16 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
 dbDelta($ld_tbl_sql);
+
+$log_tbl_sql = "CREATE TABLE " . $lic_log_tbl . " (
+      id INT NOT NULL AUTO_INCREMENT ,
+      license_key varchar(255) NOT NULL ,
+      slm_action varchar(255) NOT NULL ,
+      time date NOT NULL DEFAULT '0000-00-00',
+      source varchar(255) NOT NULL ,
+      PRIMARY KEY ( id )
+      )" . $charset_collate . ";";
+dbDelta($log_tbl_sql);
 
 $ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
       id INT NOT NULL AUTO_INCREMENT ,

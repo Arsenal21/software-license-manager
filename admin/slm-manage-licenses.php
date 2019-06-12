@@ -1,4 +1,25 @@
 <?php
+//add_action('plugins_loaded', 'get_user_info');
+// TODO
+
+if (!defined('WPINC')) {
+    die;
+}
+
+
+function get_user_info()
+{
+    if (!current_user_can('manage_licenses')) {
+        $response = array(
+            'success' => false,
+            'message' => __('You do not have permission to manage this license.', 'edd_sl'),
+        );
+
+        echo json_encode($response);
+        die();
+    }
+}
+
 
 function slm_manage_licenses_menu()
 {
@@ -11,8 +32,13 @@ function slm_manage_licenses_menu()
             $license_list->delete_license_key(sanitize_text_field($_REQUEST['id']));
         }
     }
-
     ?>
+
+
+    <div class="stats">
+
+    </div>
+
     <div class="wrap">
         <h1>Overview - Manage licenses</h1>
         <br>

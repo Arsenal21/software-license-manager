@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('WPINC')) {
+    die;
+}
+
 if (!class_exists('WP_List_Table')) {
     require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 }
@@ -23,6 +27,56 @@ class SLM_List_Licenses extends WP_List_Table {
         _e('No licenses avaliable.', 'slm');
     }
 
+    function get_views()
+    {
+
+        $base = admin_url( 'admin.php?page=slm_overview');
+        $current = isset($_GET['view']) ? $_GET['view'] : '';
+
+        $link_html = '<a href="%s"%s>%s</a>(%s)';
+
+        $views = array(
+            'all'      => sprintf(
+                $link_html,
+                esc_url(remove_query_arg('view', $base)),
+                $current === 'all' || $current == '' ? ' class="current"' : '',
+                esc_html__('All', 'slm'),
+                SLM_Utility::get_total_licenses()
+            ),
+            'active'   => sprintf(
+                $link_html,
+                esc_url(add_query_arg('view', 'active', $base . '&s=active')),
+                $current === 'active' ? ' class="current"' : '',
+                esc_html__('active', 'slm'),
+                SLM_Utility::count_licenses('active')
+            ),
+            'pending' => sprintf(
+                $link_html,
+                esc_url(add_query_arg('view', 'pending', $base . '&s=pending')),
+                $current === 'pending' ? ' class="current"' : '',
+                esc_html__('pending', 'slm'),
+                SLM_Utility::count_licenses( 'pending')
+            ),
+            'expired'  => sprintf(
+                $link_html,
+                esc_url(add_query_arg('view', 'expired', $base . '&s=expired')),
+                $current === 'expired' ? ' class="current"' : '',
+                esc_html__('expired', 'slm'),
+                SLM_Utility::count_licenses( 'expired')
+            ),
+            'blocked'  => sprintf(
+                $link_html,
+                esc_url(add_query_arg('view', 'blocked', $base . '&s=blocked')),
+                $current === 'blocked' ? ' class="current"' : '',
+                esc_html__('blocked', 'slm'),
+                SLM_Utility::count_licenses( 'blocked')
+            )
+        );
+
+        return $views;
+    }
+
+
     function get_columns()
     {
         $columns = array(
@@ -30,6 +84,7 @@ class SLM_List_Licenses extends WP_List_Table {
             'id'                    => 'ID',
             'license_key'           => 'Key',
             'lic_status'            => 'Status',
+            'lic_type'              => 'Type',
             'email'                 => 'Email',
             'max_allowed_domains'   => 'Domains',
             'max_allowed_devices'   => 'Devices',
@@ -45,7 +100,37 @@ class SLM_List_Licenses extends WP_List_Table {
 
     function column_default($item, $column_name)
     {
-        return $item[$column_name];
+        switch ($column_name) {
+
+            case 'lic_status':
+                return '<span class="slm-lic-' . $item[$column_name] . '"> <span class="slm-status ' . $item[$column_name] . '"></span>'  . $item[$column_name] . '</span>';
+                break;
+
+            case 'email':
+                return '<a href="'. admin_url( 'admin.php?page=slm_subscribers&slm_subscriber_edit=true&manage_subscriber='. $item['id'].'&email=' . $item[$column_name] . '').'">' . $item[$column_name] . ' </a>';
+                break;
+
+            case 'date_expiry':
+                $now = $item[$column_name];
+                $date_today = time();
+
+                if ($now != '0000-00-00'){
+                    if( strtotime($now) < time()) {
+                        return '<span class="slm-lic-expired-date"> '. $now . '  </span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($now) . ' day(s) due</span>';
+                    }
+                    else {
+                        return '<span class="tag license-date-valid">' . $item[$column_name] . '</span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($now) . ' day(s) left</span>';
+                    }
+                }
+                else {
+                    //return $item[$column_name];
+                    return '<span class="tag license-date-null">not set<span>';
+                }
+                break;
+
+            default:
+                return $item[$column_name];
+        }
     }
 
     function column_id($item)
@@ -64,9 +149,6 @@ class SLM_List_Licenses extends WP_List_Table {
         );
     }
 
-
-
-
     function column_active($item)
     {
         if ($item['active'] == 1) {
@@ -75,9 +157,6 @@ class SLM_List_Licenses extends WP_List_Table {
             return 'inactive';
         }
     }
-
-
-
 
     function column_cb($item)
     {
@@ -90,7 +169,6 @@ class SLM_List_Licenses extends WP_List_Table {
             $item['id']                //The value of the checkbox should be the record's id
         );
     }
-
 
     function get_sortable_columns()
     {
@@ -107,10 +185,11 @@ class SLM_List_Licenses extends WP_List_Table {
         //     'date_expiry'   => array('date_expiry', false),
         // );
         $sortable_columns = array(
-            'id' => array('id', true),
-            'email' => array('email', true),
-            'until' => array('until', true),
-            'lic_status' => array('lic_status', true)
+            'id'            => array('id', true),
+            'email'         => array('email', true),
+            'lic_type'      => array('lic_type', true),
+            'until'         => array('until', true),
+            'lic_status'    => array('lic_status', true)
         );
 
         return $sortable_columns;
@@ -202,8 +281,6 @@ class SLM_List_Licenses extends WP_List_Table {
         }
     }
 
-
-
     /*
      * This function will delete the selected license key entries from the DB.
      */
@@ -260,7 +337,7 @@ class SLM_List_Licenses extends WP_List_Table {
         $search = (isset($_REQUEST['s'])) ? $_REQUEST['s'] : false;
         $search_term = trim(strip_tags($search));
 
-        $do_search = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `txn_id` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
+        $do_search = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `lic_status` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
 
         $data = $wpdb->get_results($do_search, ARRAY_A);
 
@@ -278,8 +355,6 @@ class SLM_List_Licenses extends WP_List_Table {
         ));
     }
 }
-
-
 
 class SLM_Plugin{
 
@@ -306,13 +381,13 @@ class SLM_Plugin{
         add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Add License", "Add Licenses", SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, "Subscribers", "Subscribers", SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Tools", "Tools", SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Help", "Help", SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
 
         add_action("load-$hook", [$this, 'screen_option']);
     }
-
 
     /**
      * Screen options
@@ -331,7 +406,6 @@ class SLM_Plugin{
         $this->licenses_obj = new SLM_List_Licenses();
     }
 
-
     /** Singleton instance */
     public static function get_instance(){
         if (!isset(self::$instance)) {
@@ -340,14 +414,8 @@ class SLM_Plugin{
 
         return self::$instance;
     }
-
-
 }
 
 add_action('plugins_loaded', function () {
     SLM_Plugin::get_instance();
 });
-
-
-
-

@@ -5,18 +5,6 @@
  * @link   https://github.com/michelve/software-license-manager
  */
 
-function getActiveUser($action)
-{
-    $info           = '';
-    $current_user   = wp_get_current_user();
-    if ($action == 'email') {
-        $info = esc_html($current_user->user_email);
-    }
-    if ($action == 'id') {
-        $info =  esc_html($current_user->ID);
-    }
-    return $info;
-}
 
 class SLM_Woo_Account
 {
@@ -31,6 +19,19 @@ class SLM_Woo_Account
         // Insering your new tab/page into the My Account page.
         add_filter('woocommerce_account_menu_items', array($this, 'slm_woo_menu_list'));
         add_action('woocommerce_account_' . self::$endpoint .  '_endpoint', array($this, 'endpoint_content'));
+    }
+
+    public function getActiveUser($action)
+    {
+        $info           = '';
+        $current_user   = wp_get_current_user();
+        if ($action == 'email') {
+            $info = esc_html($current_user->user_email);
+        }
+        if ($action == 'id') {
+            $info =  esc_html($current_user->ID);
+        }
+        return $info;
     }
 
     public function add_endpoints()
@@ -78,14 +79,15 @@ class SLM_Woo_Account
 
         // get user email
         $wc_billing_email = get_user_meta(get_current_user_id(), 'billing_email', true);
-        $result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000");
+        $result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . SLM_Woo_Account::getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000");
 
-        $result_array = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000", ARRAY_A);
+        $result_array = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . SLM_Woo_Account::getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000", ARRAY_A);
 
         $get_subscription = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta WHERE meta_value = '273' LIMIT 0,1000", ARRAY_A);
         $lic_order_id = array();
 
         ?>
+
 
     <table id="slm_licenses_table" class="table table-condensed" style="border-collapse:collapse;">
         <thead>
@@ -191,8 +193,7 @@ class SLM_Woo_Account
             if (in_array("pending", $licenses_status_array) || in_array("active", $licenses_status_array)) {
                 echo ' <div class="clear"></div> <header class="entry-header"> <h2 class="entry-title" itemprop="name">My Downloads</h2> </header>';
                 echo do_shortcode('[wpdm_all_packages]');
-            }
-            else {
+            } else {
                 echo " <p> No active subscriptions found. Renew or reactivate your subscription. </p> ";
             }
         }

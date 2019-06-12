@@ -32,6 +32,7 @@ Postman samples:
 -  [ ] WIP - Users and admins can export licenses
 -  [ ] WIP - License activity log, track requests and activations per license
 -  [ ] WIP - Admin widgets
+-  [ ] WIP - Send emails on expiration and activation
 
 ## Installation
 1. Go to the Add New plugins screen in your WordPress admin area

@@ -29,9 +29,37 @@ body.slm_page_slm_manage_license {
     border-top: 0;
 }
 .slm-container #order_data {
-    padding: 24px;
-    background: #fff;;
+    background: #f5f5f5;
+    border: 1px solid #e5e5e5;
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+.sml-col-right {
+    padding-right: 0 !important;
+    margin: 0;
+}
+.slm-container #order_data .nav-pills .nav-link {
+    border-radius: 0;
+}
+.slm-container #order_data .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #32373c;
+    background-color: #ffffff;
+}
+.slm-container #order_data .nav-pills a.nav-link {
+    color: #32373c;
+    font-size: 13px;
+    font-weight: 600;
+}
+.slm-container #order_data .nav-pills li.nav-item {
+    border-bottom: 1px solid #e6e6e6;
+}
+.sml-col-left {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    display: inline-block;
+    margin-left: -1px;
+    min-height: 200px;
+    width: 700px;
+    z-index: 2;
 }
 .slm-container h1 {
     font-size: 32px;
@@ -116,11 +144,7 @@ cursor: pointer;
     width: 50%;
 }
 .slm-container .tab-pane {
-    padding: 16px;
-    background: #f3faff;
-    border-radius: 4px;
-    border: 1px dashed #adf;
-    margin-top: 16px;
+    padding: 8px;
 }
 .col-4{
     float: left;
@@ -163,4 +187,236 @@ cursor: pointer;
     color: #fff;
     background-color: #007bff !important;
     border-color: #007bff !important;
+}
+span.slm-status {
+    height: 8px;
+    width: 8px;
+    display: inline-block;
+    background: #72777c;
+    border-radius: 8px;
+    margin-right: 8px;
+}
+span.slm-status.pending {
+    background: #72777c;
+}
+span.slm-status.blocked {
+   background: #6649c9;
+}
+span.slm-status.active {
+  background: #00a0d2;
+}
+span.slm-status.expired {
+   background: #f0283e;
+}
+span.slm-lic-expired-date {
+    color: #c44343;
+    display: inline-block;
+    background: #fed4d4;
+    padding: 4px 8px;
+    border-radius: 91px;
+    font-weight: 600;
+}
+span.tag.license-date-null {
+    display: inline-block;
+    background: #add;
+    padding: 4px 8px;
+    border-radius: 91px;
+    color: #467675;
+    font-weight: 600;
+}
+span.tag.license-date-valid {
+    display: inline-block;
+    background: #ddeecb;
+    padding: 4px 8px;
+    border-radius: 91px;
+    color: #4f6835;
+    font-weight: 600;
+}
+span.days-left {
+    font-size: 12px;
+    display: block;
+    padding: 4px 0;
+    color: #72777c;
+}
+
+#slm_dashboard_widget .inside {
+    padding: 0;
+    margin: 0
+}
+
+#slm_dashboard_widget .total-licenses a strong {
+    margin-right: 48px
+}
+
+#slm_dashboard_widget .slm_status_list {
+    overflow: hidden;
+    margin: 0
+}
+
+#slm_dashboard_widget .slm_status_list li {
+    width: 50%;
+    float: left;
+    padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    border-top: 1px solid #ececec;
+    color: #aaa
+}
+
+#slm_dashboard_widget .slm_status_list li a {
+    display: block;
+    color: #aaa;
+    padding: 9px 12px;
+    -webkit-transition: all ease .5s;
+    transition: all ease .5s;
+    position: relative;
+    font-size: 12px
+}
+
+#slm_dashboard_widget .slm_status_list li a .wc_sparkline {
+    width: 4em;
+    height: 2em;
+    display: block;
+    float: right;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-right: 12px;
+    margin-top: -1.25em
+}
+
+#slm_dashboard_widget .slm_status_list li a strong {
+    font-size: 18px;
+    line-height: 1.2em;
+    font-weight: 400;
+    display: block;
+    color: #21759b
+}
+
+#slm_dashboard_widget .slm_status_list li a:hover {
+    color: #2ea2cc
+}
+
+#slm_dashboard_widget .slm_status_list li a:hover strong,
+#slm_dashboard_widget .slm_status_list li a:hover::before {
+    color: #2ea2cc!important
+}
+
+#slm_dashboard_widget .slm_status_list li a .icon {
+    speak: none;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    margin: 0;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "";
+    font-size: 2em;
+    position: relative;
+    width: auto;
+    line-height: 1.2em;
+    color: #464646;
+    float: left;
+    margin-right: 12px;
+    margin-bottom: 12px
+}
+
+#slm_dashboard_widget .slm_status_list li:first-child {
+    border-top: 0
+}
+
+#slm_dashboard_widget .slm_status_list li.sales-this-month {
+    width: 100%
+}
+
+
+#slm_dashboard_widget .slm_status_list li.total-licenses {
+    width: 100%
+}
+
+#slm_dashboard_widget .slm_status_list li.total-licenses a .icon {
+    content: '\e006'
+}
+
+#slm_dashboard_widget .slm_status_list li.active-licenses {
+    border-right: 1px solid #ececec
+}
+
+#slm_dashboard_widget .slm_status_list li.active-licenses a .icon {
+    color: #00a0d2
+}
+
+#slm_dashboard_widget .slm_status_list li.pending-licenses a .icon {
+    color: #72777c
+}
+
+#slm_dashboard_widget .slm_status_list li.blocked-licenses {
+    border-right: 1px solid #ececec
+}
+
+#slm_dashboard_widget .slm_status_list li.blocked-licenses a .icon {
+    color: #6649c9
+}
+
+#slm_dashboard_widget .slm_status_list li.expired-licenses a .icon {
+    color: #f0283e
+}
+
+#slm_dashboard_widget li {
+    line-height: 1.5em;
+    margin-bottom: 12px
+}
+
+#slm_dashboard_widget h4.meta {
+    line-height: 1.4;
+    margin: -.2em 0 0 0;
+    font-weight: 400;
+    color: #999
+}
+#slm_dashboard_widget .recent_licenses {
+    padding: 12px;
+}
+#slm_dashboard_widget blockquote {
+    padding: 0;
+    margin: 0
+}
+#slm_dashboard_widget .badge {
+    background: #00769c;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 4px;
+    margin-right: 2px;
+    display: inline-block;
+}
+#slm_dashboard_widget td.license-row {
+    width: 80%;
+}
+#slm_dashboard_widget .recent_licenses table {
+        width: 100%;
+}
+#slm_dashboard_widget .recent_licenses tr {
+    padding: 3px 0;
+    display: inline-block;
+    width: 100%;
+}
+#slm_dashboard_widget .recent_licenses td {
+    padding: 3px 0;
+}
+#slm_dashboard_widget .recent_licenses table thead td {
+    border-bottom: 1px solid #ececec;
+    color: #777;
+}
+#slm_dashboard_widget .recent_licenses table thead td {
+    border-bottom: 1px solid #ececec;
+    color: #777;
+}
+#slm_dashboard_widget .recent_licenses td {
+    padding: 3px 0;
 }

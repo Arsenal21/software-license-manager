@@ -1,11 +1,16 @@
 <?php
 
+if (!defined('WPINC')) {
+    die;
+}
+
+
 function slm_integration_help_menu()
 {
     ?>
 
     <?php
-        echo '<h2 class="imgh2"> <img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> License Manager Integration Help v' . SLM_VERSION . '</h2>';
+    echo '<h2 class="imgh2"> <img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> License Manager Integration Help v' . SLM_VERSION . '</h2>';
     ?>
 
     <div class="postbox">
@@ -13,16 +18,16 @@ function slm_integration_help_menu()
         <div class="inside">
 
             <?php
-                $options                    = get_option('slm_plugin_options');
-                $creation_secret_key        = $options['lic_creation_secret'];
-                $secret_verification_key    = $options['lic_verification_secret'];
-                $api_query_post_url = SLM_SITE_HOME_URL;
-                echo "<strong>The License API Query POST URL For Your Installation</strong>";
-                echo '<div class="slm_code">' . $api_query_post_url . '</div>';
-                echo "<strong>The License Activation or Deactivation API secret key</strong>";
-                echo '<div class="slm_code">' . $secret_verification_key . '</div>';
-                echo "<strong>The License Creation API secret key</strong>";
-                echo '<div class="slm_code">' . $creation_secret_key . '</div>';
+            $options                    = get_option('slm_plugin_options');
+            $creation_secret_key        = $options['lic_creation_secret'];
+            $secret_verification_key    = $options['lic_verification_secret'];
+            $api_query_post_url = SLM_SITE_HOME_URL;
+            echo "<strong>The License API Query POST URL For Your Installation</strong>";
+            echo '<div class="slm_code">' . $api_query_post_url . '</div>';
+            echo "<strong>The License Activation or Deactivation API secret key</strong>";
+            echo '<div class="slm_code">' . $secret_verification_key . '</div>';
+            echo "<strong>The License Creation API secret key</strong>";
+            echo '<div class="slm_code">' . $creation_secret_key . '</div>';
             ?>
 
         </div>
@@ -121,32 +126,32 @@ function slm_integration_help_menu()
         <div class="error_codes">
             <h3>Error codes and constants</h3>
             <pre class="slm_code">
-                const CREATE_FAILED                 = 10;
-                const CREATE_KEY_INVALID            = 100;
-                const DOMAIN_ALREADY_INACTIVE       = 80;
-                const DOMAIN_MISSING                = 70;
-                const KEY_CANCELED                  = 130;
-                const KEY_CANCELED_FAILED           = 140;
-                const KEY_DEACTIVATE_DOMAIN_SUCCESS = 360;
-                const KEY_DEACTIVATE_SUCCESS        = 340;
-                const KEY_DELETE_FAILED             = 300;
-                const KEY_DELETE_SUCCESS            = 320;
-                const KEY_DELETED                   = 130;
-                const KEY_UPDATE_FAILED             = 220;
-                const KEY_UPDATE_SUCCESS            = 240;
-                const LICENSE_ACTIVATED             = 380;
-                const LICENSE_BLOCKED               = 20;
-                const LICENSE_CREATED               = 400;
-                const LICENSE_EXIST                 = 200;
-                const LICENSE_EXPIRED               = 30;
-                const LICENSE_IN_USE                = 40;
-                const LICENSE_INVALID               = 60;
-                const MISSING_KEY_DELETE_FAILED     = 280;
-                const MISSING_KEY_UPDATE_FAILED     = 260;
-                const REACHED_MAX_DEVICES           = 120;
-                const REACHED_MAX_DOMAINS           = 50;
-                const VERIFY_KEY_INVALID            = 90;
-                    </pre>
+                    const CREATE_FAILED                 = 10;
+                    const CREATE_KEY_INVALID            = 100;
+                    const DOMAIN_ALREADY_INACTIVE       = 80;
+                    const DOMAIN_MISSING                = 70;
+                    const KEY_CANCELED                  = 130;
+                    const KEY_CANCELED_FAILED           = 140;
+                    const KEY_DEACTIVATE_DOMAIN_SUCCESS = 360;
+                    const KEY_DEACTIVATE_SUCCESS        = 340;
+                    const KEY_DELETE_FAILED             = 300;
+                    const KEY_DELETE_SUCCESS            = 320;
+                    const KEY_DELETED                   = 130;
+                    const KEY_UPDATE_FAILED             = 220;
+                    const KEY_UPDATE_SUCCESS            = 240;
+                    const LICENSE_ACTIVATED             = 380;
+                    const LICENSE_BLOCKED               = 20;
+                    const LICENSE_CREATED               = 400;
+                    const LICENSE_EXIST                 = 200;
+                    const LICENSE_EXPIRED               = 30;
+                    const LICENSE_IN_USE                = 40;
+                    const LICENSE_INVALID               = 60;
+                    const MISSING_KEY_DELETE_FAILED     = 280;
+                    const MISSING_KEY_UPDATE_FAILED     = 260;
+                    const REACHED_MAX_DEVICES           = 120;
+                    const REACHED_MAX_DOMAINS           = 50;
+                    const VERIFY_KEY_INVALID            = 90;
+                        </pre>
         </div>
 
         <?php
