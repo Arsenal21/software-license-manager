@@ -50,7 +50,7 @@ function slm_general_settings()
             'enable_auto_key_expiry'    => isset($_POST['enable_auto_key_expiry']) ? '1' : '',
             'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
             'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
-            // 'slm_subscriptio'        => isset($_POST['slm_subscriptio']) ? '1':'',
+            'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
             'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
             'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
         );
@@ -144,6 +144,10 @@ function slm_general_settings()
                         <td>
                             <input name="slm_woo" type="checkbox" <?php if ($options['slm_woo'] != '') echo ' checked="checked"'; ?> value="1" />
                             A fully customizable, open source eCommerce platform built for WordPress.</td>
+
+                        <td>
+                            <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
+                            Disable woocommerce download page. Proccess downloads though license order info page.</td>
                     </tr>
 
                     <tr valign="top">

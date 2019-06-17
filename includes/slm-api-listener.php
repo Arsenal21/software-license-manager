@@ -74,6 +74,8 @@ class SLM_API_Listener {
             $fields['date_expiry']      = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
             $fields['product_ref']      = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
             $fields['until']            = isset( $_REQUEST['until'] ) ? wp_unslash( strip_tags( $_REQUEST['until'] ) ) : '';
+            $fields[ 'current_ver']            = isset($_REQUEST[ 'current_ver']) ? wp_unslash(strip_tags($_REQUEST[ 'current_ver'])) : '';
+            //current_ver
             $fields['subscr_id']        = isset( $_REQUEST['subscr_id'] ) ? wp_unslash( strip_tags( $_REQUEST['subscr_id'] ) ) : '';
             $fields['lic_type']         = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_type'] ) ) : '';
 
@@ -466,6 +468,8 @@ class SLM_API_Listener {
                     'product_ref'           => $retLic->product_ref,
                     'txn_id'                => $retLic->txn_id,
                     'until'                 => $retLic->until,
+                    'current_ver'           => $retLic->current_ver,
+                    //current_ver
                 ));
 
                 //Output the license details

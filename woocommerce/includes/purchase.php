@@ -26,7 +26,7 @@ add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 
 
 function wc_slm_on_complete_purchase($order_id) {
 	//SLM_Helper_Class::write_log('loading wc_slm_on_complete_purchase');
-	if (WOO_SLM_API_URL != '' && WOO_SLM_API_SECRET != '') {
+	if ( SLM_SITE_URL != '' && WOO_SLM_API_SECRET != '') {
 		wc_slm_create_license_keys($order_id);
 	}
 }
@@ -35,8 +35,9 @@ function wc_slm_create_license_keys($order_id) {
 
 	// SLM_Helper_Class::write_log('loading wc_slm_create_license_keys');
 
-	$order_id 		= wc_get_order($order_id);
-	$purchase_id_ 	= $order_id->get_id();
+	$order_id 			= wc_get_order($order_id);
+	$purchase_id_ 		= $order_id->get_id();
+	$variations_items_ 	= $order_id->get_items();
 
 	// SLM_Helper_Class::write_log('purchase_id_ -- '.$purchase_id_ );
 	// SLM_Helper_Class::write_log('purchase_id_ -- '.$user_id  );
@@ -57,132 +58,125 @@ function wc_slm_create_license_keys($order_id) {
 	$licenses = array();
 	$items = $order_id->get_items();
 
-	//SLM_Helper_Class::write_log($items);
-
 
 	foreach ($items as $item => $values) {
 		$download_id 	= $product_id = $values['product_id'];
 		$product 		= new WC_Product($product_id);
-		// $variation_id 	= new WC_Product_Variation($product_id);
 
-		//if ($product->is_downloadable('yes')) {
+		$download_quantity = absint($values['qty']);
+		for ($i = 1; $i <= $download_quantity; $i++) {
+			/**
+			 * Calculate Expire date
+			 * @since 1.0.3
+			 */
+			$renewal_period = (int) wc_slm_get_licensing_renewal_period($product_id);
 
-			$download_quantity = absint($values['qty']);
-			for ($i = 1; $i <= $download_quantity; $i++) {
-				/**
-				 * Calculate Expire date
-				 * @since 1.0.3
-				 */
-				$renewal_period = (int) wc_slm_get_licensing_renewal_period($product_id);
-
-				if ($renewal_period == 0) {
-					$renewal_period = '0000-00-00';
-				}
-				else {
-					$renewal_period = date('Y-m-d', strtotime('+' . $renewal_period . ' years'));
-				}
-
-				//SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
-
-
-				// Sites allowed get license meta from variation
-				$sites_allowed 			= wc_slm_get_sites_allowed($product_id);
-				$devices_allowed 		= wc_slm_get_devices_allowed($product_id);
-				$amount_of_licenses 	= wc_slm_get_licenses_qty($product_id);
-
-				if (!$sites_allowed) {
-					$sites_allowed_error = __('License could not be created: Invalid sites allowed number.', 'wc-slm');
-					$int = wc_insert_payment_note($purchase_id_, $sites_allowed_error);
-					break;
-				}
-
-				// Get an instance of the WC_Order object (same as before)
-				$order = new WC_Order( $order_id );
-
-				// Get the order ID
-				$order_id = $order->get_id();
-
-				// Get the custumer ID
-				// $user_id = $order->get_user_id();
-				$order_data = $order->get_data(); // The Order data
-
-				// Iterating through each WC_Order_Item objects
-				foreach( $order-> get_items() as $item_key => $item_values ){
-
-				    ## Using WC_Order_Item methods ##
-				    $item_id 			= $item_values->get_id();
-				    $item_name 			= $item_values->get_name();
-				    $item_type 			= $item_values->get_type();
-
-				    ## Access Order Items data properties (in an array of values) ##
-				    $item_data 			= $item_values->get_data();
-				    $product_name 		= $item_data['name'];
-				    $product_id 		= $item_data['product_id'];
-				    // $variation_id 		= $item_data['variation_id'];
-				    $quantity 			= $item_data['quantity'];
-				    $tax_class 			= $item_data['tax_class'];
-				    $line_subtotal 		= $item_data['subtotal'];
-				    $line_subtotal_tax 	= $item_data['subtotal_tax'];
-				    $line_total 		= $item_data['total'];
-				    $line_total_tax 	= $item_data['total_tax'];
-				    // $post_object 		= get_post($variation_id);
-
-				    $amount_of_licenses 		= wc_slm_get_sites_allowed($product_id);
-				    $_license_current_version 	= get_post_meta( $product_id, '_license_current_version', true );
-				    $amount_of_licenses_devices = wc_slm_get_devices_allowed($product_id);
-				    $current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
-				    $license_type 				= get_post_meta( $product_id, '_license_type', true );
-				}
-
-				// Transaction id
-				$transaction_id = wc_get_payment_transaction_id($product_id);
-
-				// Build item name
-				$item_name = $product->get_title();
-
-				// Build parameters
-				$api_params = array();
-				$api_params['slm_action'] 			= 'slm_create_new';
-				$api_params['secret_key'] 			= KEY_API;
-				$api_params['first_name'] 			= (isset($payment_meta['user_info']['first_name'])) ? $payment_meta['user_info']['first_name'] : '';
-				$api_params['last_name'] 			= (isset($payment_meta['user_info']['last_name'])) ? $payment_meta['user_info']['last_name'] : '';
-				$api_params['email'] 				= (isset($payment_meta['user_info']['email'])) ? $payment_meta['user_info']['email'] : '';
-				$api_params['company_name'] 		= $payment_meta['user_info']['company'];
-				$api_params['purchase_id_'] 		= $purchase_id_;
-				$api_params['product_ref'] 			= $product_id; // TODO: get product id
-				$api_params['txn_id'] 				= $purchase_id_;
-				$api_params['max_allowed_domains'] 	= $amount_of_licenses;
-				$api_params['max_allowed_devices'] 	= $amount_of_licenses_devices;
-				$api_params['date_created'] 		= date('Y-m-d');
-				$api_params['date_expiry'] 			= $renewal_period;
-				$api_params['until'] 				= $_license_current_version;
-				$api_params['subscr_id'] 			= $order->get_customer_id();
-				$api_params['lic_type'] 			= $license_type;
-
-				//access_expires
-
-				//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
-
-				// Send query to the license manager server
-				$url 			= 'http://' . WOO_SLM_API_URL . '?' . http_build_query($api_params);
-				$url 			= str_replace(array('http://', 'https://'), '', $url);
-				$url 			= 'http://' . $url;
-				$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
-				$license_key 	= wc_slm_get_license_key($response);
-
-				// Collect license keys
-				if ($license_key) {
-					$licenses[] = array(
-						'item' 		=> $item_name,
-						'key' 		=> $license_key,
-						'expires' 	=> $renewal_period,
-						'type' 		=>	$license_type,
-						'status' 	=>	'pending',
-						'version' 	=>	$_license_current_version
-				);
-				}
+			if ($renewal_period == 0) {
+				$renewal_period = '0000-00-00';
 			}
-		// }
+			else {
+				$renewal_period = date('Y-m-d', strtotime('+' . $renewal_period . ' years'));
+			}
+			//SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
+
+			// Sites allowed get license meta from variation
+			$sites_allowed 			= wc_slm_get_sites_allowed($product_id);
+			$devices_allowed 		= wc_slm_get_devices_allowed($product_id);
+			$amount_of_licenses 	= wc_slm_get_licenses_qty($product_id);
+
+			if (!$sites_allowed) {
+				$sites_allowed_error = __('License could not be created: Invalid sites allowed number.', 'slm');
+				$int = wc_insert_payment_note($purchase_id_, $sites_allowed_error);
+				break;
+			}
+
+			// Get an instance of the WC_Order object (same as before)
+			$order = new WC_Order( $order_id );
+
+			// Get the order ID
+			$order_id = $order->get_id();
+
+			// Get the custumer ID
+			// $user_id = $order->get_user_id();
+			$order_data = $order->get_data(); // The Order data
+
+			// Iterating through each WC_Order_Item objects
+			foreach( $order-> get_items() as $item_key => $item_values ){
+
+				## Using WC_Order_Item methods ##
+				$item_id 			= $item_values->get_id();
+				$item_name 			= $item_values->get_name();
+				$item_type 			= $item_values->get_type();
+
+				## Access Order Items data properties (in an array of values) ##
+				$item_data 			= $item_values->get_data();
+				$product_name 		= $item_data['name'];
+				$product_id 		= $item_data['product_id'];
+				// $variation_id 		= $item_data['variation_id'];
+				// $quantity 			= $item_data['quantity'];
+				// $tax_class 			= $item_data['tax_class'];
+				// $line_subtotal 		= $item_data['subtotal'];
+				// $line_subtotal_tax 	= $item_data['subtotal_tax'];
+				// $line_total 		= $item_data['total'];
+				// $line_total_tax 	= $item_data['total_tax'];
+				// $post_object 		= get_post($variation_id);
+
+				$amount_of_licenses 		= wc_slm_get_sites_allowed($product_id);
+				$_license_current_version 	= get_post_meta( $product_id, '_license_current_version', true );
+				$_license_until_version 	= get_post_meta($product_id, '_license_until_version', true);
+				$amount_of_licenses_devices = wc_slm_get_devices_allowed($product_id);
+				$current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
+				$license_type 				= get_post_meta( $product_id, '_license_type', true );
+			}
+
+			// Transaction id
+			$transaction_id = wc_get_payment_transaction_id($product_id);
+
+			// Build item name
+			$item_name = $product->get_title();
+
+			// Build parameters
+			$api_params = array();
+			$api_params['slm_action'] 			= 'slm_create_new';
+			$api_params['secret_key'] 			= KEY_API;
+			$api_params['first_name'] 			= (isset($payment_meta['user_info']['first_name'])) ? $payment_meta['user_info']['first_name'] : '';
+			$api_params['last_name'] 			= (isset($payment_meta['user_info']['last_name'])) ? $payment_meta['user_info']['last_name'] : '';
+			$api_params['email'] 				= (isset($payment_meta['user_info']['email'])) ? $payment_meta['user_info']['email'] : '';
+			$api_params['company_name'] 		= $payment_meta['user_info']['company'];
+			$api_params['purchase_id_'] 		= $purchase_id_;
+			$api_params['product_ref'] 			= $product_id; // TODO: get product id
+			$api_params['txn_id'] 				= $purchase_id_;
+			$api_params['max_allowed_domains'] 	= $amount_of_licenses;
+			$api_params['max_allowed_devices'] 	= $amount_of_licenses_devices;
+			$api_params['date_created'] 		= date('Y-m-d');
+			$api_params['date_expiry'] 			= $renewal_period;
+			$api_params['until'] 				= $_license_until_version;
+			$api_params['current_ver'] 			= $_license_current_version;
+			$api_params['subscr_id'] 			= $order->get_customer_id();
+			$api_params['lic_type'] 			= $license_type;
+
+			//access_expires
+			//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
+			// Send query to the license manager server
+			$url 			= 'http://' . WOO_SLM_API_URL . '?' . http_build_query($api_params);
+			$url 			= str_replace(array('http://', 'https://'), '', $url);
+			$url 			= 'http://' . $url;
+			$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
+			$license_key 	= wc_slm_get_license_key($response);
+
+			// Collect license keys
+			if ($license_key) {
+				$licenses[] = array(
+					'item' 		=>	$item_name,
+					'key' 		=>	$license_key,
+					'expires' 	=>	$renewal_period,
+					'type' 		=>	$license_type,
+					'status' 	=>	'pending',
+					'version' 	=>	$_license_current_version,
+					'until' 	=>	$_license_until_version
+			);
+			}
+		}
 	}
 
 	// Payment note
@@ -227,6 +221,7 @@ function wc_slm_payment_note($order_id, $licenses) {
 			add_post_meta($order_id, 'slm_wc_license_type', $license[ 'type']);
 			add_post_meta($order_id, 'slm_wc_license_status', $license['status']);
 			add_post_meta($order_id, 'slm_wc_license_version', $license[ 'version']);
+			add_post_meta($order_id, 'slm_wc_until_version', $license['until']);
 
 			//SLM_Helper_Class::write_log($license_key);
 		}
@@ -332,7 +327,7 @@ function slm_order_completed( $order_id ) {
 	$order_billing_email = $order_data['billing']['email'];
 
 	$billing_address = $order_billing_email;
-	$message = 'ddd00';
+	$message = 'error: 000 null';
 
 	$get_user_meta 	= get_user_meta($user_id);
 
@@ -364,22 +359,7 @@ function slm_show_msg( $order_id ) {
 	    //var_dump(get_post_meta($product_id));
 
 	    if ($amount_of_licenses) {
-			echo '<div class="woocommerce-order-details">
-				<h2 class="woocommerce-order-details__title">My subscriptions</h2>
-				<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
-					<thead>
-						<tr>
-							<th class="woocommerce-table__product-name product-name">My Account</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="woocommerce-table__line-item order_item">
-							<td class="woocommerce-table__product-name product-name" >
-								You can see and manage your licenses inside your account. <a href="/my-account/my-licenses/">Manage Licenses</a></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>';
+			echo '<div class="woocommerce-order-details"> <h2 class="woocommerce-order-details__title">My subscriptions</h2> <table class="woocommerce-table woocommerce-table--order-details shop_table order_details"> <thead> <tr> <th class="woocommerce-table__product-name product-name">My Account</th> </tr> </thead> <tbody> <tr class="woocommerce-table__line-item order_item"> <td class="woocommerce-table__product-name product-name" > You can see and manage your licenses inside your account. <a href="/my-account/my-licenses/">Manage Licenses</a></td> </tr> </tbody> </table> </div>';
 		}
 	}
 }
@@ -412,15 +392,13 @@ function slm_add_lic_key_meta_update($order_id)
  * Display field value on the order edit page
  */
 
-function slm_add_lic_key_meta_display($order)
-{
+function slm_add_lic_key_meta_display($order){
 	echo '<p><strong>' . __('License key') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . '</p>';
 	echo '<p><strong>' . __('License expiration') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_expires', true) . '</p>';
-
 	echo '<p><strong>' . __('License type') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_type', true) . '</p>';
-
 	echo '<p><strong>' . __('License status') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_status', true) . '</p>';
-	echo '<p><strong>' . __('License version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_version', true) . '</p>';
+	echo '<p><strong>' . __('License current version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_version', true) . '</p>';
+	echo '<p><strong>' . __('Supported until version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_until_version', true) . '</p>';
 }
 
 /**

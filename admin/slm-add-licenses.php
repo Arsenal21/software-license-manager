@@ -22,6 +22,7 @@ function slm_add_licenses_menu()
     $renewed_date   = '';
     $expiry_date    = '';
     $until          = '';
+    $current_ver    = '';
     $product_ref    = '';
     $subscr_id      = '';
     $lic_type       = '';
@@ -59,6 +60,7 @@ function slm_add_licenses_menu()
         $expiry_date    = $record->date_expiry;
         $product_ref    = $record->product_ref;
         $until          = $record->until;
+        $current_ver    = $record->current_ver;
         $subscr_id      = $record->subscr_id;
         $lic_type       = $record->lic_type;
     }
@@ -90,6 +92,7 @@ function slm_add_licenses_menu()
         $expiry_date    = $_POST['date_expiry'];
         $product_ref    = $_POST['product_ref'];
         $until          = $_POST['until'];
+        $current_ver    = $_POST['current_ver'];
         $subscr_id      = $_POST['subscr_id'];
         $lic_type       = $_POST['lic_type'];
 
@@ -122,6 +125,7 @@ function slm_add_licenses_menu()
         $fields['date_expiry']  = $expiry_date;
         $fields['product_ref']  = $product_ref;
         $fields['until']        = $until;
+        $fields['current_ver']  = $current_ver;
         $subscr_id              = $_POST['subscr_id'];
         $lic_type               = $_POST['lic_type'];
 
@@ -541,6 +545,11 @@ function slm_add_licenses_menu()
                                                                 <label for="until">Supported Until</label>
                                                                 <input name="until" type="text" class="form-control" id="until" value="<?php echo $until; ?>" />
                                                                 <small class="form-text text-muted">Until what version this product is supported</small>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="current_ver">Current Version</label>
+                                                                <input name="current_ver" type="text" class="form-control" id="current_ver" value="<?php echo $current_ver; ?>" />
+                                                                <small class="form-text text-muted">What is the current version of this product</small>
                                                             </div>
                                                             <div class="clear"></div>
 
