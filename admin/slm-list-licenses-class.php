@@ -94,6 +94,7 @@ class SLM_List_Licenses extends WP_List_Table {
             'date_activated'        => 'Date activated',
             'date_expiry'           => 'Expiration',
             'until'                 => 'Until Ver.',
+            'current_ver'           => 'Current Ver.'
         );
         return $columns;
     }
@@ -172,23 +173,12 @@ class SLM_List_Licenses extends WP_List_Table {
 
     function get_sortable_columns()
     {
-        // $sortable_columns = array(
-        //     'id'            => array('id', false),
-        //     'license_key'   => array('license_key', false),
-        //     'lic_status'    => array('lic_status', false),
-        //     'purchase_id_'  => array('purchase_id_', false),
-        //     'until'         => array('until', false),
-        //     'email'         => array('email', false),
-        //     'date_created'  => array('date_created', false),
-        //     'date_renewed'  => array('date_renewed', false),
-        //     'date_activated'  => array('date_activated', false),
-        //     'date_expiry'   => array('date_expiry', false),
-        // );
         $sortable_columns = array(
             'id'            => array('id', true),
             'email'         => array('email', true),
             'lic_type'      => array('lic_type', true),
             'until'         => array('until', true),
+            'current_ver'   => array( 'current_ver', true),
             'lic_status'    => array('lic_status', true)
         );
 

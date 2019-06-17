@@ -119,7 +119,7 @@ class SLM_Woo_Account
                 </tr>
                 <tr class="parent">
                     <td colspan="5" class="hiddenRow">
-                        <div class="row row-p collapse demo<?php echo $class_id_++; ?>">
+                        <div class="collapse demo<?php echo $class_id_++; ?>">
                             <?php
                             global $wpdb;
 
@@ -130,47 +130,85 @@ class SLM_Woo_Account
                             $detailed_devices_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_devices_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
                             ?>
 
-                            <div class="domains-list col-md-6">
-                                <h5>Domain(s)</h5>
-                                <ul class="list-unstyled">
-                                    <?php
-                                    // var_dump($detailed_domain_info);
-                                    // var_dump($detailed_devices_info);
-                                    foreach ($detailed_domain_info as $domain_info) {
-
-                                        if (isset($domain_info["lic_key"]) && !empty($domain_info["lic_key"])) {
-                                            echo '<li> <a href="http://' . $domain_info["registered_domain"] . '" target="_blank">' . $domain_info["registered_domain"] . '</a></li>';
-                                        } else {
+                            <div class="row pt-3">
+                                <div class="domains-list col-md-6">
+                                    <h5>Domain(s)</h5>
+                                    <ul class="list-unstyled">
+                                        <?php
+                                        // var_dump($detailed_domain_info);
+                                        // var_dump($detailed_devices_info);
+                                        if (count($detailed_domain_info) == 0) {
                                             echo "<li>no data available</li>";
-                                        }
-                                    }
-                                    $out                    = array_values($detailed_license_info);
-                                    $license_key_json_data  = json_encode($out);
-
-                                    ?>
-
-                                    <div class="clear"></div>
-                                    <input type="button" id="export-lic-key" data-licdata='<?php echo $license_key_json_data; ?>' value="Export license" />
-
-                                </ul>
-                            </div>
-                            <div class="devices-list col-md-6">
-                                <h5>Device(s)</h5>
-                                <ul class="list-unstyled">
-                                    <?php
-                                    foreach ($detailed_devices_info as $devices_info) {
-                                        if (isset($devices_info["lic_key"]) && !empty($devices_info["lic_key"])) {
-                                            echo '<li>' . $devices_info["registered_devices"] . '</li>';
                                         } else {
-                                            echo "<li>no data available</li>";
+                                            foreach ($detailed_domain_info as $domain_info) {
+
+                                                if (isset($domain_info["lic_key"]) && !empty($domain_info["lic_key"])) {
+                                                    echo '<li> <a href="http://' . $domain_info["registered_domain"] . '" target="_blank">' . $domain_info["registered_domain"] . '</a></li>';
+                                                } else {
+                                                    echo "<li>no data available</li>";
+                                                }
+                                            }
                                         }
-                                    }
-                                    ?>
-                                </ul>
+                                        $out                    = array_values($detailed_license_info);
+                                        $license_key_json_data  = json_encode($out);
+
+                                        ?>
+
+                                    </ul>
+                                </div>
+                                <div class="devices-list col-md-6">
+                                    <h5>Device(s)</h5>
+                                    <ul class="list-unstyled">
+                                        <?php
+                                        if (count($detailed_domain_info) == 0) {
+                                            echo "<li>no data available</li>";
+                                        } else {
+                                            foreach ($detailed_devices_info as $devices_info) {
+                                                if (isset($devices_info["lic_key"]) && !empty($devices_info["lic_key"])) {
+                                                    echo '<li>' . $devices_info["registered_devices"] . '</li>';
+                                                } else {
+                                                    echo "<li>no data available</li>";
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="view-order">
-                                <a href="<?php echo get_site_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">View Order #<?php echo $license_info->purchase_id_; ?></a>
+                            <div class="clear"></div>
+
+                            <!-- <div class="view-order"> <a href="<?php ?>">View Order #<?php ?></a> </div> -->
+                            <div class="lic-actions border-top mt-5 pt-5">
+
+                                <div class="download-files row">
+                                    <?php
+                                    // woo download integration
+                                    $slm_woo_order_id       = $license_info->purchase_id_;
+                                    $slm_woo_product_id     = $license_info->product_ref;
+                                    $woo_download_db        = 'woocommerce_downloadable_product_permissions';
+
+                                    $get_woo_downloads =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . $woo_download_db . " WHERE `product_id` = '" . $slm_woo_product_id . "' ORDER BY `product_id` LIMIT 0,1000;", ARRAY_A);
+
+                                    if ($license_info->lic_status == 'active' || $license_info->lic_status == 'pending') {
+
+                                        echo '<div class="col-md-6"> <input type="button" id="export-lic-key" data-licdata="' . $license_key_json_data . '" value="Export license" class="btn btn-secondary" /> </div>';
+
+                                        foreach ($get_woo_downloads as $download) {
+                                            $get_files = get_post_meta($slm_woo_product_id, '_downloadable_files', true);
+                                            $file_name = $get_files[$download["download_id"]]['name'];
+                                            //var_dump($my_meta);
+
+                                            if (isset($download["order_key"]) && !empty($download["order_key"]) && $download["user_id"] == SLM_Woo_Account::getActiveUser('id')) {
+                                                echo '<div class="col-md-6"> <a href="' . get_site_url() . '?download_file=' . $download["product_id"] . '&order=' . $download["order_key"] . '&email=' . $download["user_email"] . '&key=' . $download["download_id"] . '" class="btn btn-secondary"> Download ' . $file_name . ' </a></div>';
+                                            }
+                                        }
+                                    } else {
+                                        echo '<p class="alert alert-danger"> You are not allowed to view/download files. Renew or upgarde your license.</p>';
+                                    } ?>
+                                </div>
                             </div>
+                            <div class="clear"></div>
+
                         </div>
                     </td>
                 </tr>

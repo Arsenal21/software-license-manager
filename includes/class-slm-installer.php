@@ -49,6 +49,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       reminder_sent_date date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
       until varchar(255) NOT NULL default '',
+      current_ver varchar(255) NOT NULL default '',
       subscr_id varchar(128) NOT NULL default '',
       PRIMARY KEY (id)
       )" . $charset_collate . ";";
@@ -85,7 +86,6 @@ $ldv_tbl_sql = "CREATE TABLE " .$lic_devices_table. " (
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
 dbDelta($ldv_tbl_sql);
-update_option("slm_db_version", SLM_DB_VERSION);
 
 // Add default options
 $options = array(
@@ -97,6 +97,9 @@ $options = array(
     'enable_debug'            => '',
     'slm_woo'                 => '',
     'slm_wpestores'           => '',
-    'slm_dl_manager'          => '', //Download Manager
+    'slm_woo_downloads'       => '',
+    'slm_dl_manager'          => ''
 );
-add_option('slm_plugin_options', $options);
+
+update_option('slm_plugin_options', $options);
+update_option("slm_db_version", SLM_DB_VERSION);

@@ -57,3 +57,17 @@ function slm_get_processing_notification_content( $order, $heading = false, $mai
 }
 
 
+if (null !== SLM_Helper_Class::slm_get_option('slm_woo_downloads') && SLM_Helper_Class::slm_get_option('slm_woo_downloads') == 1) {
+    // disable downloads
+    function slm_woo_remove_downlaods($items)
+    {
+        unset($items['downloads']);
+        return $items;
+    }
+    function slm_remove_order_downloads_from_emails($emails)
+    {
+        remove_action('woocommerce_email_order_details', array($emails, 'order_downloads'), 10);
+    }
+    add_action('woocommerce_email', 'slm_remove_order_downloads_from_emails', 10, 1);
+    add_filter('woocommerce_account_menu_items', 'slm_woo_remove_downlaods');
+}
