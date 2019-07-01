@@ -19,7 +19,7 @@ This plugin is very useful for creating a license server and doing the following
 [Demo and samples:]( https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest).
 
 ## Features:
-- Create license keys in your system (license server)
+- Create license keys
 - Check the status of a license key from from your application (remotely)
 - Activate a license key from your application (remotely)
 - Deactivate a license key (remotely)
@@ -35,13 +35,17 @@ This plugin is very useful for creating a license server and doing the following
 - License info is now included inside woocommerce order (new)
 - License activity log, track requests and activations per license (new)
 - Admin stats widgets (new)
--  [ ] WIP - Send emails on expiration and activation
+- Send emails on expiration and activation
+- Language support (spanish and english)
+- Woocommerce product type
+- Pass license info to woocommerce order
+-
 
 ## Installation
 1. Go to the Add New plugins screen in your WordPress admin area
-1. Click the upload tab
-1. Browse for the plugin file (software-license-manager.zip)
-1. Click Install Now and then activate the plugin
+2. Click the upload tab
+3. Browse for the plugin file (software-license-manager.zip)
+4. Click Install Now and then activate the plugin
 
 ## Compatibility
 - [-] Woocommerce
@@ -53,20 +57,20 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 
 
 ## Screenshots
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/dashboard.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/dashboard.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/overview-filters.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview-filters.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/overview.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/screen%20options.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/screen%20options.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/subscribers-results.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers-results.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/subscribers.png?raw=true" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers.png?raw=true" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/add-key.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/export.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width=800 alt="Software License Manager" />
 
-<img src="https://github.com/michelve/software-license-manager/blob/master/public/assets/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" />
