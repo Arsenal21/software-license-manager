@@ -9,123 +9,52 @@ function slm_integration_help_menu()
 {
     ?>
 
-    <?php
-    echo '<h2 class="imgh2"> <img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> License Manager Integration Help v' . SLM_VERSION . '</h2>';
-    ?>
+    <h2>License Manager Integration Help v <?php SLM_VERSION; ?></h2>
 
-    <div class="postbox">
-        <h3 class="hndle"><label for="title">API Settings</label></h3>
-        <div class="inside">
+    <style>
+        pre {
+            display: block;
+            font-size: 87.5%;
+            color: #212529;
+            line-height: 12px;
+            padding: 8px;
+            background: #fff;
+            margin: 16px 0;
+            text-align: left;
+        }
 
-            <?php
-            $options                    = get_option('slm_plugin_options');
-            $creation_secret_key        = $options['lic_creation_secret'];
-            $secret_verification_key    = $options['lic_verification_secret'];
-            $api_query_post_url = SLM_SITE_HOME_URL;
-            echo "<strong>The License API Query POST URL For Your Installation</strong>";
-            echo '<div class="slm_code">' . $api_query_post_url . '</div>';
-            echo "<strong>The License Activation or Deactivation API secret key</strong>";
-            echo '<div class="slm_code">' . $secret_verification_key . '</div>';
-            echo "<strong>The License Creation API secret key</strong>";
-            echo '<div class="slm_code">' . $creation_secret_key . '</div>';
-            ?>
+        pre {
+            display: block;
+            font-size: 87.5%;
+            color: #212529;
+        }
+    </style>
+    <div class="wrap">
+        <div class="slm-postbox set-pd">
+            <h3>API Settings</h3>
+            <div class="inside">
+                <?php
+                $options                    = get_option('slm_plugin_options');
+                $creation_secret_key        = $options['lic_creation_secret'];
+                $secret_verification_key    = $options['lic_verification_secret'];
+                $api_query_post_url = SLM_SITE_HOME_URL;
+                echo "<br><strong>The License API Query POST URL For Your Installation</strong>";
+                echo '<br><div class="slm_code"> <input style="width: 500px" type="text" value="' . $api_query_post_url . '"></div>';
+                echo "<br><strong>The License Activation or Deactivation API secret key</strong>";
+                echo '<br><div class="slm_code"><input style="width: 500px" type="text" value="' . $secret_verification_key . '"></div>';
+                echo "<br><strong>The License Creation API secret key</strong>";
+                echo '<br><div class="slm_code"><input style="width: 500px" type="text" value="' . $creation_secret_key . '"></div>';
+                ?>
 
-        </div>
-    </div>
+            </div>
 
-    <div class="postbox set-pd">
+            <div>
+                <p>Documentation and guides: <a href="https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest">check out postman demos</a></p>
+            </div>
 
-
-
-        <h2>3rd Party Integration</h2>
-
-        Integrating a 3rd party payment system or shopping cart with License Manager is easy.
-        <br /><br />
-        The integration process can be accomplished in three steps, namely:
-        <br />
-        <br />1. Generate POST data
-        <br />2. Send POST data to the API POST URL
-        <br />3. Process the returned data
-        <br /><br />
-        <strong>POST Values</strong>
-        <br />
-        License Manager expects a certain set of variables to be sent to it via HTTP POST or GET. These variables are:
-        <br /><br />
-        Mandatory Variables
-        <br />
-        ----------------
-        <br />a. secret_key - A Secret API key for authentication (you can find the secret key value in the settings menu of this plugin)
-        <br />b. slm_action - The action being performed. The values can be slm_create_new or slm_activate or slm_deactivate
-        <br /><br />
-        Optional Variables
-        <br />
-        ---------------
-        <br />c. Customer First Name: The first name of the customer
-        <br />d. Customer Last Name: The last name of the customer
-        <br />e. Customer Email: The email address of the customer
-        <br />f. Company Name: The customer's company name
-        <br />g. Maximum Domains Allowed: The number of domains this license key can be used on
-        <br />h. Transaction ID: A unique transaction ID to reference the transaction
-        <br /><br />
-        <strong>Return Value</strong>
-        <br />
-        Upon successful processing, License Manager will return a plain text message that will have two or three lines similar to the following:
-        <br />
-        <div class="slm_code">
-            Success
-            <br />License key
-            <br />WPLICMGR4bc29fd61e471
-        </div>
-        or
-        <div class="slm_code">
-            Error
-            <br />Secret key is invalid
-        </div>
-
-        1. The first line is an indication of success or error
-        <br />2. The second line is the result.
-        <br />3. The third line is additional message that resulted from the request.
-        <br /><br />
-        <strong>Sample PHP Code</strong>
-        <br />
-        Below is a sample PHP code that shows how you can create a license via the API
-        <br />
-
-        <div class="slm_code">
-            /*** Mandatory data ***/
-            <br />// Post URL
-            <br />$postURL = "<?php echo isset($LicenseCreationPostURL) ? $LicenseCreationPostURL : ''; ?>";
-            <br />// The Secret key
-            <br />$secretKey = "<?php echo $creation_secret_key; ?>";
-            <br />
-            <br />/*** Optional Data ***/
-            <br />$firstname = "John";
-            <br />$lastname = "Doe";
-            <br />$email = "john.doe@gmail.com";
-            <br />
-            <br />// prepare the data
-            <br />$data = array ();
-            <br />$data['secret_key'] = $secretKey;
-            <br />$data['slm_action'] = 'slm_create_new';
-            <br />$data['first_name'] = $firstname;
-            <br />$data['last_name'] = $lastname;
-            <br />$data['email'] = $email;
-            <br />
-            <br />// send data to post URL
-            <br />$ch = curl_init ($postURL);
-            <br />curl_setopt ($ch, CURLOPT_POST, true);
-            <br />curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
-            <br />curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-            <br />$returnValue = curl_exec ($ch);
-            <br />
-            <br />// Process the return values
-            <br />//var_dump($returnValue);
-        </div>
-
-
-        <div class="error_codes">
-            <h3>Error codes and constants</h3>
-            <pre class="slm_code">
+            <div class="error_codes">
+                <h3>Error codes and constants</h3>
+                <pre class="slm_code">
                     const CREATE_FAILED                 = 10;
                     const CREATE_KEY_INVALID            = 100;
                     const DOMAIN_ALREADY_INACTIVE       = 80;
@@ -151,10 +80,11 @@ function slm_integration_help_menu()
                     const REACHED_MAX_DEVICES           = 120;
                     const REACHED_MAX_DOMAINS           = 50;
                     const VERIFY_KEY_INVALID            = 90;
-                        </pre>
+                                                                            </pre>
+            </div>
         </div>
+    </div>
 
-        <?php
-        echo '</div></div>';
-        echo '</div> </div>';
-    }
+<?php
+
+}

@@ -2,7 +2,7 @@
 
 // add admin styles and scipts
 function slm_admin_assets() {
-   wp_enqueue_style('slm', SLM_ASSETS_URL .'css/slm.css');
+   wp_enqueue_style('softwarelicensemanager', SLM_ASSETS_URL .'css/slm.css');
    wp_enqueue_script('slm_validate', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js', array('jquery'), '1.19.0', true);
    wp_enqueue_script('slm_validate_js', SLM_ASSETS_URL .'js/slm.js', array('jquery'), '1.0.1', true );
 }
@@ -21,7 +21,7 @@ function slm_frontend_assets() {
         wp_enqueue_script( 'bootstrapcdn-slm-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', array('jquery'), '4.1.3', true );
     }
     // custom css
-    wp_enqueue_style('slm', SLM_ASSETS_URL .'css/slm-front-end.css');
+    wp_enqueue_style('softwarelicensemanager', SLM_ASSETS_URL .'css/slm-front-end.css');
 }
 
 add_action('wp_enqueue_scripts', 'slm_frontend_assets');
@@ -40,4 +40,5 @@ function slm_get_page(){
         add_action('wp_enqueue_scripts', 'slm_js_license');
     }
 }
+
 

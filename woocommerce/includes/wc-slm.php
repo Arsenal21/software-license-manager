@@ -1,6 +1,6 @@
 <?php
 
-if (!class_exists('WOO_SLM')) {
+
 	class WOO_SLM {
 		private static $instance;
 		public static function instance() {
@@ -12,10 +12,8 @@ if (!class_exists('WOO_SLM')) {
 		}
 
 		private function includes() {
-			require_once SLM_WOO . 'includes/class.php';
 			require_once SLM_WOO . 'includes/purchase.php';
 		}
 
 	}
 	return WOO_SLM::instance();
-}

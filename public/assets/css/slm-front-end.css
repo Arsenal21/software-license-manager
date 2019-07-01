@@ -5,3 +5,30 @@
 #slm_licenses_table .row-p {
     padding: 25px;
 }
+.slm-status .slm-key-status .key-status {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f2f2f2;
+    color: #ffffff;
+    border-radius: 24px;
+}
+.slm-status .slm-key-status .key-status.pending {
+background: #72777c;
+}
+.slm-status .slm-key-status .key-status.blocked {
+background: #6649c9;
+}
+.slm-status .slm-key-status .key-status.active {
+background: #00a0d2;
+}
+.slm-status .slm-key-status .key-status.expired {
+background: #f0283e;
+}
+
+#slm_licenses_table td.hiddenRow {
+    padding: 0 16px;
+    margin: 0;
+}
+
+#slm_licenses_table tbody tr:nth-child(even) {background: #fbfbfb}
+#slm_licenses_table tbody tr:nth-child(odd) {background: #FFF}

@@ -6,24 +6,18 @@ if (!defined('WPINC')) {
     die;
 }
 
-
-function get_user_info()
-{
+function get_user_info(){
     if (!current_user_can('manage_licenses')) {
         $response = array(
             'success' => false,
-            'message' => __('You do not have permission to manage this license.', 'edd_sl'),
+            'message' => _e('You do not have permission to manage this license.', 'softwarelicensemanager'),
         );
-
         echo json_encode($response);
         die();
     }
 }
 
-
-function slm_manage_licenses_menu()
-{
-
+function slm_manage_licenses_menu(){
     //include_once('slm-list-licenses-class.php');
     $license_list = new SLM_List_Licenses();
 
@@ -33,16 +27,12 @@ function slm_manage_licenses_menu()
         }
     }
     ?>
-
-
     <div class="stats">
-
     </div>
-
     <div class="wrap">
-        <h1>Overview - Manage licenses</h1>
+        <h1><?php _e('Overview - Manage licenses', 'softwarelicensemanager'); ?></h1>
         <br>
-        <a href="admin.php?page=slm_manage_license" class="page-title-action aria-button-if-js" role="button" aria-expanded="false">Add New</a>
+        <a href="admin.php?page=slm_manage_license" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'softwarelicensemanager'); ?></a>
         <hr class="wp-header-end">
 
 

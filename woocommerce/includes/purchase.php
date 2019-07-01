@@ -85,7 +85,7 @@ function wc_slm_create_license_keys($order_id) {
 			$amount_of_licenses 	= wc_slm_get_licenses_qty($product_id);
 
 			if (!$sites_allowed) {
-				$sites_allowed_error = __('License could not be created: Invalid sites allowed number.', 'slm');
+				$sites_allowed_error = __('License could not be created: Invalid sites allowed number.', 'softwarelicensemanager');
 				$int = wc_insert_payment_note($purchase_id_, $sites_allowed_error);
 				break;
 			}
@@ -158,7 +158,7 @@ function wc_slm_create_license_keys($order_id) {
 			//access_expires
 			//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
 			// Send query to the license manager server
-			$url 			= 'http://' . WOO_SLM_API_URL . '?' . http_build_query($api_params);
+			$url 			= SLM_SITE_URL . '?' . http_build_query($api_params);
 			$url 			= str_replace(array('http://', 'https://'), '', $url);
 			$url 			= 'http://' . $url;
 			$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
@@ -210,7 +210,7 @@ function wc_slm_get_license_id($license){
 
 function wc_slm_payment_note($order_id, $licenses) {
 	if ($licenses && count($licenses) != 0) {
-		$message = __('License Key(s) generated', 'wc-slm');
+		$message = __('License Key(s) generated', 'softwarelicensemanager');
 
 		foreach ($licenses as $license) {
 			$license_key = $license['key'];
@@ -227,7 +227,7 @@ function wc_slm_payment_note($order_id, $licenses) {
 		}
 	}
 	else {
-		$message = __('License Key(s) could not be created.', 'wc-slm');
+		$message = __('License Key(s) could not be created.', 'softwarelicensemanager');
 	}
 
 	// Save note
@@ -321,18 +321,15 @@ function wc_get_payment_transaction_id($order_id) {
 function slm_order_completed( $order_id ) {
 
 	global $user_id, $wpdb;
-	$order = wc_get_order($order_id);
-	$purchase_id_ 	= $order->get_id();
-	$order_data = $order->get_data(); // The Order data
-	$order_billing_email = $order_data['billing']['email'];
-
-	$billing_address = $order_billing_email;
-	$message = 'error: 000 null';
-
-	$get_user_meta 	= get_user_meta($user_id);
-
-    $headers = 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
-    wp_mail( $billing_address, 'License details', $message, $headers );
+	$order 					= wc_get_order($order_id);
+	$purchase_id_ 			= $order->get_id();
+	$order_data 			= $order->get_data(); // The Order data
+	$order_billing_email 	= $order_data['billing']['email'];
+	$billing_address 		= $order_billing_email;
+	$message 				= 'error: 000 null';
+	$get_user_meta 			= get_user_meta($user_id);
+    $headers 				= 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
+    //wp_mail( $billing_address, 'License details', $message, $headers );
 
 	// The text for the note
 	$note = __("Order confirmation email sent to: <a href='mailto:". $billing_address ."'>" . $billing_address . "</a>" );
@@ -430,3 +427,19 @@ function slm_order_details($order){
 		';
 	}
 }
+
+/**
+ * @snippet       Add Content to the Customer Processing Order Email - WooCommerce
+ * https://businessbloomer.com/woocommerce-add-extra-content-order-email/
+ */
+add_action('woocommerce_email_before_order_table', 'slm_add_license_to_order_confirmation', 20, 4);
+
+function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_text, $email)
+{
+	if ($email->id == 'customer_completed_order') {
+		echo '
+		<table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family:"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;"> <thead> <tr> <th class="td" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;"> License key</th> </tr> </thead> <tbody> <tr> <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;"> ' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . ' </td> </tr> </tbody> </table><br><br>
+		';
+	}
+}
+

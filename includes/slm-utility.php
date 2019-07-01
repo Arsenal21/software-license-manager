@@ -5,8 +5,8 @@
  */
 
 // Helper Class
-class SLM_Helper_Class
-{
+class SLM_Helper_Class {
+
     public static function slm_get_option($option)
     {
         $option_name    = '';
@@ -29,38 +29,73 @@ $slm_helper = new SLM_Helper_Class();
 
 class SLM_Utility {
 
-    static function check_for_expired_lic($lic_key = '')
-    {
+    static function check_for_expired_lic($lic_key=''){
+        global $wpdb, $first_name, $body, $date_expiry, $license_key, $expiration_reminder_text;
 
-        // $lic_key = '';
+        $headers                    = array('Content-Type: text/html; charset=UTF-8');
+        $response                   = '';
+        $sql_query                  = $wpdb->get_results("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() ORDER BY date_expiry ASC;", ARRAY_A);
+        $subject                    = get_bloginfo('name') . ' - Your license has expired';
+        $expiration_reminder_text   = SLM_Helper_Class::slm_get_option( 'expiration_reminder_text');
 
-        // log
-        SLM_Helper_Class::write_log('-------------------------------------------');
-        SLM_Helper_Class::write_log('check_for_expired_lic: is running class');
+        //SLM_Helper_Class::write_log('Found: ' . $expiration_reminder_text);
 
-        require_once(ABSPATH . '/wp-load.php');
+        if (count( $sql_query) > 0) {
 
-        $to             = 'mvelis90@gmail.com';
-        $admin_email    = get_option('admin_email');
-        $subject        = 'The subject';
-        $body           = 'The email body content';
-        $headers        = array('Content-Type: text/html; charset=UTF-8');
-        $response       = '';
+            foreach ($sql_query as $expired_licenses) {
 
-        $sent_email = wp_mail($to, $subject, $body, $headers);
+                // TODO move to template
+                include SLM_LIB . 'mails/expired.php';
 
-        // sent
-        if ($sent_email) {
-            $response = 'Reminder message was sent.';
-            SLM_Helper_Class::write_log($response);
+                $license_key            = $expired_licenses['license_key'];
+                $first_name             = $expired_licenses['first_name'];
+                $last_name              = $expired_licenses['last_name'];
+                $email                  = $expired_licenses['email'];
+                $date_expiry            = $expired_licenses['date_expiry'];
+
+                //SLM_Helper_Class::write_log('Found: ' . $license_key);
+                self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
+                self::create_log($license_key, 'sent expiration email notification');
+
+                //SLM_Helper_Class::write_log('DB record logged');
+                $response = 'Reminder message was sent to: ' . $license_key;
+                //SLM_Helper_Class::write_log($response);
+            }
         }
-        // mail failed
         else {
-            $response = 'Reminder message was not sent.';
-            SLM_Helper_Class::write_log('The message was not sent!');
+            SLM_Helper_Class::write_log('array is empty');
+            $response = 'array is empty';
         }
-
         return $response;
+    }
+
+    static function slm_check_sent_emails($license_key, $email, $subject, $body, $headers)
+    {
+        global $wpdb;
+        $query           = 'SELECT * FROM ' . SLM_TBL_EMAILS . ' WHERE lic_key = "' . $license_key . '";';
+        $lic_log_results = $wpdb->get_results($query, ARRAY_A);
+
+        if (count($lic_log_results) > 0) {
+            foreach ($lic_log_results as $license) {
+                if ($license["lic_key"] != $license_key) {
+                    // TODO: use mail class from include
+                    wp_mail($email, $subject, $body, $headers);
+                    self::create_email_log($license_key, $email, 'success', 'yes', date("Y/m/d"));
+                    return '200'; //reminder was never sent before, first time (record does not exist)
+                }
+                else {
+                    //reminder was sent before
+                    return '400';
+                }
+            }
+        }
+        else {
+            // array or results are empty (lic key was not found)
+            // TODO: use mail class from include
+            wp_mail($email, $subject, $body, $headers);
+            self::create_email_log($license_key, $email, 'success', 'yes', date("Y/m/d"));
+            return '300';
+        }
     }
 
     static function do_auto_key_expiry() {
@@ -129,18 +164,14 @@ class SLM_Utility {
 
     }
 
-    static function count_licenses($status)
-    {
+    static function count_licenses($status){
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
-
         $get_lic_status = $wpdb->get_var("SELECT COUNT(*) FROM $license_table WHERE lic_status = '" . $status . "'");
-
         return $get_lic_status;
     }
 
-    static function get_total_licenses()
-    {
+    static function get_total_licenses(){
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
         $license_count = $wpdb->get_var("SELECT COUNT(*) FROM  " . $license_table . "");
@@ -150,7 +181,6 @@ class SLM_Utility {
     static function block_license_key_by_row_id($key_row_id){
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
-
         //Now, delete the key from the licenses table.
         $wpdb->update( $license_table, array('lic_status' => 'blocked'), array('id' => $key_row_id));
 
@@ -219,6 +249,26 @@ class SLM_Utility {
         $wpdb->insert( $slm_log_table, $log_data );
 
     }
+
+    static function create_email_log($lic_key, $sent_to, $status, $sent, $date_sent)
+    {
+        global $wpdb;
+        $slm_email_table  = SLM_TBL_EMAILS;
+
+        $log_data = array(
+            'lic_key'       => $lic_key,
+            'sent_to'       => $sent_to,
+            'status'        => $status,
+            'sent'          => $sent,
+            'date_sent'     => $date_sent
+        );
+
+        $wpdb->insert($slm_email_table, $log_data);
+        SLM_Helper_Class::write_log('email log created for '. $lic_key);
+    }
+
+
+
     static function slm_wp_dashboards_stats($amount){
         global $wpdb;
         $slm_log_table  = SLM_TBL_LICENSE_KEYS;

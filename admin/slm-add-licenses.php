@@ -138,7 +138,7 @@ function slm_add_licenses_menu()
             $result = $wpdb->insert($lk_table, $fields);
             $id = $wpdb->insert_id;
             if ($result === false) {
-                $errors .= __('Record could not be inserted into the database!', 'slm');
+                $errors .= __('Record could not be inserted into the database!', 'softwarelicensemanager');
             }
         } else {
             //Update record
@@ -146,7 +146,7 @@ function slm_add_licenses_menu()
             $updated = $wpdb->update($lk_table, $fields, $where);
             if ($updated === false) {
                 //TODO - log error
-                $errors .= __('Update of the license key table failed!', 'slm');
+                $errors .= __('Update of the license key table failed!', 'softwarelicensemanager');
             }
         }
 
@@ -175,17 +175,14 @@ function slm_add_licenses_menu()
     </style>
 
     <div id="container-2" class="container slm-container">
-        <div class="mx-auto" style="width: 670px;">
+        <div class="mx-auto" style="">
             <div class="row pb-4">
-                <div class="logo col-md-2">
-                    <img src="<?php echo SLM_ASSETS_URL; ?>images/slm_logo.svg" alt="slm logo">
-                </div>
                 <div class="heading col-md-10">
                     <h1 class="woocommerce-order-data__heading">
-                        Software License Manager
+                        <?php _e('Software License Manager', 'softwarelicensemanager'); ?>
                     </h1>
                     <p class="lead">
-                        You can add a new license or edit an existing one from this interface.
+                        <?php _e('You can add a new license or edit an existing one from this interface.', 'softwarelicensemanager'); ?>
                     </p>
                 </div>
             </div>
@@ -231,39 +228,39 @@ function slm_add_licenses_menu()
                                             <ul class="nav flex-column nav-pills" aria-orientation="vertical" id="slm_manage_license" role="tablist">
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" id="license-tab" data-toggle="tab" href="#license" role="tab" aria-controls="license" aria-selected="false"><span class="dashicons dashicons-lock"></span> License key and status</a>
+                                                    <a class="nav-link active" id="license-tab" data-toggle="tab" href="#license" role="tab" aria-controls="license" aria-selected="false"><span class="dashicons dashicons-lock"></span> <?php _e('License key and status', 'softwarelicensemanager'); ?></a>
                                                 </li>
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false"><span class="dashicons dashicons-admin-users"></span> User information</a>
+                                                    <a class="nav-link" id="userinfo-tab" data-toggle="tab" href="#userinfo" role="tab" aria-controls="userinfo" aria-selected="false"><span class="dashicons dashicons-admin-users"></span> <?php _e('User information', 'softwarelicensemanager'); ?></a>
                                                 </li>
 
                                                 <?php
                                                 if (isset($_GET['edit_record'])) : ?>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" id="devicesinfo-tab" data-toggle="tab" href="#devicesinfo" role="tab" aria-controls="devicesinfo" aria-selected="false"><span class="dashicons dashicons-admin-site-alt2"></span> Devices & Domains</a>
+                                                        <a class="nav-link" id="devicesinfo-tab" data-toggle="tab" href="#devicesinfo" role="tab" aria-controls="devicesinfo" aria-selected="false"><span class="dashicons dashicons-admin-site-alt2"></span> <?php _e('Devices & Domains', 'softwarelicensemanager'); ?></a>
                                                     </li>
                                                 <?php endif; ?>
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false"><span class="dashicons dashicons-media-text"></span> Transaction</a>
+                                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false"><span class="dashicons dashicons-media-text"></span> <?php _e('Transaction', 'softwarelicensemanager'); ?></a>
                                                 </li>
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="productinfo-tab" data-toggle="tab" href="#productinfo" role="tab" aria-controls="productinfo" aria-selected="false"><span class="dashicons dashicons-store"></span> Product</a>
+                                                    <a class="nav-link" id="productinfo-tab" data-toggle="tab" href="#productinfo" role="tab" aria-controls="productinfo" aria-selected="false"><span class="dashicons dashicons-store"></span> <?php _e('Product', 'softwarelicensemanager'); ?></a>
                                                 </li>
 
                                                 <?php
                                                 if (isset($_GET['edit_record'])) : ?>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" id="activity-log-tab" data-toggle="tab" href="#activity-log" role="tab" aria-controls="activity-log" aria-selected="false"><span class="dashicons dashicons-media-text"></span> Activity log</a>
+                                                        <a class="nav-link" id="activity-log-tab" data-toggle="tab" href="#activity-log" role="tab" aria-controls="activity-log" aria-selected="false"><span class="dashicons dashicons-media-text"></span> <?php _e('Activity log ', 'softwarelicensemanager'); ?></a>
                                                     </li>
                                                 <?php endif; ?>
 
                                                 <?php
                                                 if (isset($_GET['edit_record'])) : ?>
                                                     <li class="nav-item">
-                                                        <a class="nav-link" id="export-license-tab" data-toggle="tab" href="#export-license" role="tab" aria-controls="export-license" aria-selected="false"><span class="dashicons dashicons-external"></span> Export</a>
+                                                        <a class="nav-link" id="export-license-tab" data-toggle="tab" href="#export-license" role="tab" aria-controls="export-license" aria-selected="false"><span class="dashicons dashicons-external"></span> <?php _e('Export ', 'softwarelicensemanager'); ?></a>
                                                     </li>
                                                 <?php endif; ?>
                                             </ul>

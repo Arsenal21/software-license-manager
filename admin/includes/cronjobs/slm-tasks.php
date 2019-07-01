@@ -1,28 +1,24 @@
 <?php
 
+add_filter('cron_schedules', 'slm_check_expiration_daily');
+add_action('slm_expired_send_email_reminder', 'slm_run_lic_check');
 
-// ---- ---- ----
-// A. Define a cron job interval if it doesn't exist
-
-add_filter('cron_schedules', 'slm_check_every_minute');
-
-function slm_check_every_minute($schedules)
-{
-    $schedules['every_minute'] = array(
-        'interval' => 1*60,
-        'display'  => __('Every 1 minute'),
+// for dev
+function slm_check_expiration_daily($schedules){
+    $schedules['slm_daily'] = array(
+        'interval' => 21600*4,
+        'display'  => __('Every day'),
     );
     return $schedules;
 }
 
-
 // send automatic scheduled email
 if (!wp_next_scheduled('slm_expired_send_email_reminder')) {
-    wp_schedule_event(time(), 'every_minute', 'slm_expired_send_email_reminder');
+    wp_schedule_event(time(), 'slm_daily', 'slm_expired_send_email_reminder');
 }
-add_action('slm_expired_send_email_reminder', 'run_slm_lic_check');
 
-
-function run_slm_lic_check(){
+function slm_run_lic_check(){
     SLM_Utility::check_for_expired_lic();
 }
+
+

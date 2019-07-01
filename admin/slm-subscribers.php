@@ -167,9 +167,9 @@ function slm_subscribers_menu()
     if (isset($_REQUEST['slm_subscriber_edit']) && $_REQUEST['slm_subscriber_edit'] == 'true') : ?>
 
         <div class="wrap">
-            <h1>Overview - Manage Subscriber</h1>
+            <h1><?php _e('Overview - Manage Subscribers', 'softwarelicensemanager'); ?></h1>
             <br>
-            <a href="<?php echo admin_url('admin.php?page=slm_subscribers') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false">View all</a>
+            <a href="<?php echo admin_url('admin.php?page=slm_subscribers') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('View all', 'softwarelicensemanager'); ?></a>
             <hr class="wp-header-end">
 
             <div id="poststuff">
@@ -178,14 +178,14 @@ function slm_subscribers_menu()
                         <div class="manage-user">
                             <table class="wp-list-table widefat fixed striped items">
                                 <tr>
-                                    <th scope="col" style="width: 32px">ID</th>
-                                    <th scope="col">License key</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col" style="width: 32px"><?php _e('ID', 'softwarelicensemanager'); ?></th>
+                                    <th scope="col"><?php _e('License key', 'softwarelicensemanager'); ?></th>
+                                    <th scope="col"><?php _e('Status', 'softwarelicensemanager'); ?></th>
                                     <th scope="col"> </th>
                                 </tr>
 
                                 <?php
-                                    SLM_Utility::get_subscriber_licenses();
+                                SLM_Utility::get_subscriber_licenses();
                                 ?>
                             </table>
                         </div>
@@ -197,7 +197,7 @@ function slm_subscribers_menu()
     <?php else : ?>
 
         <div class="wrap">
-            <h1>Overview - All Subscribers</h1>
+            <h1><?php _e('Overview - All Subscribers', 'softwarelicensemanager'); ?></h1>
             <br>
             <hr class="wp-header-end">
             <div id="poststuff">

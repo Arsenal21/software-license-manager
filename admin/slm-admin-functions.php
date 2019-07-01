@@ -9,7 +9,7 @@ function slm_admin_tools_menu()
 {
 
     echo '<div class="wrap">';
-    echo '<h2 class="imgh2"><img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> Software License Manager Admin Tools</h2>';
+    echo '<h2 class="imgh2"><img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> Admin Tools</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
     $slm_options = get_option('slm_plugin_options');
@@ -38,9 +38,9 @@ function slm_admin_tools_menu()
     ?>
     <br />
     <div class="postbox">
-        <h3 class="hndle"><label for="title">Send Deactivation Message for a License</label></h3>
+        <h3 class="hndle"><label for="title"><?php _e('Send Deactivation Message for a License', 'softwarelicensemanager'); ?></label></h3>
         <div class="inside">
-            <br /><strong>Enter the URL where the license deactivation message will be sent to</strong>
+            <br /><strong><?php _e('Enter the URL where the license deactivation message will be sent to', 'softwarelicensemanager'); ?></strong>
             <br /><br />
             <form method="post" action="">
 

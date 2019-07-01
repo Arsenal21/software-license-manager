@@ -6,12 +6,20 @@
  * @author    Michel Velis
  * @license   GPL-2.0+
  * @link      http://epikly.com
+ * https://api.github.com/repos/michelve/software-license-manager/tags
  */
 
+require_once(SLM_LIB . 'slm-wizard.php');
+require_once(SLM_LIB . 'wp-mail-class.php');
 
+function slm_load_language(){
+    load_plugin_textdomain('softwarelicensemanager', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+add_action('init', 'slm_load_language');
+
+//Includes - utilities and cron jobs
 require_once(SLM_LIB . 'slm-utility.php');
 require_once( SLM_CRONS . 'slm-tasks.php');
-
 
 add_filter('extra_plugin_headers', 'add_extra_headers');
 add_filter('plugin_row_meta', 'filter_authors_row_meta', 1, 4);
@@ -33,10 +41,18 @@ function filter_authors_row_meta($plugin_meta, $plugin_file, $plugin_data, $stat
     return $plugin_meta;
 }
 
+function slm_settings_link($links)
+{
+    $links[] = '<a href="' .
+        admin_url('admin.php?page=slm_settings') .
+        '">' . __('Settings') . '</a>';
+    $links[] = '<a href="https://github.com/michelve/software-license-manager" target="_blank">' . __('GitHub') . '</a>';
+    return $links;
+}
+
 //Includes
 require_once( SLM_LIB .'slm-debug-logger.php');
 require_once( SLM_LIB .'slm-error-codes.php');
-
 require_once( SLM_LIB .'slm-init-time-tasks.php');
 require_once( SLM_LIB .'slm-api-utility.php');
 require_once( SLM_LIB .'slm-api-listener.php');
@@ -123,6 +139,30 @@ function slm_plugins_loaded_handler() {
         }
     }
 }
+
+class slm_tabbed_plugin
+{
+    // singleton class variable
+    static private $classobj = NULL;
+
+    // singleton method
+    public static function get_object()
+    {
+        if (NULL === self::$classobj) {
+            self::$classobj = new self;
+        }
+        return self::$classobj;
+    }
+
+    private function __construct()
+    { }
+}
+
+// initialize plugin
+if (function_exists('add_action') && function_exists('register_activation_hook')) {
+    add_action('plugins_loaded', array('slm_tabbed_plugin', 'get_object'));
+}
+
 
 //TODO - need to move this to an ajax handler file
 function slm_del_reg_dom() {

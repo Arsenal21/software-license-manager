@@ -8,6 +8,10 @@
 add_filter('woocommerce_product_data_tabs', 'wc_slm_add_tab');
 add_action('woocommerce_process_product_meta_simple', 'wc_slm_save_data');
 add_action('woocommerce_product_data_panels', 'wc_slm_data_panel');
+add_filter('product_type_options', 'add_wc_slm_data_tab_enabled_product_option');
+add_action('init', 'slm_register_product_type');
+add_filter('product_type_selector', 'slm_add_product_type');
+add_action('admin_footer', 'slm_license_admin_custom_js');
 /**
  * Add 'License' product option
  */
@@ -15,14 +19,13 @@ function add_wc_slm_data_tab_enabled_product_option($product_type_options)
 {
     $product_type_options['wc_slm_data_tab_enabled'] = array(
         'id'            => '_wc_slm_data_tab_enabled',
-        'wrapper_class' => 'show_if_simple show_if_variable',
-        'label'         => __('License Manager', 'woocommerce'),
+        'wrapper_class' => 'show_if_slm_license',
+        'label'         => __('License Manager', 'softwarelicensemanager'),
         'default'       => 'no',
-        'description'   => __('Enables the license creation api.', 'woocommerce')
+        'description'   => __('Enables the license creation api.', 'softwarelicensemanager')
     );
     return $product_type_options;
 }
-add_filter('product_type_options', 'add_wc_slm_data_tab_enabled_product_option');
 
 
 /** CSS To Add Custom tab Icon */
@@ -37,23 +40,23 @@ function wcpp_custom_style()
 
     <script>
         jQuery(document).ready(function($) {
-            $('input#_wc_slm_data_tab_enabled').change(function() {
+            jQuery('input#_wc_slm_data_tab_enabled').change(function() {
 
-                var is_wc_slm_data_tab_enabled = $('input#_wc_slm_data_tab_enabled:checked').size();
+                var is_wc_slm_data_tab_enabled = jQuery('input#_wc_slm_data_tab_enabled:checked').size();
                 // console.log( is_wc_slm_data_tab_enabled );
-                $('.show_if_wc_slm_data_tab_enabled').hide();
-                $('.hide_if_wc_slm_data_tab_enabled').hide();
+                $jQuery('.show_if_wc_slm_data_tab_enabled').hide();
+                jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
                 if (is_wc_slm_data_tab_enabled) {
-                    $('.hide_if_wc_slm_data_tab_enabled').hide();
+                    jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
                 }
                 if (is_wc_slm_data_tab_enabled) {
-                    $('.show_if_wc_slm_data_tab_enabled').show();
+                    jQuery('.show_if_wc_slm_data_tab_enabled').show();
                 }
             });
-            $('input#_wc_slm_data_tab_enabled').trigger('change');
+            jQuery('input#_wc_slm_data_tab_enabled').trigger('change');
         });
 
-        $(document).ready(function() {
+        jQuery(document).ready(function() {
             jQuery('#_license_type').change(function() {
                 if (jQuery(this).val() == 'lifetime') {
                     jQuery('#_license_renewal_period').val('0');
@@ -67,9 +70,9 @@ function wcpp_custom_style()
         function wc_slm_add_tab($wc_slm_data_tabs)
         {
             $wc_slm_data_tabs['wc_slm_data_tab'] = array(
-                'label'     => __('Licensing', 'woocommerce'),
+                'label'     => __('Licensing', 'softwarelicensemanager'),
                 'target'    => 'wc_slm_meta',
-                'class'     => array('show_if_simple', 'show_if_wc_slm_data_tab_enabled'),
+                'class'     => array('show_if_slm_license', 'show_if_wc_slm_data_tab_enabled'),
             );
 
             return $wc_slm_data_tabs;
@@ -87,64 +90,64 @@ function wcpp_custom_style()
             woocommerce_wp_text_input(
                 array(
                     'id'            => '_domain_licenses',
-                    'label'         => __('Domain Licenses', 'woocommerce'),
+                    'label'         => __('Domain Licenses', 'softwarelicensemanager'),
                     'placeholder'   => '0',
                     'desc_tip'      => 'true',
                     'type'          => 'number',
-                    'description'   => __('Enter the allowed amount of domains this license can have (websites).', 'woocommerce')
+                    'description'   => __('Enter the allowed amount of domains this license can have (websites).', 'softwarelicensemanager')
                 )
             );
             woocommerce_wp_text_input(
                 array(
                     'id'            => '_devices_licenses',
-                    'label'         => __('Devices Licenses', 'woocommerce'),
+                    'label'         => __('Devices Licenses', 'softwarelicensemanager'),
                     'placeholder'   => '0',
                     'desc_tip'      => 'true',
                     'type'          => 'number',
-                    'description'   => __('Enter the allowed amount of devices this license can have (computers, mobile, etc).', 'woocommerce')
+                    'description'   => __('Enter the allowed amount of devices this license can have (computers, mobile, etc).', 'softwarelicensemanager')
                 )
             );
             woocommerce_wp_select(
                 array(
                     'id'            => '_license_type',
-                    'label'         => __('License Type', 'woocommerce'),
+                    'label'         => __('License Type', 'softwarelicensemanager'),
                     'placeholder'   => 'Select one',
                     'desc_tip'      => 'true',
-                    'description'   => __('type of license: subscription base or lifetime', 'woocommerce'),
+                    'description'   => __('type of license: subscription base or lifetime', 'softwarelicensemanager'),
                     'options'       => array(
-                        'none'      => __('Select one', 'woocommerce'),
-                        'subscription'   => __('subscription', 'woocommerce'),
-                        'lifetime'       => __('lifetime', 'woocommerce'),
+                        'none'      => __('Select one', 'softwarelicensemanager'),
+                        'subscription'   => __('subscription', 'softwarelicensemanager'),
+                        'lifetime'       => __('lifetime', 'softwarelicensemanager'),
                     )
                 )
             );
             woocommerce_wp_text_input(
                 array(
                     'id'            => '_license_renewal_period',
-                    'label'         => __('Renewal period ', 'woocommerce'),
+                    'label'         => __('Renewal period ', 'softwarelicensemanager'),
                     'placeholder'   => '0',
                     'desc_tip'      => 'true',
-                    'description'   => __('License renewal period(yearly) , enter 0 for lifetime.', 'woocommerce')
+                    'description'   => __('License renewal period(yearly) , enter 0 for lifetime.', 'softwarelicensemanager')
                 )
             );
 
             woocommerce_wp_text_input(
                 array(
                     'id'            => '_license_current_version',
-                    'label'         => __('Current Version', 'woocommerce'),
+                    'label'         => __('Current Version', 'softwarelicensemanager'),
                     'placeholder'   => '0.0.0',
                     'desc_tip'      => 'true',
-                    'description' => __('Enter the current version of your application, theme, or plug-in', 'woocommerce')
+                    'description' => __('Enter the current version of your application, theme, or plug-in', 'softwarelicensemanager')
                 )
             );
 
             woocommerce_wp_text_input(
                 array(
                     'id'            => '_license_until_version',
-                    'label'         => __('Until Version', 'woocommerce'),
+                    'label'         => __('Until Version', 'softwarelicensemanager'),
                     'placeholder'   => '0.0.0',
                     'desc_tip'      => 'true',
-                    'description' => __('Enter the version until support expires.', 'woocommerce')
+                    'description' => __('Enter the version until support expires.', 'softwarelicensemanager')
                 )
             );
             ?>
@@ -188,3 +191,46 @@ function wcpp_custom_style()
             update_post_meta($post_id, '_license_until_version', esc_attr($_license_until_version));
         }
     }
+
+
+    function slm_register_product_type()
+    {
+        class WC_Product_SLM_License extends WC_Product
+        {
+            public function __construct($product)
+            {
+                $this->product_type = 'slm_license';
+                parent::__construct($product);
+            }
+        }
+    }
+
+    function slm_add_product_type($types)
+    {
+        $types['slm_license'] = __('License product', 'slm_license');
+        return $types;
+    }
+    function slm_license_admin_custom_js()
+    {
+        if ('product' != get_post_type()) :
+            return;
+        endif;
+        ?>
+    <script type='text/javascript'>
+        jQuery(document).ready(function() {
+            //for Price tab
+            jQuery('.product_data_tabs .general_tab').addClass('show_if_slm_license').show();
+            jQuery('#general_product_data .pricing').addClass('show_if_slm_license').show();
+            //for Inventory tab
+            jQuery('.inventory_options').addClass('show_if_slm_license').show();
+            jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_slm_license').show();
+            jQuery('#inventory_product_data ._sold_individually_field').parent().addClass('show_if_slm_license').show();
+            jQuery('#inventory_product_data ._sold_individually_field').addClass('show_if_slm_license').show();
+
+            jQuery('.shipping_options').addClass('hide_if_slm_license').hide();
+            jQuery('.marketplace-suggestions_options').addClass('hide_if_slm_license').hide();
+            jQuery('input#_wc_slm_data_tab_enabled').trigger('change');
+        });
+    </script>
+<?php
+}

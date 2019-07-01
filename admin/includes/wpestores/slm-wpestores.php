@@ -67,7 +67,7 @@ function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $c
     if ($retrieved_product->create_license == 1) {
         $slm_debug_logger->log_debug('Need to create a license key for this product (' . $retrieved_product->id . ')');
         $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name);
-        $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
+        $license_data = "\n" . __('Item Name: ', 'softwarelicensemanager') . $retrieved_product->name . " - " . __('License Key: ', 'softwarelicensemanager') . $slm_key;
         $slm_debug_logger->log_debug('Liense data: ' . $license_data);
         $license_data = apply_filters('slm_estore_item_license_data', $license_data);
     }

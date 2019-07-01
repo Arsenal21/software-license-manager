@@ -15,6 +15,7 @@ $lic_key_table      = SLM_TBL_LICENSE_KEYS;
 $lic_domain_table   = SLM_TBL_LIC_DOMAIN;
 $lic_devices_table  = SLM_TBL_LIC_DEVICES;
 $lic_log_tbl        = SLM_TBL_LIC_LOG;
+$lic_emails_table   = SLM_TBL_EMAILS;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)){
@@ -55,6 +56,8 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);
 
+
+
 $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       id INT NOT NULL AUTO_INCREMENT ,
       lic_key_id INT NOT NULL ,
@@ -65,6 +68,20 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       PRIMARY KEY ( id )
       )" . $charset_collate . ";";
 dbDelta($ld_tbl_sql);
+
+
+$slm_emails_tbl = "CREATE TABLE " . $lic_emails_table . " (
+      id INT NOT NULL AUTO_INCREMENT ,
+      lic_key varchar(255) NOT NULL ,
+      sent_to varchar(255) NOT NULL ,
+      status varchar(255) NOT NULL ,
+      sent text NOT NULL ,
+      date_sent date NOT NULL DEFAULT '0000-00-00',
+      disable_notifications text NOT NULL ,
+      PRIMARY KEY ( id )
+      )" . $charset_collate . ";";
+dbDelta($slm_emails_tbl);
+
 
 $log_tbl_sql = "CREATE TABLE " . $lic_log_tbl . " (
       id INT NOT NULL AUTO_INCREMENT ,
@@ -98,8 +115,8 @@ $options = array(
     'slm_woo'                 => '',
     'slm_wpestores'           => '',
     'slm_woo_downloads'       => '',
-    'slm_dl_manager'          => ''
-);
+    'slm_dl_manager'          => '',
+    'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
 
 update_option('slm_plugin_options', $options);
 update_option("slm_db_version", SLM_DB_VERSION);
