@@ -14,7 +14,6 @@ class SLM_List_Licenses extends WP_List_Table
     function __construct()
     {
         global $status, $page;
-
         //Set parent defaults
         parent::__construct(array(
             'singular'  => 'item',     //singular name of the listed records
@@ -191,6 +190,7 @@ class SLM_List_Licenses extends WP_List_Table
             'blocked'   => 'Block',
             'expired'   => 'Expire',
             'active'    => 'Activate',
+            'reminder'  => 'Send Reminder'
         );
         return $actions;
     }
@@ -382,30 +382,28 @@ class SLM_Plugin
 
         add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
+
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Add License", "Add Licenses", SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Subscribers", "Subscribers", SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Tools", "Tools", SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Help", "Help", SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
-        add_action("load-$hook", [$this, 'screen_option']);
+        add_action("load-" . $hook, [$this, 'screen_option']);
+
     }
 
 
     /**
      * Screen options
      */
-    public function screen_option()
-    {
-
+    public function screen_option(){
         $option = 'per_page';
         $args   = [
             'label'   => 'Pagination',
             'default' => 16,
             'option'  => 'licenses_per_page'
         ];
-
         add_screen_option($option, $args);
-
         $this->licenses_obj = new SLM_List_Licenses();
     }
 

@@ -9,8 +9,8 @@
  * https://api.github.com/repos/michelve/software-license-manager/tags
  */
 
-require_once(SLM_LIB . 'slm-wizard.php');
-require_once(SLM_LIB . 'wp-mail-class.php');
+//require_once(SLM_LIB . 'slm-wizard.php');
+//require_once(SLM_LIB . 'wp-mail-class.php');
 
 function slm_load_language(){
     load_plugin_textdomain('softwarelicensemanager', false, dirname(plugin_basename(__FILE__)) . '/languages');
@@ -54,7 +54,6 @@ function slm_settings_link($links)
 require_once( SLM_LIB .'slm-debug-logger.php');
 require_once( SLM_LIB .'slm-error-codes.php');
 require_once( SLM_LIB .'slm-init-time-tasks.php');
-require_once( SLM_LIB .'slm-api-utility.php');
 require_once( SLM_LIB .'slm-api-listener.php');
 require_once( SLM_LIB .'slm-scripts.php');
 
@@ -78,9 +77,11 @@ function deactivate_software_license_manager()
     $slm_deactivator->deactivate();
 }
 
-function slm_get_license($lic_key_prefix ='')
-{
-    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 8), true) . date('Y-m-d') . time())));
+function slm_get_license($lic_key_prefix = ''){
+
+    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 10), true) . date( 'Y-m-d H:i:s') . time())));
+
+
 }
 
 register_activation_hook(__FILE__, 'activate_software_license_manager');

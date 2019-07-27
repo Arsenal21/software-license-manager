@@ -115,6 +115,8 @@ $options = array(
     'slm_woo'                 => '',
     'slm_wpestores'           => '',
     'slm_woo_downloads'       => '',
+    'slm_stats'               => '',
+    'slm_adminbar'            => '',
     'slm_dl_manager'          => '',
     'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
 

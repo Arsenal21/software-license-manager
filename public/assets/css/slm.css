@@ -420,3 +420,70 @@ span.days-left {
 #slm_dashboard_widget .recent_licenses td {
     padding: 3px 0;
 }
+.slm_overview_stats .stats{
+    background: #fff;
+    padding: 24px 32px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 16px 1px rgba(0,0,0,0.2);
+    max-width: 33%;
+    float: left;
+    margin: 8px
+}
+.slm_overview_stats li:first-child {
+    margin-left: 0 !important
+}
+/* .slm_overview_stats li:last-child {
+    margin-left: 0 !important
+} */
+.slm_overview_stats .stats .info {
+    float: left;
+    text-align: right;
+}
+.slm_overview_stats .stats .icon {
+    float: left;
+    margin-right: 32px;
+}
+.slm_overview_stats .stats .icon span {
+    font-size: 24px;
+    color: #72777c;
+}
+.slm_overview_stats .stats span {
+    display: block;
+    clear: both;
+    padding: 16px 0 0 0;
+}
+.slm_overview_stats .stats span.badge {
+    font-size: 32px;
+    display: block;
+    width: 100%;
+    padding: 0
+}
+
+#wpadminbar #wp-admin-bar-slm-menu .ab-icon:before {
+    content: "\f112";
+    top: 3px;
+}
+
+#slm_dashboard_widget .slm_status_list .dashicons:before, #slm_dashboard_widget .slm_status_list .dashicons {
+    width: 29px !important;
+    height: 12px !important;
+    font-size: 30px;
+
+}
+.slm-col-half {
+    float: left;
+    width: 50%
+
+}
+.v-spacer {
+    width: 32px;
+    float: left;
+    display: block;
+    height: 53px;
+}
+.h-spacer {
+    height: 24px;
+    clear: both;
+}

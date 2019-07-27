@@ -24,8 +24,85 @@ class SLM_Helper_Class {
             }
         }
     }
+    /**
+     * PHP Logger
+     */
+
+    static function console($data)
+    {
+        $output = $data;
+        if (is_array($output))
+            $output = implode(',', $output);
+
+        // print the result into the JavaScript console
+        echo "<script>console.log( 'PHP LOG: " . $output . "' );</script>";
+    }
 }
+
 $slm_helper = new SLM_Helper_Class();
+
+
+class SLM_API_Utility
+{
+    /*
+     * The args array can contain the following:
+     * result (success or error)
+     * message (a message describing the outcome of the action
+     */
+
+    static function output_api_response($args)
+    {
+        //Log to debug file (if enabled)
+        global $slm_debug_logger;
+        $slm_debug_logger->log_debug('API Response - Result: ' . $args['result'] . ' Message: ' . $args['message']);
+
+        //Send response
+        $args = apply_filters('slm_ap_response_args', $args);
+        $args = apply_filters('slm_api_response_args', $args);
+
+        header('Content-Type: application/json');
+        echo json_encode($args);
+        exit(0);
+    }
+
+    static function verify_secret_key()
+    {
+        $slm_options                = get_option('slm_plugin_options');
+        $right_secret_key           = $slm_options['lic_verification_secret'];
+        $received_secret_key        = strip_tags($_REQUEST['secret_key']);
+        if ($received_secret_key    != $right_secret_key) {
+            $args = (array(
+                'result'        => 'error',
+                'message'       => 'Verification API secret key is invalid',
+                'error_code'    => SLM_Error_Codes::VERIFY_KEY_INVALID
+            ));
+            self::output_api_response($args);
+        }
+    }
+
+    static function verify_secret_key_for_creation()
+    {
+        $slm_options                = get_option('slm_plugin_options');
+        $right_secret_key           = $slm_options['lic_creation_secret'];
+        $received_secret_key        = strip_tags($_REQUEST['secret_key']);
+        if ($received_secret_key    != $right_secret_key) {
+            $args = (array(
+                'result'        => 'error',
+                'message'       => 'License Creation API secret key is invalid',
+                'error_code'    => SLM_Error_Codes::CREATE_KEY_INVALID
+            ));
+            self::output_api_response($args);
+        }
+    }
+
+    static function insert_license_data_internal($fields)
+    {
+        global $wpdb;
+        $tbl_name   = SLM_TBL_LICENSE_KEYS;
+        $fields     = array_filter($fields); //Remove any null values.
+        $result     = $wpdb->insert($tbl_name, $fields);
+    }
+}
 
 class SLM_Utility {
 
@@ -171,10 +248,41 @@ class SLM_Utility {
         return $get_lic_status;
     }
 
+    static function count_logrequest()
+    {
+        global $wpdb;
+        $license_table = SLM_TBL_LIC_LOG;
+        $getlogs = $wpdb->get_var("SELECT COUNT(*) FROM $license_table");
+        return $getlogs;
+    }
+
+    static function count_emailsent()
+    {
+        global $wpdb;
+        $license_table = SLM_TBL_EMAILS;
+        $getlogs = $wpdb->get_var("SELECT COUNT(*) FROM $license_table");
+        return $getlogs;
+    }
+
+    static function getstats_licenses($date_created, $interval)
+    {
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+        $query = $wpdb->get_var("SELECT COUNT(*) FROM $license_table WHERE $date_created >= DATE_ADD(CURDATE(), INTERVAL -" . $interval . " DAY)");
+        return $query;
+    }
+
     static function get_total_licenses(){
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
         $license_count = $wpdb->get_var("SELECT COUNT(*) FROM  " . $license_table . "");
+        return  $license_count;
+    }
+
+    static function get_lic_expiringsoon(){
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+        $license_count = $wpdb->get_var("SELECT COUNT(*) FROM $license_table WHERE date_expiry BETWEEN DATE_SUB( CURDATE( ) ,INTERVAL 1 MONTH ) AND DATE_SUB( CURDATE( ) ,INTERVAL 0 MONTH );");
         return  $license_count;
     }
 
