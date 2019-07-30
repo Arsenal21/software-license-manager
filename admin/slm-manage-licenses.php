@@ -1,12 +1,14 @@
 <?php
-//add_action('plugins_loaded', 'get_user_info');
-// TODO
 
 if (!defined('WPINC')) {
     die;
 }
 
-function get_user_info(){
+//add_action('plugins_loaded', 'get_user_info');
+// TODO
+
+function get_user_info()
+{
     if (!current_user_can('manage_licenses')) {
         $response = array(
             'success' => false,
@@ -17,7 +19,8 @@ function get_user_info(){
     }
 }
 
-function slm_manage_licenses_menu(){
+function slm_manage_licenses_menu()
+{
     //include_once('slm-list-licenses-class.php');
     $license_list = new SLM_List_Licenses();
 
@@ -32,13 +35,28 @@ function slm_manage_licenses_menu(){
     <div class="wrap">
         <h1><?php _e('Overview - Manage licenses', 'softwarelicensemanager'); ?></h1>
         <br>
-        <a href="admin.php?page=slm_manage_license" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'softwarelicensemanager'); ?></a>
+        <a href="<?php echo admin_url( 'admin.php?page=slm_manage_license')?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'softwarelicensemanager'); ?></a>
+
+
         <hr class="wp-header-end">
 
 
         <div id="poststuff">
             <div id="post-body" class="metabox-holder columns-1">
                 <div id="post-body-content">
+
+                    <div class="overview">
+                        <?php
+
+                            $options    = get_option('slm_plugin_options');
+                            $slm_stats = $options[ 'slm_stats'];
+
+                            if ( $slm_stats == 1 && !empty( $slm_stats)) {
+                                include SLM_ADMIN_ADDONS . 'partials/stats.php';
+                            }
+                        ?>
+                    </div>
+
                     <div class="meta-box-sortables ui-sortable">
                         <form id="licenses-filter" method="get">
                             <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />

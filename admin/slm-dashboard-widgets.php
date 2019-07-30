@@ -4,6 +4,8 @@ if (!defined('WPINC')) {
     die;
 }
 
+add_action('wp_dashboard_setup', 'slm_add_dashboard_widgets');
+add_action('admin_bar_menu', 'add_toolbar_items', 100);
 
 /**
  * Add a widget to the dashboard.
@@ -19,7 +21,49 @@ function slm_add_dashboard_widgets()
         'slm_dashboard_widget_function' // Display function.
     );
 }
-add_action('wp_dashboard_setup', 'slm_add_dashboard_widgets');
+
+function add_toolbar_items($admin_bar)
+{
+    $admin_bar->add_menu(array(
+        'id'    => 'slm-menu',
+        'title' => '<span class="ab-icon"></span>' . __('SLM', 'softwarelicensemanager'),
+        'href'  => '#',
+        'meta'  => array(
+            'title' => __('SLM'),
+        ),
+    ));
+    $admin_bar->add_menu(array(
+        'id'    => 'slm-manage-licenses-overview',
+        'parent' => 'slm-menu',
+        'title' => 'Overview',
+        'href'  => admin_url('admin.php?page=slm_overview'),
+        'meta'  => array(
+            'title' => __('Overview'),
+            'class' => 'slm_overview_menu'
+        ),
+    ));
+    $admin_bar->add_menu(array(
+        'id'    => 'slm-manage-licenses-addnew',
+        'parent' => 'slm-menu',
+        'title' => 'Add new license',
+        'href'  => admin_url('admin.php?page=slm_manage_license'),
+        'meta'  => array(
+            'title' => __( 'Add new license'),
+            'class' => 'slm_addlicense_menu'
+        ),
+    ));
+    $admin_bar->add_menu(array(
+        'id'    => 'slm-manage-licenses-settings',
+        'parent' => 'slm-menu',
+        'title' => 'Settings',
+        'href'  => admin_url( 'admin.php?page=slm_settings'),
+        'meta'  => array(
+            'title' => __('Settings'),
+            'class' => 'slm_settings_menu'
+        ),
+    ));
+}
+
 
 /**
  * Create the function to output the contents of our Dashboard Widget.

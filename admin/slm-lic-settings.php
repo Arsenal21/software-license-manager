@@ -44,6 +44,8 @@ function slm_general_settings()
             'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
             'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
             'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
+            'slm_stats'                 => isset($_POST['slm_stats']) ? '1' : '',
+            'slm_adminbar'                 => isset($_POST['slm_adminbar']) ? '1' : '',
             'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
             'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
             'expiration_reminder_text'  => sanitize_text_field($_POST['expiration_reminder_text'])
@@ -158,8 +160,23 @@ function slm_general_settings()
                                 <p class="description"><?php _e(' When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value  of the k ey is reached. It doesn\'t remotely deactivate a key. It simply changes the status of the key in your database to expired.', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
+                        <tr>
+                            <th scope="row"><?php _e('General settings', 'softwarelicensemanager'); ?></th>
+                            <td>
+                                <input name="slm_stats" type="checkbox" <?php if ($options['slm_stats'] != '') echo ' checked="checked"'; ?> value="1" />
+                                <?php _e('Disable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row"></th>
+                            <td>
+                                <input name="slm_adminbar" type="checkbox" <?php if ($options['slm_adminbar'] != '') echo ' checked="checked"'; ?> value="1" />
+                                <?php _e('Disable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
+                        </tr>
                     </table>
                 </div>
+
+
 
                 <div class="slm-postbox wrap integrations hidepanel <?php echo ($tab == 'integrations') ? 'showpanel' : '' ?>">
                     <div class="inside">
@@ -231,4 +248,4 @@ function slm_general_settings()
         </div>
 
     <?php
-}
+    }
