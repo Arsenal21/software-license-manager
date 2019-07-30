@@ -16,10 +16,15 @@ function slm_frontend_assets() {
     /**
      * Check if WooCommerce is activated
      */
-    if (!function_exists('is_woocommerce_activated') && is_account_page()) {
-        wp_enqueue_style('bootstrapcdn-slm', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
-        wp_enqueue_script( 'bootstrapcdn-slm-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', array('jquery'), '4.1.3', true );
+    if (function_exists('is_woocommerce_activated')) {
+
+        if(is_account_page() && class_exists( 'woocommerce' )) {
+            wp_enqueue_style('bootstrapcdn-slm', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
+            wp_enqueue_script( 'bootstrapcdn-slm-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', array('jquery'), '4.1.3', true );
+        }
+
     }
+
     // custom css
     wp_enqueue_style('softwarelicensemanager', SLM_ASSETS_URL .'css/slm-front-end.css');
 }
