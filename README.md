@@ -10,8 +10,10 @@
 ## Install
 
 ```text
-Upload "software-license-manager \" to the \ "/ wp-content / plugins \" directory.
-Activate the plugin through the \ "Plugins \" menu in WordPress.
+1. Go to the Add New plugins screen in your WordPress admin area
+2. Click the upload tab
+3. Browse for the plugin file (software-license-manager.zip)
+4. Click Install Now and then activate the plugin
 ```
 
 ## Author
