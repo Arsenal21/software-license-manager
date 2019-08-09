@@ -69,23 +69,23 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 
 
 ## 🎑 Screenshots
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/dashboard.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/dashboard.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview-filters.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview-filters.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/screen%20options.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/screen%20options.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers-results.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers-results.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers.png?raw=true" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers.png?raw=true"  width="800"/>
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true"width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width=800 alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" width="800" />
 
 
 ## 📝 License
