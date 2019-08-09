@@ -8,6 +8,7 @@
     "auto-changelog": {
         "output": "CHANGELOG.md",
         "template": "keepachangelog",
+        "issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
         "unreleased": true,
         "commitLimit": false,
         "includeBranch": [
@@ -37,5 +38,8 @@
     "bugs": {
         "url": "https://github.com/michelve/software-license-manager/issues"
     },
-    "homepage": "https://github.com/michelve/software-license-manager#readme"
+    "homepage": "https://github.com/michelve/software-license-manager#readme",
+    "devDependencies": {
+        "auto-changelog": "^1.14.1"
+    }
 }
