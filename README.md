@@ -5,6 +5,8 @@
 
 > Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
 
+> ⚠️ **NOTICE**: In the next version release this plugin will be rename to: wp license manager (wlm)
+
 ### 🏠 [Homepage](https://github.com/michelve/software-license-manager#readme)
 
 ## 🔧 Install
