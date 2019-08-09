@@ -7,7 +7,7 @@
 
 ### 🏠 [Homepage](https://github.com/michelve/software-license-manager#readme)
 
-## Install
+## 🔧 Install
 
 ```text
 1. Go to the Add New plugins screen in your WordPress admin area
@@ -33,10 +33,10 @@ Feel free to check [issues page](https://github.com/michelve/software-license-ma
 Give a ⭐️ if this project helped you!
 
 
-## Postman samples:
-[Demo and samples:]( https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest).
+## 📓 Postman samples:
+[API Demo and Samples:]( https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
 
-## Features:
+## 📦 Features:
 - Create license keys
 - Check the status of a license key from from your application (remotely)
 - Activate a license key from your application (remotely)
@@ -59,16 +59,16 @@ Give a ⭐️ if this project helped you!
 - Pass license info to woocommerce order
 
 
-## Compatibility
+## ✅ Compatibility
 - [-] Woocommerce
 - [-] WP eStore
 - [-] WP Download Manager
 
-## Changelog and history
+## 🕘 Changelog and history
 Changelog: [View changelog](https://github.com/michelve/software-license-manager/blob/master/CHANGELOG.md)
 
 
-## Screenshots
+## 🎑 Screenshots
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/dashboard.png?raw=true" width=800 alt="Software License Manager" />
 
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview-filters.png?raw=true" width=800 alt="Software License Manager" />
