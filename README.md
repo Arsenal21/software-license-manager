@@ -1,19 +1,35 @@
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/slm_logo.png" height=100 alt="Software License Manager" />
+# Welcome to software license manager 👋
+![Version](https://img.shields.io/badge/version-5.0.3-blue.svg?cacheSeconds=2592000)
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md)
 
-# Software License Manager
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+> Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
 
-Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
+### 🏠 [Homepage](https://github.com/michelve/software-license-manager#readme)
 
-## Authors
-[Arsenal21](https://github.com/Arsenal21)
-[Michel Velis](https://github.com/michelve)
+## Install
 
+```text
+Upload "software-license-manager \" to the \ "/ wp-content / plugins \" directory.
+Activate the plugin through the \ "Plugins \" menu in WordPress.
+```
 
-## Description
-Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
+## Author
 
-This plugin is very useful for creating a license server and doing the following via API:
+👤 **Michel Velis and Tips and Tricks HQ**
+
+* Github: [@michelve](https://github.com/michelve)
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!
+
+Feel free to check [issues page](https://github.com/michelve/software-license-manager/issues).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
 
 ## Postman samples:
 [Demo and samples:]( https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest).
@@ -39,13 +55,7 @@ This plugin is very useful for creating a license server and doing the following
 - Language support (spanish and english)
 - Woocommerce product type
 - Pass license info to woocommerce order
--
 
-## Installation
-1. Go to the Add New plugins screen in your WordPress admin area
-2. Click the upload tab
-3. Browse for the plugin file (software-license-manager.zip)
-4. Click Install Now and then activate the plugin
 
 ## Compatibility
 - [-] Woocommerce
@@ -74,3 +84,10 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width=800 alt="Software License Manager" />
 
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" />
+
+
+## 📝 License
+
+Copyright © 2019 [Michel Velis and Tips and Tricks HQ](https://github.com/michelve).
+
+This project is [MIT](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md) licensed.
