@@ -81,7 +81,7 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers.png?raw=true"  width="800"/>
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true"width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true" width="800" alt="Software License Manager" />
 
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width="800" alt="Software License Manager" />
 
