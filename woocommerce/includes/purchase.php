@@ -216,12 +216,12 @@ function wc_slm_payment_note($order_id, $licenses) {
 			$license_key = $license['key'];
 			$message .= '<br />' . $license['item'] . ': <a href="'. get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=' . wc_slm_get_license_id($license_key).'">' . $license_key . '</a>';
 
-			add_post_meta($order_id, 'slm_wc_license_order_key', $license_key);
-			add_post_meta($order_id, 'slm_wc_license_expires', $license[ 'expires']);
-			add_post_meta($order_id, 'slm_wc_license_type', $license[ 'type']);
-			add_post_meta($order_id, 'slm_wc_license_status', $license['status']);
-			add_post_meta($order_id, 'slm_wc_license_version', $license[ 'version']);
-			add_post_meta($order_id, 'slm_wc_until_version', $license['until']);
+			add_post_meta($order_id, 'slm_wc_license_order_key', 	$license_key);
+			add_post_meta($order_id, 'slm_wc_license_expires', 		$license[ 'expires']);
+			add_post_meta($order_id, 'slm_wc_license_type', 		$license[ 'type']);
+			add_post_meta($order_id, 'slm_wc_license_status', 		$license['status']);
+			add_post_meta($order_id, 'slm_wc_license_version', 		$license[ 'version']);
+			add_post_meta($order_id, 'slm_wc_until_version', 		$license['until']);
 
 			//SLM_Helper_Class::write_log($license_key);
 		}

@@ -6,9 +6,9 @@
 // from: https://gist.github.com/JeroenSormani/6b710d079386d096f932
 
 add_filter('woocommerce_product_data_tabs', 'wc_slm_add_tab');
-add_action('woocommerce_process_product_meta_simple', 'wc_slm_save_data');
+add_action('woocommerce_process_product_meta', 'wc_slm_save_data');
 add_action('woocommerce_product_data_panels', 'wc_slm_data_panel');
-add_filter('product_type_options', 'add_wc_slm_data_tab_enabled_product_option');
+//add_filter('product_type_options', 'add_wc_slm_data_tab_enabled_product_option'); //legacy
 add_action('init', 'slm_register_product_type');
 add_filter('product_type_selector', 'slm_add_product_type');
 add_action('admin_footer', 'slm_license_admin_custom_js');
@@ -44,7 +44,7 @@ function wcpp_custom_style()
 
                 var is_wc_slm_data_tab_enabled = jQuery('input#_wc_slm_data_tab_enabled:checked').size();
                 // console.log( is_wc_slm_data_tab_enabled );
-                $jQuery('.show_if_wc_slm_data_tab_enabled').hide();
+                jQuery('.show_if_wc_slm_data_tab_enabled').hide();
                 jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
                 if (is_wc_slm_data_tab_enabled) {
                     jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
@@ -158,6 +158,12 @@ function wcpp_custom_style()
     /** Hook callback function to save custom fields information */
     function wc_slm_save_data($post_id)
     {
+        // _domain_licenses
+        // _devices_licenses
+        // _license_type
+        // _license_current_version
+        // _license_until_version
+
         $_domain_licenses = $_POST['_domain_licenses'];
         if (!empty($_domain_licenses)) {
             update_post_meta($post_id, '_domain_licenses', esc_attr($_domain_licenses));
@@ -207,7 +213,7 @@ function wcpp_custom_style()
 
     function slm_add_product_type($types)
     {
-        $types['slm_license'] = __('License product', 'slm_license');
+        $types['slm_license'] = __('License product', 'softwarelicensemanager');
         return $types;
     }
     function slm_license_admin_custom_js()
