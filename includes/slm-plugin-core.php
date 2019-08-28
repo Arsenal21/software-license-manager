@@ -100,7 +100,7 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::sl
     require_once( SLM_WOO  . 'includes/wc-slm.php');
 
     // support for meta boxes
-    require_once( SLM_LIB . 'slm-meta-boxes.php');
+    require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
 
 }
 

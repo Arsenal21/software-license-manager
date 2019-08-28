@@ -112,11 +112,11 @@ $options = array(
     'default_max_devices'     => '2',
     'lic_verification_secret' => SLM_Utility::create_secret_keys(),
     'enable_debug'            => '',
-    'slm_woo'                 => '',
+    'slm_woo'                 => '1',
     'slm_wpestores'           => '',
     'slm_woo_downloads'       => '',
-    'slm_stats'               => '',
-    'slm_adminbar'            => '',
+    'slm_stats'               => '1',
+    'slm_adminbar'            => '1',
     'slm_dl_manager'          => '',
     'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
 

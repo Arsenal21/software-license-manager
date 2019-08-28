@@ -83,7 +83,6 @@ function wcpp_custom_style()
                 global $post;
                 ?>
 <div id='wc_slm_meta' class='panel woocommerce_options_panel'>
-
     <?php ?>
     <div class='options_group'>
         <?php
