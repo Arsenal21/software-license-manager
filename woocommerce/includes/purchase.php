@@ -71,11 +71,14 @@ function wc_slm_create_license_keys($order_id) {
 			 */
 			$renewal_period = (int) wc_slm_get_licensing_renewal_period($product_id);
 
-			if ($renewal_period == 0) {
+			if ($renewal_period == 'onetime') {
 				$renewal_period = '0000-00-00';
 			}
+			elseif ($renewal_period == 30) {
+				$renewal_period = date('Y-m-d', strtotime('+' . 31 . ' days'));
+			}
 			else {
-				$renewal_period = date('Y-m-d', strtotime('+' . $renewal_period . ' years'));
+				$renewal_period = date('Y-m-d', strtotime('+' . 1 . ' years'));
 			}
 			//SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
 

@@ -15,70 +15,70 @@ function slm_general_settings()
     ?>
     <?php
 
-    if (isset($_REQUEST['slm_reset_log'])) {
-        $slm_logger = new SLM_Debug_Logger();
-        global $slm_debug_logger;
-        $slm_debug_logger->reset_log_file("log.txt");
-        $slm_debug_logger->reset_log_file("log-cron-job.txt");
-        echo '<div id="message" class="updated fade"><p>Debug log files have been reset!</p></div>';
-    }
-
-    if (isset($_POST['slm_save_settings'])) {
-
-        if (!is_numeric($_POST["default_max_domains"])) {
-            //Set it to one by default if incorrect value is entered
-            $_POST["default_max_domains"] = '2';
-        }
-        if (!is_numeric($_POST["default_max_devices"])) {
-            //Set it to one by default if incorrect value is entered
-            $_POST["default_max_devices"] = '2';
+        if (isset($_REQUEST['slm_reset_log'])) {
+            $slm_logger = new SLM_Debug_Logger();
+            global $slm_debug_logger;
+            $slm_debug_logger->reset_log_file("log.txt");
+            $slm_debug_logger->reset_log_file("log-cron-job.txt");
+            echo '<div id="message" class="updated fade"><p>Debug log files have been reset!</p></div>';
         }
 
-        $options = array(
-            'lic_creation_secret'       => trim($_POST["lic_creation_secret"]),
-            'lic_prefix'                => trim($_POST["lic_prefix"]),
-            'default_max_domains'       => trim($_POST["default_max_domains"]),
-            'default_max_devices'       => trim($_POST["default_max_devices"]),
-            'lic_verification_secret'   => trim($_POST["lic_verification_secret"]),
-            'enable_auto_key__xpiry'    => isset($_POST['enable_auto_key__xpiry']) ? '1' : '',
-            'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
-            'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
-            'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
-            'slm_stats'                 => isset($_POST['slm_stats']) ? '1' : '',
-            'slm_adminbar'                 => isset($_POST['slm_adminbar']) ? '1' : '',
-            'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
-            'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
-            'expiration_reminder_text'  => sanitize_text_field($_POST['expiration_reminder_text'])
-        );
-        update_option('slm_plugin_options', $options);
+        if (isset($_POST['slm_save_settings'])) {
 
-        echo '
+            if (!is_numeric($_POST["default_max_domains"])) {
+                //Set it to one by default if incorrect value is entered
+                $_POST["default_max_domains"] = '2';
+            }
+            if (!is_numeric($_POST["default_max_devices"])) {
+                //Set it to one by default if incorrect value is entered
+                $_POST["default_max_devices"] = '2';
+            }
+
+            $options = array(
+                'lic_creation_secret'       => trim($_POST["lic_creation_secret"]),
+                'lic_prefix'                => trim($_POST["lic_prefix"]),
+                'default_max_domains'       => trim($_POST["default_max_domains"]),
+                'default_max_devices'       => trim($_POST["default_max_devices"]),
+                'lic_verification_secret'   => trim($_POST["lic_verification_secret"]),
+                'enable_auto_key__xpiry'    => isset($_POST['enable_auto_key__xpiry']) ? '1' : '',
+                'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
+                'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
+                'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
+                'slm_stats'                 => isset($_POST['slm_stats']) ? '1' : '',
+                'slm_adminbar'                 => isset($_POST['slm_adminbar']) ? '1' : '',
+                'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
+                'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
+                'expiration_reminder_text'  => sanitize_text_field($_POST['expiration_reminder_text'])
+            );
+            update_option('slm_plugin_options', $options);
+
+            echo '
         <div id="message" class="updated fade">
             <p>Options Updated!</p>
         </div>';
-    }
+        }
 
-    $options    = get_option('slm_plugin_options');
-    $secret_key = $options['lic_creation_secret'];
+        $options    = get_option('slm_plugin_options');
+        $secret_key = $options['lic_creation_secret'];
 
-    if (empty($secret_key)) {
-        //$secret_key = md5(uniqid('', true));
-        $secret_key = SLM_Utility::create_secret_keys();
-    }
+        if (empty($secret_key)) {
+            //$secret_key = md5(uniqid('', true));
+            $secret_key = SLM_Utility::create_secret_keys();
+        }
 
-    $secret_verification_key = $options['lic_verification_secret'];
-    if (empty($secret_verification_key)) {
-        //$secret_verification_key = md5(uniqid('', true));
-        $secret_verification_key = SLM_Utility::create_secret_keys();
-    }
-    $tab = ""; //Initialization value;
-    if (isset($_REQUEST['tab'])) {
-        $tab = $_REQUEST['tab'];
-    } else {
-        $tab = 'general_settings';
-    }
+        $secret_verification_key = $options['lic_verification_secret'];
+        if (empty($secret_verification_key)) {
+            //$secret_verification_key = md5(uniqid('', true));
+            $secret_verification_key = SLM_Utility::create_secret_keys();
+        }
+        $tab = ""; //Initialization value;
+        if (isset($_REQUEST['tab'])) {
+            $tab = $_REQUEST['tab'];
+        } else {
+            $tab = 'general_settings';
+        }
 
-    ?>
+        ?>
     <div class="wrap">
         <h1>Settings - Software License Manager </h1>
 
@@ -125,19 +125,20 @@ function slm_general_settings()
                     <table class="form-table">
                         <tr valign="top">
                             <th scope="row"><?php _e('Secret Key for License Creation', 'softwarelicensemanager'); ?></th>
-                            <td><input type="text" name="lic_creation_secret" value="<?php echo $secret_key; ?>" size="40" />
-                                <p class="description"><?php _e('This secret key will be used to authenticate any license creation request. You can change it with something random.', 'softwarelicensemanager'); ?></p>
+                            <td><textarea name="lic_creation_secret" rows="2" cols="50"><?php echo $secret_key; ?>
+                            </textarea>
+                                <p class=" description"><?php _e('This secret key will be used to authenticate any license creation request. You can change it with something random.', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Secret Key for License Verification Requests', 'softwarelicensemanager'); ?></th>
-                            <td><input type="text" name="lic_verification_secret" value="<?php echo $secret_verification_key; ?>" size="40" />
+                            <td><textarea name="lic_verification_secret" rows="2" cols="50"><?php echo $secret_verification_key; ?></textarea>
                                 <p class="description"><?php _e('This secret key will be used to authenticate any license verification request from customer\'s site. Important! Do not change this value once your customers start to use your product(s)!', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('License Key Prefix', 'softwarelicensemanager'); ?></th>
-                            <td><input type="text" name="lic_prefix" value="<?php echo $options['lic_prefix']; ?>" size="40" />
+                            <td><input type="text" name="lic_prefix" value="<?php echo $options['lic_prefix']; ?>" size="6" />
                                 <p class="description"><?php _e('You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
