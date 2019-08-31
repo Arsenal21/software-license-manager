@@ -117,6 +117,7 @@ $options = array(
     'slm_woo_downloads'       => '',
     'slm_stats'               => '1',
     'slm_adminbar'            => '1',
+    'enable_auto_key_expiration' => '1',
     'slm_dl_manager'          => '',
     'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
 

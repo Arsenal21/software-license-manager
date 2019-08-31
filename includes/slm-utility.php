@@ -124,11 +124,22 @@ class SLM_Utility {
                 // TODO move to template
                 include SLM_LIB . 'mails/expired.php';
 
+                $id                     = $expired_licenses['id'];
                 $license_key            = $expired_licenses['license_key'];
                 $first_name             = $expired_licenses['first_name'];
                 $last_name              = $expired_licenses['last_name'];
                 $email                  = $expired_licenses['email'];
                 $date_expiry            = $expired_licenses['date_expiry'];
+
+
+                if(SLM_Helper_Class::slm_get_option('enable_auto_key_expiration') == 1 ){
+                    global $wpdb;
+                    $data = array('lic_status' => 'expired');
+                    $where = array('id' => $id);
+                    $updated = $wpdb->update(SLM_TBL_LICENSE_KEYS , $data, $where);
+
+                    self::create_log($license_key, 'set to expired');
+                }
 
                 //SLM_Helper_Class::write_log('Found: ' . $license_key);
                 self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);

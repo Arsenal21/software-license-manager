@@ -40,7 +40,7 @@ function slm_general_settings()
                 'default_max_domains'       => trim($_POST["default_max_domains"]),
                 'default_max_devices'       => trim($_POST["default_max_devices"]),
                 'lic_verification_secret'   => trim($_POST["lic_verification_secret"]),
-                'enable_auto_key__xpiry'    => isset($_POST['enable_auto_key__xpiry']) ? '1' : '',
+                'enable_auto_key_expiration' => isset($_POST['enable_auto_key_expiration']) ? '1' : '',
                 'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
                 'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
                 'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
@@ -156,9 +156,9 @@ function slm_general_settings()
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Auto Expire License Keys', 'softwarelicensemanager'); ?></th>
-                            <td><input name="enable_auto_key__xpiry" type="checkbox" <?php if (isset($options['enable_auto_key__xpiry']) && $options['enable_auto_key__xpiry'] != '') echo ' checked="checked"'; ?> value="1" />
+                            <td><input name="enable_auto_key_expiration" type="checkbox" <?php if (isset($options['enable_auto_key_expiration']) && $options['enable_auto_key_expiration'] != '') echo ' checked="checked"'; ?> value="1" />
                                 <?php _e('Enable auto expiration ', 'softwarelicensemanager '); ?>
-                                <p class="description"><?php _e(' When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value  of the k ey is reached. It doesn\'t remotely deactivate a key. It simply changes the status of the key in your database to expired.', 'softwarelicensemanager'); ?></p>
+                                <p class="description"><?php _e(' When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value  of the key is reached. It doesn\'t remotely deactivate a key. It simply changes the status of the key in your database to expired.', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
                         <tr>
