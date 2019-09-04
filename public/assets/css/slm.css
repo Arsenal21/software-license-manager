@@ -487,3 +487,6 @@ span.days-left {
     height: 24px;
     clear: both;
 }
+.show_if_slm_license.slm-display, .slm-display {
+display: block !important
+}

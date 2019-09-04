@@ -46,6 +46,7 @@ function wcpp_custom_style()
                 // console.log( is_wc_slm_data_tab_enabled );
                 jQuery('.show_if_wc_slm_data_tab_enabled').hide();
                 jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
+
                 if (is_wc_slm_data_tab_enabled) {
                     jQuery('.hide_if_wc_slm_data_tab_enabled').hide();
                 }
@@ -62,8 +63,10 @@ function wcpp_custom_style()
                     jQuery('._license_renewal_period_field').hide();
                     jQuery('#_license_renewal_period').val('onetime');
                     jQuery('#_license_renewal_period').prop("disabled", true);
+                    jQuery('._license_renewal_period_term_field').hide();
                 } else {
                     jQuery('._license_renewal_period_field').show();
+                    jQuery('._license_renewal_period_term_field').show();
                     jQuery('#_license_renewal_period').val('');
                     jQuery('#_license_renewal_period').prop("disabled", false);
                 }
@@ -126,31 +129,32 @@ function wcpp_custom_style()
                         )
                     )
                 );
-                // woocommerce_wp_text_input(
-                //     array(
-                //         'id'            => '_license_renewal_period',
-                //         'label'         => __('Renewal period ', 'softwarelicensemanager'),
-                //         'placeholder'   => '0',
-                //         'desc_tip'      => 'true',
-                //         'description'   => __('License renewal period(yearly) , enter 0 for lifetime.', 'softwarelicensemanager')
-                //     )
-                // );
+
+                echo '<hr>';
+                woocommerce_wp_text_input(
+                    array(
+                        'id'            => '_license_renewal_period',
+                        'label'         => __('Renewal period lenght ', 'softwarelicensemanager'),
+                        'placeholder'   => '0',
+                        'description'   => __('Amount of days or months or years', 'softwarelicensemanager'),
+                    )
+                );
 
                 woocommerce_wp_select(
                     array(
-                        'id'            => '_license_renewal_period',
-                        'label'         => __('Renewal period ', 'softwarelicensemanager'),
-                        'placeholder'   => '0',
-                        'desc_tip'      => 'true',
-                        'description'   => __('License renewal period(yearly) , enter 0 for lifetime, 30 for monthly, 365 yearly.', 'softwarelicensemanager'),
+                        'id'            => '_license_renewal_period_term',
+                        'label'         => __('Expiration term', 'softwarelicensemanager'),
+                        'placeholder'   => 'days',
+                        'description'   => __('Choose between days or months or years', 'softwarelicensemanager'),
                         'options'       => array(
-                            'none'      => __('Select one', 'softwarelicensemanager'),
-                            '30'   => __('monthly', 'softwarelicensemanager'),
-                            '365'       => __('yearly', 'softwarelicensemanager'),
-                            'onetime'       => __('one time', 'softwarelicensemanager')
+                            'days'      => __('Day(s)', 'softwarelicensemanager'),
+                            'months'    => __('Month(s)', 'softwarelicensemanager'),
+                            'years'     => __('Year(s)', 'softwarelicensemanager'),
+                            'onetime'   => __('One Time', 'softwarelicensemanager'),
                         )
                     )
                 );
+                echo '<div class="clear"><hr></div>';
 
                 woocommerce_wp_text_input(
                     array(
@@ -208,6 +212,11 @@ function wcpp_custom_style()
                     update_post_meta($post_id, '_license_renewal_period', esc_attr($_license_renewal_period));
                 }
 
+                $_license_renewal_period_term = $_POST['_license_renewal_period_term'];
+                if (!empty($_license_renewal_period_term)) {
+                    update_post_meta($post_id, '_license_renewal_period_term', esc_attr($_license_renewal_period_term));
+                }
+
                 $_license_current_version = $_POST['_license_current_version'];
                 if (!empty($_license_current_version)) {
                     update_post_meta($post_id, '_license_current_version', esc_attr($_license_current_version));
@@ -249,16 +258,18 @@ function wcpp_custom_style()
             jQuery('.product_data_tabs .general_tab').addClass('show_if_slm_license').show();
 
             //options_group show_if_downloadable hidden
-            jQuery('.options_group').addClass('show_if_slm_license').show();
+            //jQuery('.options_group').addClass('show_if_slm_license').show();
 
             jQuery("label[for='_virtual']").addClass('show_if_slm_license').show();
 
             jQuery("label[for='_downloadable']").addClass('show_if_slm_license').show();
 
-
             jQuery(".show_if_external").addClass('hide_if_slm_license').hide();
 
-            jQuery('#general_product_data .pricing').addClass('show_if_slm_license').show();
+            jQuery('#general_product_data .pricing').addClass('show_if_slm_license slm-display').show();
+            jQuery("#_virtual").prop("checked", true);
+            jQuery("#_downloadable").prop("checked", true);
+
             //for Inventory tab
             jQuery('.inventory_options').addClass('show_if_slm_license').show();
             jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_slm_license').show();

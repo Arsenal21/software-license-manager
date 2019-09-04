@@ -69,18 +69,23 @@ function wc_slm_create_license_keys($order_id) {
 			 * Calculate Expire date
 			 * @since 1.0.3
 			 */
+			$expiration = '';
+
 			$renewal_period = (int) wc_slm_get_licensing_renewal_period($product_id);
+			$renewal_term 	= wc_slm_get_licensing_renewal_period_term($product_id);
 
 			if ($renewal_period == 'onetime') {
-				$renewal_period = '0000-00-00';
+				$expiration = '0000-00-00';
 			}
-			elseif ($renewal_period == 30) {
-				$renewal_period = date('Y-m-d', strtotime('+' . 31 . ' days'));
-			}
+			// elseif ($renewal_period == 30) {
+			// 	$renewal_period = date('Y-m-d', strtotime('+' . 31 . ' days'));
+			// }
 			else {
-				$renewal_period = date('Y-m-d', strtotime('+' . 1 . ' years'));
+				$expiration = date('Y-m-d', strtotime('+' . $renewal_period .' '. $renewal_term));
 			}
-			//SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
+			// SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
+			// SLM_Helper_Class::write_log('exp -- ' . $expiration);
+			// SLM_Helper_Class::write_log('term -- ' . $renewal_term);
 
 			// Sites allowed get license meta from variation
 			$sites_allowed 			= wc_slm_get_sites_allowed($product_id);
@@ -152,7 +157,7 @@ function wc_slm_create_license_keys($order_id) {
 			$api_params['max_allowed_domains'] 	= $amount_of_licenses;
 			$api_params['max_allowed_devices'] 	= $amount_of_licenses_devices;
 			$api_params['date_created'] 		= date('Y-m-d');
-			$api_params['date_expiry'] 			= $renewal_period;
+			$api_params['date_expiry'] 			= $expiration;
 			$api_params['until'] 				= $_license_until_version;
 			$api_params['current_ver'] 			= $_license_current_version;
 			$api_params['subscr_id'] 			= $order->get_customer_id();
@@ -172,7 +177,7 @@ function wc_slm_create_license_keys($order_id) {
 				$licenses[] = array(
 					'item' 		=>	$item_name,
 					'key' 		=>	$license_key,
-					'expires' 	=>	$renewal_period,
+					'expires' 	=>	$expiration,
 					'type' 		=>	$license_type,
 					'status' 	=>	'pending',
 					'version' 	=>	$_license_current_version,
@@ -299,6 +304,13 @@ function wc_slm_get_licensing_renewal_period($product_id) {
 		return 0;
 	}
 	return $_license_renewal_period;
+}
+//_license_renewal_period_term
+
+function wc_slm_get_licensing_renewal_period_term($product_id)
+{
+	$term = get_post_meta($product_id, '_license_renewal_period_term', true);
+	return $term;
 }
 
 function wc_slm_is_licensing_enabled($download_id) {
