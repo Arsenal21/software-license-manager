@@ -95,12 +95,22 @@ register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
 
-    // WordPress Plugin :: wc-software-license-manager
-    require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
-    require_once( SLM_WOO  . 'includes/wc-slm.php');
+    /**
+     * Check if WooCommerce is activated
+     */
+    if ( ! function_exists( 'is_woocommerce_activated' ) ) {
+        function is_woocommerce_activated() {
+            if ( class_exists( 'woocommerce' ) ) {
 
-    // support for meta boxes
-    require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
+                // WordPress Plugin :: wc-software-license-manager
+                require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
+                require_once( SLM_WOO  . 'includes/wc-slm.php');
+
+                // support for meta boxes
+                require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
+            }
+        }
+    }
 
 }
 
