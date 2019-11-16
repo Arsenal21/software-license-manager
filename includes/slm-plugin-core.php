@@ -18,6 +18,8 @@ function slm_load_language(){
 add_action('init', 'slm_load_language');
 
 //Includes - utilities and cron jobs
+include_once(ABSPATH.'wp-admin/includes/plugin.php');
+
 require_once(SLM_LIB . 'slm-utility.php');
 require_once( SLM_CRONS . 'slm-tasks.php');
 
@@ -98,21 +100,20 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::sl
     /**
      * Check if WooCommerce is activated
      */
-    if ( ! function_exists( 'is_woocommerce_activated' ) ) {
-        function is_woocommerce_activated() {
-            if ( class_exists( 'woocommerce' ) ) {
+    // WordPress Plugin :: wc-software-license-manager
 
-                // WordPress Plugin :: wc-software-license-manager
-                require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
-                require_once( SLM_WOO  . 'includes/wc-slm.php');
+    if( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+        require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
+    require_once( SLM_WOO  . 'includes/wc-slm.php');
 
-                // support for meta boxes
-                require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
-            }
-        }
+    // support for meta boxes
+    require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
     }
 
+
 }
+
+
 
 if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
     // wpestores PLugin Integration
