@@ -16,9 +16,13 @@ function slm_frontend_assets() {
     /**
      * Check if WooCommerce is activated
      */
-    if (!function_exists('is_woocommerce_activated') && is_account_page()) {
-        wp_enqueue_style('bootstrapcdn-slm', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
-        wp_enqueue_script( 'bootstrapcdn-slm-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', array('jquery'), '4.1.3', true );
+    if (is_plugin_active('woocommerce/woocommerce.php'))  {
+
+        if(is_account_page()) {
+            wp_enqueue_style('bootstrapcdn-slm', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css');
+            wp_enqueue_script('bootstrapcdn-slm-js', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', array('jquery'), '4.1.3', true);
+        }
+
     }
     // custom css
     wp_enqueue_style('softwarelicensemanager', SLM_ASSETS_URL .'css/slm-front-end.css');
@@ -28,17 +32,17 @@ add_action('wp_enqueue_scripts', 'slm_frontend_assets');
 add_action('admin_enqueue_scripts', 'slm_admin_assets');
 
 
+
 /**
  * Check if WooCommerce is activated
  */
-if (!function_exists('is_woocommerce_activated')) {
+if (is_plugin_active('woocommerce/woocommerce.php')) {
     add_action('template_redirect', 'slm_get_page');
-}
 
-function slm_get_page(){
-    if (is_page('my-account')) {
-        add_action('wp_enqueue_scripts', 'slm_js_license');
+    function slm_get_page()
+    {
+        if (is_page('my-account')) {
+            add_action('wp_enqueue_scripts', 'slm_js_license');
+        }
     }
 }
-
-

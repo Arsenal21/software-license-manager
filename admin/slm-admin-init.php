@@ -4,7 +4,6 @@ if (!defined('WPINC')) {
     die;
 }
 
-
 require_once SLM_ADMIN . 'slm-manage-licenses.php';
 require_once SLM_ADMIN . 'slm-add-licenses.php';
 require_once SLM_ADMIN . 'slm-lic-settings.php';
