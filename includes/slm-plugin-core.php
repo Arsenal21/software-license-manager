@@ -96,12 +96,10 @@ register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
 
 // Third Party Support
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
-
     /**
      * Check if WooCommerce is activated
      */
     // WordPress Plugin :: wc-software-license-manager
-
     if( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
         require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
     require_once( SLM_WOO  . 'includes/wc-slm.php');
@@ -109,10 +107,7 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::sl
     // support for meta boxes
     require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
     }
-
-
 }
-
 
 
 if (null !== SLM_Helper_Class::slm_get_option('slm_wpestores') && SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
