@@ -96,6 +96,7 @@ register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
 // TODO check for optional plugins
 
 // Third Party Support
+
 if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::slm_get_option('slm_woo') == 1) {
     /**
      * Check if WooCommerce is activated
