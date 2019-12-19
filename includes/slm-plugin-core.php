@@ -73,6 +73,7 @@ function activate_software_license_manager()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-software-license-manager-deactivator.php
  */
+
 function deactivate_software_license_manager()
 {
     require_once SLM_LIB . 'class-slm-deactivator.php';
