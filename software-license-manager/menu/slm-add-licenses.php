@@ -142,8 +142,15 @@ function wp_lic_mgr_add_licenses_menu() {
 			max-height: 400px;
 			border: 1px solid #ccc;
 		}
-		.domain-licenses > table {
+		.domain-license-table {
 			width: 100%;
+		}
+		.form-table .domain-license-table td {
+			padding: 8px 10px;
+		}
+		.domain-license-table td.remove-domain {
+			width: 15px;
+			padding-right: 0;
 		}
 		.del {
 			display: inline-block;
@@ -160,6 +167,21 @@ function wp_lic_mgr_add_licenses_menu() {
 		.del:active {
 			background-color: red;
 			color: #fff;
+		}
+		#reg_del_msg {
+			background-color: #666;
+			display: inline-block;
+			color: white;
+			font-weight: bold;
+			padding: 3px 15px;
+			margin-bottom: 5px;
+			border-radius: 3px;
+		}
+		#reg_del_msg.success {
+			background: green;
+		}
+		#reg_del_msg.error {
+			background: red;
 		}
 	</style>
     You can add a new license or edit an existing one from this interface.
@@ -216,14 +238,14 @@ function wp_lic_mgr_add_licenses_menu() {
 					if ( '' != $id ) :
 						global $wpdb;
 						$reg_table   = SLM_TBL_LIC_DOMAIN;
-						$sql_prep    = $wpdb->prepare( "SELECT * FROM $reg_table WHERE lic_key_id = %s", $id );
+						$sql_prep    = $wpdb->prepare( "SELECT * FROM `$reg_table` WHERE `lic_key_id` = %s", $id );
 						$reg_domains = $wpdb->get_results( $sql_prep, OBJECT );
 						?>
 						<tr valign="top">
 							<th scope="row">Registered Domains</th>
 							<td>
 								<?php if ( count( $reg_domains ) > 0 ) { ?>
-									<div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
+									<div id="reg_del_msg" style="display: none;"></div>
 									<div class="domain-licenses">
 										<table cellpadding="0" cellspacing="0" class="domain-license-table">
 											<?php
@@ -231,8 +253,8 @@ function wp_lic_mgr_add_licenses_menu() {
 											foreach ( $reg_domains as $reg_domain ) :
 												?>
 												<tr <?php echo ( $count % 2 ) ? 'class="alternate"' : ''; ?>>
-													<td style="width: 15px; padding-right: 0;"><a class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>" href="#remove-domain">&times;</a></td>
-													<td style="padding: 8px 12px;"><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
+													<td class="remove-domain"><a class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>" href="#remove-domain">&times;</a></td>
+													<td><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
 												</tr>
 												<?php
 												$count++;
@@ -347,24 +369,31 @@ function wp_lic_mgr_add_licenses_menu() {
 			var id = $link.attr( 'id' ),
 				$msg = $( '#reg_del_msg' );
 
-			$msg.html( 'Loading ...' );
+			$msg.html( 'Loading ...' ).show();
 
 			$.get(
 				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
 				function( data ) {
 					if ( 'success' == data ) {
-						$msg.html('Deleted');
+						$msg.addClass( 'success' ).html( 'Deleted' );
+
 						var $tr = $link.parents( 'tr:first' );
 						$tr.fadeOut( 'fast', function() {
 							$tr.remove();
+
+							// Check if any more rows exist.
 							if ( ! $( '.domain-license-table tbody tr' ).length ) {
 								var $none  =$( '<p />' ).html( 'No domains activated.' ).hide();
 								$( '.domain-licenses' ).after( $none ).hide();
 								$none.fadeIn( 'fast' );
-							};
+							} else {
+								// Restripe table.
+								$( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
+								$( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
+							}
 						} );
 					} else {
-						$msg.html( 'Failed' );
+						$msg.addClass( 'error' ).html( 'Failed' );
 					}
 				} // ajax callback function.
 			); // get/ajax.
