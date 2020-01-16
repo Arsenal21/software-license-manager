@@ -7,6 +7,12 @@ function wp_lic_mgr_manage_licenses_menu() {
 		th#id {
 			width: 95px;
 		}
+		th#license_key {
+			width: 150px;
+		}
+		th#max_allowed_domains {
+			width: 70px;
+		}
 		th#lic_status {
 			width: 90px;
 		}
