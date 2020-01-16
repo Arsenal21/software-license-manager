@@ -23,7 +23,7 @@ function wp_lic_mgr_manage_licenses_menu() {
 			width: 122px;
 		}
 		th#date_expiry {
-			width: 90px;
+			width: 95px;
 		}
 	</style>
 	<div class="wrap">
