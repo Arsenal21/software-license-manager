@@ -1,6 +1,8 @@
 <?php
 
 function wp_lic_mgr_manage_licenses_menu() {
+	$search_term = ! empty( $_POST['slm_search'] ) ? sanitize_text_field( $_POST['slm_search'] ) : '';
+
     echo '<div class="wrap">';
     echo '<h2>Manage Licenses</h2>';
     echo '<div id="poststuff"><div id="post-body">';
@@ -11,8 +13,8 @@ function wp_lic_mgr_manage_licenses_menu() {
         <div class="inside">
             Search for a license by using email, name, key or transaction ID
             <br /><br />
-            <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-                <input name="slm_search" type="text" size="40" value=""/>
+            <form method="post" action="<?php echo esc_attr( sanitize_text_field( $_SERVER['REQUEST_URI'] ) ); ?>">
+                <input name="slm_search" type="text" size="40" value="<?php echo esc_attr( $search_term ); ?>" />
                 <input type="submit" name="slm_search_btn" class="button" value="Search" />
             </form>
         </div></div>
