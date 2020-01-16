@@ -51,22 +51,21 @@ class WPLM_List_Licenses extends WP_List_Table {
         }
     }
 
-
-    function get_columns(){
-        $columns = array(
-            'cb' => '<input type="checkbox" />', //Render a checkbox
-            'id' => 'ID',
-            'license_key' => 'License Key',
-            'lic_status' => 'Status',
-            'max_allowed_domains' => 'Domains Allowed',
-            'email' => 'Registered Email',
-            'date_created' => 'Date Created',
-            'date_renewed' => 'Date Renewed',
-            'date_expiry' => 'Expiry',
-            'product_ref' => 'Product Reference',
-        );
-        return $columns;
-    }
+	function get_columns() {
+		$columns = array(
+			'cb'                  => '<input type="checkbox" />', // Render a checkbox.
+			'id'                  => 'ID',
+			'license_key'         => 'License Key',
+			'lic_status'          => 'Status',
+			'max_allowed_domains' => 'Domains Active/Allowed',
+			'email'               => 'Registered Email',
+			'date_created'        => 'Date Created',
+			'date_renewed'        => 'Date Renewed',
+			'date_expiry'         => 'Expiry',
+			'product_ref'         => 'Product Reference',
+		);
+		return $columns;
+	}
 
     function get_sortable_columns() {
         $sortable_columns = array(
