@@ -11,9 +11,9 @@ function wp_lic_mgr_manage_licenses_menu() {
     <div class="postbox">
         <h3 class="hndle"><label for="title">License Search</label></h3>
         <div class="inside">
-            Search for a license by using email, name, key or transaction ID
+            Search for a license by using email, name, key, domain or transaction ID
             <br /><br />
-            <form method="post" action="<?php echo esc_attr( sanitize_text_field( $_SERVER['REQUEST_URI'] ) ); ?>">
+            <form method="post" action="">
                 <input name="slm_search" type="text" size="40" value="<?php echo esc_attr( $search_term ); ?>" />
                 <input type="submit" name="slm_search_btn" class="button" value="Search" />
             </form>
@@ -33,7 +33,7 @@ function wp_lic_mgr_manage_licenses_menu() {
             }
             //Fetch, prepare, sort, and filter our data...
             $license_list->prepare_items();
-            //echo "put table of locked entries here"; 
+            //echo "put table of locked entries here";
             ?>
             <form id="tables-filter" method="get" onSubmit="return confirm('Are you sure you want to perform this bulk operation on the selected entries?');">
                 <!-- For plugins, we also need to ensure that the form posts back to our current page -->
