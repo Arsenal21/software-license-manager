@@ -7,6 +7,18 @@ function wp_lic_mgr_manage_licenses_menu() {
 		th#id {
 			width: 95px;
 		}
+		th#lic_status {
+			width: 90px;
+		}
+		th#date_created {
+			width: 115px;
+		}
+		th#date_renewed {
+			width: 122px;
+		}
+		th#date_expiry {
+			width: 90px;
+		}
 	</style>
 	<div class="wrap">
 		<h2>Manage Licenses</h2>

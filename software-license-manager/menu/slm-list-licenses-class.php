@@ -57,7 +57,7 @@ class WPLM_List_Licenses extends WP_List_Table {
 			'id'                  => 'ID',
 			'license_key'         => 'License Key',
 			'lic_status'          => 'Status',
-			'max_allowed_domains' => 'Domains Active/Allowed',
+			'max_allowed_domains' => 'Domains',
 			'email'               => 'Registered Email',
 			'date_created'        => 'Date Created',
 			'date_renewed'        => 'Date Renewed',
