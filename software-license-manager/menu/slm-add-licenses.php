@@ -137,12 +137,23 @@ function wp_lic_mgr_add_licenses_menu() {
 
 	?>
 	<style type="text/css">
+		.domain-licenses {
+			overflow: auto;
+			max-height: 400px;
+			border: 1px solid #ccc;
+		}
+		.domain-licenses > table {
+			width: 100%;
+		}
 		.del {
+			display: inline-block;
+			text-decoration: none;
 			cursor: pointer;
-			padding: 3px 8px 5px;
+			padding: 3px 7px 5px;
 			line-height: 1;
 			border-radius: 100%;
 			color: red;
+			transition: 200ms all ease-in-out;
 		}
 		.del:hover,
 		.del:focus,
@@ -213,14 +224,14 @@ function wp_lic_mgr_add_licenses_menu() {
 							<td>
 								<?php if ( count( $reg_domains ) > 0 ) { ?>
 									<div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-									<div style="overflow:auto; max-height:400px;border:1px solid #ccc;">
-										<table cellpadding="0" cellspacing="0" style="width: 100%;">
+									<div class="domain-licenses">
+										<table cellpadding="0" cellspacing="0" class="domain-license-table">
 											<?php
 											$count = 0;
 											foreach ( $reg_domains as $reg_domain ) :
 												?>
 												<tr <?php echo ( $count % 2 ) ? 'class="alternate"' : ''; ?>>
-													<td style="width: 15px; padding-right: 0;"><span class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>">&times;</span></td>
+													<td style="width: 15px; padding-right: 0;"><a class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>" href="#remove-domain">&times;</a></td>
 													<td style="padding: 8px 12px;"><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
 												</tr>
 												<?php
@@ -231,7 +242,7 @@ function wp_lic_mgr_add_licenses_menu() {
 									</div>
 									<?php
 								} else {
-									esc_html_e( 'Not Registered Yet.', 'slm' );
+									echo esc_html__( 'No domains activated.', 'slm' );
 								}
 								?>
 							</td>
@@ -318,22 +329,47 @@ function wp_lic_mgr_add_licenses_menu() {
     </div></div>
     </div>
 
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            jQuery('.del').click(function() {
-                var $this = this;
-                jQuery('#reg_del_msg').html('Loading ...');
-                jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
-                    if (data == 'success') {
-                        jQuery('#reg_del_msg').html('Deleted');
-                        jQuery($this).parent().parent().remove();
-                    }
-                    else {
-                        jQuery('#reg_del_msg').html('Failed');
-                    }
-                });
-            });
-        });
-    </script>
-<?php
+	<script type="text/javascript">
+	jQuery( function( $ ) {
+		$( '.del' ).on( 'click', function( e ) {
+			e.preventDefault();
+
+			var $link = $( this );
+
+			if ( ! confirm( 'Are you sure you want to remove this domain?' ) ) {
+				$link.blur();
+				return false;
+			}
+
+			var $spinner = $( '<span />' ).addClass( 'spinner' ).css( 'visibility', 'visible' ).css( 'margin', '0 0 0 2px' );
+			$link.before( $spinner ).hide();
+
+			var id = $link.attr( 'id' ),
+				$msg = $( '#reg_del_msg' );
+
+			$msg.html( 'Loading ...' );
+
+			$.get(
+				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
+				function( data ) {
+					if ( 'success' == data ) {
+						$msg.html('Deleted');
+						var $tr = $link.parents( 'tr:first' );
+						$tr.fadeOut( 'fast', function() {
+							$tr.remove();
+							if ( ! $( '.domain-license-table tbody tr' ).length ) {
+								var $none  =$( '<p />' ).html( 'No domains activated.' ).hide();
+								$( '.domain-licenses' ).after( $none ).hide();
+								$none.fadeIn( 'fast' );
+							};
+						} );
+					} else {
+						$msg.html( 'Failed' );
+					}
+				} // ajax callback function.
+			); // get/ajax.
+		}); // click event.
+	}); // document ready.
+	</script>
+	<?php
 }
