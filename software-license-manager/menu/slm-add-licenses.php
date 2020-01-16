@@ -135,13 +135,22 @@ function wp_lic_mgr_add_licenses_menu() {
 
     }
 
-?>
-    <style type="text/css">
-        .del{
-            cursor: pointer;
-            color:red;
-        }
-    </style>
+	?>
+	<style type="text/css">
+		.del {
+			cursor: pointer;
+			padding: 3px 8px 5px;
+			line-height: 1;
+			border-radius: 100%;
+			color: red;
+		}
+		.del:hover,
+		.del:focus,
+		.del:active {
+			background-color: red;
+			color: #fff;
+		}
+	</style>
     You can add a new license or edit an existing one from this interface.
     <br /><br />
 
@@ -211,7 +220,7 @@ function wp_lic_mgr_add_licenses_menu() {
 											foreach ( $reg_domains as $reg_domain ) :
 												?>
 												<tr <?php echo ( $count % 2 ) ? 'class="alternate"' : ''; ?>>
-													<td style="width: 15px;"><span class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>">&times;</span></td>
+													<td style="width: 15px; padding-right: 0;"><span class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>">&times;</span></td>
 													<td style="padding: 8px 12px;"><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
 												</tr>
 												<?php
