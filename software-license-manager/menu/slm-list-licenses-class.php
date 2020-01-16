@@ -119,46 +119,54 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
 
-    function prepare_items() {
-        /**
-         * First, lets decide how many records per page to show
-         */
-        $per_page = 50;
-        $columns = $this->get_columns();
-        $hidden = array();
-        $sortable = $this->get_sortable_columns();
+	function prepare_items() {
+		/**
+		 * First, lets decide how many records per page to show
+		 */
+		$per_page = 50;
+		$columns  = $this->get_columns();
+		$hidden   = array();
+		$sortable = $this->get_sortable_columns();
 
-        $this->_column_headers = array($columns, $hidden, $sortable);
+		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $this->process_bulk_action();
+		$this->process_bulk_action();
 
 		global $wpdb;
 		$license_table = SLM_TBL_LICENSE_KEYS;
 		$domain_table  = SLM_TBL_LIC_DOMAIN;
 
 		/**
-		 * Ordering parameters
+		 * Ordering parameters:
+		 * Parameters that are going to be used to order the result.
 		 */
-		// Parameters that are going to be used to order the result.
-		$orderby = ! empty( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
+		$orderby = ! empty( $_GET['orderby'] ) ? '`lk`.`' . sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) . '`' : '`lk`.`date_created`';
 		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC';
 
 		if ( ! empty( $_POST['slm_search'] ) ) {
-			$search_term   = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
-			$prepare_query = $wpdb->prepare( "SELECT `lk`.* FROM `{$license_table}` `lk` INNER JOIN `{$domain_table}` `rd` ON `lk`.`id` = `rd`.`lic_key_id` WHERE `lk`.`license_key` LIKE '%%%1\$s%%' OR `lk`.`email` LIKE '%%%1\$s%%' OR `lk`.`txn_id` LIKE '%%%1\$s%%' OR `lk`.`first_name` LIKE '%%%1\$s%%' OR `lk`.`last_name` LIKE '%%%1\$s%%' OR `rd`.`registered_domain` LIKE '%%%1\$s%%' GROUP BY `lk`.`id`", $search_term );
-			$data          = $wpdb->get_results( $prepare_query, ARRAY_A );
+			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
+			$placeholder = '%%%1$s%%';
+			$data        = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` WHERE `lk`.`license_key` LIKE '$placeholder' OR `lk`.`email` LIKE '$placeholder' OR `lk`.`txn_id` LIKE '$placeholder' OR `lk`.`first_name` LIKE '$placeholder' OR `lk`.`last_name` LIKE '$placeholder' OR `rd`.`registered_domain` LIKE '$placeholder' GROUP BY `lk`.`id` ORDER BY $orderby $order",
+					$search_term
+				),
+				ARRAY_A
+			);
 		} else {
-			$data = $wpdb->get_results( "SELECT * FROM $license_table ORDER BY $orderby $order", ARRAY_A );
+			$data = $wpdb->get_results( "SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order", ARRAY_A );
 		}
 
-        $current_page = $this->get_pagenum();
-        $total_items = count($data);
-        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
-        $this->items = $data;
-        $this->set_pagination_args( array(
-            'total_items' => $total_items,                  //WE have to calculate the total number of items
-            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
-            'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
-        ) );
-    }
+		$current_page = $this->get_pagenum();
+		$total_items  = count( $data );
+		$data         = array_slice( $data, ( $current_page - 1 ) * $per_page, $per_page );
+		$this->items  = $data;
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,                     // WE have to calculate the total number of items.
+				'per_page'    => $per_page,                        // WE have to determine how many items to show on a page.
+				'total_pages' => ceil( $total_items / $per_page ), // WE have to calculate the total number of pages.
+			)
+		);
+	}
 }
