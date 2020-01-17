@@ -22,7 +22,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $subscr_id = '';
 
     $slm_options = get_option('slm_plugin_options');
-    
+
     echo '<div class="wrap">';
     echo '<h2>Add/Edit Licenses</h2>';
     echo '<div id="poststuff"><div id="post-body">';
@@ -49,18 +49,18 @@ function wp_lic_mgr_add_licenses_menu() {
         $product_ref = $record->product_ref;
         $subscr_id = $record->subscr_id;
     }
-    
-    
+
+
     if (isset($_POST['save_record'])) {
-        
+
         //Check nonce
         if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )){
             //Nonce check failed.
             wp_die("Error! Nonce verification failed for license save action.");
         }
-        
+
         do_action('slm_add_edit_interface_save_submission');
-        
+
         //TODO - do some validation
         $license_key = $_POST['license_key'];
         $max_domains = $_POST['max_allowed_domains'];
@@ -76,7 +76,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $expiry_date = $_POST['date_expiry'];
         $product_ref = $_POST['product_ref'];
         $subscr_id = $_POST['subscr_id'];
-        
+
         if(empty($created_date)){
             $created_date = $current_date;
         }
@@ -86,7 +86,7 @@ function wp_lic_mgr_add_licenses_menu() {
         if(empty($expiry_date)){
             $expiry_date = $current_date_plus_1year;
         }
-        
+
         //Save the entry to the database
         $fields = array();
         $fields['license_key'] = $license_key;
@@ -127,21 +127,63 @@ function wp_lic_mgr_add_licenses_menu() {
             echo $message;
             echo '</p></div>';
         }else{
-            echo '<div id="message" class="error">' . $errors . '</div>';            
+            echo '<div id="message" class="error">' . $errors . '</div>';
         }
-        
+
         $data = array('row_id' => $id, 'key' => $license_key);
         do_action('slm_add_edit_interface_save_record_processed',$data);
-        
+
     }
 
-?>    
-    <style type="text/css">
-        .del{
-            cursor: pointer;
-            color:red;	
-        }
-    </style>
+	?>
+	<style type="text/css">
+		.domain-licenses {
+			overflow: auto;
+			max-height: 400px;
+			border: 1px solid #ccc;
+		}
+		.domain-license-table {
+			width: 100%;
+		}
+		.form-table .domain-license-table td {
+			padding: 8px 10px;
+		}
+		.domain-license-table td.remove-domain {
+			width: 15px;
+			padding-right: 0;
+		}
+		.del {
+			display: inline-block;
+			text-decoration: none;
+			cursor: pointer;
+			padding: 3px 7px 5px;
+			line-height: 1;
+			border-radius: 100%;
+			color: red;
+			transition: 200ms all ease-in-out;
+		}
+		.del:hover,
+		.del:focus,
+		.del:active {
+			background-color: red;
+			color: #fff;
+		}
+		#reg_del_msg {
+			background-color: #666;
+			display: inline-block;
+			color: white;
+			font-weight: bold;
+			padding: 3px 15px;
+			margin-bottom: 5px;
+			border-radius: 3px;
+		}
+		#reg_del_msg.success {
+			background: green;
+		}
+		#reg_del_msg.error {
+			background: red;
+		}
+	</style>
     You can add a new license or edit an existing one from this interface.
     <br /><br />
 
@@ -184,7 +226,7 @@ function wp_lic_mgr_add_licenses_menu() {
                     <tr valign="top">
                         <th scope="row">License Status</th>
                         <td>
-                            <select name="lic_status">    
+                            <select name="lic_status">
                                 <option value="pending" <?php if ($license_status == 'pending') echo 'selected="selected"'; ?> >Pending</option>
                                 <option value="active" <?php if ($license_status == 'active') echo 'selected="selected"'; ?> >Active</option>
                                 <option value="blocked" <?php if ($license_status == 'blocked') echo 'selected="selected"'; ?> >Blocked</option>
@@ -192,43 +234,42 @@ function wp_lic_mgr_add_licenses_menu() {
                             </select>
                         </td></tr>
 
-                    <?php
-                    if ($id != '') {
-                        global $wpdb;
-                        $reg_table = SLM_TBL_LIC_DOMAIN;
-                        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
-                        $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
-                        ?>
-                        <tr valign="top">
-                            <th scope="row">Registered Domains</th>
-                            <td><?php
-                                if (count($reg_domains) > 0) {
-                                    ?>
-                                    <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                    <div style="overflow:auto; height:200px;width:400px;border:1px solid #ccc;">
-                                        <table cellpadding="0" cellspacing="0">
-                                            <?php
-                                            $count = 0;
-                                            foreach ($reg_domains as $reg_domain) {
-                                                ?>
-                                                <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
-                                                    <td height="5"><?php echo $reg_domain->registered_domain; ?></td> 
-                                                    <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
-                                                </tr>
-                                                <?php
-                                                $count++;
-                                            }
-                                            ?>
-                                        </table>         
-                                    </div>
-                                    <?php
-                                } else {
-                                    echo "Not Registered Yet.";
-                                }
-                                ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
+					<?php
+					if ( '' != $id ) :
+						global $wpdb;
+						$reg_table   = SLM_TBL_LIC_DOMAIN;
+						$sql_prep    = $wpdb->prepare( "SELECT * FROM `$reg_table` WHERE `lic_key_id` = %s", $id );
+						$reg_domains = $wpdb->get_results( $sql_prep, OBJECT );
+						?>
+						<tr valign="top">
+							<th scope="row">Registered Domains</th>
+							<td>
+								<?php if ( count( $reg_domains ) > 0 ) { ?>
+									<div id="reg_del_msg" style="display: none;"></div>
+									<div class="domain-licenses">
+										<table cellpadding="0" cellspacing="0" class="domain-license-table">
+											<?php
+											$count = 0;
+											foreach ( $reg_domains as $reg_domain ) :
+												?>
+												<tr <?php echo ( $count % 2 ) ? 'class="alternate"' : ''; ?>>
+													<td class="remove-domain"><a class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>" href="#remove-domain">&times;</a></td>
+													<td><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
+												</tr>
+												<?php
+												$count++;
+											endforeach;
+											?>
+										</table>
+									</div>
+									<?php
+								} else {
+									echo esc_html__( 'No domains activated.', 'slm' );
+								}
+								?>
+							</td>
+						</tr>
+					<?php endif; ?>
 
                     <tr valign="top">
                         <th scope="row">First Name</th>
@@ -278,7 +319,7 @@ function wp_lic_mgr_add_licenses_menu() {
                         <td><input name="date_expiry" type="text" id="date_expiry" class="wplm_pick_date" value="<?php echo $expiry_date; ?>" size="10" />
                             <br/>Expiry date of license.</td>
                     </tr>
-                    
+
                     <tr valign="top">
                         <th scope="row">Product Reference</th>
                         <td><input name="product_ref" type="text" id="product_ref" value="<?php echo $product_ref; ?>" size="30" />
@@ -290,7 +331,7 @@ function wp_lic_mgr_add_licenses_menu() {
                         <td><input name="subscr_id" type="text" id="subscr_id" value="<?php echo $subscr_id; ?>" size="50" />
                             <br/>The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</td>
                     </tr>
-                    
+
                 </table>
 
                 <?php
@@ -300,7 +341,7 @@ function wp_lic_mgr_add_licenses_menu() {
                     echo $extra_output;
                 }
                 ?>
-                
+
                 <div class="submit">
                     <input type="submit" class="button-primary" name="save_record" value="Save Record" />
                 </div>
@@ -310,22 +351,54 @@ function wp_lic_mgr_add_licenses_menu() {
     </div></div>
     </div>
 
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            jQuery('.del').click(function() {
-                var $this = this;
-                jQuery('#reg_del_msg').html('Loading ...');
-                jQuery.get('<?php echo get_bloginfo('wpurl') ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
-                    if (data == 'success') {
-                        jQuery('#reg_del_msg').html('Deleted');
-                        jQuery($this).parent().parent().remove();
-                    }
-                    else {
-                        jQuery('#reg_del_msg').html('Failed');
-                    }
-                });
-            });
-        });
-    </script>
-<?php
+	<script type="text/javascript">
+	jQuery( function( $ ) {
+		$( '.del' ).on( 'click', function( e ) {
+			e.preventDefault();
+
+			var $link = $( this );
+
+			if ( ! confirm( 'Are you sure you want to remove this domain?' ) ) {
+				$link.blur();
+				return false;
+			}
+
+			var $spinner = $( '<span />' ).addClass( 'spinner' ).css( 'visibility', 'visible' ).css( 'margin', '0 0 0 2px' );
+			$link.before( $spinner ).hide();
+
+			var id = $link.attr( 'id' ),
+				$msg = $( '#reg_del_msg' );
+
+			$msg.html( 'Loading ...' ).show();
+
+			$.get(
+				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
+				function( data ) {
+					if ( 'success' == data ) {
+						$msg.addClass( 'success' ).html( 'Deleted' );
+
+						var $tr = $link.parents( 'tr:first' );
+						$tr.fadeOut( 'fast', function() {
+							$tr.remove();
+
+							// Check if any more rows exist.
+							if ( ! $( '.domain-license-table tbody tr' ).length ) {
+								var $none  =$( '<p />' ).html( 'No domains activated.' ).hide();
+								$( '.domain-licenses' ).after( $none ).hide();
+								$none.fadeIn( 'fast' );
+							} else {
+								// Restripe table.
+								$( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
+								$( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
+							}
+						} );
+					} else {
+						$msg.addClass( 'error' ).html( 'Failed' );
+					}
+				} // ajax callback function.
+			); // get/ajax.
+		}); // click event.
+	}); // document ready.
+	</script>
+	<?php
 }

@@ -5,23 +5,23 @@ if (!class_exists('WP_List_Table')) {
 }
 
 class WPLM_List_Licenses extends WP_List_Table {
-    
+
     function __construct(){
         global $status, $page;
-                
+
         //Set parent defaults
         parent::__construct( array(
             'singular'  => 'item',     //singular name of the listed records
             'plural'    => 'items',    //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
-        
+
     }
 
     function column_default($item, $column_name){
     	return $item[$column_name];
     }
-        
+
     function column_id($item){
         $row_id = $item['id'];
         $actions = array(
@@ -34,7 +34,7 @@ class WPLM_List_Licenses extends WP_List_Table {
         );
     }
 
-    
+
     function column_cb($item){
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
@@ -42,7 +42,7 @@ class WPLM_List_Licenses extends WP_List_Table {
             /*$2%s*/ $item['id']                //The value of the checkbox should be the record's id
        );
     }
-    
+
     function column_active($item){
         if ($item['active'] == 1){
             return 'active';
@@ -51,23 +51,22 @@ class WPLM_List_Licenses extends WP_List_Table {
         }
     }
 
-    
-    function get_columns(){
-        $columns = array(
-            'cb' => '<input type="checkbox" />', //Render a checkbox
-            'id' => 'ID',
-            'license_key' => 'License Key',
-            'lic_status' => 'Status',
-            'max_allowed_domains' => 'Domains Allowed',
-            'email' => 'Registered Email',
-            'date_created' => 'Date Created',
-            'date_renewed' => 'Date Renewed',
-            'date_expiry' => 'Expiry',
-            'product_ref' => 'Product Reference',
-        );
-        return $columns;
-    }
-    
+	function get_columns() {
+		$columns = array(
+			'cb'                  => '<input type="checkbox" />', // Render a checkbox.
+			'id'                  => 'ID',
+			'license_key'         => 'License Key',
+			'lic_status'          => 'Status',
+			'max_allowed_domains' => 'Domains',
+			'email'               => 'Registered Email',
+			'date_created'        => 'Date Created',
+			'date_renewed'        => 'Date Renewed',
+			'date_expiry'         => 'Expiry',
+			'product_ref'         => 'Product Reference',
+		);
+		return $columns;
+	}
+
     function get_sortable_columns() {
         $sortable_columns = array(
             'id' => array('id',false),
@@ -79,7 +78,7 @@ class WPLM_List_Licenses extends WP_List_Table {
         );
         return $sortable_columns;
     }
-    
+
     function get_bulk_actions() {
         $actions = array(
             'delete' => 'Delete',
@@ -88,15 +87,15 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
     function process_bulk_action() {
-        if('delete'===$this->current_action()) 
+        if('delete'===$this->current_action())
         {
             //Process delete bulk actions
             if(!isset($_REQUEST['item'])){
                 $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
                 echo '<div id="message" class="error fade">'.$error_msg.'</div>';
                 return;
-            }else {            
-        	$nvp_key = $this->_args['singular'];                
+            }else {
+        	$nvp_key = $this->_args['singular'];
         	$records_to_delete = $_GET[$nvp_key];
         	foreach ($records_to_delete as $row){
                     SLM_Utility::delete_license_key_by_row_id($row);
@@ -105,8 +104,8 @@ class WPLM_List_Licenses extends WP_List_Table {
             }
         }
     }
-    
-    
+
+
     /*
      * This function will delete the selected license key entries from the DB.
      */
@@ -120,43 +119,54 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
 
-    function prepare_items() {
-        /**
-         * First, lets decide how many records per page to show
-         */
-        $per_page = 50;
-        $columns = $this->get_columns();
-        $hidden = array();
-        $sortable = $this->get_sortable_columns();
+	function prepare_items() {
+		/**
+		 * First, lets decide how many records per page to show
+		 */
+		$per_page = 50;
+		$columns  = $this->get_columns();
+		$hidden   = array();
+		$sortable = $this->get_sortable_columns();
 
-        $this->_column_headers = array($columns, $hidden, $sortable);
-        
-        $this->process_bulk_action();
-    	
-    	global $wpdb;
-        $license_table = SLM_TBL_LICENSE_KEYS;
-        
-	/* -- Ordering parameters -- */
-	    //Parameters that are going to be used to order the result
-	$orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
-	$order = !empty($_GET["order"]) ? strip_tags($_GET["order"]) : 'DESC';
+		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-        if (isset($_POST['slm_search'])) {
-            $search_term = trim(strip_tags($_POST['slm_search']));
-            $prepare_query = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `txn_id` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
-            $data = $wpdb->get_results($prepare_query, ARRAY_A);
-        }else{
-            $data = $wpdb->get_results("SELECT * FROM $license_table ORDER BY $orderby $order", ARRAY_A);
-        }
-        
-        $current_page = $this->get_pagenum();
-        $total_items = count($data);
-        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
-        $this->items = $data;
-        $this->set_pagination_args( array(
-            'total_items' => $total_items,                  //WE have to calculate the total number of items
-            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
-            'total_pages' => ceil($total_items/$per_page)   //WE have to calculate the total number of pages
-        ) );
-    }
+		$this->process_bulk_action();
+
+		global $wpdb;
+		$license_table = SLM_TBL_LICENSE_KEYS;
+		$domain_table  = SLM_TBL_LIC_DOMAIN;
+
+		/**
+		 * Ordering parameters:
+		 * Parameters that are going to be used to order the result.
+		 */
+		$orderby = ! empty( $_GET['orderby'] ) ? '`lk`.`' . sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) . '`' : '`lk`.`date_created`';
+		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC';
+
+		if ( ! empty( $_POST['slm_search'] ) ) {
+			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
+			$placeholder = '%%%1$s%%';
+			$data        = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` WHERE `lk`.`license_key` LIKE '$placeholder' OR `lk`.`email` LIKE '$placeholder' OR `lk`.`txn_id` LIKE '$placeholder' OR `lk`.`first_name` LIKE '$placeholder' OR `lk`.`last_name` LIKE '$placeholder' OR `rd`.`registered_domain` LIKE '$placeholder' GROUP BY `lk`.`id` ORDER BY $orderby $order",
+					$search_term
+				),
+				ARRAY_A
+			);
+		} else {
+			$data = $wpdb->get_results( "SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order", ARRAY_A );
+		}
+
+		$current_page = $this->get_pagenum();
+		$total_items  = count( $data );
+		$data         = array_slice( $data, ( $current_page - 1 ) * $per_page, $per_page );
+		$this->items  = $data;
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,                     // WE have to calculate the total number of items.
+				'per_page'    => $per_page,                        // WE have to determine how many items to show on a page.
+				'total_pages' => ceil( $total_items / $per_page ), // WE have to calculate the total number of pages.
+			)
+		);
+	}
 }
