@@ -54,7 +54,7 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 == Changelog ==
 
 = 4.4 = 
-- The follower UI improvements were submitted by Brian DiChiara. A big Thank You to @solepixel
+- The following UI improvements were submitted by Brian DiChiara. A big Thank You to @solepixel
 - Adds domain to license search.
 - Retain search term value in search field.
 - Better UI for deleting domains:
