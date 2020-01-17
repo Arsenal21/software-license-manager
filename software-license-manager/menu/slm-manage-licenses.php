@@ -5,25 +5,25 @@ function wp_lic_mgr_manage_licenses_menu() {
 	?>
 	<style>
 		th#id {
-			width: 95px;
+			width: 100px;
 		}
 		th#license_key {
-			width: 150px;
+			width: 250px;
 		}
 		th#max_allowed_domains {
-			width: 70px;
+			width: 75px;
 		}
 		th#lic_status {
-			width: 90px;
+			width: 100px;
 		}
 		th#date_created {
-			width: 115px;
+			width: 125px;
 		}
 		th#date_renewed {
-			width: 122px;
+			width: 125px;
 		}
 		th#date_expiry {
-			width: 95px;
+			width: 125px;
 		}
 	</style>
 	<div class="wrap">

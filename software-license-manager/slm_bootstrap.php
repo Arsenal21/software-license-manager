@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.3
+Version: 4.4
 Plugin URI: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Author: Tips and Tricks HQ
 Author URI: https://www.tipsandtricks-hq.com/
@@ -14,7 +14,7 @@ if(!defined('ABSPATH')){
 
 //Short name/slug "SLM" or "slm"
 
-define('WP_LICENSE_MANAGER_VERSION', "4.3");
+define('WP_LICENSE_MANAGER_VERSION', "4.4");
 define('WP_LICENSE_MANAGER_DB_VERSION', '1.4');
 define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
 define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));
@@ -28,9 +28,9 @@ include_once('slm_plugin_core.php');
 function slm_activate_handler(){
     //Do installer task
     slm_db_install();
-    
+
     //schedule a daily cron event
-    wp_schedule_event(time(), 'daily', 'slm_daily_cron_event'); 
+    wp_schedule_event(time(), 'daily', 'slm_daily_cron_event');
 
     do_action('slm_activation_complete');
 }
@@ -40,7 +40,7 @@ register_activation_hook(__FILE__,'slm_activate_handler');
 function slm_deactivate_handler(){
     //Clear the daily cron event
     wp_clear_scheduled_hook('slm_daily_cron_event');
-    
+
     do_action('slm_deactivation_complete');
 }
 register_deactivation_hook(__FILE__,'slm_deactivate_handler');

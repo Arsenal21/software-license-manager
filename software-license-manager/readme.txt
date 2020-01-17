@@ -2,9 +2,9 @@
 Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
-Requires at least: 4.7
+Requires at least: 5.0
 Tested up to: 5.3
-Stable tag: 4.3
+Stable tag: 4.4
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,18 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.4 = 
+- The follower UI improvements were submitted by Brian DiChiara. A big Thank You to @solepixel
+- Adds domain to license search.
+- Retain search term value in search field.
+- Better UI for deleting domains:
+    Wider domain table.
+    Allow for more domains visible in table.
+    Easier to click "delete" button.
+    Prompt before deleting asking "Are you sure you want to remove this domain?".
+    Intuitive post-delete to remove section if no more domains are active.
+- Displays total activated domains in Manage Licenses table.
 
 = 4.3 =
 - The product quantity of WP eStore product is taken into account when creating a new license key.

@@ -140,8 +140,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 		 * Ordering parameters:
 		 * Parameters that are going to be used to order the result.
 		 */
-		$orderby = ! empty( $_GET['orderby'] ) ? '`lk`.`' . sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) . '`' : '`lk`.`date_created`';
-		$order   = ! empty( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'DESC';
+                $orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
+                $order = !empty($_GET["order"]) ? strip_tags($_GET["order"]) : 'DESC';
 
 		if ( ! empty( $_POST['slm_search'] ) ) {
 			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
