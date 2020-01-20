@@ -388,8 +388,10 @@ class SLM_Plugin
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Tools", "Tools", SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Help", "Help", SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
-        add_action("load-" . $hook, [$this, 'screen_option']);
 
+        add_submenu_page(SLM_MAIN_MENU_SLUG, "About", "About", SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
+
+        add_action("load-" . $hook, [$this, 'screen_option']);
     }
 
 

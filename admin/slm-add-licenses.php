@@ -29,6 +29,7 @@ function slm_add_licenses_menu()
     $reg_domains    = '';
     $reg_devices    = '';
     $class_hide     = '';
+    $activated_date = '';
     $current_date   = (date("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
 
@@ -404,6 +405,12 @@ function slm_add_licenses_menu()
                                                                             $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
                                                                             $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
                                                                         }
+
+
+
+                                                                        if (!isset($_GET["edit_record"])) : ?>
+
+
                                                                         if (count($reg_domains) > 0) : ?>
                                                                             <label>Registered Domains</label>
                                                                             <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
@@ -423,6 +430,9 @@ function slm_add_licenses_menu()
                                                                         <?php else : ?>
                                                                             <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
                                                                         <?php endif; ?>
+
+
+
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-md-6">
@@ -555,33 +565,33 @@ function slm_add_licenses_menu()
                                                     </div>
 
                                                     <?php
-                                                    if (isset($_GET['edit_record'])) : ?>
+                                                    if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) : ?>
                                                         <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
 
                                                             <div class="export-license col-full">
                                                                 <div class="license_export_info" style="min-width: 100%; max-width: 900px">
                                                                     <?php
-                                                                    $api_params = array(
-                                                                        'slm_action'    =>  'slm_check',
-                                                                        'secret_key'    =>  SLM_Helper_Class::slm_get_option('lic_verification_secret'),
-                                                                        'license_key'   =>  $license_key,
-                                                                    );
-                                                                    // Send query to the license manager server
-                                                                    $response = wp_remote_get(add_query_arg($api_params, SLM_SITE_URL), array('timeout' => 20, 'sslverify' => false));
+                                                                        $api_params = array(
+                                                                            'slm_action'    =>  'slm_check',
+                                                                            'secret_key'    =>  SLM_Helper_Class::slm_get_option('lic_verification_secret'),
+                                                                            'license_key'   =>  $license_key,
+                                                                        );
+                                                                        // Send query to the license manager server
+                                                                        $response = wp_remote_get(add_query_arg($api_params, SLM_SITE_URL), array('timeout' => 20, 'sslverify' => false));
 
-                                                                    $data = $response['body'];
+                                                                        $data = $response['body'];
 
-                                                                    // parsing json
-                                                                    $arr = json_decode($data, true);
+                                                                        // parsing json
+                                                                        $arr = json_decode($data, true);
 
-                                                                    // removing the value
-                                                                    unset($arr['result']);
-                                                                    unset($arr['code']);
-                                                                    unset($arr['message']);
+                                                                        // removing the value
+                                                                        unset($arr['result']);
+                                                                        unset($arr['code']);
+                                                                        unset($arr['message']);
 
-                                                                    // and back to json
-                                                                    $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-                                                                    echo '<figure class="highlight"><pre><code id="lic-json-data">' . $response . '</code></pre></figure>';
+                                                                        // and back to json
+                                                                        $response = utf8_encode(json_encode($arr, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+                                                                        echo '<figure class="highlight"><pre><code id="lic-json-data" data-lickey="'.$license_key.'">' . $response . '</code></pre></figure>';
 
                                                                     ?>
                                                                     <a href="#" class="button-secondary" onclick="slm_exportlicense()">Export License</a>
