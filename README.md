@@ -59,6 +59,9 @@ Give a ⭐️ if this project helped you!
 - Language support (spanish and english)
 - Woocommerce product type
 - Pass license info to woocommerce order
+- Expiration reminder (Emails the user when the license expires)
+- User can manager and view licenses from my account's page
+
 
 
 ## ✅ Compatibility
@@ -92,6 +95,6 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 
 ## 📝 License
 
-Copyright © 2019 [Michel Velis and Tips and Tricks HQ](https://github.com/michelve).
+Copyright © 2020 [Michel Velis and Tips and Tricks HQ](https://github.com/michelve).
 
 This project is [MIT](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md) licensed.
