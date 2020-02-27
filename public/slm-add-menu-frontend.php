@@ -76,9 +76,17 @@ class SLM_Woo_Account
         global $wpdb;
         $class_ = 0;
         $class_id_ = 0;
+        $get_user_info = $get_user_email = '';
 
-        // get user email
+        // get user billing email
         $wc_billing_email = get_user_meta(get_current_user_id(), 'billing_email', true);
+
+        // if wp billing is empty
+        if ($wc_billing_email == '') {
+            $get_user_info      = get_userdata(get_current_user_id());
+            $wc_billing_email   = $get_user_info->user_email;
+        }
+
         $result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . SLM_Woo_Account::getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000");
 
         $result_array = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email LIKE '%" . SLM_Woo_Account::getActiveUser('email') . "%' OR email LIKE '%" . $wc_billing_email . "%' ORDER BY `email` DESC LIMIT 0,1000", ARRAY_A);
