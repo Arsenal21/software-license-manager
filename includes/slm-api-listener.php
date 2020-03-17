@@ -112,6 +112,8 @@ class SLM_API_Listener {
     }
 
     function activation_api_listener() {
+        $registered_devices = $item_reference  = $registered_domain = '';
+
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_activate') {
             //Handle the license activation API query
             global $slm_debug_logger;
@@ -124,14 +126,25 @@ class SLM_API_Listener {
 
             $fields                         = array();
             $fields['lic_key']              = trim(strip_tags($_REQUEST['license_key']));
-            $fields['registered_domain']    = trim(wp_unslash(strip_tags($_REQUEST['registered_domain']))); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
-            $fields['registered_devices']   = trim(wp_unslash(strip_tags($_REQUEST['registered_devices']))); //client ip or machine name
-            $fields['item_reference']       = trim(strip_tags($_REQUEST['item_reference']));
 
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $fields['registered_domain']);
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Device: " . $fields['registered_devices']);
+            if (isset($_REQUEST['registered_domain'])) {
+                $registered_domain = $fields['registered_domain']    = trim(wp_unslash(strip_tags($_REQUEST['registered_domain'])));
+            }
+
+            if (isset($_REQUEST['registered_devices'])) {
+                $registered_devices = $fields['registered_devices']    = trim(wp_unslash(strip_tags($_REQUEST['registered_devices'])));
+            }
+
+            if (isset($_REQUEST['item_reference'])) {
+                $item_reference = $fields['item_reference']    = trim(strip_tags($_REQUEST['item_reference']));
+            }
+
+
+            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $registered_domain);
+            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Device: " . $registered_devices);
 
             global $wpdb;
+
             $tbl_name           = SLM_TBL_LICENSE_KEYS;
             $reg_table          = SLM_TBL_LIC_DOMAIN;
             $reg_table_devices  = SLM_TBL_LIC_DEVICES;

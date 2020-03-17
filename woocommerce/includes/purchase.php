@@ -15,18 +15,17 @@ if (!defined('ABSPATH')) {
 
 global $post, $woocommerce, $product;
 
-
 add_action('woocommerce_checkout_update_order_meta', 'slm_add_lic_key_meta_update');
 add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
 add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
 add_action('woocommerce_order_status_completed', 'wc_slm_access_expiration', 82);
 add_action('woocommerce_order_details_after_order_table', 'slm_order_details', 10, 1);
-add_action('woocommerce_thankyou', 'slm_show_msg', 80 );
+add_action('woocommerce_thankyou', 'slm_show_msg', 80);
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
 
 function wc_slm_on_complete_purchase($order_id) {
 	//SLM_Helper_Class::write_log('loading wc_slm_on_complete_purchase');
-	if ( SLM_SITE_URL != '' && WOO_SLM_API_SECRET != '') {
+	if (SLM_SITE_URL != '' && WOO_SLM_API_SECRET != '') {
 		wc_slm_create_license_keys($order_id);
 	}
 }
@@ -336,14 +335,22 @@ function wc_get_payment_transaction_id($order_id) {
 function slm_order_completed( $order_id ) {
 
 	global $user_id, $wpdb;
+	$get_user_info = '';
 	$order 					= wc_get_order($order_id);
 	$purchase_id_ 			= $order->get_id();
 	$order_data 			= $order->get_data(); // The Order data
 	$order_billing_email 	= $order_data['billing']['email'];
+
+	// if wp billing is empty
+	if ($order_billing_email == '') {
+		$get_user_info      = get_userdata(get_current_user_id());
+		$order_billing_email   = $get_user_info->user_email;
+	}
+
 	$billing_address 		= $order_billing_email;
-	$message 				= 'error: 000 null';
-	$get_user_meta 			= get_user_meta($user_id);
-    $headers 				= 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
+	//$message 				= 'error: 000 null';
+	//$get_user_meta 			= get_user_meta($user_id);
+    //$headers 				= 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
     //wp_mail( $billing_address, 'License details', $message, $headers );
 
 	// The text for the note

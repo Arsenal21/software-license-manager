@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 5.1.9
+Version: 5.2.0
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -12,14 +12,14 @@ Domain Path: /languages/
 */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-    die;
+if (!defined('WPINC')) {
+    die();
 }
 
 global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',               '5.1.9');
+define('SLM_VERSION',               '5.2.0');
 define('SLM_DB_VERSION',            '4.1.2');
 define('SLM_REWRITE_VERSION',       '2.3.0');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
@@ -44,8 +44,8 @@ define('SLM_MANAGEMENT_PERMISSION', 'manage_options');
 define('SLM_MAIN_MENU_SLUG',        'slm_overview');
 define('SLM_MENU_ICON',             'dashicons-lock');
 
-if( file_exists( SLM_LIB .  'slm-plugin-core.php') ) {
-    require_once SLM_LIB . 'slm-plugin-core.php';
+if (file_exists(SLM_LIB .  'slm-plugin-core.php')) {
+    include_once SLM_LIB . 'slm-plugin-core.php';
 }
 
 // Options and filters

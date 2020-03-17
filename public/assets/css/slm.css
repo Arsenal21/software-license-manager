@@ -88,17 +88,19 @@ body.slm_page_slm_manage_license {
     border:1px solid #ccc;
     padding: 8px;
 }
-.del_device, .del {
-    color: red;
+.del_device,
+.del {
+    color: white;
     margin: 0 8px;
     display: block;
-    background: #ccc;
+    background: #dc3545;
     padding: 4px;
     border-radius: 12px;
     width: 16px;
     height: 16px;
     line-height: 8px;
     text-align: center;
+    font-size: 10px;
 }
 .del_device:hover, .del:hover {
 background: red;

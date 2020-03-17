@@ -407,10 +407,6 @@ function slm_add_licenses_menu()
                                                                         }
 
 
-
-                                                                        if (!isset($_GET["edit_record"])) : ?>
-
-
                                                                         if (count($reg_domains) > 0) : ?>
                                                                             <label>Registered Domains</label>
                                                                             <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
@@ -430,7 +426,6 @@ function slm_add_licenses_menu()
                                                                         <?php else : ?>
                                                                             <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
                                                                         <?php endif; ?>
-
 
 
                                                                     </div>
@@ -466,6 +461,8 @@ function slm_add_licenses_menu()
                                                                     <?php else : ?>
                                                                         <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
                                                                     <?php endif; ?>
+
+
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>

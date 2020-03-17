@@ -8,11 +8,11 @@
  * @link      http://epikly.com
  */
 
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit; // Exit if accessed directly
+if (!defined('WP_UNINSTALL_PLUGIN')) {
+    exit(); // Exit if accessed directly
 }
 
-if ( ! current_user_can( 'activate_plugins' ) ) {
+if (!current_user_can('activate_plugins')) {
     return;
 }
 
@@ -24,19 +24,19 @@ $slm_options = array(
     'slm_plugin_options',
 );
 
-foreach ( $slm_options as $option ) {
-    if ( get_option( $option ) ) {
-        delete_option( $option );
+foreach ($slm_options as $option) {
+    if (get_option($option)) {
+        delete_option($option);
     }
 }
 
 // Delete Custom Post Type posts
-$wpdb->query( "DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'slm_manage_license' );" );
-$wpdb->query( "DELETE FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE wp.ID IS NULL;" );
+$wpdb->query("DELETE FROM {$wpdb->posts} WHERE post_type IN ( 'slm_manage_license' );");
+$wpdb->query("DELETE FROM {$wpdb->postmeta} meta LEFT JOIN {$wpdb->posts} posts ON posts.ID = meta.post_id WHERE wp.ID IS NULL;");
 
 
 // Delete Tables
-$wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_key_tbl" );
-$wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_domain_tbl" );
-$wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_devices_tbl" );
-$wpdb->query( "DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_log_tbl");
+$wpdb->query("DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_key_tbl");
+$wpdb->query("DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_domain_tbl");
+$wpdb->query("DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_reg_devices_tbl");
+$wpdb->query("DROP TABLE IF EXISTS" . $wpdb->prefix . "lic_log_tbl");

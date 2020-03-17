@@ -4,7 +4,6 @@ if (!defined('WPINC')) {
     die;
 }
 
-
 function slm_integration_help_menu()
 {
     ?>
@@ -54,33 +53,115 @@ function slm_integration_help_menu()
 
             <div class="error_codes">
                 <h3>Error codes and constants</h3>
-                <pre class="slm_code">
-                    const CREATE_FAILED                 = 10;
-                    const CREATE_KEY_INVALID            = 100;
-                    const DOMAIN_ALREADY_INACTIVE       = 80;
-                    const DOMAIN_MISSING                = 70;
-                    const KEY_CANCELED                  = 130;
-                    const KEY_CANCELED_FAILED           = 140;
-                    const KEY_DEACTIVATE_DOMAIN_SUCCESS = 360;
-                    const KEY_DEACTIVATE_SUCCESS        = 340;
-                    const KEY_DELETE_FAILED             = 300;
-                    const KEY_DELETE_SUCCESS            = 320;
-                    const KEY_DELETED                   = 130;
-                    const KEY_UPDATE_FAILED             = 220;
-                    const KEY_UPDATE_SUCCESS            = 240;
-                    const LICENSE_ACTIVATED             = 380;
-                    const LICENSE_BLOCKED               = 20;
-                    const LICENSE_CREATED               = 400;
-                    const LICENSE_EXIST                 = 200;
-                    const LICENSE_EXPIRED               = 30;
-                    const LICENSE_IN_USE                = 40;
-                    const LICENSE_INVALID               = 60;
-                    const MISSING_KEY_DELETE_FAILED     = 280;
-                    const MISSING_KEY_UPDATE_FAILED     = 260;
-                    const REACHED_MAX_DEVICES           = 120;
-                    const REACHED_MAX_DOMAINS           = 50;
-                    const VERIFY_KEY_INVALID            = 90;
-                                                                            </pre>
+
+                <table class="slm-lic-erro-code">
+                    <thead>
+                    <td><strong>Constant</strong></td>
+                    <td><strong>Error code</strong></td>
+                    </thead>
+
+                <tr>
+                    <td>CREATE_FAILED</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>CREATE_KEY_INVALID</td>
+                    <td>100</td>
+                </tr>
+                <tr>
+                    <td>DOMAIN_ALREADY_INACTIVE </td>
+                    <td>80</td>
+                </tr>
+                <tr>
+                    <td>DOMAIN_MISSING </td>
+                    <td>70</td>
+                </tr>
+                <tr>
+                    <td>KEY_CANCELED </td>
+                    <td>130</td>
+                </tr>
+                <tr>
+                    <td>KEY_CANCELED_FAILED  </td>
+                    <td>140</td>
+                </tr>
+                <tr>
+                    <td>KEY_DEACTIVATE_DOMAIN_SUCCESS </td>
+                    <td>360</td>
+                </tr>
+                <tr>
+                    <td>KEY_DEACTIVATE_SUCCESS  </td>
+                    <td>340</td>
+                </tr>
+                <tr>
+                    <td>KEY_DELETE_FAILED </td>
+                    <td>300</td>
+                </tr>
+                <tr>
+                    <td>KEY_DELETE_SUCCESS</td>
+                    <td>320</td>
+                </tr>
+                <tr>
+                    <td>KEY_DELETED  </td>
+                    <td>130</td>
+                </tr>
+                <tr>
+                    <td>KEY_UPDATE_FAILED </td>
+                    <td>220</td>
+                </tr>
+                <tr>
+                    <td>KEY_UPDATE_SUCCESS</td>
+                    <td>240</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_ACTIVATED </td>
+                    <td>380</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_BLOCKED</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_CREATED</td>
+                    <td>400</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_EXIST</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_EXPIRED</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_IN_USE </td>
+                    <td>40</td>
+                </tr>
+                <tr>
+                    <td>LICENSE_INVALID</td>
+                    <td>60</td>
+                </tr>
+                <tr>
+                    <td>MISSING_KEY_DELETE_FAILED  </td>
+                    <td>280</td>
+                </tr>
+                <tr>
+                    <td>MISSING_KEY_UPDATE_FAILED  </td>
+                    <td>260</td>
+                </tr>
+                <tr>
+                    <td>REACHED_MAX_DEVICES  </td>
+                    <td>120</td>
+                </tr>
+                <tr>
+                    <td>REACHED_MAX_DOMAINS  </td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>VERIFY_KEY_INVALID</td>
+                    <td>90</td>
+                </tr>
+
+                </table>
             </div>
         </div>
     </div>

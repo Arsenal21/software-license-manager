@@ -89,12 +89,15 @@ function slm_dashboard_widget_function()
                 <strong><?php echo SLM_Utility::count_licenses('pending '); ?></strong> Pending licenses
             </a>
         </li>
+
+
         <li class=" blocked-licenses">
             <a href="<?php echo admin_url('admin.php?page=slm_overview&s=blocked&view=blocked'); ?>">
                 <div class="icon"> <span class="dashicons dashicons-dismiss"></span> </div>
-                <strong><?php echo SLM_Utility::count_licenses('blocked '); ?></strong> Blocked licenses
+                <strong><?php echo SLM_Utility::count_licenses('blocked'); ?></strong> Blocked licenses
             </a>
         </li>
+
         <li class="expired-licenses">
             <a href="<?php echo admin_url('admin.php?page=slm_overview&s=expired&view=expired'); ?>">
                 <div class="icon"> <span class="dashicons dashicons-calendar-alt"></span> </div>
