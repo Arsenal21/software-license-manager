@@ -111,7 +111,7 @@ class SLM_Utility {
 
         $headers                    = array('Content-Type: text/html; charset=UTF-8');
         $response                   = '';
-        $sql_query                  = $wpdb->get_results("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() ORDER BY date_expiry ASC;", ARRAY_A);
+        $sql_query                  = $wpdb->get_results("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() AND NOT date_expiry='00000000' ORDER BY date_expiry ASC;", ARRAY_A);
         $subject                    = get_bloginfo('name') . ' - Your license has expired';
         $expiration_reminder_text   = SLM_Helper_Class::slm_get_option( 'expiration_reminder_text');
 
@@ -139,11 +139,11 @@ class SLM_Utility {
                     $updated = $wpdb->update(SLM_TBL_LICENSE_KEYS , $data, $where);
 
                     self::create_log($license_key, 'set to expired');
-                }
 
-                //SLM_Helper_Class::write_log('Found: ' . $license_key);
-                self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
-                self::create_log($license_key, 'sent expiration email notification');
+                    //SLM_Helper_Class::write_log('Found: ' . $license_key);
+                    self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
+                    self::create_log($license_key, 'sent expiration email notification');
+                }
 
                 //SLM_Helper_Class::write_log('DB record logged');
                 $response = 'Reminder message was sent to: ' . $license_key;
