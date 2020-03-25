@@ -116,7 +116,15 @@ class Subscribers_List_Table extends WP_List_Table
         if (!empty($_GET['order'])) {
             $order = $_GET['order'];
         }
-        $result = strcmp($a[$orderby], $b[$orderby]);
+        if ($orderby == 'id'){ 
+          if ($a[$orderby]==$b[$orderby]){
+            $result = 0;
+          }else{
+            $result = ($a[$orderby]<$b[$orderby])?-1:1;          
+          }
+        }else{
+          $result = strcmp($a[$orderby], $b[$orderby]);
+        }
         if ($order === 'asc') {
             return $result;
         }
