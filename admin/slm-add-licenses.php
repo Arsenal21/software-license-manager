@@ -29,7 +29,7 @@ function slm_add_licenses_menu()
     $reg_domains    = '';
     $reg_devices    = '';
     $class_hide     = '';
-    $activated_date = '';
+    $date_activated = '';
     $current_date   = (date("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
 
@@ -57,13 +57,13 @@ function slm_add_licenses_menu()
         $purchase_id_   = $record->purchase_id_;
         $created_date   = $record->date_created;
         $renewed_date   = $record->date_renewed;
-        $activated_date = $record->date_activated;
-        $expiry_date    = $record->date_expiry;
+        $date_activated = $record->date_activated;
         $product_ref    = $record->product_ref;
         $until          = $record->until;
         $current_ver    = $record->current_ver;
         $subscr_id      = $record->subscr_id;
         $lic_type       = $record->lic_type;
+        $expiry_date    = $record->date_expiry;
     }
     if (isset($_POST['save_record'])) {
 
@@ -76,6 +76,7 @@ function slm_add_licenses_menu()
         do_action('slm_add_edit_interface_save_submission');
 
         //TODO - do some validation
+        $expiry_date = '';
         $license_key    = $_POST['license_key'];
         $max_domains    = $_POST['max_allowed_domains'];
         $max_devices    = $_POST['max_allowed_devices'];
@@ -89,13 +90,21 @@ function slm_add_licenses_menu()
         $purchase_id_   = $_POST['purchase_id_'];
         $created_date   = $_POST['date_created'];
         $renewed_date   = $_POST['date_renewed'];
-        $activated_date = $_POST['date_activated'];
-        $expiry_date    = $_POST['date_expiry'];
+        $date_activated = $_POST['date_activated'];
+        // $expiry_date    = $_POST['date_expiry'];
         $product_ref    = $_POST['product_ref'];
         $until          = $_POST['until'];
         $current_ver    = $_POST['current_ver'];
         $subscr_id      = $_POST['subscr_id'];
         $lic_type       = $_POST['lic_type'];
+
+
+        if ($_POST['lic_type'] == 'lifetime'){
+            $expiry_date       = '0000-00-00';
+        }
+        else {
+            $expiry_date    = $_POST['date_expiry'];
+        }
 
         if (empty($created_date)) {
             $created_date = $current_date;
@@ -103,7 +112,7 @@ function slm_add_licenses_menu()
         if (empty($renewed_date)) {
             $renewed_date = $current_date;
         }
-        if (empty($expiry_date)) {
+        if (empty($expiry_date) && $lic_type !== 'lifetime') {
             $expiry_date = $current_date_plus_1year;
         }
 
@@ -122,13 +131,13 @@ function slm_add_licenses_menu()
         $fields['purchase_id_'] = $purchase_id_;
         $fields['date_created'] = $created_date;
         $fields['date_renewed'] = $renewed_date;
-        $fields['date_activated'] = $activated_date;
+        $fields['date_activated'] = $date_activated;
         $fields['date_expiry']  = $expiry_date;
         $fields['product_ref']  = $product_ref;
         $fields['until']        = $until;
         $fields['current_ver']  = $current_ver;
-        $subscr_id              = $_POST['subscr_id'];
-        $lic_type               = $_POST['lic_type'];
+        $fields['subscr_id']    = $subscr_id;
+        $fields['lic_type']     = $lic_type;
 
 
         $id                     = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
@@ -290,16 +299,16 @@ function slm_add_licenses_menu()
                                                 <div class="tab-content col-md-12" id="slm_manage_licenseContent">
                                                     <div class="tab-pane fade show active" id="license" role="tabpanel" aria-labelledby="license-tab">
                                                         <div class="license col-full">
-                                                            <h3>License key and status</h3>
+                                                            <h3><?php _e('License key and status');?></h3>
                                                             <div class="form-group">
-                                                                <label for="license_key">License Key</label>
+                                                                <label for="license_key"><?php _e('License Key');?></label>
                                                                 <input name="license_key" class="form-control" aria-describedby="licInfo" type="text" id="license_key" value="<?php echo $license_key; ?>" readonly />
-                                                                <small id="licInfo" class="form-text text-muted">The unique license key.</small>
+                                                                <small id="licInfo" class="form-text text-muted"><?php _e('The unique license key.');?></small>
                                                             </div>
 
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="lic_status">License Status</label>
+                                                                    <label for="lic_status"><?php _e('License Status');?></label>
                                                                     <select name="lic_status" class="form-control">
                                                                         <option value="pending" <?php if ($license_status == 'pending') {
                                                                                                     echo 'selected="selected"';
@@ -325,13 +334,13 @@ function slm_add_licenses_menu()
                                                                     <select name="lic_type" class="form-control">
                                                                         <option value="subscription" <?php if ($lic_type == 'subscription') {
                                                                                                             echo 'selected="selected"';
-                                                                                                        } ?>>Subscription</option>
+                                                                                                        } ?>> <?php _e('Subscription');?> </option>
                                                                         <option value="lifetime" <?php if ($lic_type == 'lifetime') {
                                                                                                         echo 'selected="selected"';
-                                                                                                    } ?>>Life-time</option>
+                                                                                                    } ?>> <?php _e('Life-time');?></option>
                                                                     </select>
 
-                                                                    <small class="form-text text-muted">type of license: subscription base or lifetime</small>
+                                                                    <small class="form-text text-muted"><?php _e('type of license: subscription base or lifetime');?></small>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
@@ -341,32 +350,32 @@ function slm_add_licenses_menu()
 
                                                     <div class="tab-pane fade show" id="userinfo" role="tabpanel" aria-labelledby="userinfo-tab">
                                                         <div class="col-full">
-                                                            <h3>User Information</h3>
+                                                            <h3><?php _e('User Information');?></h3>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="first_name">First Name</label>
+                                                                    <label for="first_name"><?php _e('First Name');?></label>
                                                                     <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" class="form-control required" required />
-                                                                    <small class="form-text text-muted">License user's first name </small>
+                                                                    <small class="form-text text-muted"><?php _e('License user\'s first name');?> </small>
                                                                 </div>
 
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="last_name"> Last Name</label>
+                                                                    <label for="last_name"><?php _e(' Last Name');?></label>
                                                                     <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" class="form-control required" required />
-                                                                    <small class="form-text text-muted">License user's last name </small>
+                                                                    <small class="form-text text-muted"><?php _e('License user\'s last name');?> </small>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
 
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="email">Subscriber ID</label>
+                                                                    <label for="email"><?php _e('Subscriber ID');?></label>
                                                                     <input name="subscr_id" class="form-control" type=" text" id="subscr_id" value="<?php echo $subscr_id; ?>" />
-                                                                    <small class="form-text text-muted">The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</small>
+                                                                    <small class="form-text text-muted"><?php _e('The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.');?></small>
                                                                 </div>
 
 
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="email">Email Address</label>
+                                                                    <label for="email"><?php _e('Email Address');?></label>
                                                                     <input name="email" type="email" class="form-control" id="email" value="<?php echo $email; ?>" class="form-control required" required />
                                                                     <?php
                                                                     if (isset($_GET['edit_record'])) : ?>
@@ -390,12 +399,12 @@ function slm_add_licenses_menu()
 
                                                     <div class="tab-pane fade show " id="devicesinfo" role="tabpanel" aria-labelledby="devicesinfo-tab">
                                                         <div class="devicesinfo col-full">
-                                                            <h3>Allowed Activations</h3>
+                                                            <h3><?php _e('Allowed Activations');?></h3>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="max_allowed_domains">Maximum Allowed Domains</label>
+                                                                    <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains');?></label>
                                                                     <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
-                                                                    <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
+                                                                    <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used');?></small>
 
                                                                     <div class="table">
                                                                         <?php
@@ -492,7 +501,18 @@ function slm_add_licenses_menu()
 
                                                                 <div class="form-group col-md-6">
                                                                     <label for="date_expiry">Expiration Date</label>
-                                                                    <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" />
+                                                                     <?php
+                                                                        if ($lic_type == 'lifetime') : ?>
+
+                                                                            <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" disabled/>
+
+                                                                        <?php else: ?>
+
+                                                                             <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" />
+
+                                                                        <?php endif;
+                                                                    ?>
+
                                                                     <small class="form-text text-muted">Expiry date of license</small>
                                                                 </div>
 
@@ -504,7 +524,7 @@ function slm_add_licenses_menu()
 
                                                                 <div class="form-group col-md-6">
                                                                     <label for="date_activated">Date activated</label>
-                                                                    <input name="date_activated" type="date" id="date_activated" class="form-control wplm_pick_date" value="form-control <?php echo $activated_date; ?>" />
+                                                                    <input name="date_activated" type="date" id="date_activated" class="form-control wplm_pick_date" value="<?php echo $date_activated; ?>" />
                                                                     <small class="form-text text-muted">Activation date</small>
                                                                 </div>
 

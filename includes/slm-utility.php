@@ -201,8 +201,8 @@ class SLM_Utility {
         foreach($licenses as $license){
             $key = $license->license_key;
             $expiry_date = $license->date_expiry;
-            if ($expiry_date == '0000-00-00'){
-                SLM_Debug_Logger::log_debug_st("This key (".$key.") doesn't have a valid expiry date set. The expiry of this key will not be checked.");
+            if ($expiry_date == '0000-00-00' || $expiry_date == '00000000' || $expiry_date == ''){
+                SLM_Debug_Logger::log_debug_st("This key (".$key.") doesn't have a valid expiration date set. The expiration of this key will not be checked.");
                 continue;
             }
 

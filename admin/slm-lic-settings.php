@@ -221,8 +221,6 @@ function slm_general_settings()
                                 <td>
                                     <p class="description"><input name="enable_debug" type="checkbox" <?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1" />
                                         <?php _e('If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).', ' softwarelicensemanager '); ?></p>
-                                    - <?php _e('View debug log file by clicking', 'softwarelicensemanager'); ?> <a href="<?php echo SLM_URL . '/public/logs/log.txt'; ?>" target="_blank"><?php _e('here', ' softwarelicensemanager '); ?></a>..
-                                    - <?php _e('Reset debug log file by clicking', 'softwarelicensemanager'); ?> <a href="admin.php?page=slm_settings&slm_reset_log=1" target="_blank"><?php _e('here', ' softwarelicensemanager '); ?></a>.
                                 </td>
                             </tr>
                         </table>

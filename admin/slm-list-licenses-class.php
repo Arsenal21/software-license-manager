@@ -82,16 +82,16 @@ class SLM_List_Licenses extends WP_List_Table
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
             'id'                    => 'ID',
-            'license_key'           => 'Key',
             'lic_status'            => 'Status',
-            'lic_type'              => 'Type',
+            'license_key'           => 'Key',
+            'lic_type'              => 'License type',
             'email'                 => 'Email',
             'max_allowed_domains'   => 'Domains',
             'max_allowed_devices'   => 'Devices',
-            'purchase_id_'          => 'Purchase #',
+            'purchase_id_'          => 'Order #',
             'date_created'          => 'Created on',
-            'date_renewed'          => 'Date Renewed',
-            'date_activated'        => 'Date activated',
+            'date_renewed'          => 'Renewed on',
+            'date_activated'        => 'Activated on',
             'date_expiry'           => 'Expiration',
             'until'                 => 'Until Ver.',
             'current_ver'           => 'Current Ver.'
@@ -112,16 +112,23 @@ class SLM_List_Licenses extends WP_List_Table
                 break;
 
             case 'date_expiry':
-                $now = $item[$column_name];
+                $expiration = $item[$column_name];
                 $date_today = time();
 
-                if ($now != '0000-00-00') {
-                    if (strtotime($now) < time()) {
-                        return '<span class="slm-lic-expired-date"> ' . $now . '  </span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($now) . ' day(s) due</span>';
-                    } else {
-                        return '<span class="tag license-date-valid">' . $item[$column_name] . '</span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($now) . ' day(s) left</span>';
+                if ($expiration == '0000-00-00') {
+                    return '<span class="tag license-date-valid"> Lifetime  </span>' . '<span class="days-left"> </span>';
+                }
+
+
+                if ($expiration != '0000-00-00') {
+                    if (strtotime($expiration) < time()) {
+                        return '<span class="slm-lic-expired-date"> ' . $expiration . '  </span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($expiration) . ' day(s) due</span>';
                     }
-                } else {
+                    else {
+                        return '<span class="tag license-date-valid">' . $item[$column_name] . '</span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($expiration) . ' day(s) left</span>';
+                    }
+                }
+                else {
                     //return $item[$column_name];
                     return '<span class="tag license-date-null">not set<span>';
                 }
@@ -303,11 +310,11 @@ class SLM_List_Licenses extends WP_List_Table
         if (!empty($_GET['order'])) {
             $order = $_GET['order'];
         }
-        if ($orderby == 'id'){ 
+        if ($orderby == 'id'){
           if ($a[$orderby]==$b[$orderby]){
             $result = 0;
           }else{
-            $result = ($a[$orderby]<$b[$orderby])?-1:1;          
+            $result = ($a[$orderby]<$b[$orderby])?-1:1;
           }
         }else{
           $result = strcmp($a[$orderby], $b[$orderby]);
