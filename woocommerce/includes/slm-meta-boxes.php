@@ -208,14 +208,23 @@ function wcpp_custom_style()
                 }
 
                 $_license_renewal_period = $_POST['_license_renewal_period'];
-                if (!empty($_license_renewal_period)) {
+                if (!empty($_license_renewal_period)  && $_license_type == 'lifetime') {
+                    update_post_meta($post_id, '_license_renewal_period', esc_attr('0'));
+                }
+                else {
                     update_post_meta($post_id, '_license_renewal_period', esc_attr($_license_renewal_period));
                 }
 
+
                 $_license_renewal_period_term = $_POST['_license_renewal_period_term'];
-                if (!empty($_license_renewal_period_term)) {
-                    update_post_meta($post_id, '_license_renewal_period_term', esc_attr($_license_renewal_period_term));
+                if (!empty($_license_renewal_period_term) && $_license_type == 'lifetime') {
+                    update_post_meta($post_id, '_license_renewal_period_term', esc_attr('onetime'));
                 }
+                else {
+                     update_post_meta($post_id, '_license_renewal_period_term', esc_attr($_license_renewal_period_term));
+                }
+
+
 
                 $_license_current_version = $_POST['_license_current_version'];
                 if (!empty($_license_current_version)) {
@@ -255,6 +264,30 @@ function wcpp_custom_style()
     <script type='text/javascript'>
         jQuery(document).ready(function() {
             //for Price tab
+            $lic_type = jQuery("#_license_type").val();
+
+            if ($lic_type == 'lifetime') {
+                console.log('yes lifetime');
+                jQuery('._license_renewal_period_field').hide();
+                jQuery('._license_renewal_period_term_field').hide();
+                jQuery('#_download_limit').val('');
+                jQuery('#_download_expiry').val('');
+            }
+            else {
+                console.log('no - is subscription based');
+                jQuery('._license_renewal_period_field').show();
+                jQuery('._license_renewal_period_term_field').show();
+            }
+
+            jQuery('#_license_type').on('change', function() {
+                if (jQuery(this).find(":selected").val() == 'lifetime') {
+                    jQuery('#_download_expiry').val('');
+                    jQuery('#_download_limit').val('');
+                    jQuery('._license_renewal_period_field').hide();
+                    jQuery('._license_renewal_period_term_field').hide();
+                }
+            });
+
             jQuery('.product_data_tabs .general_tab').addClass('show_if_slm_license').show();
 
             //options_group show_if_downloadable hidden
