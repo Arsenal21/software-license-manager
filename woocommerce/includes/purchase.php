@@ -348,10 +348,6 @@ function slm_order_completed( $order_id ) {
 	}
 
 	$billing_address 		= $order_billing_email;
-	//$message 				= 'error: 000 null';
-	//$get_user_meta 			= get_user_meta($user_id);
-    //$headers 				= 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
-    //wp_mail( $billing_address, 'License details', $message, $headers );
 
 	// The text for the note
 	$note = __("Order confirmation email sent to: <a href='mailto:". $billing_address ."'>" . $billing_address . "</a>" );

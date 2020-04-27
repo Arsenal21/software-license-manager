@@ -1,30 +1,23 @@
 <?php
-
 /**
  * @author Michel Velis <michel@epikly.com>
  * @link   https://github.com/michelve/software-license-manager
  */
 
-
-class SLM_Woo_Account
-{
+class SLM_Woo_Account{
     public static $endpoint = 'my-licenses';
-    public function __construct()
-    {
+    public function __construct(){
         // Actions used to insert a new endpoint in the WordPress.
         add_action('init', array($this, 'add_endpoints'));
         add_filter('query_vars', array($this, 'add_query_vars'), 0);
-
         // Change the My Accout page title.
         add_filter('the_title', array($this, 'endpoint_title'));
-
         // Insering your new tab/page into the My Account page.
         add_filter('woocommerce_account_menu_items', array($this, 'slm_woo_menu_list'));
         add_action('woocommerce_account_' . self::$endpoint .  '_endpoint', array($this, 'endpoint_content'));
     }
 
-    public function getActiveUser($action)
-    {
+    public function getActiveUser($action){
         $info           = '';
         $current_user   = wp_get_current_user();
         if ($action == 'email') {
@@ -36,13 +29,11 @@ class SLM_Woo_Account
         return $info;
     }
 
-    public function add_endpoints()
-    {
+    public function add_endpoints(){
         add_rewrite_endpoint(self::$endpoint, EP_ROOT | EP_PAGES);
     }
 
-    public function add_query_vars($vars)
-    {
+    public function add_query_vars($vars){
         $vars[] = self::$endpoint;
         return $vars;
     }
@@ -59,27 +50,22 @@ class SLM_Woo_Account
         return $title;
     }
 
-    public function slm_woo_menu_list($items)
-    {
+    public function slm_woo_menu_list($items){
         // Remove the logout menu item.
         $logout = $items['customer-logout'];
         unset($items['customer-logout']);
-
         // Insert your custom endpoint.
         $items[self::$endpoint] = __('My Licenses', 'softwarelicensemanager');
-
         // Insert back the logout item.
         $items['customer-logout'] = $logout;
         return $items;
     }
 
-    public function endpoint_content()
-    {
+    public function endpoint_content(){
         global $wpdb;
         $class_ = 0;
         $class_id_ = 0;
         $get_user_info = $get_user_email = '';
-
         // get user billing email
         $wc_billing_email = get_user_meta(get_current_user_id(), 'billing_email', true);
 
@@ -87,9 +73,7 @@ class SLM_Woo_Account
         if ($wc_billing_email == '') {
             $wc_billing_email   = get_userdata(get_current_user_id())->user_email;
         }
-
         $result = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE email='" . $wc_billing_email . "' ORDER BY `email` DESC LIMIT 0,1000");
-
         ?>
 
     <div class="woocommerce-slm-content">
@@ -106,7 +90,6 @@ class SLM_Woo_Account
             <tbody>
                 <?php
                 global $wp_query;
-
                 foreach ($result as $license_info) : ?>
 
                     <tr data-toggle="collapse" data-target=".demo<?php echo $class_++; ?>" class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
@@ -126,7 +109,6 @@ class SLM_Woo_Account
                             <div class="collapse demo<?php echo $class_id_++; ?>">
                                 <?php
                                 global $wpdb;
-
                                 $detailed_license_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE `license_key` = '" . $license_info->license_key . "' ORDER BY `id` LIMIT 0,1000;", ARRAY_A);
 
                                 $detailed_domain_info = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_reg_domain_tbl WHERE `lic_key` = '" . $license_info->license_key . "' ORDER BY `lic_key_id` LIMIT 0,1000;", ARRAY_A);
@@ -140,7 +122,6 @@ class SLM_Woo_Account
                                         <ul class="list-unstyled">
                                             <?php
                                             foreach ($detailed_domain_info as $domain_info) {
-
                                                 if (isset($domain_info["lic_key"]) && !empty($domain_info["lic_key"])) {
                                                     echo '<li> <a href="http://' . $domain_info["registered_domain"] . '" target="_blank">' . $domain_info["registered_domain"] . '</a></li>';
                                                 } else {
@@ -149,9 +130,7 @@ class SLM_Woo_Account
                                             }
                                             $out                    = array_values($detailed_license_info);
                                             $license_key_json_data  = json_encode($out);
-
                                             ?>
-
                                         </ul>
                                     </div>
                                     <div class="devices-list col-md-6">
@@ -170,7 +149,6 @@ class SLM_Woo_Account
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-
                                 <!-- <div class="view-order"> <a href="<?php ?>">View Order #<?php ?></a> </div> -->
                                 <div class="lic-actions border-top mt-5 pt-5">
 
@@ -180,7 +158,6 @@ class SLM_Woo_Account
                                         $slm_woo_order_id       = $license_info->purchase_id_;
                                         $slm_woo_product_id     = $license_info->product_ref;
                                         $woo_download_db        = 'woocommerce_downloadable_product_permissions';
-
                                         $get_woo_downloads =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . $woo_download_db . " WHERE `product_id` = '" . $slm_woo_product_id . "' ORDER BY `product_id` LIMIT 0,1000;", ARRAY_A);
 
                                         if ($license_info->lic_status == 'active' || $license_info->lic_status == 'pending') {
@@ -213,17 +190,13 @@ class SLM_Woo_Account
         </table>
     </div>
     <?php
-
-
-
 }
 
 /**
  * Plugin install action.
  * Flush rewrite rules to make our custom endpoint available.
  */
-public static function install()
-{
+public static function install(){
     flush_rewrite_rules();
 }
 }

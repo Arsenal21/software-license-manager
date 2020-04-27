@@ -5,6 +5,17 @@
  */
 
 // Helper Class
+
+// define the wp_mail_failed callback
+function action_wp_mail_failed($wp_error)
+{
+    return error_log(print_r($wp_error, true));
+}
+
+// add the action
+add_action('wp_mail_failed', 'action_wp_mail_failed', 10, 1);
+
+
 class SLM_Helper_Class {
 
     public static function slm_get_option($option)
@@ -252,11 +263,50 @@ class SLM_Utility {
 
     }
 
+    static function slm_get_lic_email($license) {
+        // DOC: https://www.smashingmagazine.com/2011/09/interacting-with-the-wordpress-database/
+        global $wpdb;
+        $lic_key_table = SLM_TBL_LICENSE_KEYS;
+        $email = $wpdb->get_var("SELECT email FROM $lic_key_table WHERE license_key='$license'");
+        return $email;
+    }
+
+    static function slm_send_mail($to, $subject, $message, $bgcolor) {
+        // send activation email
+        $headers[] = 'From: '.get_bloginfo('name').' <'.get_bloginfo('admin_email').'>';
+        $headers[] = 'Content-Type: text/html; charset=UTF-8';
+
+        $body = self::slm_email_template($message, $bgcolor);
+        wp_mail($to, $subject, $body, $headers);
+    }
+
+    static function slm_email_template($message, $bgcolor = ''){
+        if ($bgcolor == 'success'){
+            $color = '#eceff0';
+        }
+
+        if (empty($bgcolor)){
+            $color = '#eceff0';
+        }
+
+        if ($bgcolor == 'error'){
+            $color = '#e23b2f';
+        }
+
+
+        $template = '<?xml version="1.0" encoding="UTF-8"?> <html xmlns="http://www.w3.org/1999/xhtml" style="background-color: '.$color.'; padding: 0; margin: 0;"> <head> <style type="text/css"> body, html { font-family: Helvetica, Arial; font-size: 13px; background-color: '.$color.'; background: '.$color.'; padding: 0px; margin: 0px; } a.schedule_btn, .schedule_btn { display: inline-block; background: #e93e40; color: #fff; text-decoration: none; padding: 6px 12px; text-align: center; border-radius: 2px; font-size: 16px; font-weight: 600; margin: 36px 0; } p.legal, .legal { text-align: center; font-size: 13px; font-family: "Open Sans, Helvetica, Arial, sans-serif; line-height: 22px; color: #aaacad; font-weight: 300 } p { font-size: 16px; font-weight: 300; color: #2d2d31; line-height: 26px; font-family: "Open Sans, helvetica, arial, sans-serif; } h2, h3, h5, h4, h6, h1 { color: #6b6e6f; font-size: 19px; padding: 0 0 15px 0; font-family: "Open Sans, Helvetica, Arial, Sans-serif; } </style> <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css" /> <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css" /> <title>Epikly</title> </head> <body style="word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space; background-color: '.$color.'"> <div style="background-color: '.$color.' !important; font-family: " Open Sans,Helvetica,Arial, sans-serif, Helvetica; margin: 0px; padding: 16px 0 80px 0px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; background-position: initial initial; background-repeat: initial initial;" bgcolor="'.$color.'" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> <br /> <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"> <tbody> <tr> <td align="center" style="background-color:'.$color.'; color:#FFFFFF;" valign="top"> <!-- Content table --> <table align="center" border="0" cellpadding="0" cellspacing="0" width="600"> <tbody> <tr> <td align="left" colspan="2" width="500" style="background-color:'.$color.';"> <div class="main" style="min-width: 320px;max-width: 500px;margin: 62px auto;background: #ffffff;padding: 35px 45px;-webkit-box-shadow: 1px 12px 15px -9px rgba(0,0,0,0.32); -moz-box-shadow: 1px 12px 15px -9px rgba(0,0,0,0.32); box-shadow: 1px 12px 15px -9px rgba(0,0,0,0.32);"> <br> <div class="logo" style="text-align: center; max-width: 160px; margin: 0 auto;"> <a href="'.get_home_url().'"> <img src="'.SLM_Utility::slm_get_icon_url('3x', 'verified.png').'" alt=""> </a> </div> <br> <h2 style="color: #6b6e6f;font-size: 19px;padding: 0 0 15px 0;font-family: Open Sans,Helvetica, Arial, Sans-serif; text-align: center">License key was activated successfully !</h2> <p style="font-size: 16px;font-weight: 300;color: #2d2d31;line-height: 26px;font-family: Open Sans,helvetica,arial,sans-serif;"> '.$message.' </p> <p>Regards, </p> <div class="signature"> <p style="color: #89898c; font-size: 14px; margin: 36px 0;line-height: 20px;"> <strong> '.get_bloginfo( 'name' ).' </strong> <br /> <a href="mailto: '.get_bloginfo( 'admin_email' ).'"> '.get_bloginfo( 'admin_email' ).'</a> </p> </div> </div> <div class="clear" style="height: 1px; clear: both;float: none; display: block; padding: 1px"> </div> <div class="more-support" style="min-width: 320px;max-width: 500px;margin: 0px auto;padding: 24px 0px;"> <p class="legal" style="text-align: center; font-size: 13px; font-family: Open Sans,Helvetica, Arial, sans-serif; line-height: 22px; color: #aaacad; font-weight: 300">The content of this email is confidential and intended for the recipient specified in message only. It is strictly forbidden to share any part of this message with any third party, without a written consent of the sender. If you received this message by mistake, please reply to this message and follow with its deletion, so that we can ensure such a mistake does not occur in the future.</p> <p class="legal" style="text-align: center; font-size: 13px; font-family: Open Sans,Helvetica, Arial, sans-serif; line-height: 22px; color: #aaacad; font-weight: 300">Questions? We are always here to help. Contact <a href="mailto: '.get_bloginfo( 'admin_email' ).'"> '.get_bloginfo( 'admin_email' ).'</a> or simply reply to this e-mail. </p> </div> </td> </tr> </tbody> </table> </td> </tr> </tbody> </table> </div> </body> </html>';
+        return $template;
+
+    }
+
     static function count_licenses($status){
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
         $get_lic_status = $wpdb->get_var("SELECT COUNT(*) FROM $license_table WHERE lic_status = '" . $status . "'");
         return $get_lic_status;
+    }
+    static function slm_get_icon_url($size, $filename){
+        return SLM_ASSETS_URL . 'icons/' . $size . '/' .$filename;
     }
 
     static function count_logrequest()
@@ -386,8 +436,6 @@ class SLM_Utility {
         SLM_Helper_Class::write_log('email log created for '. $lic_key);
     }
 
-
-
     static function slm_wp_dashboards_stats($amount){
         global $wpdb;
         $slm_log_table  = SLM_TBL_LICENSE_KEYS;
@@ -401,6 +449,25 @@ class SLM_Utility {
                     <a href="' . admin_url('admin.php?page=slm_manage_license&edit_record=' . $license->id . '') . '">' . $license->license_key . ' </td>
                 </tr>';
         }
+    }
+
+    static function slm_get_licinfo ($api_action, $license_key){
+        $api_url = get_site_url() . '/?secret_key=' . SLM_Helper_Class::slm_get_option('lic_verification_secret') . '&slm_action='.$api_action.'&license_key='.$license_key;
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $api_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $json = json_decode($response);
+        return $json;
     }
 
     static function get_subscriber_licenses(){
@@ -430,15 +497,7 @@ class SLM_Utility {
         $slm_log_table  = SLM_TBL_LIC_LOG;
 
         echo '
-        <div class="table-responsive">
-            <table class="table table-striped table-hover table-sm">
-                <thead>
-                    <tr>
-                    <th scope="col">Request ID</th>
-                    <th scope="col">Info</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="table-responsive"> <table class="table table-striped table-hover table-sm"> <thead> <tr> <th scope="col">ID</th> <th scope="col">Request</th> </tr> </thead> <tbody>
         ';
         $activity = $wpdb->get_results( "SELECT * FROM " . $slm_log_table . " WHERE license_key='" .  $license_key."';");
         foreach ($activity as $log) {
@@ -455,10 +514,4 @@ class SLM_Utility {
             </table>
         </div>';
     }
-
-
-
-
-
 }
-
