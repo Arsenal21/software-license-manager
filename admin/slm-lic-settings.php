@@ -46,6 +46,7 @@ function slm_general_settings(){
                 'slm_conflictmode'          => isset($_POST['slm_conflictmode']) ? '1' : '',
                 'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
                 'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
+                'slm_multiple_items'         => isset($_POST['slm_multiple_items']) ? '1' : '',
                 'expiration_reminder_text'  => sanitize_text_field($_POST['expiration_reminder_text'])
             );
             update_option('slm_plugin_options', $options);
@@ -160,7 +161,7 @@ function slm_general_settings(){
                             <th scope="row"><?php _e('General settings', 'softwarelicensemanager'); ?></th>
                             <td>
                                 <input name="slm_stats" type="checkbox" <?php if ($options['slm_stats'] != '') echo ' checked="checked"'; ?> value="1" />
-                                <?php _e('Disable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
+                                <?php _e('Enable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
                         </tr>
 
                         <tr>
@@ -168,6 +169,15 @@ function slm_general_settings(){
                             <td>
                                 <input name="slm_adminbar" type="checkbox" <?php if ($options['slm_adminbar'] != '') echo ' checked="checked"'; ?> value="1" />
                                 <?php _e('Disable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row"><?php _e('Multiple items validation', 'softwarelicensemanager'); ?></th>
+                            <td>
+                                <input name="slm_multiple_items" type="checkbox" <?php if ($options['slm_multiple_items'] != '') echo ' checked="checked"'; ?> value="1" />
+                                <?php _e('Enable verification of Item reference.', 'softwarelicensemanager'); ?>
+                                <p class="description"><?php _e("When enabled, there will be another field in Licenced product - Item reference. This field should correspond to the API parameter item_reference of your software.", 'softwarelicensemanager'); ?></p>
+                            </td>
                         </tr>
 
                         <tr>
@@ -195,7 +205,7 @@ function slm_general_settings(){
                                 <th scope="row"></th>
                                 <td>
                                     <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
-                                    <?php _e('Disable woocommerce download page. Proccess downloads though license order info page.', 'softwarelicensemanager'); ?></td>
+                                    <?php _e('Disable woocommerce download page. Process downloads though license order info page.', 'softwarelicensemanager'); ?></td>
                             </tr>
                             <tr valign="top">
                                 <th scope="row"> <?php _e('Download Manager Support', 'softwarelicensemanager'); ?></th>

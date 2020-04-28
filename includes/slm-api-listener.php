@@ -80,6 +80,7 @@ class SLM_API_Listener {
             //current_ver
             $fields['subscr_id']        = isset( $_REQUEST['subscr_id'] ) ? wp_unslash( strip_tags( $_REQUEST['subscr_id'] ) ) : '';
             $fields['lic_type']         = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_type'] ) ) : '';
+            $fields['item_reference']   = isset( $_REQUEST['item_reference'] ) ? wp_unslash( strip_tags( $_REQUEST['item_reference'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
@@ -119,6 +120,7 @@ class SLM_API_Listener {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_activate') {
             //Handle the license activation API query
             global $slm_debug_logger;
+            $options = get_option('slm_plugin_options');
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
             $slm_debug_logger->log_debug("API - license activation (slm_activate) request received.");
@@ -153,8 +155,17 @@ class SLM_API_Listener {
 
             $key                = $fields['lic_key'];
 
-            $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
-            $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            // $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+            // $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+
+            //Enable item_reference verification during activation
+            if ($options['slm_multiple_items']==1){
+                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s AND item_reference = %s", $key, $item_reference);
+                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            }else{
+                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            }
 
             $sql_prep2          = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains        = $wpdb->get_results($sql_prep2, OBJECT);
@@ -427,6 +438,7 @@ class SLM_API_Listener {
             $fields['txn_id'] = strip_tags(sanitize_text_field($_REQUEST['txn_id']));
             $fields['lic_type'] = isset($_REQUEST['lic_type']) ? wp_unslash(strip_tags(sanitize_text_field($_REQUEST['lic_type']))) : 'subscription';
             $fields['lic_status'] = isset($_REQUEST['lic_status']) ? wp_unslash(strip_tags(sanitize_text_field($_REQUEST['lic_status']))) : 'active';
+            $fields['item_reference']   = isset( $_REQUEST['item_reference'] ) ? wp_unslash( strip_tags( $_REQUEST['item_reference'] ) ) : '';
 
 
             global $wpdb;
@@ -510,6 +522,7 @@ class SLM_API_Listener {
                     'lic_type'              => $retLic->lic_type,
                     'max_allowed_domains'   => $retLic->max_allowed_domains,
                     'max_allowed_devices'   => $retLic->max_allowed_devices,
+                    'item_reference'        => $retLic->item_reference,
                     'registered_domains'    => $reg_domains,
                     'registered_devices'    => $reg_devices,
                     'date_created'          => $retLic->date_created,
@@ -585,6 +598,7 @@ class SLM_API_Listener {
                     'license_key'           => $retLic->license_key,
                     'lic_type'              => $retLic->lic_type,
                     'max_allowed_domains'   => $retLic->max_allowed_domains,
+                    'item_reference'        => $retLic->item_reference,
                     'max_allowed_devices'   => $retLic->max_allowed_devices,
                     'date_created'          => $retLic->date_created,
                     'date_renewed'          => $retLic->date_renewed,
