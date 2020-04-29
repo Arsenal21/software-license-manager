@@ -1,11 +1,10 @@
 # Welcome to software license manager 👋
-![Version](https://img.shields.io/badge/version-5.3.2-blue.svg?cacheSeconds=2592000)
+![Version](https://img.shields.io/badge/version-5.5.0-blue.svg?cacheSeconds=2592000)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md)
 
 > Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
 
-> ⚠️ **NOTICE**: In the next version release this plugin will be rename to: wp license manager (wlm)
 
 ### 🏠 [Homepage](https://github.com/michelve/software-license-manager#readme)
 

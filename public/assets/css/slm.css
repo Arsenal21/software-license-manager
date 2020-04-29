@@ -9,6 +9,21 @@ body.slm_page_slm_manage_license {
 .required.invalid {
     border: 1px solid red !important;
 }
+.slm-img-ico {
+    float: left;
+    width: 51px;
+    margin-right: 16px;
+    padding-top: 4px;
+}
+.sml-sep {
+    border-bottom: 1px solid #eee;
+    margin: 1px 0 13px 0px;
+    clear: both;
+}
+.slm-tab-title {
+    float: left;
+    width: 90%;
+}
 #order_data .invalid{
     color: #721c24;
     background-color: #f8d7da;
@@ -114,8 +129,6 @@ cursor: pointer;
 .slm-container h2, .slm-container h3 {
     font-size: 1.3em;
     margin: 1em 0;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 16px;
     color: #111;
 }
 .slm-container h3 span {

@@ -25,6 +25,7 @@ class SLM_Error_Codes {
     const LICENSE_EXPIRED               = 30;
     const LICENSE_IN_USE                = 40;
     const LICENSE_INVALID               = 60;
+    const LICENSE_VALID                 = 65;
     const MISSING_KEY_DELETE_FAILED     = 280;
     const MISSING_KEY_UPDATE_FAILED     = 260;
     const REACHED_MAX_DEVICES           = 120;

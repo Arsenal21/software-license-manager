@@ -17,6 +17,9 @@ $lic_devices_table  = SLM_TBL_LIC_DEVICES;
 $lic_log_tbl        = SLM_TBL_LIC_LOG;
 $lic_emails_table   = SLM_TBL_EMAILS;
 
+//***Database version check */
+$used_db_version = get_option( 'slm_db_version', SLM_DB_VERSION);
+
 $charset_collate = '';
 if (!empty($wpdb->charset)){
     $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
@@ -38,6 +41,7 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       first_name varchar(32) NOT NULL default '',
       last_name varchar(32) NOT NULL default '',
       email varchar(64) NOT NULL,
+      item_reference varchar(255) NOT NULL,
       company_name varchar(100) NOT NULL default '',
       txn_id varchar(64) NOT NULL default '',
       manual_reset_count varchar(128) NOT NULL default '',
@@ -56,7 +60,24 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);
 
+// // thanks to @MechComp
+if (version_compare($used_db_version, '4.1.3', '<=')) {
+      $lk_tbl_sql = "ALTER TABLE " . $lic_key_table . " ADD item_reference varchar(255) NOT NULL;";
+      dbDelta($lk_tbl_sql);
+}
 
+// set default value for reference item when they are empty
+if (version_compare($used_db_version, '4.1.3', '<=')) {
+      // get empty values
+      $item_result = $wpdb->get_results("SELECT id FROM `$lic_key_table` WHERE `item_reference` LIKE '' ORDER BY id");
+
+      foreach ($item_result as $reference_item) {
+            $item_id = $reference_item->id;
+            // update and set default value
+            $update_reference = "UPDATE $lic_key_table SET item_reference='default' WHERE id='".$item_id."';";
+            dbDelta($update_reference);
+      }
+}
 
 $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       id INT NOT NULL AUTO_INCREMENT ,
@@ -117,9 +138,18 @@ $options = array(
     'slm_woo_downloads'       => '',
     'slm_stats'               => '1',
     'slm_adminbar'            => '1',
+    'slm_multiple_items'      => '',
+    'slm_conflictmode'        => '1',
     'enable_auto_key_expiration' => '1',
     'slm_dl_manager'          => '',
     'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
+
+//Bugfix - Prevention of overwriting existing settings
+// thanks to @MechComp
+$old_options = get_option('slm_plugin_options');
+if($old_options != false){
+      $options = array_merge($options,$old_options);
+}
 
 update_option('slm_plugin_options', $options);
 update_option("slm_db_version", SLM_DB_VERSION);

@@ -134,6 +134,7 @@ function wc_slm_create_license_keys($order_id) {
 				$amount_of_licenses_devices = wc_slm_get_devices_allowed($product_id);
 				$current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
 				$license_type 				= get_post_meta( $product_id, '_license_type', true );
+				$lic_item_ref				= get_post_meta( $product_id, '_license_item_reference', true );
 			}
 
 			// Transaction id
@@ -161,6 +162,7 @@ function wc_slm_create_license_keys($order_id) {
 			$api_params['current_ver'] 			= $_license_current_version;
 			$api_params['subscr_id'] 			= $order->get_customer_id();
 			$api_params['lic_type'] 			= $license_type;
+			$api_params['item_reference'] 		= $lic_item_ref;
 
 			//access_expires
 			//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
@@ -178,6 +180,7 @@ function wc_slm_create_license_keys($order_id) {
 					'key' 		=>	$license_key,
 					'expires' 	=>	$expiration,
 					'type' 		=>	$license_type,
+					'item_ref'	=>	$lic_item_ref,
 					'status' 	=>	'pending',
 					'version' 	=>	$_license_current_version,
 					'until' 	=>	$_license_until_version
@@ -226,6 +229,7 @@ function wc_slm_payment_note($order_id, $licenses) {
 			add_post_meta($order_id, 'slm_wc_license_order_key', 	$license_key);
 			add_post_meta($order_id, 'slm_wc_license_expires', 		$license[ 'expires']);
 			add_post_meta($order_id, 'slm_wc_license_type', 		$license[ 'type']);
+			add_post_meta($order_id, 'slm_wc_license_item_ref',		$license[ 'item_ref']);
 			add_post_meta($order_id, 'slm_wc_license_status', 		$license['status']);
 			add_post_meta($order_id, 'slm_wc_license_version', 		$license[ 'version']);
 			add_post_meta($order_id, 'slm_wc_until_version', 		$license['until']);
@@ -348,10 +352,6 @@ function slm_order_completed( $order_id ) {
 	}
 
 	$billing_address 		= $order_billing_email;
-	//$message 				= 'error: 000 null';
-	//$get_user_meta 			= get_user_meta($user_id);
-    //$headers 				= 'From: '. get_bloginfo( 'name' ).' <'.get_bloginfo('admin_email').'>' . "\r\n";
-    //wp_mail( $billing_address, 'License details', $message, $headers );
 
 	// The text for the note
 	$note = __("Order confirmation email sent to: <a href='mailto:". $billing_address ."'>" . $billing_address . "</a>" );
@@ -403,6 +403,10 @@ function slm_add_lic_key_meta_update($order_id)
 		update_post_meta($order_id, 'slm_wc_license_status', sanitize_text_field($_POST['slm_wc_license_status']));
 	}
 
+	if (!empty($_POST['slm_wc_license_item_ref'])) {
+		update_post_meta($order_id, 'slm_wc_license_item_ref', sanitize_text_field($_POST['slm_wc_license_item_ref']));
+	}
+
 	if (!empty($_POST['slm_wc_license_version'])) {
 		update_post_meta($order_id, 'slm_wc_license_version', sanitize_text_field($_POST['slm_wc_license_version']));
 	}
@@ -415,6 +419,7 @@ function slm_add_lic_key_meta_display($order){
 	echo '<p><strong>' . __('License key') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . '</p>';
 	echo '<p><strong>' . __('License expiration') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_expires', true) . '</p>';
 	echo '<p><strong>' . __('License type') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_type', true) . '</p>';
+	echo '<p><strong>' . __('License item reference') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_item_ref', true) . '</p>';
 	echo '<p><strong>' . __('License status') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_status', true) . '</p>';
 	echo '<p><strong>' . __('License current version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_version', true) . '</p>';
 	echo '<p><strong>' . __('Supported until version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_until_version', true) . '</p>';
