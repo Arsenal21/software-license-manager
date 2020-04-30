@@ -12,10 +12,15 @@
 //require_once(SLM_LIB . 'slm-wizard.php');
 //require_once(SLM_LIB . 'wp-mail-class.php');
 
-function slm_load_language(){
-    load_plugin_textdomain('softwarelicensemanager', false, dirname(plugin_basename(__FILE__)) . '/languages');
-}
+
+/**
+ * Load plugin textdomain.
+ */
 add_action('init', 'slm_load_language');
+function slm_load_language(){
+    load_plugin_textdomain('softwarelicensemanager', false, plugin_dir_path( __FILE__ ) . 'i18n/languages/');
+}
+
 
 //Includes - utilities and cron jobs
 include_once(ABSPATH.'wp-admin/includes/plugin.php');
@@ -101,13 +106,11 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::sl
     /**
      * Check if WooCommerce is activated
      */
-    // WordPress Plugin :: wc-software-license-manager
     if( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-        require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
-    require_once( SLM_WOO  . 'includes/wc-slm.php');
-
-    // support for meta boxes
-    require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
+        require_once( SLM_WOO . 'includes/my-licenses-page.php');
+        require_once( SLM_WOO  . 'includes/wc-slm.php');
+        // support for meta boxes
+        require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
     }
 }
 

@@ -76,15 +76,12 @@ function wcpp_custom_style()
     <?php
             }
             add_action('admin_head', 'wcpp_custom_style');
-
-            function wc_slm_add_tab($wc_slm_data_tabs)
-            {
+            function wc_slm_add_tab($wc_slm_data_tabs){
                 $wc_slm_data_tabs['wc_slm_data_tab'] = array(
                     'label'     => __('Licensing', 'softwarelicensemanager'),
                     'target'    => 'wc_slm_meta',
                     'class'     => array('show_if_slm_license', 'show_if_wc_slm_data_tab_enabled'),
                 );
-
                 return $wc_slm_data_tabs;
             }
 
@@ -100,9 +97,14 @@ function wcpp_custom_style()
                     array(
                         'id'            => '_domain_licenses',
                         'label'         => __('Domain Licenses', 'softwarelicensemanager'),
-                        'placeholder'   => '0',
+                        'placeholder'   => SLM_Helper_Class::slm_get_option('default_max_domains'),
                         'desc_tip'      => 'true',
+                        'value'         => SLM_Helper_Class::slm_get_option('default_max_domains'),
                         'type'          => 'number',
+                        'custom_attributes' => array(
+ 					        'step' 	=> 'any',
+ 					        'min'	=> SLM_Helper_Class::slm_get_option('default_max_domains')
+                        ),
                         'description'   => __('Enter the allowed amount of domains this license can have (websites).', 'softwarelicensemanager')
                     )
                 );
@@ -110,9 +112,14 @@ function wcpp_custom_style()
                     array(
                         'id'            => '_devices_licenses',
                         'label'         => __('Devices Licenses', 'softwarelicensemanager'),
-                        'placeholder'   => '0',
+                        'placeholder'   => SLM_Helper_Class::slm_get_option('default_max_devices'),
+                        'value'         => SLM_Helper_Class::slm_get_option('default_max_devices'),
                         'desc_tip'      => 'true',
                         'type'          => 'number',
+                        'custom_attributes' => array(
+ 					        'step' 	=> 'any',
+ 					        'min'	=> SLM_Helper_Class::slm_get_option('default_max_devices')
+                        ),
                         'description'   => __('Enter the allowed amount of devices this license can have (computers, mobile, etc).', 'softwarelicensemanager')
                     )
                 );
@@ -210,7 +217,12 @@ function wcpp_custom_style()
                 update_post_meta($post_id, '_wc_slm_data_tab_enabled', $is_wc_slm_data_tab_enabled);
 
                 $_license_item_reference = $_POST['_license_item_reference'];
-                update_post_meta($post_id, '_license_item_reference', esc_attr($_license_item_reference));
+                if (!empty($_license_item_reference)) {
+                    update_post_meta($post_id, '_license_item_reference', esc_attr($_license_item_reference));
+                }
+                else {
+                    update_post_meta($post_id, '_license_item_reference', esc_attr('default'));
+                }
 
                 $_license_type = $_POST['_license_type'];
                 if (!empty($_license_type)) {
@@ -230,16 +242,13 @@ function wcpp_custom_style()
                     update_post_meta($post_id, '_license_renewal_period', esc_attr($_license_renewal_period));
                 }
 
-
                 $_license_renewal_period_term = $_POST['_license_renewal_period_term'];
                 if (!empty($_license_renewal_period_term) && $_license_type == 'lifetime') {
                     update_post_meta($post_id, '_license_renewal_period_term', esc_attr('onetime'));
                 }
                 else {
-                     update_post_meta($post_id, '_license_renewal_period_term', esc_attr($_license_renewal_period_term));
+                    update_post_meta($post_id, '_license_renewal_period_term', esc_attr($_license_renewal_period_term));
                 }
-
-
 
                 $_license_current_version = $_POST['_license_current_version'];
                 if (!empty($_license_current_version)) {
@@ -252,26 +261,20 @@ function wcpp_custom_style()
                 }
             }
 
-
-            function slm_register_product_type()
-            {
-                class WC_Product_SLM_License extends WC_Product
-                {
-                    public function __construct($product)
-                    {
+            function slm_register_product_type(){
+                class WC_Product_SLM_License extends WC_Product{
+                    public function __construct($product){
                         $this->product_type = 'slm_license';
                         parent::__construct($product);
                     }
                 }
             }
 
-            function slm_add_product_type($types)
-            {
+            function slm_add_product_type($types){
                 $types['slm_license'] = __('License product', 'softwarelicensemanager');
                 return $types;
             }
-            function slm_license_admin_custom_js()
-            {
+            function slm_license_admin_custom_js(){
                 if ('product' != get_post_type()) :
                     return;
                 endif;
@@ -302,28 +305,20 @@ function wcpp_custom_style()
                     jQuery('._license_renewal_period_term_field').hide();
                 }
             });
-
             jQuery('.product_data_tabs .general_tab').addClass('show_if_slm_license').show();
-
             //options_group show_if_downloadable hidden
             //jQuery('.options_group').addClass('show_if_slm_license').show();
-
             jQuery("label[for='_virtual']").addClass('show_if_slm_license').show();
-
             jQuery("label[for='_downloadable']").addClass('show_if_slm_license').show();
-
             jQuery(".show_if_external").addClass('hide_if_slm_license').hide();
-
             jQuery('#general_product_data .pricing').addClass('show_if_slm_license slm-display').show();
             jQuery("#_virtual").prop("checked", true);
             jQuery("#_downloadable").prop("checked", true);
-
             //for Inventory tab
             jQuery('.inventory_options').addClass('show_if_slm_license').show();
             jQuery('#inventory_product_data ._manage_stock_field').addClass('show_if_slm_license').show();
             jQuery('#inventory_product_data ._sold_individually_field').parent().addClass('show_if_slm_license').show();
             jQuery('#inventory_product_data ._sold_individually_field').addClass('show_if_slm_license').show();
-
             jQuery('.shipping_options').addClass('hide_if_slm_license').hide();
             jQuery('.marketplace-suggestions_options').addClass('hide_if_slm_license').hide();
             jQuery('input#_wc_slm_data_tab_enabled').trigger('change');

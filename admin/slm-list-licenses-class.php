@@ -394,12 +394,12 @@ class SLM_Plugin
 
     public function slm_add_admin_menu()
     {
-        $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
+        $icon_svg = SLM_ASSETS_URL . 'icons/logo/slm_small.svg';
 
         add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
 
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "Add License", "Add Licenses", SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Create license', 'softwarelicensemanager'), __( 'Create license', 'softwarelicensemanager') , SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Subscribers", "Subscribers", SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Tools", "Tools", SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");

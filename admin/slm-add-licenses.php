@@ -1,10 +1,7 @@
 <?php
-
-function slm_add_licenses_menu()
-{
+function slm_add_licenses_menu(){
     global $wpdb;
     $slm_options    = get_option('slm_plugin_options');
-
     //initialise some variables
     $id             = '';
     $license_key    = '';
@@ -40,8 +37,8 @@ function slm_add_licenses_menu()
 
     //If product is being edited, grab current product info
     if (isset($_GET['edit_record'])) {
-        $errors = '';
-        $id = $_GET['edit_record'];
+        $errors         = '';
+        $id             = $_GET['edit_record'];
         $lk_table       = SLM_TBL_LICENSE_KEYS;
         $sql_prep       = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
         $record         = $wpdb->get_row($sql_prep, OBJECT);
@@ -78,7 +75,6 @@ function slm_add_licenses_menu()
         do_action('slm_add_edit_interface_save_submission');
 
         //TODO - do some validation
-        $expiry_date = '';
         $license_key    = $_POST['license_key'];
         $max_domains    = $_POST['max_allowed_domains'];
         $max_devices    = $_POST['max_allowed_devices'];
@@ -101,7 +97,7 @@ function slm_add_licenses_menu()
         $lic_type       = $_POST['lic_type'];
         $lic_item_ref   = trim($_POST['item_reference']);
 
-
+        $expiry_date    = '';
         if ($_POST['lic_type'] == 'lifetime'){
             $expiry_date       = '0000-00-00';
         }
@@ -120,32 +116,30 @@ function slm_add_licenses_menu()
         }
 
         //Save the entry to the database
-        $fields = array();
-        $fields['license_key']  = $license_key;
-        $fields['max_allowed_domains'] = $max_domains;
-        $fields['max_allowed_devices'] = $max_devices;
-        $fields['lic_status']   = $license_status;
-        $fields['first_name']   = $first_name;
-        $fields['last_name']    = $last_name;
-        $fields['email']        = $email;
-        $fields['company_name'] = $company_name;
-        $fields['txn_id']       = $txn_id;
-        $fields['manual_reset_count'] = $reset_count;
-        $fields['purchase_id_'] = $purchase_id_;
-        $fields['date_created'] = $created_date;
-        $fields['date_renewed'] = $renewed_date;
-        $fields['date_activated'] = $date_activated;
-        $fields['date_expiry']  = $expiry_date;
-        $fields['product_ref']  = $product_ref;
-        $fields['until']        = $until;
-        $fields['current_ver']  = $current_ver;
-        $fields['subscr_id']    = $subscr_id;
-        $fields['lic_type']     = $lic_type;
-        $fields['item_reference'] = $lic_item_ref;
-
-
-        $id                     = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
-        $lk_table               = SLM_TBL_LICENSE_KEYS;
+        $fields                         = array();
+        $fields['license_key']          = $license_key;
+        $fields['max_allowed_domains']  = $max_domains;
+        $fields['max_allowed_devices']  = $max_devices;
+        $fields['lic_status']           = $license_status;
+        $fields['first_name']           = $first_name;
+        $fields['last_name']            = $last_name;
+        $fields['email']                = $email;
+        $fields['company_name']         = $company_name;
+        $fields['txn_id']               = $txn_id;
+        $fields['manual_reset_count']   = $reset_count;
+        $fields['purchase_id_']         = $purchase_id_;
+        $fields['date_created']         = $created_date;
+        $fields['date_renewed']         = $renewed_date;
+        $fields['date_activated']       = $date_activated;
+        $fields['date_expiry']          = $expiry_date;
+        $fields['product_ref']          = $product_ref;
+        $fields['until']                = $until;
+        $fields['current_ver']          = $current_ver;
+        $fields['subscr_id']            = $subscr_id;
+        $fields['lic_type']             = $lic_type;
+        $fields['item_reference']       = $lic_item_ref;
+        $id                             = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
+        $lk_table                       = SLM_TBL_LICENSE_KEYS;
 
         if (empty($id)) {
             //Insert into database
@@ -177,26 +171,20 @@ function slm_add_licenses_menu()
         do_action('slm_add_edit_interface_save_record_processed', $data);
     }
     ?>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
     <?php
         if(SLM_Helper_Class::slm_get_option('slm_conflictmode') == 1){
-            echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>';
+            echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>';
         }
     ?>
-
-
-    <style>
-        .wp-admin select {
-            height: calc(2.25rem + 2px);
-        }
-    </style>
+    <style> .wp-admin select { height: calc(2.25rem + 2px); } </style>
 
     <div id="container-2" class="container slm-container">
         <div class="mx-auto" style="">
             <div class="row pb-4">
+                <div class="slm-logo col-md-1">
+                    <img src="<?php echo SLM_Utility::slm_get_icon_url('logo', 'slm-large.svg');?>" alt="">
+                </div>
                 <div class="heading col-md-10">
                     <h1 class="woocommerce-order-data__heading">
                         <?php _e('Software License Manager', 'softwarelicensemanager'); ?>
@@ -622,22 +610,26 @@ function slm_add_licenses_menu()
                                                             <?php
                                                                 if ($slm_options['slm_multiple_items']==1) :
                                                                     global $wpdb;
-                                                                    $post_meta_tbl = $wpdb->prefix . 'postmeta';
-                                                                    $item_ref_meta = '_license_item_reference';
-                                                                    $sql_prep = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
-                                                                    $values_item_refs = $wpdb->get_results($sql_prep, OBJECT);
+                                                                    $post_meta_tbl      = $wpdb->prefix . 'postmeta';
+                                                                    $item_ref_meta      = '_license_item_reference';
+                                                                    $sql_prep           = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
+                                                                    $values_item_refs   = $wpdb->get_results($sql_prep, OBJECT);
                                                                 ?>
                                                                 <div class="row">
                                                                     <div class="form-group col-md-12">
                                                                     <label for="item_reference">Item reference</label>
                                                                         <select name="item_reference" class="form-control">
-                                                                        <?php
-                                                                            foreach ($values_item_refs as $item_reference) {
-                                                                                $sel_val = esc_attr(trim($item_reference->meta_value));
-                                                                                $is_selected = $lic_item_ref==$sel_val ? ' selected="selected"' : '';
-                                                                                echo '<option value="'. $sel_val .'"'.$is_selected.'>'.$sel_val .'</option>';
-                                                                            }
-                                                                        ?>
+                                                                            <option value="select one" selected> Select one ...</option>
+                                                                            <?php
+                                                                                foreach ($values_item_refs as $item_reference) {
+                                                                                    $sel_val        = esc_attr(trim($item_reference->meta_value));
+                                                                                    $is_selected    = $lic_item_ref==$sel_val;
+                                                                                    // filter out empty values
+                                                                                    if (!empty($sel_val)) {
+                                                                                       echo '<option value="'. $sel_val .'">'.$sel_val .'</option>';
+                                                                                    }
+                                                                                }
+                                                                            ?>
                                                                         </select>
                                                                         <small class="form-text text-muted"><?php _e('Item reference of your software');?></small>
                                                                     </div>
@@ -697,8 +689,17 @@ function slm_add_licenses_menu()
                                                     </div>
 
                                                     <div class="submit form_actions">
-                                                        <input type="submit" class="button btn btn-primary save_lic" name="save_record" value="Save License" />
-                                                        <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="btn btn-link">Manage Licenses</a>
+                                                        <?php
+                                                        $save_label = '';
+                                                        if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) {
+                                                            $save_label = 'Save changes';
+                                                        }
+                                                        else {
+                                                            $save_label = 'Create license';
+                                                        }
+                                                        ?>
+                                                        <input type="submit" class="button button-primary save_lic" name="save_record" value="<?php echo $save_label; ?>" />
+                                                        <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="button media-button select-mode-toggle-button">Manage Licenses</a>
                                                     </div>
                                                 </div>
                                             </form>
@@ -734,6 +735,7 @@ function slm_add_licenses_menu()
                 var form = jQuery(".slm_license_form")
 
                 if (form[0].checkValidity() === false) {
+                    jQuery('#userinfo-tab').css("color", "red");
                     event.preventDefault()
                     event.stopPropagation()
                 }
