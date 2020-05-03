@@ -56,13 +56,19 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       until varchar(255) NOT NULL default '',
       current_ver varchar(255) NOT NULL default '',
       subscr_id varchar(128) NOT NULL default '',
+      slm_billing_length varchar(255) NOT NULL,
+      slm_billing_interval ENUM('days', 'months', 'years', 'onetime') NOT NULL DEFAULT 'days',
       PRIMARY KEY (id)
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);
 
 // // thanks to @MechComp
 if (version_compare($used_db_version, '4.1.3', '<=')) {
-      $lk_tbl_sql = "ALTER TABLE " . $lic_key_table . " ADD item_reference varchar(255) NOT NULL;";
+      $lk_tbl_sql = "
+      ALTER TABLE " . $lic_key_table . " ADD item_reference varchar(255) NOT NULL;
+      ALTER TABLE " . $lic_key_table . " ADD slm_billing_length varchar(255) NOT NULL;
+      ALTER TABLE " . $lic_key_table . " ADD slm_billing_interval ENUM('days', 'months', 'years', 'onetime') NOT NULL DEFAULT 'days',
+      ";
       dbDelta($lk_tbl_sql);
 }
 

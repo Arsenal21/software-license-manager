@@ -31,7 +31,8 @@ class SLM_API_Listener {
     function creation_api_listener() {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_create_new') {
             //Handle the licene creation API query
-            global $slm_debug_logger;
+            global $slm_debug_logger, $wpdb;
+            $tbl_name = SLM_TBL_LICENSE_KEYS;
 
             $options        = get_option('slm_plugin_options');
             $lic_key_prefix = $options['lic_prefix'];
@@ -79,11 +80,38 @@ class SLM_API_Listener {
             $fields[ 'current_ver']            = isset($_REQUEST[ 'current_ver']) ? wp_unslash(strip_tags($_REQUEST[ 'current_ver'])) : '';
             //current_ver
             $fields['subscr_id']        = isset( $_REQUEST['subscr_id'] ) ? wp_unslash( strip_tags( $_REQUEST['subscr_id'] ) ) : '';
-            $fields['lic_type']         = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_type'] ) ) : '';
             $fields['item_reference']   = isset( $_REQUEST['item_reference'] ) ? wp_unslash( strip_tags( $_REQUEST['item_reference'] ) ) : '';
 
-            global $wpdb;
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
+            $fields['lic_type']         = isset( $_REQUEST['lic_type'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_type'] ) ) : '';
+
+            $fields['slm_billing_length']   = isset( $_REQUEST['slm_billing_length'] ) ? wp_unslash( strip_tags( $_REQUEST['slm_billing_length'] ) ) : '';
+            $fields['slm_billing_interval']   = isset( $_REQUEST['slm_billing_interval'] ) ? wp_unslash( strip_tags( $_REQUEST['slm_billing_interval'] ) ) : '';
+
+            if($_REQUEST['lic_type'] == 'subscription' && !isset( $_REQUEST['slm_billing_length'] )){
+                //error inserting
+                $error_args = (
+                    array(
+                        'result'     => 'error',
+                        'message'    => 'License creation failed. Specify license length "slm_billing_length".',
+                        'error_code' => SLM_Error_Codes::CREATE_FAILED
+                    )
+                );
+                SLM_API_Utility::output_api_response($error_args);
+            }
+
+            if($_REQUEST['lic_type'] == 'subscription' && !isset( $_REQUEST['slm_billing_interval'] )){
+                //error inserting
+                $error_args = (
+                    array(
+                        'result'     => 'error',
+                        'message'    => 'License creation failed. Specify license length "slm_billing_interval".',
+                        'error_code' => SLM_Error_Codes::CREATE_FAILED
+                    )
+                );
+                SLM_API_Utility::output_api_response($error_args);
+            }
+
+
             $result = $wpdb->insert($tbl_name, $fields);
             if ($result === false) {
                 //error inserting
@@ -140,7 +168,7 @@ class SLM_API_Listener {
             }
 
             if (isset($_REQUEST['item_reference'])) {
-                $item_reference = $fields['item_reference']    = trim(strip_tags($_REQUEST['item_reference']));
+                $item_reference = $fields['item_reference']    = trim(wp_unslash(strip_tags($_REQUEST['item_reference'])));
             }
 
 
@@ -155,17 +183,8 @@ class SLM_API_Listener {
 
             $key                = $fields['lic_key'];
 
-            // $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
-            // $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
-
-            //Enable item_reference verification during activation
-            if ($options['slm_multiple_items']==1){
-                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s AND item_reference = %s", $key, $item_reference);
-                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
-            }else{
-                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
-                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
-            }
+            $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+            $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
 
             $sql_prep2          = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains        = $wpdb->get_results($sql_prep2, OBJECT);
@@ -175,14 +194,13 @@ class SLM_API_Listener {
 
             if ($retLic) {
                 if ($retLic->lic_status == 'blocked') {
-                    $args = (array('result' => 'error', 'message' => 'Your License key is blocked', 'error_code' => SLM_Error_Codes::LICENSE_BLOCKED));
+                    $args = (array('result' => 'error', 'message' => 'Your license key is blocked', 'error_code' => SLM_Error_Codes::LICENSE_BLOCKED));
                     SLM_API_Utility::output_api_response($args);
                 }
                 elseif ($retLic->lic_status == 'expired') {
-                    $args = (array('result' => 'error', 'message' => 'Your License key has expired', 'error_code' => SLM_Error_Codes::LICENSE_EXPIRED));
+                    $args = (array('result' => 'error', 'message' => 'Your license key has expired', 'error_code' => SLM_Error_Codes::LICENSE_EXPIRED));
                     SLM_API_Utility::output_api_response($args);
                 }
-
                 if (isset($_REQUEST['registered_domain']) && !empty($_REQUEST['registered_domain'])) {
                     if (count($reg_domains) < floor($retLic->max_allowed_domains)) {
                         foreach ($reg_domains as $reg_domain) {
@@ -199,7 +217,8 @@ class SLM_API_Listener {
                                     'icon_url'          =>  SLM_Utility::slm_get_icon_url('1x', 'f-remove.png'),
                                     'message'           => 'License key already in use on ' . $reg_domain->registered_domain,
                                     'error_code'        => SLM_Error_Codes::LICENSE_IN_USE,
-                                    'registered_domain' => $reg_domain->registered_domain
+                                    'registered_domain' => $reg_domain->registered_domain,
+                                    'item_reference' =>  $item_reference
                                 ));
                                 SLM_API_Utility::output_api_response($args);
                             }
@@ -231,7 +250,8 @@ class SLM_API_Listener {
                                 'icon_url'              =>  SLM_Utility::slm_get_icon_url('1x', 'verified.png'),
                                 'message'               => 'License key activated.',
                                 'registered_domain'     => $_REQUEST['registered_domain'],
-                                'code'                  => SLM_Error_Codes::LICENSE_VALID
+                                'code'                  => SLM_Error_Codes::LICENSE_VALID,
+                                'item_reference'        =>  $item_reference
                             )
                         );
 
@@ -532,7 +552,6 @@ class SLM_API_Listener {
                     'txn_id'                => $retLic->txn_id,
                     'until'                 => $retLic->until,
                     'current_ver'           => $retLic->current_ver,
-                    //current_ver
                 ));
 
                 //Output the license details
@@ -627,7 +646,4 @@ class SLM_API_Listener {
             }
         }
     }
-
-
-
 }
