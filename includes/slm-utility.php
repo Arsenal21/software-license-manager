@@ -514,4 +514,74 @@ class SLM_Utility {
             </table>
         </div>';
     }
+
+    static function get_license_activation($license_key, $tablename, $item_name) {
+        ?>
+        <div class="table">
+            <h5> <?php echo $item_name; ?> </h5>
+            <?php
+            global $wpdb;
+            $sql_prep = $wpdb->prepare("SELECT * FROM $tablename WHERE lic_key = %s", $license_key);
+            $activations = $wpdb->get_results($sql_prep, OBJECT);
+
+            if (count($activations) > 0) : ?>
+                <div id="slm_ajax_msg"></div>
+                <div class="<?php echo $item_name; ?>_info">
+                    <table cellpadding="0" cellspacing="0" class="table">
+                        <?php
+                        $count = 0;
+                        foreach ($activations as $activation) : ?>
+                        <div class="input-group mb-3 lic-entry-<?php echo $activation->id;?>">
+                            <?php
+                                if($item_name =='Devices'){
+                                    echo '<input type="text" class="form-control" placeholder="' .$activation->registered_devices .'" aria-label="' .$activation->registered_devices .'" aria-describedby="' .$activation->registered_devices .'" value="' .$activation->registered_devices .'"  readonly>';
+                                }
+                                else {
+                                    echo '<input type="text" class="form-control" placeholder="' .$activation->registered_domain .'" aria-label="' .$activation->registered_domain .'" aria-describedby="' .$activation->registered_domain .'" value="' .$activation->registered_domain .'" readonly>';
+                                }
+                            ?>
+                            <div class="input-group-append">
+                                <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo $activation->lic_key; ?>'" id="<?php echo $activation->id; ?>" data-id="<?php echo $activation->id; ?>"> Remove</button>
+                            </div>
+                        </div>
+
+                            <?php $count++; ?>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            <?php else : ?>
+                <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
+            <?php endif; ?>
+        </div>
+    <?php
+    }
+
+
+    static function slm_woo_build_tab() {
+        do_action( 'woocommerce_before_add_to_cart_form' );
+
+        add_filter( 'woocommerce_product_tabs', 'slm_woo_product_tab' );
+        function slm_woo_product_tab( $tabs ) {
+            global $product;
+
+            if( $product->is_type( 'slm_license' ) ) {
+                $tabs['shipping'] = array(
+                    'title'     => __( 'License information', 'softwarelicensemanager' ),
+                    'priority'  => 50,
+                    'callback'  => 'slm_woo_tab_lic_info'
+                );
+            }
+            return $tabs;
+        }
+
+        function slm_woo_tab_lic_info() {
+            global $product;
+                // The new tab content
+                echo '<h2>License information</h2>';
+                echo 'License type: ' . get_post_meta($product->get_id(), '_license_type', true ) . '<br>';
+                echo 'Domains allowed: ' . get_post_meta($product->get_id(), '_domain_licenses', true ) . '<br>';
+                echo 'Devices allowed: ' . get_post_meta($product->get_id(), '_devices_licenses', true ) . '<br>';
+                echo 'Renews every ' . get_post_meta($product->get_id(), '_license_renewal_period', true ) . ' ' . get_post_meta($product->get_id(), '_license_renewal_period_term', true ) . '<br>';
+        }
+    }
 }

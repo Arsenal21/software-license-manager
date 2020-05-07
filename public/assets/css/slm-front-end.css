@@ -15,6 +15,18 @@
 .slm-status .slm-key-status .key-status.pending {
 background: #72777c;
 }
+.clear {
+    clear: both;
+    float: none;
+    width: 100%;
+}
+.slm-shadow {
+    background: #fff;
+    margin: 2%;
+    padding: 2%;
+    box-shadow: 0px 2px 13px #d4d4d4;
+    border-radius: 3px;
+}
 .slm-status .slm-key-status .key-status.blocked {
 background: #6649c9;
 }

@@ -1,12 +1,10 @@
 <?php
-
-function slm_add_licenses_menu()
-{
+function slm_add_licenses_menu(){
     global $wpdb;
     $slm_options    = get_option('slm_plugin_options');
-
     //initialise some variables
     $id             = '';
+    $item_reference ='';
     $license_key    = '';
     $max_domains    = SLM_Helper_Class::slm_get_option('default_max_domains');
     $max_devices    = SLM_Helper_Class::slm_get_option('default_max_devices');
@@ -31,6 +29,8 @@ function slm_add_licenses_menu()
     $class_hide     = '';
     $date_activated = '';
     $lic_item_ref   = '';
+    $slm_billing_length   = '';
+    $slm_billing_interval   = '';
     $current_date   = (date("Y-m-d"));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
 
@@ -40,8 +40,8 @@ function slm_add_licenses_menu()
 
     //If product is being edited, grab current product info
     if (isset($_GET['edit_record'])) {
-        $errors = '';
-        $id = $_GET['edit_record'];
+        $errors         = '';
+        $id             = $_GET['edit_record'];
         $lk_table       = SLM_TBL_LICENSE_KEYS;
         $sql_prep       = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
         $record         = $wpdb->get_row($sql_prep, OBJECT);
@@ -66,6 +66,8 @@ function slm_add_licenses_menu()
         $lic_type       = $record->lic_type;
         $expiry_date    = $record->date_expiry;
         $lic_item_ref   = $record->item_reference;
+        $slm_billing_length  = $record->slm_billing_length;
+        $slm_billing_interval   = $record->slm_billing_interval;
     }
     if (isset($_POST['save_record'])) {
 
@@ -78,7 +80,6 @@ function slm_add_licenses_menu()
         do_action('slm_add_edit_interface_save_submission');
 
         //TODO - do some validation
-        $expiry_date = '';
         $license_key    = $_POST['license_key'];
         $max_domains    = $_POST['max_allowed_domains'];
         $max_devices    = $_POST['max_allowed_devices'];
@@ -99,9 +100,19 @@ function slm_add_licenses_menu()
         $current_ver    = $_POST['current_ver'];
         $subscr_id      = $_POST['subscr_id'];
         $lic_type       = $_POST['lic_type'];
-        $lic_item_ref   = trim($_POST['item_reference']);
+
+        if("" == trim($_POST['item_reference'])){
+            $lic_item_ref   = 'default';
+        }
+        else {
+            $lic_item_ref   = trim($_POST['item_reference']);
+        }
 
 
+        $slm_billing_length = trim($_POST['slm_billing_length']);
+        $slm_billing_interval= trim($_POST['slm_billing_interval']);
+
+        $expiry_date    = '';
         if ($_POST['lic_type'] == 'lifetime'){
             $expiry_date       = '0000-00-00';
         }
@@ -120,32 +131,32 @@ function slm_add_licenses_menu()
         }
 
         //Save the entry to the database
-        $fields = array();
-        $fields['license_key']  = $license_key;
-        $fields['max_allowed_domains'] = $max_domains;
-        $fields['max_allowed_devices'] = $max_devices;
-        $fields['lic_status']   = $license_status;
-        $fields['first_name']   = $first_name;
-        $fields['last_name']    = $last_name;
-        $fields['email']        = $email;
-        $fields['company_name'] = $company_name;
-        $fields['txn_id']       = $txn_id;
-        $fields['manual_reset_count'] = $reset_count;
-        $fields['purchase_id_'] = $purchase_id_;
-        $fields['date_created'] = $created_date;
-        $fields['date_renewed'] = $renewed_date;
-        $fields['date_activated'] = $date_activated;
-        $fields['date_expiry']  = $expiry_date;
-        $fields['product_ref']  = $product_ref;
-        $fields['until']        = $until;
-        $fields['current_ver']  = $current_ver;
-        $fields['subscr_id']    = $subscr_id;
-        $fields['lic_type']     = $lic_type;
-        $fields['item_reference'] = $lic_item_ref;
-
-
-        $id                     = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
-        $lk_table               = SLM_TBL_LICENSE_KEYS;
+        $fields                         = array();
+        $fields['license_key']          = $license_key;
+        $fields['max_allowed_domains']  = $max_domains;
+        $fields['max_allowed_devices']  = $max_devices;
+        $fields['lic_status']           = $license_status;
+        $fields['first_name']           = $first_name;
+        $fields['last_name']            = $last_name;
+        $fields['email']                = $email;
+        $fields['company_name']         = $company_name;
+        $fields['txn_id']               = $txn_id;
+        $fields['manual_reset_count']   = $reset_count;
+        $fields['purchase_id_']         = $purchase_id_;
+        $fields['date_created']         = $created_date;
+        $fields['date_renewed']         = $renewed_date;
+        $fields['date_activated']       = $date_activated;
+        $fields['date_expiry']          = $expiry_date;
+        $fields['product_ref']          = $product_ref;
+        $fields['until']                = $until;
+        $fields['current_ver']          = $current_ver;
+        $fields['subscr_id']            = $subscr_id;
+        $fields['lic_type']             = $lic_type;
+        $fields['item_reference']       = $lic_item_ref;
+        $fields['slm_billing_length']   = $slm_billing_length;
+        $fields['slm_billing_interval'] = $slm_billing_interval;
+        $id                             = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
+        $lk_table                       = SLM_TBL_LICENSE_KEYS;
 
         if (empty($id)) {
             //Insert into database
@@ -164,39 +175,24 @@ function slm_add_licenses_menu()
             }
         }
 
-        if (empty($errors)) {
-            $message = "Record successfully saved!";
-            echo '<div id="message" class="updated fade"><p>';
-            echo $message;
-            echo '</div></div>';
-        } else {
-            echo '<div id="message" class="error">' . $errors . '</div>';
-        }
-
         $data = array('row_id' => $id, 'key' => $license_key);
         do_action('slm_add_edit_interface_save_record_processed', $data);
     }
     ?>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
     <?php
         if(SLM_Helper_Class::slm_get_option('slm_conflictmode') == 1){
-            echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>';
+            echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>';
         }
     ?>
-
-
-    <style>
-        .wp-admin select {
-            height: calc(2.25rem + 2px);
-        }
-    </style>
+    <style> .wp-admin select { height: calc(2.25rem + 2px); } </style>
 
     <div id="container-2" class="container slm-container">
         <div class="mx-auto" style="">
             <div class="row pb-4">
+                <div class="slm-logo col-md-1">
+                    <img src="<?php echo SLM_Utility::slm_get_icon_url('logo', 'slm-large.svg');?>" alt="">
+                </div>
                 <div class="heading col-md-10">
                     <h1 class="woocommerce-order-data__heading">
                         <?php _e('Software License Manager', 'softwarelicensemanager'); ?>
@@ -263,7 +259,7 @@ function slm_add_licenses_menu()
                                                 <?php endif; ?>
 
                                                 <li class="nav-item">
-                                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false"><span class="dashicons dashicons-media-text"></span> <?php _e('Transaction', 'softwarelicensemanager'); ?></a>
+                                                    <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false"><span class="dashicons dashicons-media-text"></span> <?php _e('Subscription and Renewal', 'softwarelicensemanager'); ?></a>
                                                 </li>
 
                                                 <li class="nav-item">
@@ -428,79 +424,19 @@ function slm_add_licenses_menu()
                                                             <h3 class="slm-tab-title"><?php _e('Allowed Activations');?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
-
+                                                            <div class="slm_ajax_msg"></div>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
                                                                     <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains');?></label>
                                                                     <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
                                                                     <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used');?></small>
-
-                                                                    <div class="table">
-                                                                        <?php
-                                                                        if ($id != '') {
-                                                                            global $wpdb;
-                                                                            $reg_table = SLM_TBL_LIC_DOMAIN;
-                                                                            $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $id);
-                                                                            $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
-                                                                        }
-
-
-                                                                        if (count($reg_domains) > 0) : ?>
-                                                                            <label>Registered Domains</label>
-                                                                            <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                                                            <div class="devices-info">
-                                                                                <table cellpadding="0" cellspacing="0" class="table">
-                                                                                    <?php
-                                                                                    $count = 0;
-                                                                                    foreach ($reg_domains as $reg_domain) : ?>
-                                                                                        <tr <?php echo ($count % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                            <td height="5"><?php echo $reg_domain->registered_domain; ?></td>
-                                                                                            <td height="5"><span class="del" id=<?php echo $reg_domain->id ?>>X</span></td>
-                                                                                        </tr>
-                                                                                        <?php $count++; ?>
-                                                                                    <?php endforeach; ?>
-                                                                                </table>
-                                                                            </div>
-                                                                        <?php else : ?>
-                                                                            <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
-                                                                        <?php endif; ?>
-
-
-                                                                    </div>
+                                                                        <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains'); ?>
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label for="max_allowed_devices">Maximum Allowed Devices</label>
                                                                     <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
                                                                     <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
-
-                                                                    <?php
-                                                                    if ($id != '') {
-                                                                        global $wpdb;
-                                                                        $devices_table  = SLM_TBL_LIC_DEVICES;
-                                                                        $sql_prep2      = $wpdb->prepare("SELECT * FROM `$devices_table` WHERE `lic_key_id` = '%s'", $id);
-                                                                        $reg_devices    = $wpdb->get_results($sql_prep2, OBJECT);
-                                                                    }
-                                                                    if (count($reg_devices) > 0) : ?>
-                                                                        <label for="order_date">Registered Devices</label>
-                                                                        <div style="background: red;width: 100px;color:white; font-weight: bold;padding-left: 10px;" id="reg_del_msg"></div>
-                                                                        <div class="devices-info">
-                                                                            <table cellpadding="0" cellspacing="0" class="table">
-                                                                                <?php
-                                                                                $count_ = 0;
-                                                                                foreach ($reg_devices as $reg_device) : ?>
-                                                                                    <tr <?php echo ($count_ % 2) ? 'class="alternate"' : ''; ?>>
-                                                                                        <td height="5"><?php echo $reg_device->registered_devices; ?></td>
-                                                                                        <td height="5"><span class="del_device" id=<?php echo $reg_device->id ?>>X</span></td>
-                                                                                    </tr>
-                                                                                    <?php $count_++; ?>
-                                                                                <?php endforeach; ?>
-                                                                            </table>
-                                                                        </div>
-                                                                    <?php else : ?>
-                                                                        <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
-                                                                    <?php endif; ?>
-
-
+                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices'); ?>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
@@ -525,7 +461,58 @@ function slm_add_licenses_menu()
                                                                 <small class="form-text text-muted">The number of times this license has been manually reset by the admin (use it if you want to keep track of it). It can be helpful for the admin to keep track of manual reset counts</small>
 
                                                             </div>
+                                                            <div class="clear"></div>
+                                                            <hr>
+                                                            <div class="clear"></div>
 
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <h5>Billing period</h5>
+                                                                </div>
+                                                                <div class="clear"></div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="order_date">Billing length</label>
+                                                                        <input name="slm_billing_length" class="form-control" type="text" id="slm_billing_length" value="<?php echo $slm_billing_length; ?>" />
+                                                                        <small class="form-text text-muted">Amount in days or months or years</small>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="order_date">Billing Interval</label>
+                                                                        <select name="slm_billing_interval" class="form-control">
+                                                                            <option value="days"
+                                                                                <?php
+                                                                                    if ($slm_billing_interval == 'days') {
+                                                                                        echo 'selected="selected"';
+                                                                                    }
+                                                                                ?>>
+                                                                                <?php _e('Days');?>
+                                                                            </option>
+                                                                            <option value="months"
+                                                                                <?php
+                                                                                    if ($slm_billing_interval == 'months') {
+                                                                                        echo 'selected="selected"';
+                                                                                    }
+                                                                                ?>>
+                                                                                <?php _e('Months');?>
+                                                                            </option>
+                                                                            <option value="years"
+                                                                                <?php
+                                                                                    if ($slm_billing_interval == 'years') {
+                                                                                        echo 'selected="selected"';
+                                                                                    }
+                                                                                ?>>
+                                                                                <?php _e('Years');?>
+                                                                            </option>
+                                                                        </select>
+                                                                        <small class="form-text text-muted">Frequency period: in days, months, years</small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                             <div class="clear"></div>
+                                                                <hr>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
                                                                     <label for="order_date">Date Created</label>
@@ -533,7 +520,6 @@ function slm_add_licenses_menu()
 
                                                                     <small class="form-text text-muted">Creation date of license</small>
                                                                 </div>
-
                                                                 <div class="form-group col-md-6">
                                                                     <label for="date_expiry">Expiration Date</label>
                                                                      <?php
@@ -547,7 +533,6 @@ function slm_add_licenses_menu()
 
                                                                         <?php endif;
                                                                     ?>
-
                                                                     <small class="form-text text-muted">Expiry date of license</small>
                                                                 </div>
 
@@ -562,7 +547,6 @@ function slm_add_licenses_menu()
                                                                     <input name="date_activated" type="date" id="date_activated" class="form-control wplm_pick_date" value="<?php echo $date_activated; ?>" />
                                                                     <small class="form-text text-muted">Activation date</small>
                                                                 </div>
-
                                                                 <div class="clear"></div>
                                                             </div>
                                                         </div>
@@ -601,7 +585,6 @@ function slm_add_licenses_menu()
                                                                     <?php else : ?>
                                                                         <small class="form-text text-muted"> No order found yet</small>
                                                                     <?php endif; ?>
-
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
@@ -618,38 +601,38 @@ function slm_add_licenses_menu()
                                                             </div>
                                                             <div class="clear"></div>
                                                             </div>
-
                                                             <?php
                                                                 if ($slm_options['slm_multiple_items']==1) :
                                                                     global $wpdb;
-                                                                    $post_meta_tbl = $wpdb->prefix . 'postmeta';
-                                                                    $item_ref_meta = '_license_item_reference';
-                                                                    $sql_prep = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
-                                                                    $values_item_refs = $wpdb->get_results($sql_prep, OBJECT);
+                                                                    $post_meta_tbl      = $wpdb->prefix . 'postmeta';
+                                                                    $item_ref_meta      = '_license_item_reference';
+                                                                    $sql_prep           = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
+                                                                    $values_item_refs   = $wpdb->get_results($sql_prep, OBJECT);
                                                                 ?>
                                                                 <div class="row">
                                                                     <div class="form-group col-md-12">
                                                                     <label for="item_reference">Item reference</label>
                                                                         <select name="item_reference" class="form-control">
-                                                                        <?php
-                                                                            foreach ($values_item_refs as $item_reference) {
-                                                                                $sel_val = esc_attr(trim($item_reference->meta_value));
-                                                                                $is_selected = $lic_item_ref==$sel_val ? ' selected="selected"' : '';
-                                                                                echo '<option value="'. $sel_val .'"'.$is_selected.'>'.$sel_val .'</option>';
-                                                                            }
-                                                                        ?>
+                                                                            <option value="select one" selected> Select one ...</option>
+                                                                            <?php
+                                                                                foreach ($values_item_refs as $item_reference) {
+                                                                                    $sel_val        = esc_attr(trim($item_reference->meta_value));
+                                                                                    $is_selected    = $lic_item_ref==$sel_val;
+                                                                                    // filter out empty values
+                                                                                    if (!empty($sel_val)) {
+                                                                                       echo '<option value="'. $sel_val .'">'.$sel_val .'</option>';
+                                                                                    }
+                                                                                }
+                                                                            ?>
                                                                         </select>
                                                                         <small class="form-text text-muted"><?php _e('Item reference of your software');?></small>
                                                                     </div>
                                                                 </div>
                                                             <?php endif; ?>
-
                                                             <div class="clear"></div>
-
                                                         </div>
                                                         <div class="clear"></div>
                                                     </div>
-
                                                     <?php
                                                     if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) : ?>
                                                         <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
@@ -685,7 +668,6 @@ function slm_add_licenses_menu()
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
-
                                                     <div class="output-msg">
                                                         <?php
                                                         $data = array('row_id' => $id, 'key' => $license_key);
@@ -695,24 +677,27 @@ function slm_add_licenses_menu()
                                                         }
                                                         ?>
                                                     </div>
-
                                                     <div class="submit form_actions">
-                                                        <input type="submit" class="button btn btn-primary save_lic" name="save_record" value="Save License" />
-                                                        <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="btn btn-link">Manage Licenses</a>
+                                                        <?php
+                                                        $save_label = '';
+                                                        if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) {
+                                                            $save_label = 'Save changes';
+                                                        }
+                                                        else {
+                                                            $save_label = 'Create license';
+                                                        }
+                                                        ?>
+                                                        <input type="submit" class="button button-primary save_lic" name="save_record" value="<?php echo $save_label; ?>" />
+                                                        <a href="admin.php?page=<?php echo SLM_MAIN_MENU_SLUG; ?>" class="button media-button select-mode-toggle-button">Manage Licenses</a>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
-
                                         <!-- end of form -->
                                         <div class="clear"></div>
-
-
                                     </div>
                                 </div>
                                 <!-- end of tabbed form -->
-
-
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -727,45 +712,31 @@ function slm_add_licenses_menu()
 
     <script type="text/javascript">
         jQuery(document).ready(function() {
-
             jQuery(".save_lic").click(function(event) {
-
                 // Fetch form to apply custom Bootstrap validation
                 var form = jQuery(".slm_license_form")
-
                 if (form[0].checkValidity() === false) {
+                    jQuery('#userinfo-tab').css("color", "red");
                     event.preventDefault()
                     event.stopPropagation()
                 }
-
                 form.addClass('was-validated');
-                // Perform ajax submit here...
-
             });
-
-
-            jQuery('.del').click(function() {
-                jQuery('#reg_del_msg').html('Loading ...');
-
-                jQuery.get('<?php echo get_bloginfo("wpurl"); ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_domain&id=' + jQuery(this).attr('id'), function(data) {
-                    if (data == 'success') {
-                        jQuery('#reg_del_msg').html('Deleted');
-                        jQuery(this).parent().parent().remove();
-                    } else {
-                        jQuery('#reg_del_msg').html('Failed');
-                    }
-                });
-            });
-
-            jQuery('.del_device').click(function() {
-                jQuery('#reg_device_del_msg').html('Loading ...');
-                jQuery.get('<?php echo get_bloginfo("wpurl"); ?>' + '/wp-admin/admin-ajax.php?action=del_reistered_devices&id=' + jQuery(this).attr('id'), function(data) {
-                    if (data == 'success') {
-                        jQuery('#reg_device_del_msg').html('Deleted');
-                        jQuery(this).parent().parent().remove();
-                    } else {
-                        jQuery('#reg_device_del_msg').html('Failed');
-                    }
+            jQuery(document).ready(function() {
+                jQuery('.deactivate_lic_key').click(function(event) {
+                    var id          = jQuery(this).attr("id");
+                    var lic_type    = jQuery(this).attr('lic_type');
+                    var class_name  = '.lic-entry-' + id;
+                    jQuery(this).text('Removing');
+                    jQuery.get('<?php echo get_bloginfo("url"); ?>' + '/wp-admin/admin-ajax.php?action=del_activation&id=' + id +'&lic_type=' + lic_type, function(data) {
+                        if (data == 'success') {
+                            jQuery(class_name).remove();
+                            jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"> License key was deactivated! </div>');
+                        }
+                        else {
+                            jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> License key was not deactivated! </div>');
+                        }
+                    });
                 });
             });
         });

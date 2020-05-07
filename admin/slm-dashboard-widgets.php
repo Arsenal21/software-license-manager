@@ -5,8 +5,10 @@ if (!defined('WPINC')) {
 }
 
 add_action('wp_dashboard_setup', 'slm_add_dashboard_widgets');
-add_action('admin_bar_menu', 'add_toolbar_items', 100);
 
+if (null !== SLM_Helper_Class::slm_get_option('slm_adminbar') && SLM_Helper_Class::slm_get_option('slm_adminbar') == 1) {
+    add_action('admin_bar_menu', 'add_toolbar_items', 100);
+}
 /**
  * Add a widget to the dashboard.
  *
@@ -22,8 +24,7 @@ function slm_add_dashboard_widgets()
     );
 }
 
-function add_toolbar_items($admin_bar)
-{
+function add_toolbar_items($admin_bar){
     $admin_bar->add_menu(array(
         'id'    => 'slm-menu',
         'title' => '<span class="ab-icon"></span>' . __('SLM', 'softwarelicensemanager'),

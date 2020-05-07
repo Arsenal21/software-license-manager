@@ -1,27 +1,26 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 5.5.0
+Version: 5.5.2
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
 Description: Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
 Author2: <a href="https://www.tipsandtricks-hq.com/">Tips and Tricks HQ</a>
 Text Domain: softwarelicensemanager
-Domain Path: /languages/
+Domain Path: /i18n/languages/
 */
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
     die();
 }
-
 global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',               '5.5.0');
-define('SLM_DB_VERSION',            '4.1.8');
-define('SLM_REWRITE_VERSION',       '2.3.6');
+define('SLM_VERSION',               '5.5.2');
+define('SLM_DB_VERSION',            '4.2.6');
+define('SLM_REWRITE_VERSION',       '2.3.8');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('' ,__FILE__));
 define('SLM_ASSETS_URL',            SLM_URL   . '/public/assets/');
@@ -55,9 +54,8 @@ define('KEY_API_PREFIX',        SLM_Helper_Class::slm_get_option('lic_prefix'));
 
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'slm_settings_link');
 
-require 'plugin-update-checker/plugin-update-checker.php';
-$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	'https://github.com/michelve/software-license-manager',
-	__FILE__,
-	'/software-license-manager'
-);
+// plugin auto updater helper
+if (file_exists('plugin-update-checker/plugin-update-checker.php')) {
+    require 'plugin-update-checker/plugin-update-checker.php';
+	$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker('https://github.com/michelve/software-license-manager',__FILE__,'/software-license-manager');
+}

@@ -12,10 +12,15 @@
 //require_once(SLM_LIB . 'slm-wizard.php');
 //require_once(SLM_LIB . 'wp-mail-class.php');
 
-function slm_load_language(){
-    load_plugin_textdomain('softwarelicensemanager', false, dirname(plugin_basename(__FILE__)) . '/languages');
-}
+
+/**
+ * Load plugin textdomain.
+ */
 add_action('init', 'slm_load_language');
+function slm_load_language(){
+    load_plugin_textdomain('softwarelicensemanager', false, plugin_dir_path( __FILE__ ) . 'i18n/languages/');
+}
+
 
 //Includes - utilities and cron jobs
 include_once(ABSPATH.'wp-admin/includes/plugin.php');
@@ -101,14 +106,14 @@ if (null !== SLM_Helper_Class::slm_get_option('slm_woo') && SLM_Helper_Class::sl
     /**
      * Check if WooCommerce is activated
      */
-    // WordPress Plugin :: wc-software-license-manager
     if( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-        require_once(SLM_PUBLIC . 'slm-add-menu-frontend.php');
-    require_once( SLM_WOO  . 'includes/wc-slm.php');
-
-    // support for meta boxes
-    require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
+        require_once( SLM_WOO . 'includes/wc_licenses_class.php');
+        require_once( SLM_WOO  . 'includes/wc-slm.php');
+        // support for meta boxes
+        require_once( SLM_WOO . 'includes/slm-meta-boxes.php');
     }
+    // build woocommerce tabs
+    SLM_Utility::slm_woo_build_tab();
 }
 
 
@@ -127,6 +132,8 @@ add_action('init', 'slm_init_handler');
 add_action('plugins_loaded', 'slm_plugins_loaded_handler');
 add_action('wp_ajax_del_reistered_devices', 'slm_del_reg_devices');
 add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
+// woo public facing
+add_action('wp_ajax_del_activation', 'slm_remove_activation');
 
 //Initialize debug logger
 $slm_debug_logger   = new SLM_Debug_Logger();
@@ -188,6 +195,25 @@ function slm_del_reg_devices() {
     $reg_table  = SLM_TBL_LIC_DEVICES;
     $id         = strip_tags($_GET['id']);
     $ret        = $wpdb->query($wpdb->prepare( "DELETE FROM {$reg_table} WHERE id=%d", $id ) );
+    echo ($ret) ? 'success' : 'failed';
+    exit(0);
+}
+
+//TODO - need to move this to an ajax handler file
+function slm_remove_activation() {
+    global $wpdb;
+    $table = '';
+    $id      = strip_tags($_GET['id']);
+    $lic_type     = strip_tags($_GET['lic_type']);
+
+    if($lic_type == 'Devices'){
+        $table = SLM_TBL_LIC_DEVICES;
+    }
+    else {
+        $table = SLM_TBL_LIC_DOMAIN;
+    }
+
+    $ret        = $wpdb->query($wpdb->prepare( "DELETE FROM {$table} WHERE id=%d", $id ) );
     echo ($ret) ? 'success' : 'failed';
     exit(0);
 }
