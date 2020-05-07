@@ -1,5 +1,5 @@
 # Welcome to software license manager 👋
-![Version](https://img.shields.io/badge/version-5.5.0-blue.svg?cacheSeconds=2592000)
+![Version](https://img.shields.io/badge/version-5.5.2-blue.svg?cacheSeconds=2592000)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md)
 
@@ -89,7 +89,7 @@ Changelog: [View changelog](https://github.com/michelve/software-license-manager
 
 <img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width="800" alt="Software License Manager" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/my-account-lics-opened.png?raw=true" alt="Software License Manager" width="800" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/1bf014b84300ba58e7ce614c25f9976c7fab6cb1/public/assets/images/previews/my-account-lics-opened.png" alt="Software License Manager" width="800" />
 
 
 ## 📝 License

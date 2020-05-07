@@ -17,7 +17,9 @@ function slm_general_settings(){
             global $slm_debug_logger;
             $slm_debug_logger->reset_log_file("log.txt");
             $slm_debug_logger->reset_log_file("log-cron-job.txt");
-            echo '<div id="message" class="updated fade"><p>Debug log files have been reset!</p></div>';
+            echo '<div id="message" class="updated fade"><p>
+            '.__( 'Debug log files have been reset!', 'softwarelicensemanager' ) .'
+            </p></div>';
         }
 
         if (isset($_POST['slm_save_settings'])) {
@@ -51,7 +53,7 @@ function slm_general_settings(){
             );
             update_option('slm_plugin_options', $options);
 
-            echo ' <div id="message" class="updated fade"> <p>Options Updated!</p> </div>';
+            echo ' <div id="message" class="updated fade"> <p>'.__( 'Options updated!', 'softwarelicensemanager' ).'</p> </div>';
         }
 
         $options    = get_option('slm_plugin_options');
@@ -81,19 +83,19 @@ function slm_general_settings(){
         <div id="icon-options-general" class="icon32"></div>
         <h2 class="nav-tab-wrapper">
             <a href="<?php echo admin_url('admin.php?page=' . 'slm_settings') ?>" class="nav-tab <?php echo ($tab == 'general_settings') ? 'nav-tab-active' : '' ?>">
-                <?php echo __('General Settings', 'slm'); ?>
+                <?php echo __('General Settings', 'softwarelicensemanager'); ?>
             </a>
 
             <a href="<?php echo admin_url('admin.php?page=' . 'slm_settings' . '&tab=integrations') ?>" class="nav-tab <?php echo ($tab == 'integrations') ? 'nav-tab-active' : '' ?>">
-                <?php echo __('Integrations', 'slm'); ?>
+                <?php echo __('Integrations', 'softwarelicensemanager'); ?>
             </a>
 
             <a href="<?php echo admin_url('admin.php?page=' . 'slm_settings' . '&tab=debug') ?>" class="nav-tab <?php echo ($tab == 'debug') ? 'nav-tab-active' : '' ?>">
-                <?php echo __('Debugging settings', 'slm'); ?>
+                <?php echo __('Debugging settings', 'softwarelicensemanager'); ?>
             </a>
 
             <a href="<?php echo admin_url('admin.php?page=' . 'slm_settings' . '&tab=emails') ?>" class="nav-tab <?php echo ($tab == 'emails') ? 'nav-tab-active' : '' ?>">
-                <?php echo __('Emails', 'slm'); ?>
+                <?php echo __('Emails', 'softwarelicensemanager'); ?>
             </a>
 
         </h2>
@@ -121,14 +123,14 @@ function slm_general_settings(){
                     <table class="form-table">
                         <tr valign="top">
                             <th scope="row"><?php _e('Secret Key for License Creation', 'softwarelicensemanager'); ?></th>
-                            <td><textarea name="lic_creation_secret" rows="2" cols="50"><?php echo $secret_key; ?>
+                            <td><textarea name="lic_creation_secret" rows="2" cols="50" readonly><?php echo $secret_key; ?>
                             </textarea>
                                 <p class=" description"><?php _e('This secret key will be used to authenticate any license creation request. You can change it with something random.', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
                         <tr valign="top">
                             <th scope="row"><?php _e('Secret Key for License Verification Requests', 'softwarelicensemanager'); ?></th>
-                            <td><textarea name="lic_verification_secret" rows="2" cols="50"><?php echo $secret_verification_key; ?></textarea>
+                            <td><textarea name="lic_verification_secret" rows="2" cols="50" readonly><?php echo $secret_verification_key; ?></textarea>
                                 <p class="description"><?php _e('This secret key will be used to authenticate any license verification request from customer\'s site. Important! Do not change this value once your customers start to use your product(s)!', 'softwarelicensemanager'); ?></p>
                             </td>
                         </tr>
@@ -168,7 +170,7 @@ function slm_general_settings(){
                             <th scope="row"></th>
                             <td>
                                 <input name="slm_adminbar" type="checkbox" <?php if ($options['slm_adminbar'] != '') echo ' checked="checked"'; ?> value="1" />
-                                <?php _e('Disable stats in licenses overview page.', 'softwarelicensemanager'); ?></td>
+                                <?php _e('Enable admin bar shortcut link', 'softwarelicensemanager'); ?></td>
                         </tr>
 
                         <tr>
@@ -181,7 +183,7 @@ function slm_general_settings(){
                         </tr>
 
                         <tr>
-                            <th scope="row"></th>
+                            <th scope="row">Bootstrap library</th>
                             <td>
                                 <input name="slm_conflictmode" type="checkbox" <?php if ($options['slm_conflictmode'] != '') echo ' checked="checked"'; ?> value="1" />
                                 <?php _e('Enable Bootstrap javascript libray.', 'softwarelicensemanager'); ?></td>
@@ -207,13 +209,13 @@ function slm_general_settings(){
                                     <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
                                     <?php _e('Disable woocommerce download page. Process downloads though license order info page.', 'softwarelicensemanager'); ?></td>
                             </tr>
-                            <tr valign="top">
+                            <!-- <tr valign="top">
                                 <th scope="row"> <?php _e('Download Manager Support', 'softwarelicensemanager'); ?></th>
                                 <td>
                                     <input name="slm_dl_manager" type="checkbox" <?php if ($options['slm_dl_manager'] != '') echo ' checked="checked"'; ?> value="1" />
                                     <?php _e('Download Manager Plugin – Adds a simple download manager to your WordPress blog.', 'softwarelicensemanager'); ?>
                                 </td>
-                            </tr>
+                            </tr> -->
                             <tr valign="top">
                                 <th scope="row"> <?php _e('WP eStores Support', 'softwarelicensemanager'); ?></th>
                                 <td>
@@ -230,10 +232,10 @@ function slm_general_settings(){
                     <div class=" inside">
                         <table class="form-table">
                             <tr valign="top">
-                                <th scope="row"> <?php _e('Enable Debug Logging', 'softwarelicensemanager'); ?></th>
+                                <th scope="row"> <?php echo __('Enable Debug Logging', 'softwarelicensemanager'); ?></th>
                                 <td>
                                     <p class="description"><input name="enable_debug" type="checkbox" <?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).', ' softwarelicensemanager '); ?></p>
+                                        <?php echo __('If checked, debug output will be written to log files.', ' softwarelicensemanager '); ?></p>
                                 </td>
                             </tr>
                         </table>

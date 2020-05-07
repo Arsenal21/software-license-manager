@@ -3,15 +3,15 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Software License Manager\n"
-"POT-Creation-Date: 2020-04-21 17:15-0400\n"
-"PO-Revision-Date: 2020-04-21 17:15-0400\n"
+"POT-Creation-Date: 2020-04-29 13:31-0400\n"
+"PO-Revision-Date: 2020-04-29 13:31-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
-"X-Poedit-Basepath: ..\n"
+"X-Poedit-Basepath: ../..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: software-license-manager.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -26,46 +26,6 @@ msgstr ""
 msgid "Every day"
 msgstr ""
 
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:54
-msgid "View details"
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:77
-#, php-format
-msgid "More information about %s"
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:128
-msgid "Check for updates"
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:213
-#, php-format
-msgctxt "the plugin title"
-msgid "The %s plugin is up to date."
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:215
-#, php-format
-msgctxt "the plugin title"
-msgid "A new version of the %s plugin is available."
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:217
-#, php-format
-msgctxt "the plugin title"
-msgid "Could not determine if updates are available for %s."
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Plugin/Ui.php:223
-#, php-format
-msgid "Unknown update checker status \"%s\""
-msgstr ""
-
-#: admin/includes/plugin-update-checker/Puc/v4p6/Vcs/PluginUpdateChecker.php:98
-msgid "There is no changelog available."
-msgstr ""
-
 #: admin/includes/wpestores/slm-wpestores.php:70
 msgid "Item Name: "
 msgstr ""
@@ -74,119 +34,139 @@ msgstr ""
 msgid "License Key: "
 msgstr ""
 
-#: admin/slm-add-licenses.php:151
+#: admin/slm-add-licenses.php:149
 msgid "Record could not be inserted into the database!"
 msgstr ""
 
-#: admin/slm-add-licenses.php:159
+#: admin/slm-add-licenses.php:157
 msgid "Update of the license key table failed!"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-#: admin/slm-add-licenses.php:192
+#: admin/slm-add-licenses.php:190
 msgid "Software License Manager"
 msgstr ""
 
-#: admin/slm-add-licenses.php:195
+#: admin/slm-add-licenses.php:193
 msgid "You can add a new license or edit an existing one from this interface."
 msgstr ""
 
-#: admin/slm-add-licenses.php:241 admin/slm-add-licenses.php:302
+#: admin/slm-add-licenses.php:239 admin/slm-add-licenses.php:304
 msgid "License key and status"
 msgstr ""
 
-#: admin/slm-add-licenses.php:245
+#: admin/slm-add-licenses.php:243
 msgid "User information"
 msgstr ""
 
-#: admin/slm-add-licenses.php:251
+#: admin/slm-add-licenses.php:249
 msgid "Devices & Domains"
 msgstr ""
 
-#: admin/slm-add-licenses.php:256
+#: admin/slm-add-licenses.php:254
 msgid "Transaction"
 msgstr ""
 
-#: admin/slm-add-licenses.php:260
+#: admin/slm-add-licenses.php:258
 msgid "Product"
 msgstr ""
 
-#: admin/slm-add-licenses.php:266
+#: admin/slm-add-licenses.php:264
 msgid "Activity log "
 msgstr ""
 
-#: admin/slm-add-licenses.php:273
+#: admin/slm-add-licenses.php:271
 msgid "Export "
 msgstr ""
 
-#: admin/slm-add-licenses.php:304
+#: admin/slm-add-licenses.php:309
 msgid "License Key"
 msgstr ""
 
-#: admin/slm-add-licenses.php:306
+#: admin/slm-add-licenses.php:311
 msgid "The unique license key."
 msgstr ""
 
-#: admin/slm-add-licenses.php:311
+#: admin/slm-add-licenses.php:316
 msgid "License Status"
 msgstr ""
 
-#: admin/slm-add-licenses.php:337
+#: admin/slm-add-licenses.php:342
 msgid "Subscription"
 msgstr ""
 
-#: admin/slm-add-licenses.php:340
+#: admin/slm-add-licenses.php:345
 msgid "Life-time"
 msgstr ""
 
-#: admin/slm-add-licenses.php:343 woocommerce/includes/slm-meta-boxes.php:124
+#: admin/slm-add-licenses.php:347 woocommerce/includes/slm-meta-boxes.php:143
 msgid "type of license: subscription base or lifetime"
 msgstr ""
 
-#: admin/slm-add-licenses.php:353
+#: admin/slm-add-licenses.php:361
 msgid "User Information"
 msgstr ""
 
-#: admin/slm-add-licenses.php:356
+#: admin/slm-add-licenses.php:367
 msgid "First Name"
 msgstr ""
 
-#: admin/slm-add-licenses.php:358
+#: admin/slm-add-licenses.php:369
 msgid "License user's first name"
 msgstr ""
 
-#: admin/slm-add-licenses.php:362
+#: admin/slm-add-licenses.php:373
 msgid " Last Name"
 msgstr ""
 
-#: admin/slm-add-licenses.php:364
+#: admin/slm-add-licenses.php:375
 msgid "License user's last name"
 msgstr ""
 
-#: admin/slm-add-licenses.php:371
+#: admin/slm-add-licenses.php:382
 msgid "Subscriber ID"
 msgstr ""
 
-#: admin/slm-add-licenses.php:373
+#: admin/slm-add-licenses.php:384
 msgid ""
 "The Subscriber ID (if any). Can be useful if you are using the license key "
 "with a recurring payment plan."
 msgstr ""
 
-#: admin/slm-add-licenses.php:378
+#: admin/slm-add-licenses.php:389
 msgid "Email Address"
 msgstr ""
 
-#: admin/slm-add-licenses.php:402
+#: admin/slm-add-licenses.php:416
 msgid "Allowed Activations"
 msgstr ""
 
-#: admin/slm-add-licenses.php:405 admin/slm-lic-settings.php:146
+#: admin/slm-add-licenses.php:422 admin/slm-lic-settings.php:142
 msgid "Maximum Allowed Domains"
 msgstr ""
 
-#: admin/slm-add-licenses.php:407
+#: admin/slm-add-licenses.php:424
 msgid "Number of domains/installs in which this license can be used"
+msgstr ""
+
+#: admin/slm-add-licenses.php:506
+msgid "Advanced Details"
+msgstr ""
+
+#: admin/slm-add-licenses.php:566
+msgid "Product Informations"
+msgstr ""
+
+#: admin/slm-add-licenses.php:634
+msgid "Item reference of your software"
+msgstr ""
+
+#: admin/slm-add-licenses.php:652
+msgid "Export License"
+msgstr ""
+
+#: admin/slm-add-licenses.php:672
+msgid "Activity Log"
 msgstr ""
 
 #: admin/slm-admin-functions.php:41
@@ -197,93 +177,93 @@ msgstr ""
 msgid "Enter the URL where the license deactivation message will be sent to"
 msgstr ""
 
-#: admin/slm-dashboard-widgets.php:29 admin/slm-dashboard-widgets.php:32
+#: admin/slm-dashboard-widgets.php:30 admin/slm-dashboard-widgets.php:33
 msgid "SLM"
 msgstr ""
 
-#: admin/slm-dashboard-widgets.php:41
+#: admin/slm-dashboard-widgets.php:42
 msgid "Overview"
 msgstr ""
 
-#: admin/slm-dashboard-widgets.php:51
+#: admin/slm-dashboard-widgets.php:52
 msgid "Add new license"
 msgstr ""
 
-#: admin/slm-dashboard-widgets.php:61 includes/slm-plugin-core.php:50
+#: admin/slm-dashboard-widgets.php:62 includes/slm-plugin-core.php:50
 msgid "Settings"
 msgstr ""
 
-#: admin/slm-lic-settings.php:88
+#: admin/slm-lic-settings.php:84
 msgid "General Settings"
 msgstr ""
 
-#: admin/slm-lic-settings.php:92
+#: admin/slm-lic-settings.php:88
 msgid "Integrations"
 msgstr ""
 
-#: admin/slm-lic-settings.php:96
+#: admin/slm-lic-settings.php:92
 msgid "Debugging settings"
 msgstr ""
 
-#: admin/slm-lic-settings.php:100
+#: admin/slm-lic-settings.php:96
 msgid "Emails"
 msgstr ""
 
-#: admin/slm-lic-settings.php:127
+#: admin/slm-lic-settings.php:123
 msgid "Secret Key for License Creation"
 msgstr ""
 
-#: admin/slm-lic-settings.php:130
+#: admin/slm-lic-settings.php:126
 msgid ""
 "This secret key will be used to authenticate any license creation request. "
 "You can change it with something random."
 msgstr ""
 
-#: admin/slm-lic-settings.php:134
+#: admin/slm-lic-settings.php:130
 msgid "Secret Key for License Verification Requests"
 msgstr ""
 
-#: admin/slm-lic-settings.php:136
+#: admin/slm-lic-settings.php:132
 msgid ""
 "This secret key will be used to authenticate any license verification "
 "request from customer's site. Important! Do not change this value once your "
 "customers start to use your product(s)!"
 msgstr ""
 
-#: admin/slm-lic-settings.php:140
+#: admin/slm-lic-settings.php:136
 msgid "License Key Prefix"
 msgstr ""
 
-#: admin/slm-lic-settings.php:142
+#: admin/slm-lic-settings.php:138
 msgid ""
 "You can optionaly specify a prefix for the license keys. This prefix will be "
 "added to the uniquely generated license keys."
 msgstr ""
 
-#: admin/slm-lic-settings.php:148
+#: admin/slm-lic-settings.php:144
 msgid ""
 "Maximum number of domains/installs which each license is valid for (default "
 "value)."
 msgstr ""
 
-#: admin/slm-lic-settings.php:152
+#: admin/slm-lic-settings.php:148
 msgid "Maximum Allowed Devices"
 msgstr ""
 
-#: admin/slm-lic-settings.php:154
+#: admin/slm-lic-settings.php:150
 msgid ""
 "Maximum number of devices which each license is valid for (default value)."
 msgstr ""
 
-#: admin/slm-lic-settings.php:158
+#: admin/slm-lic-settings.php:154
 msgid "Auto Expire License Keys"
 msgstr ""
 
-#: admin/slm-lic-settings.php:160
+#: admin/slm-lic-settings.php:156
 msgid "Enable auto expiration "
 msgstr ""
 
-#: admin/slm-lic-settings.php:161
+#: admin/slm-lic-settings.php:157
 msgid ""
 " When enabled, it will automatically set the status of a license key to "
 "\"Expired\" when the expiry date value  of the key is reached. It doesn't "
@@ -291,64 +271,87 @@ msgid ""
 "database to expired."
 msgstr ""
 
-#: admin/slm-lic-settings.php:165
+#: admin/slm-lic-settings.php:161
 msgid "General settings"
 msgstr ""
 
-#: admin/slm-lic-settings.php:168 admin/slm-lic-settings.php:175
-msgid "Disable stats in licenses overview page."
+#: admin/slm-lic-settings.php:164
+msgid "Enable stats in licenses overview page."
 msgstr ""
 
-#: admin/slm-lic-settings.php:186
+#: admin/slm-lic-settings.php:171
+msgid "Enable admin bar shortcut link"
+msgstr ""
+
+#: admin/slm-lic-settings.php:175
+msgid "Multiple items validation"
+msgstr ""
+
+#: admin/slm-lic-settings.php:178
+msgid "Enable verification of Item reference."
+msgstr ""
+
+#: admin/slm-lic-settings.php:179
+msgid ""
+"When enabled, there will be another field in Licenced product - Item "
+"reference. This field should correspond to the API parameter item_reference "
+"of your software."
+msgstr ""
+
+#: admin/slm-lic-settings.php:187
+msgid "Enable Bootstrap javascript libray."
+msgstr ""
+
+#: admin/slm-lic-settings.php:199
 msgid "Woocommerce Support"
 msgstr ""
 
-#: admin/slm-lic-settings.php:189
+#: admin/slm-lic-settings.php:202
 msgid ""
 "A fully customizable, open source eCommerce platform built for WordPress."
 msgstr ""
 
-#: admin/slm-lic-settings.php:195
+#: admin/slm-lic-settings.php:208
 msgid ""
-"Disable woocommerce download page. Proccess downloads though license order "
+"Disable woocommerce download page. Process downloads though license order "
 "info page."
 msgstr ""
 
-#: admin/slm-lic-settings.php:198
+#: admin/slm-lic-settings.php:211
 msgid "Download Manager Support"
 msgstr ""
 
-#: admin/slm-lic-settings.php:201
+#: admin/slm-lic-settings.php:214
 msgid ""
 "Download Manager Plugin – Adds a simple download manager to your WordPress "
 "blog."
 msgstr ""
 
-#: admin/slm-lic-settings.php:205
+#: admin/slm-lic-settings.php:218
 msgid "WP eStores Support"
 msgstr ""
 
-#: admin/slm-lic-settings.php:208
+#: admin/slm-lic-settings.php:221
 msgid ""
 "WordPress eStore Plugin – Complete Solution to Sell Digital Products from "
 "Your WordPress Blog Securely"
 msgstr ""
 
-#: admin/slm-lic-settings.php:220
+#: admin/slm-lic-settings.php:233
 msgid "Enable Debug Logging"
 msgstr ""
 
-#: admin/slm-lic-settings.php:223
+#: admin/slm-lic-settings.php:236
 msgid ""
 "If checked, debug output will be written to log files (keep it disabled "
 "unless you are troubleshooting)."
 msgstr ""
 
-#: admin/slm-lic-settings.php:234
+#: admin/slm-lic-settings.php:247
 msgid "Expiration reminder"
 msgstr ""
 
-#: admin/slm-lic-settings.php:244
+#: admin/slm-lic-settings.php:257
 msgid "Update Options"
 msgstr ""
 
@@ -409,7 +412,7 @@ msgstr ""
 msgid "ID"
 msgstr ""
 
-#: admin/slm-subscribers.php:190 woocommerce/includes/purchase.php:415
+#: admin/slm-subscribers.php:190 woocommerce/includes/purchase.php:419
 msgid "License key"
 msgstr ""
 
@@ -429,7 +432,48 @@ msgstr ""
 msgid "GitHub"
 msgstr ""
 
-#: public/slm-add-menu-frontend.php:56 public/slm-add-menu-frontend.php:69
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:213
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:215
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:217
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:223
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr ""
+
+#: woocommerce/includes/my-licenses-page.php:47
+#: woocommerce/includes/my-licenses-page.php:58
 msgid "My Licenses"
 msgstr ""
 
@@ -437,11 +481,11 @@ msgstr ""
 msgid "License could not be created: Invalid sites allowed number."
 msgstr ""
 
-#: woocommerce/includes/purchase.php:220
+#: woocommerce/includes/purchase.php:223
 msgid "License Key(s) generated"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:237
+#: woocommerce/includes/purchase.php:241
 msgid "License Key(s) could not be created."
 msgstr ""
 
@@ -449,23 +493,27 @@ msgstr ""
 msgid "Order confirmation email sent to: <a href='mailto:"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:416
+#: woocommerce/includes/purchase.php:420
 msgid "License expiration"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:417
+#: woocommerce/includes/purchase.php:421
 msgid "License type"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:418
+#: woocommerce/includes/purchase.php:422
+msgid "License item reference"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:423
 msgid "License status"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:419
+#: woocommerce/includes/purchase.php:424
 msgid "License current version"
 msgstr ""
 
-#: woocommerce/includes/purchase.php:420
+#: woocommerce/includes/purchase.php:425
 msgid "Supported until version"
 msgstr ""
 
@@ -477,93 +525,103 @@ msgstr ""
 msgid "Enables the license creation api."
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:82
+#: woocommerce/includes/slm-meta-boxes.php:81
 msgid "Licensing"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:101
+#: woocommerce/includes/slm-meta-boxes.php:99
 msgid "Domain Licenses"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:105
+#: woocommerce/includes/slm-meta-boxes.php:108
 msgid "Enter the allowed amount of domains this license can have (websites)."
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:111
+#: woocommerce/includes/slm-meta-boxes.php:114
 msgid "Devices Licenses"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:115
+#: woocommerce/includes/slm-meta-boxes.php:123
 msgid ""
 "Enter the allowed amount of devices this license can have (computers, "
 "mobile, etc)."
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:121
+#: woocommerce/includes/slm-meta-boxes.php:130
+msgid "Item reference"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:133
+msgid ""
+"Enter the item reference of your application, theme, or plug-in. The licence "
+"will be then bound to this exact software."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:140
 msgid "License Type"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:126
+#: woocommerce/includes/slm-meta-boxes.php:145
 msgid "Select one"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:127
+#: woocommerce/includes/slm-meta-boxes.php:146
 msgid "subscription"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:128
+#: woocommerce/includes/slm-meta-boxes.php:147
 msgid "lifetime"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:137
+#: woocommerce/includes/slm-meta-boxes.php:156
 msgid "Renewal period lenght "
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:139
+#: woocommerce/includes/slm-meta-boxes.php:158
 msgid "Amount of days or months or years"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:146
+#: woocommerce/includes/slm-meta-boxes.php:165
 msgid "Expiration term"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:148
+#: woocommerce/includes/slm-meta-boxes.php:167
 msgid "Choose between days or months or years"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:150
+#: woocommerce/includes/slm-meta-boxes.php:169
 msgid "Day(s)"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:151
+#: woocommerce/includes/slm-meta-boxes.php:170
 msgid "Month(s)"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:152
+#: woocommerce/includes/slm-meta-boxes.php:171
 msgid "Year(s)"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:153
+#: woocommerce/includes/slm-meta-boxes.php:172
 msgid "One Time"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:162
+#: woocommerce/includes/slm-meta-boxes.php:181
 msgid "Current Version"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:165
+#: woocommerce/includes/slm-meta-boxes.php:184
 msgid "Enter the current version of your application, theme, or plug-in"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:172
+#: woocommerce/includes/slm-meta-boxes.php:191
 msgid "Until Version"
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:175
+#: woocommerce/includes/slm-meta-boxes.php:194
 msgid "Enter the version until support expires."
 msgstr ""
 
-#: woocommerce/includes/slm-meta-boxes.php:255
+#: woocommerce/includes/slm-meta-boxes.php:274
 msgid "License product"
 msgstr ""
 
