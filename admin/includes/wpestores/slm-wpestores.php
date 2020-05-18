@@ -67,7 +67,7 @@ function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $c
     if ($retrieved_product->create_license == 1) {
         $slm_debug_logger->log_debug('Need to create a license key for this product (' . $retrieved_product->id . ')');
         $slm_key = slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name);
-        $license_data = "\n" . __('Item Name: ', 'softwarelicensemanager') . $retrieved_product->name . " - " . __('License Key: ', 'softwarelicensemanager') . $slm_key;
+        $license_data = "\n" . __('Item Name: ', 'slm') . $retrieved_product->name . " - " . __('License Key: ', 'slm') . $slm_key;
         $slm_debug_logger->log_debug('Liense data: ' . $license_data);
         $license_data = apply_filters('slm_estore_item_license_data', $license_data);
     }
@@ -107,7 +107,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
 
 
     $fields = array();
-    $fields['license_key'] = $license_key = strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4,8), true) . time() )));;
+    $fields['license_key'] = uniqid($lic_key_prefix);
     $fields['lic_status'] = 'pending';
     $fields['first_name'] = $payment_data['first_name'];
     $fields['last_name'] = $payment_data['last_name'];
@@ -119,7 +119,6 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['date_expiry'] = $slm_date_of_expiry;
     $fields['product_ref'] = $prod_id;//WP eStore product ID
     $fields['subscr_id'] = isset($payment_data['subscr_id']) ? $payment_data['subscr_id'] : '';
-    $fields['lic_type'] = isset($payment_data['lic_type']) ? $payment_data['lic_type'] : '';
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
     $fields = array_filter($fields); //Remove any null values.
@@ -236,10 +235,11 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
     $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
     if ($product_meta) {
         //Found existing value so lets update it
-        $fields = array();
-        $fields['meta_key'] = 'slm_max_allowed_domains';
-        $fields['meta_value'] = $prod_dat_array['slm_max_allowed_domains'];
-        $result = $wpdb->update($product_meta_table_name, $fields, array('prod_id' => $prod_id));
+        //Better to do specific update (so the other meta values for example "download_limit_count" doesn't get set to empty).
+        $meta_key_name = "slm_max_allowed_domains";
+        $meta_value = $prod_dat_array['slm_max_allowed_domains'];
+        $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
+        $results = $wpdb->query($update_db_qry);
 
     } else {
         //No value for this field was there so lets insert one.
@@ -254,10 +254,11 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
     $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
     if ($product_meta) {
         //Found existing value so lets update it
-        $fields = array();
-        $fields['meta_key'] = 'slm_date_of_expiry';
-        $fields['meta_value'] = $prod_dat_array['slm_date_of_expiry'];
-        $result = $wpdb->update($product_meta_table_name, $fields, array('prod_id' => $prod_id));
+        //Better to do specific update (so the other meta values for example "download_limit_count" doesn't get set to empty).
+        $meta_key_name = "slm_date_of_expiry";
+        $meta_value = $prod_dat_array['slm_date_of_expiry'];
+        $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
+        $results = $wpdb->query($update_db_qry);
 
     } else {
         //No value for this field was there so lets insert one.
