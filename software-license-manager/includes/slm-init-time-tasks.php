@@ -35,7 +35,7 @@ class SLM_Init_Time_Tasks{
         
         if ( isset($options['enable_auto_key_expiry']) && '1' == $options['enable_auto_key_expiry']) {
             //Do the auto key expiry task
-            SLM_Debug_Logger::log_debug_st("SLM daily cronjob - auto expiry of license key is enabled.");
+            SLM_Debug_Logger::log_debug_st('SLM daily cronjob - auto expiry of license key is enabled.');
             SLM_Utility::do_auto_key_expiry();
         }
         

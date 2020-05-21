@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 //Short name/slug "SLM" or "slm"
 
-define('WP_LICENSE_MANAGER_VERSION', "4.4.1");
+define('WP_LICENSE_MANAGER_VERSION', '4.4.1');
 define('WP_LICENSE_MANAGER_DB_VERSION', '1.4');
 define('WP_LICENSE_MANAGER_FOLDER', dirname(plugin_basename(__FILE__)));
 define('WP_LICENSE_MANAGER_URL', plugins_url('',__FILE__));

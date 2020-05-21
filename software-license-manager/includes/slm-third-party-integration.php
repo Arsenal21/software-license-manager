@@ -8,15 +8,15 @@ add_filter('eStore_squeeze_form_email_body_filter', 'slm_handle_estore_email_bod
 
 function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) {
     global $slm_debug_logger, $wpdb;
-    $slm_debug_logger->log_debug("WP eStore integration - checking if a license key needs to be created for this transaction.");
-    $products_table_name = $wpdb->prefix . "wp_eStore_tbl";
-    $slm_data = "";
+    $slm_debug_logger->log_debug('WP eStore integration - checking if a license key needs to be created for this transaction.');
+    $products_table_name = "{$wpdb->prefix}wp_eStore_tbl";
+    $slm_data = '';
 
     //Check if this is a recurring payment.
     if ( function_exists('is_paypal_recurring_payment') ) {
         $recurring_payment = is_paypal_recurring_payment($payment_data);
         if ( $recurring_payment ) {
-            $slm_debug_logger->log_debug("This is a recurring payment. No need to create a new license key.");
+            $slm_debug_logger->log_debug('This is a recurring payment. No need to create a new license key.');
             do_action('slm_estore_recurring_payment_received', $payment_data, $cart_items);
             return $body;
         }
@@ -31,14 +31,14 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
         }
         $slm_debug_logger->log_debug('License Manager - Item Number: ' . $prod_id . ', Quantity: ' . $quantity . ', Item Name: ' . $item_name);
 
-        $retrieved_product = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$prod_id'", OBJECT);
+        $retrieved_product = $wpdb->get_row("SELECT * FROM {$products_table_name} WHERE id = '$prod_id'", OBJECT);
         $package_product = eStore_is_package_product($retrieved_product);
         if ($package_product) {
             $slm_debug_logger->log_debug('Checking license key generation for package/bundle product.');
             $product_ids = explode(',', $retrieved_product->product_download_url);
             foreach ($product_ids as $id) {
                 $id = trim($id);
-                $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM $products_table_name WHERE id = '$id'", OBJECT);
+                $retrieved_product_for_specific_id = $wpdb->get_row("SELECT * FROM {$products_table_name} WHERE id = '$id'", OBJECT);
                 //$slm_data .= slm_estore_check_and_generate_key($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name);
                 $slm_data .= slm_estore_check_and_create_key_for_qty($retrieved_product_for_specific_id, $payment_data, $cart_items, $item_name, $quantity);
             }
@@ -48,12 +48,12 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
         }
     }
 
-    $body = str_replace("{slm_data}", $slm_data, $body);
+    $body = str_replace('{slm_data}', $slm_data, $body);
     return $body;
 }
 
 function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity) {
-    $prod_key_data = "";
+    $prod_key_data = '';
     for ($i = 0; $i < $quantity; $i++) {
         $prod_key_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);
     }
@@ -86,7 +86,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
 
     //Lets check any product specific configuration.
     $prod_id = $retrieved_product->id;
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
+    $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
     if ($product_meta) {
         //Found product specific SLM config data.
         $max_domains = $product_meta->meta_value;
@@ -94,7 +94,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
         //Use the default value from settings (the $max_domains variable contains the default value already).
     }
     //Lets check if any product specific expiry date is set
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+    $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
     if ($product_meta) {
         //Found product specific SLM config data.
         $num_days_before_expiry = $product_meta->meta_value;
@@ -115,7 +115,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['company_name'] = $payment_data['company_name'];
     $fields['txn_id'] = $payment_data['txn_id'];
     $fields['max_allowed_domains'] = $max_domains;
-    $fields['date_created'] = date("Y-m-d"); //Today's date
+    $fields['date_created'] = date('Y-m-d'); //Today's date
     $fields['date_expiry'] = $slm_date_of_expiry;
     $fields['product_ref'] = $prod_id;//WP eStore product ID
     $fields['subscr_id'] = isset($payment_data['subscr_id']) ? $payment_data['subscr_id'] : '';
@@ -129,11 +129,11 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     if (!$result) {
         $slm_debug_logger->log_debug('Notice! initial database table insert failed on license key table (User Email: ' . $fields['email'] . '). Trying again by converting charset', true);
         //Convert the default PayPal IPN charset to UTF-8 format
-        $first_name = mb_convert_encoding($fields['first_name'], "UTF-8", "windows-1252");
+        $first_name = mb_convert_encoding($fields['first_name'], 'UTF-8', 'windows-1252');
         $fields['first_name'] = esc_sql($first_name);
-        $last_name = mb_convert_encoding($fields['last_name'], "UTF-8", "windows-1252");
+        $last_name = mb_convert_encoding($fields['last_name'], 'UTF-8', 'windows-1252');
         $fields['last_name'] = esc_sql($last_name);
-        $company_name = mb_convert_encoding($fields['company_name'], "UTF-8", "windows-1252");
+        $company_name = mb_convert_encoding($fields['company_name'], 'UTF-8', 'windows-1252');
         $fields['company_name'] = esc_sql($company_name);
 
         $result = $wpdb->insert($tbl_name, $fields);
@@ -161,25 +161,25 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
 
     if (empty($prod_id)) {
         //New product add
-        $slm_max_allowed_domains = "";
-        $slm_date_of_expiry = "";
+        $slm_max_allowed_domains = '';
+        $slm_date_of_expiry = '';
     } else {
         //Existing product edit
 
         //Retrieve the max domain value
-        $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
+        $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
         if ($product_meta) {
             $slm_max_allowed_domains = $product_meta->meta_value;
         } else {
-            $slm_max_allowed_domains = "";
+            $slm_max_allowed_domains = '';
         }
 
         //Retrieve the expiry date value
-        $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+        $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
         if ($product_meta) {
             $slm_date_of_expiry = $product_meta->meta_value;
         } else {
-            $slm_date_of_expiry = "";
+            $slm_date_of_expiry = '';
         }
 
     }
@@ -232,13 +232,13 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
     //Find the existing value for the max domains field (for the given product)
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_max_allowed_domains'", OBJECT);
+    $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '{$prod_id}' AND meta_key='slm_max_allowed_domains'", OBJECT);
     if ($product_meta) {
         //Found existing value so lets update it
         //Better to do specific update (so the other meta values for example "download_limit_count" doesn't get set to empty).
-        $meta_key_name = "slm_max_allowed_domains";
+        $meta_key_name = 'slm_max_allowed_domains';
         $meta_value = $prod_dat_array['slm_max_allowed_domains'];
-        $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
+        $update_db_qry = "UPDATE {$product_meta_table_name} SET meta_value='{$meta_value}' WHERE prod_id='{$prod_id}' AND meta_key='{$meta_key_name}'";
         $results = $wpdb->query($update_db_qry);
 
     } else {
@@ -251,13 +251,13 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
     }
 
     //Find the existing value for the expiry date field (for the given product)
-    $product_meta = $wpdb->get_row("SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT);
+    $product_meta = $wpdb->get_row("SELECT * FROM {$product_meta_table_name} WHERE prod_id = '{$prod_id}' AND meta_key='slm_date_of_expiry'", OBJECT);
     if ($product_meta) {
         //Found existing value so lets update it
         //Better to do specific update (so the other meta values for example "download_limit_count" doesn't get set to empty).
-        $meta_key_name = "slm_date_of_expiry";
+        $meta_key_name = 'slm_date_of_expiry';
         $meta_value = $prod_dat_array['slm_date_of_expiry'];
-        $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
+        $update_db_qry = "UPDATE {$product_meta_table_name} SET meta_value='{$meta_value}' WHERE prod_id='{$prod_id}' AND meta_key='{$meta_key_name}'";
         $results = $wpdb->query($update_db_qry);
 
     } else {

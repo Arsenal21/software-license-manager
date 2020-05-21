@@ -36,7 +36,7 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key_for_creation(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license creation (slm_create_new) request received.");
+            $slm_debug_logger->log_debug('API - license creation (slm_create_new) request received.');
             
             //Action hook
             do_action('slm_api_listener_slm_create_new');            
@@ -58,8 +58,8 @@ class SLM_API_Listener {
             } else {
                 $fields['max_allowed_domains'] = strip_tags($_REQUEST['max_allowed_domains']);
             }
-            $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
-            $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
+            $fields['date_created'] = isset($_REQUEST['date_created']) ? strip_tags($_REQUEST['date_created']) : date('Y-m-d');
+            $fields['date_expiry'] = isset($_REQUEST['date_expiry']) ? strip_tags($_REQUEST['date_expiry']) : '';
             $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
 
             global $wpdb;
@@ -91,7 +91,7 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license activation (slm_activate) request received.");
+            $slm_debug_logger->log_debug('API - license activation (slm_activate) request received.');
             
             //Action hook
             do_action('slm_api_listener_slm_activate');             
@@ -106,10 +106,10 @@ class SLM_API_Listener {
             $tbl_name = SLM_TBL_LICENSE_KEYS;
             $reg_table = SLM_TBL_LIC_DOMAIN;
             $key = $fields['lic_key'];
-            $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+            $sql_prep1 = $wpdb->prepare("SELECT * FROM {$tbl_name} WHERE license_key = %s", $key);
             $retLic = $wpdb->get_row($sql_prep1, OBJECT);
 
-            $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
+            $sql_prep2 = $wpdb->prepare("SELECT * FROM {$reg_table} WHERE lic_key = %s", $key);
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {
                 if ('blocked' === $retLic->lic_status) {
@@ -135,7 +135,7 @@ class SLM_API_Listener {
                     $fields['lic_key_id'] = $retLic->id;
                     $wpdb->insert($reg_table, $fields);
                     
-                    $slm_debug_logger->log_debug("Updating license key status to active.");
+                    $slm_debug_logger->log_debug('Updating license key status to active.');
                     $data = array('lic_status' => 'active');
                     $where = array('id' => $retLic->id);
                     $updated = $wpdb->update($tbl_name, $data, $where);
@@ -171,7 +171,7 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license deactivation (slm_deactivate) request received.");
+            $slm_debug_logger->log_debug('API - license deactivation (slm_deactivate) request received.');
             
             //Action hook
             do_action('slm_api_listener_slm_deactivate');            
@@ -186,10 +186,10 @@ class SLM_API_Listener {
 
             global $wpdb;
             $registered_dom_table = SLM_TBL_LIC_DOMAIN;
-            $sql_prep = $wpdb->prepare("DELETE FROM $registered_dom_table WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
+            $sql_prep = $wpdb->prepare("DELETE FROM {$registered_dom_table} WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
             $delete = $wpdb->query($sql_prep);
             if (false === $delete) {
-                $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
+                $slm_debug_logger->log_debug('Error - failed to delete the registered domain from the database.');
             } else if (0 == $delete) {
                 $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
                 SLM_API_Utility::output_api_response($args);
@@ -207,11 +207,11 @@ class SLM_API_Listener {
 
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
-            $slm_debug_logger->log_debug("API - license check (slm_check) request received.");
+            $slm_debug_logger->log_debug('API - license check (slm_check) request received.');
             
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key']);
+            $slm_debug_logger->log_debug('License key: ' . $fields['lic_key']);
 
             //Action hook
             do_action('slm_api_listener_slm_check');
@@ -220,10 +220,10 @@ class SLM_API_Listener {
             $tbl_name = SLM_TBL_LICENSE_KEYS;
             $reg_table = SLM_TBL_LIC_DOMAIN;
             $key = $fields['lic_key'];
-            $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+            $sql_prep1 = $wpdb->prepare("SELECT * FROM {$tbl_name} WHERE license_key = %s", $key);
             $retLic = $wpdb->get_row($sql_prep1, OBJECT);
 
-            $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
+            $sql_prep2 = $wpdb->prepare("SELECT * FROM {$reg_table} WHERE lic_key = %s", $key);
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {//A license key exists
                 $args = apply_filters( 'slm_check_response_args', array(

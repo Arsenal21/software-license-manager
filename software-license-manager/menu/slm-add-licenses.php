@@ -16,7 +16,7 @@ function wp_lic_mgr_add_licenses_menu() {
     $created_date = '';
     $renewed_date = '';
     $expiry_date = '';
-    $current_date = (date ("Y-m-d"));
+    $current_date = (date ('Y-m-d'));
     $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
     $product_ref = '';
     $subscr_id = '';
@@ -32,7 +32,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $errors = '';
         $id = $_GET['edit_record'];
         $lk_table = SLM_TBL_LICENSE_KEYS;
-        $sql_prep = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
+        $sql_prep = $wpdb->prepare("SELECT * FROM {$lk_table} WHERE id = %s", $id);
         $record = $wpdb->get_row($sql_prep, OBJECT);
         $license_key = $record->license_key;
         $max_domains = $record->max_allowed_domains;
@@ -56,7 +56,7 @@ function wp_lic_mgr_add_licenses_menu() {
         //Check nonce
         if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )) {
             //Nonce check failed.
-            wp_die("Error! Nonce verification failed for license save action.");
+            wp_die('Error! Nonce verification failed for license save action.');
         }
 
         do_action('slm_add_edit_interface_save_submission');
@@ -104,12 +104,12 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['product_ref'] = $product_ref;
         $fields['subscr_id'] = $subscr_id;
 
-        $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
+        $id = isset($_POST['edit_record']) ? $_POST['edit_record'] : '';
         $lk_table = SLM_TBL_LICENSE_KEYS;
         if (empty($id)) {//Insert into database
             $result = $wpdb->insert( $lk_table, $fields);
             $id = $wpdb->insert_id;
-            if ($result === false) {
+            if (false === $result) {
                 $errors .= __('Record could not be inserted into the database!', 'slm');
             }
         } else { //Update record
@@ -122,7 +122,7 @@ function wp_lic_mgr_add_licenses_menu() {
         }
 
         if (empty($errors)) {
-            $message = "Record successfully saved!";
+            $message = 'Record successfully saved!';
             echo '<div id="message" class="updated fade"><p>';
             echo $message;
             echo '</p></div>';

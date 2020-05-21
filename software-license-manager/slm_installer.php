@@ -9,12 +9,12 @@ $lic_domain_table = SLM_TBL_LIC_DOMAIN;
 
 $charset_collate = '';
 if (!empty($wpdb->charset)) {
-    $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+    $charset_collate = "DEFAULT CHARACTER SET {$wpdb->charset}";
 } else {
-    $charset_collate = "DEFAULT CHARSET=utf8";
+    $charset_collate = 'DEFAULT CHARSET=utf8';
 }
 if (!empty($wpdb->collate)) {
-    $charset_collate .= " COLLATE $wpdb->collate";
+    $charset_collate .= " COLLATE {$wpdb->collate}";
 }
         
 $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
