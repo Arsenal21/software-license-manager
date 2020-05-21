@@ -1,19 +1,19 @@
 <?php
 //***** Installer *****
 global $wpdb;
-require_once(ABSPATH . 'wp-admin/includes/upgrade.php');	
+require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 //***Installer variables***
 $lic_key_table = SLM_TBL_LICENSE_KEYS;
 $lic_domain_table = SLM_TBL_LIC_DOMAIN;
 
 $charset_collate = '';
-if (!empty($wpdb->charset)){
+if (!empty($wpdb->charset)) {
     $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-}else{
+} else {
     $charset_collate = "DEFAULT CHARSET=utf8";
 }
-if (!empty($wpdb->collate)){
+if (!empty($wpdb->collate)) {
     $charset_collate .= " COLLATE $wpdb->collate";
 }
         

@@ -46,7 +46,7 @@ function sample_license_management_page() {
         $response = wp_remote_get($query, array('timeout' => 20, 'sslverify' => false));
 
         // Check for error in the response
-        if (is_wp_error($response)){
+        if (is_wp_error($response)) {
             echo 'Unexpected Error! The query returned with an error.';
         }
 
@@ -58,15 +58,14 @@ function sample_license_management_page() {
         // TODO - Do something with it.
         //var_dump($license_data);//uncomment it to look at the data
         
-        if('success' === $license_data->result){//Success was returned for the license activation
+        if ('success' === $license_data->result) {//Success was returned for the license activation
             
             //Uncomment the following line to see the message that returned from the license server
             echo '<br />The following message was returned from the server: '.$license_data->message;
             
             //Save the license key in the options table
             update_option('sample_license_key', $license_key); 
-        }
-        else{
+        } else {
             //Show error to the user. Probably entered incorrect license key.
             
             //Uncomment the following line to see the message that returned from the license server
@@ -94,7 +93,7 @@ function sample_license_management_page() {
         $response = wp_remote_get($query, array('timeout' => 20, 'sslverify' => false));
 
         // Check for error in the response
-        if (is_wp_error($response)){
+        if (is_wp_error($response)) {
             echo 'Unexpected Error! The query returned with an error.';
         }
 
@@ -106,15 +105,14 @@ function sample_license_management_page() {
         // TODO - Do something with it.
         //var_dump($license_data);//uncomment it to look at the data
         
-        if('success' === $license_data->result){//Success was returned for the license activation
+        if ('success' === $license_data->result) {//Success was returned for the license activation
             
             //Uncomment the following line to see the message that returned from the license server
             echo '<br />The following message was returned from the server: '.$license_data->message;
             
             //Remove the license key from the options table. It will need to be activated again.
             update_option('sample_license_key', '');
-        }
-        else{
+        } else {
             //Show error to the user. Probably entered incorrect license key.
             
             //Uncomment the following line to see the message that returned from the license server

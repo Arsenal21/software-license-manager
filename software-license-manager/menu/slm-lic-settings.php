@@ -14,7 +14,7 @@ function wp_lic_mgr_settings_menu() {
 
 function wp_lic_mgr_general_settings() {
 
-    if (isset($_REQUEST['slm_reset_log'])){
+    if (isset($_REQUEST['slm_reset_log'])) {
         //$slm_logger = new SLM_Debug_Logger();
         global $slm_debug_logger;
         $slm_debug_logger->reset_log_file("log.txt");

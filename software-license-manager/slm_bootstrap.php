@@ -8,7 +8,7 @@ Author URI: https://www.tipsandtricks-hq.com/
 Description: Software license management solution for your web applications (WordPress plugins, Themes, PHP based membership script etc.)
 */
 
-if(!defined('ABSPATH')){
+if (!defined('ABSPATH')) {
     exit; //Exit if accessed directly
 }
 
@@ -25,7 +25,7 @@ define('SLM_WP_SITE_URL', site_url());
 include_once('slm_plugin_core.php');
 
 //Activation handler
-function slm_activate_handler(){
+function slm_activate_handler() {
     //Do installer task
     slm_db_install();
 
@@ -37,7 +37,7 @@ function slm_activate_handler(){
 register_activation_hook(__FILE__,'slm_activate_handler');
 
 //Deactivation handler
-function slm_deactivate_handler(){
+function slm_deactivate_handler() {
     //Clear the daily cron event
     wp_clear_scheduled_hook('slm_daily_cron_event');
 

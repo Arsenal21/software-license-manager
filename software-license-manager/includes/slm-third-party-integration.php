@@ -15,7 +15,7 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     //Check if this is a recurring payment.
     if ( function_exists('is_paypal_recurring_payment') ) {
         $recurring_payment = is_paypal_recurring_payment($payment_data);
-        if( $recurring_payment ){
+        if ( $recurring_payment ) {
             $slm_debug_logger->log_debug("This is a recurring payment. No need to create a new license key.");
             do_action('slm_estore_recurring_payment_received', $payment_data, $cart_items);
             return $body;
@@ -26,7 +26,7 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
         $prod_id = $current_cart_item['item_number'];
         $item_name = $current_cart_item['item_name'];
         $quantity = $current_cart_item['quantity'];
-        if(empty($quantity)){
+        if (empty($quantity)) {
             $quantity = 1;
         }
         $slm_debug_logger->log_debug('License Manager - Item Number: ' . $prod_id . ', Quantity: ' . $quantity . ', Item Name: ' . $item_name);
@@ -52,7 +52,7 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     return $body;
 }
 
-function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity){
+function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity) {
     $prod_key_data = "";
     for ($i = 0; $i < $quantity; $i++) {
         $prod_key_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);

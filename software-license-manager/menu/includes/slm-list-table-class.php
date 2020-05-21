@@ -149,7 +149,7 @@ class WP_License_Mgr_List_Table
 	 * @return array
 	 */
 	function get_pagination_arg( $key ) {
-		if ( 'page' == $key )
+		if ( 'page' === $key )
 			return $this->get_pagenum();
 
 		if ( isset( $this->_pagination_args[$key] ) )
@@ -281,7 +281,7 @@ class WP_License_Mgr_List_Table
 		echo "<option value='-1' selected='selected'>" . __( 'Bulk Actions' ) . "</option>\n";
 
 		foreach ( $this->_actions as $name => $title ) {
-			$class = 'edit' == $name ? ' class="hide-if-no-js"' : '';
+			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
 
 			echo "\t<option value='$name'$class>$title</option>\n";
 		}
@@ -400,7 +400,7 @@ class WP_License_Mgr_List_Table
 		<div class="view-switch">
 <?php
 			foreach ( $modes as $mode => $title ) {
-				$class = ( $current_mode == $mode ) ? 'class="current"' : '';
+				$class = ( $current_mode === $mode ) ? 'class="current"' : '';
 				echo "<a href='" . esc_url( add_query_arg( 'mode', $mode, $_SERVER['REQUEST_URI'] ) ) . "' $class><img id='view-switch-$mode' src='" . esc_url( includes_url( 'images/blank.gif' ) ) . "' width='20' height='20' title='$title' alt='$title' /></a>\n";
 			}
 		?>
@@ -440,7 +440,7 @@ class WP_License_Mgr_List_Table
 	function get_pagenum() {
 		$pagenum = isset( $_REQUEST['paged'] ) ? absint( $_REQUEST['paged'] ) : 0;
 
-		if( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] )
+		if ( isset( $this->_pagination_args['total_pages'] ) && $pagenum > $this->_pagination_args['total_pages'] )
 			$pagenum = $this->_pagination_args['total_pages'];
 
 		return max( 1, $pagenum );
@@ -504,7 +504,7 @@ class WP_License_Mgr_List_Table
 			'&lsaquo;'
 		);
 
-		if ( 'bottom' == $which )
+		if ( 'bottom' === $which )
 			$html_current_page = $current;
 		else
 			$html_current_page = sprintf( "<input class='current-page' title='%s' type='text' name='paged' value='%s' size='%d' />",
@@ -643,7 +643,7 @@ class WP_License_Mgr_List_Table
 		else
 			$current_orderby = '';
 
-		if ( isset( $_GET['order'] ) && 'desc' == $_GET['order'] )
+		if ( isset( $_GET['order'] ) && 'desc' === $_GET['order'] )
 			$current_order = 'desc';
 		else
 			$current_order = 'asc';
@@ -664,7 +664,7 @@ class WP_License_Mgr_List_Table
 
 			$style = ' style="' . $style . '"';
 
-			if ( 'cb' == $column_key )
+			if ( 'cb' === $column_key )
 				$class[] = 'check-column';
 			elseif ( in_array( $column_key, array( 'posts', 'comments', 'links' ) ) )
 				$class[] = 'num';
@@ -672,8 +672,8 @@ class WP_License_Mgr_List_Table
 			if ( isset( $sortable[$column_key] ) ) {
 				list( $orderby, $desc_first ) = $sortable[$column_key];
 
-				if ( $current_orderby == $orderby ) {
-					$order = 'asc' == $current_order ? 'desc' : 'asc';
+				if ( $current_orderby === $orderby ) {
+					$order = 'asc' === $current_order ? 'desc' : 'asc';
 					$class[] = 'sorted';
 					$class[] = $current_order;
 				} else {
@@ -746,7 +746,7 @@ class WP_License_Mgr_List_Table
 	 * @access protected
 	 */
 	function display_tablenav( $which ) {
-		if ( 'top' == $which )
+		if ( 'top' === $which )
 			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
 ?>
 	<div class="tablenav <?php echo esc_attr( $which ); ?>">
@@ -837,7 +837,7 @@ class WP_License_Mgr_List_Table
 
 			$attributes = "$class$style";
 
-			if ( 'cb' == $column_name ) {
+			if ( 'cb' === $column_name ) {
 				echo '<th scope="row" class="check-column">';
 				echo $this->column_cb( $item );
 				echo '</th>';

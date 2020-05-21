@@ -54,7 +54,7 @@ function wp_lic_mgr_add_licenses_menu() {
     if (isset($_POST['save_record'])) {
 
         //Check nonce
-        if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )){
+        if ( !isset($_POST['slm_add_edit_nonce_val']) || !wp_verify_nonce($_POST['slm_add_edit_nonce_val'], 'slm_add_edit_nonce_action' )) {
             //Nonce check failed.
             wp_die("Error! Nonce verification failed for license save action.");
         }
@@ -77,13 +77,13 @@ function wp_lic_mgr_add_licenses_menu() {
         $product_ref = $_POST['product_ref'];
         $subscr_id = $_POST['subscr_id'];
 
-        if(empty($created_date)){
+        if (empty($created_date)) {
             $created_date = $current_date;
         }
-        if(empty($renewed_date)){
+        if (empty($renewed_date)) {
             $renewed_date = $current_date;
         }
-        if(empty($expiry_date)){
+        if (empty($expiry_date)) {
             $expiry_date = $current_date_plus_1year;
         }
 
@@ -109,24 +109,24 @@ function wp_lic_mgr_add_licenses_menu() {
         if (empty($id)) {//Insert into database
             $result = $wpdb->insert( $lk_table, $fields);
             $id = $wpdb->insert_id;
-            if($result === false){
+            if ($result === false) {
                 $errors .= __('Record could not be inserted into the database!', 'slm');
             }
         } else { //Update record
             $where = array('id'=>$id);
             $updated = $wpdb->update($lk_table, $fields, $where);
-            if($updated === false){
+            if (false === $updated) {
                 //TODO - log error
                 $errors .= __('Update of the license key table failed!', 'slm');
             }
         }
 
-        if(empty($errors)){
+        if (empty($errors)) {
             $message = "Record successfully saved!";
             echo '<div id="message" class="updated fade"><p>';
             echo $message;
             echo '</p></div>';
-        }else{
+        } else {
             echo '<div id="message" class="error">' . $errors . '</div>';
         }
 
@@ -199,7 +199,7 @@ function wp_lic_mgr_add_licenses_menu() {
                     if ($id != '') {
                         echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
                     } else {
-                        if(!isset($editing_record)){//Create an empty object
+                        if (!isset($editing_record)) {//Create an empty object
                             $editing_record = new stdClass();
                         }
                         //Auto generate unique key
@@ -227,10 +227,10 @@ function wp_lic_mgr_add_licenses_menu() {
                         <th scope="row">License Status</th>
                         <td>
                             <select name="lic_status">
-                                <option value="pending" <?php if ($license_status == 'pending') echo 'selected="selected"'; ?> >Pending</option>
-                                <option value="active" <?php if ($license_status == 'active') echo 'selected="selected"'; ?> >Active</option>
-                                <option value="blocked" <?php if ($license_status == 'blocked') echo 'selected="selected"'; ?> >Blocked</option>
-                                <option value="expired" <?php if ($license_status == 'expired') echo 'selected="selected"'; ?> >Expired</option>
+                                <option value="pending" <?php if ('pending' === $license_status) echo 'selected="selected"'; ?> >Pending</option>
+                                <option value="active" <?php if ('active' === $license_status) echo 'selected="selected"'; ?> >Active</option>
+                                <option value="blocked" <?php if ('blocked' === $license_status) echo 'selected="selected"'; ?> >Blocked</option>
+                                <option value="expired" <?php if ('expired' === $license_status) echo 'selected="selected"'; ?> >Expired</option>
                             </select>
                         </td></tr>
 
@@ -337,7 +337,7 @@ function wp_lic_mgr_add_licenses_menu() {
                 <?php
                 $data = array('row_id' => $id, 'key' => $license_key);
                 $extra_output = apply_filters('slm_add_edit_interface_above_submit','', $data);
-                if(!empty($extra_output)){
+                if (!empty($extra_output)) {
                     echo $extra_output;
                 }
                 ?>
@@ -374,7 +374,7 @@ function wp_lic_mgr_add_licenses_menu() {
 			$.get(
 				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
 				function( data ) {
-					if ( 'success' == data ) {
+					if ( 'success' === data ) {
 						$msg.addClass( 'success' ).html( 'Deleted' );
 
 						var $tr = $link.parents( 'tr:first' );

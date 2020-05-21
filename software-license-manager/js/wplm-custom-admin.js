@@ -1,7 +1,7 @@
-jQuery(document).ready(function($){
+jQuery(function(){
     //Add date picker listener on date fields
-    if ($.fn.datepicker){
-            $('.wplm_pick_date').datepicker({
+    if (jQuery.fn.datepicker) {
+        jQuery('.wplm_pick_date').datepicker({
             dateFormat : 'yy-mm-dd'
         });
     }

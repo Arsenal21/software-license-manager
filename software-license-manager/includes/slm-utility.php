@@ -12,15 +12,15 @@ class SLM_Utility {
         
         $sql_prep = $wpdb->prepare("SELECT * FROM $tbl_name WHERE lic_status !=%s", 'expired');//Load the non-expired keys
         $licenses = $wpdb->get_results($sql_prep, OBJECT);
-        if(!$licenses){
+        if (!$licenses) {
             SLM_Debug_Logger::log_debug_st("do_auto_key_expiry() - no license keys found.");
             return false;
         }
 
-        foreach($licenses as $license){
+        foreach ($licenses as $license) {
             $key = $license->license_key;
             $expiry_date = $license->date_expiry;
-            if ($expiry_date == '0000-00-00'){
+            if ('0000-00-00' === $expiry_date) {
                 SLM_Debug_Logger::log_debug_st("This key (".$key.") doesn't have a valid expiry date set. The expiry of this key will not be checked.");
                 continue;
             }

@@ -27,7 +27,7 @@ class SLM_API_Listener {
     }
 
     function creation_api_listener() {
-        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_create_new') {
+        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_create_new') {
             //Handle the licene creation API query
             global $slm_debug_logger;
 
@@ -42,9 +42,9 @@ class SLM_API_Listener {
             do_action('slm_api_listener_slm_create_new');            
 
             $fields = array();
-            if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
+            if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])) {
                 $fields['license_key'] = strip_tags($_REQUEST['license_key']);//Use the key you pass via the request
-            }else{
+            } else {
                 $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
             }
             $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
@@ -85,7 +85,7 @@ class SLM_API_Listener {
      */
 
     function activation_api_listener() {
-        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_activate') {
+        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_activate') {
             //Handle the license activation API query
             global $slm_debug_logger;
 
@@ -112,22 +112,22 @@ class SLM_API_Listener {
             $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {
-                if ($retLic->lic_status == 'blocked') {
+                if ('blocked' === $retLic->lic_status) {
                     $args = (array('result' => 'error', 'message' => 'Your License key is blocked', 'error_code' => SLM_Error_Codes::LICENSE_BLOCKED));
                     SLM_API_Utility::output_api_response($args);
-                } elseif ($retLic->lic_status == 'expired') {
+                } elseif ('expired' === $retLic->lic_status) {
                     $args = (array('result' => 'error', 'message' => 'Your License key has expired', 'error_code' => SLM_Error_Codes::LICENSE_EXPIRED));
                     SLM_API_Utility::output_api_response($args);
                 }
 
                 if (count($reg_domains) < floor($retLic->max_allowed_domains)) {
                     foreach ($reg_domains as $reg_domain) {
-                        if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_domain->registered_domain)) {
+                        if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) === $reg_domain->registered_domain)) {
                             $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim(strip_tags($_REQUEST['migrate_from']))));
                             $args = (array('result' => 'success', 'message' => 'Registered domain has been updated'));
                             SLM_API_Utility::output_api_response($args);
                         }
-                        if ($fields['registered_domain'] == $reg_domain->registered_domain) {
+                        if ($fields['registered_domain'] === $reg_domain->registered_domain) {
                             $args = (array('result' => 'error', 'message' => 'License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE));
                             SLM_API_Utility::output_api_response($args);
                         }
@@ -146,7 +146,7 @@ class SLM_API_Listener {
 
                     //Lets loop through the domains to see if it is being used on an existing domain or not.
                     foreach ($reg_domains as $reg_domain) {
-                        if ($fields['registered_domain'] == $reg_domain->registered_domain) {
+                        if ($fields['registered_domain'] === $reg_domain->registered_domain) {
                             //Not used on an existing domain. Return error: LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED
                             $args = (array('result' => 'error', 'message' => 'Reached maximum activation. License key already in use on ' . $reg_domain->registered_domain, 'error_code' => SLM_Error_Codes::LICENSE_IN_USE_ON_DOMAIN_AND_MAX_REACHED));
                             SLM_API_Utility::output_api_response($args);
@@ -165,7 +165,7 @@ class SLM_API_Listener {
     }
 
     function deactivation_api_listener() {
-        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_deactivate') {
+        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_deactivate') {
             //Handle the license deactivation API query
             global $slm_debug_logger;
 
@@ -188,9 +188,9 @@ class SLM_API_Listener {
             $registered_dom_table = SLM_TBL_LIC_DOMAIN;
             $sql_prep = $wpdb->prepare("DELETE FROM $registered_dom_table WHERE lic_key=%s AND registered_domain=%s", $license_key, $registered_domain);
             $delete = $wpdb->query($sql_prep);
-            if ($delete === false) {
+            if (false === $delete) {
                 $slm_debug_logger->log_debug("Error - failed to delete the registered domain from the database.");
-            } else if ($delete == 0) {
+            } else if (0 == $delete) {
                 $args = (array('result' => 'error', 'message' => 'The license key on this domain is already inactive', 'error_code' => SLM_Error_Codes::DOMAIN_ALREADY_INACTIVE));
                 SLM_API_Utility::output_api_response($args);
             } else {
@@ -201,7 +201,7 @@ class SLM_API_Listener {
     }
 
     function check_api_listener() {
-        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) == 'slm_check') {
+        if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_check') {
             //Handle the license check API query
             global $slm_debug_logger;
 
