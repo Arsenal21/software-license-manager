@@ -83,7 +83,7 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
     function process_bulk_action() {
-        if ('delete'===$this->current_action()) {
+        if ('delete' === $this->current_action()) {
             //Process delete bulk actions
             if (!isset($_REQUEST['item'])) {
                 $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';

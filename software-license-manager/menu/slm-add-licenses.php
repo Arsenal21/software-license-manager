@@ -352,26 +352,26 @@ function wp_lic_mgr_add_licenses_menu() {
     </div>
 
 	<script type="text/javascript">
-	jQuery( function( $ ) {
-		$( '.del' ).on( 'click', function( e ) {
+	jQuery( function() {
+		jQuery( '.del' ).on( 'click', function( e ) {
 			e.preventDefault();
 
-			var $link = $( this );
+			var $link = jQuery( this );
 
 			if ( ! confirm( 'Are you sure you want to remove this domain?' ) ) {
 				$link.blur();
 				return false;
 			}
 
-			var $spinner = $( '<span />' ).addClass( 'spinner' ).css( 'visibility', 'visible' ).css( 'margin', '0 0 0 2px' );
+			var $spinner = jQuery( '<span />' ).addClass( 'spinner' ).css( 'visibility', 'visible' ).css( 'margin', '0 0 0 2px' );
 			$link.before( $spinner ).hide();
 
 			var id = $link.attr( 'id' ),
-				$msg = $( '#reg_del_msg' );
+				$msg = jQuery( '#reg_del_msg' );
 
 			$msg.html( 'Loading ...' ).show();
 
-			$.get(
+			jQuery.get(
 				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
 				function( data ) {
 					if ( 'success' === data ) {
@@ -382,14 +382,14 @@ function wp_lic_mgr_add_licenses_menu() {
 							$tr.remove();
 
 							// Check if any more rows exist.
-							if ( ! $( '.domain-license-table tbody tr' ).length ) {
-								var $none  =$( '<p />' ).html( 'No domains activated.' ).hide();
-								$( '.domain-licenses' ).after( $none ).hide();
+							if ( ! jQuery( '.domain-license-table tbody tr' ).length ) {
+								var $none = jQuery( '<p />' ).html( 'No domains activated.' ).hide();
+								jQuery( '.domain-licenses' ).after( $none ).hide();
 								$none.fadeIn( 'fast' );
 							} else {
 								// Restripe table.
-								$( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
-								$( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
+								jQuery( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
+								jQuery( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
 							}
 						} );
 					} else {
