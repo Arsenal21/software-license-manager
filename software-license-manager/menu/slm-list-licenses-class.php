@@ -6,7 +6,7 @@ if (!class_exists('WP_List_Table')) {
 
 class WPLM_List_Licenses extends WP_List_Table {
 
-    function __construct(){
+    function __construct() {
         global $status, $page;
 
         //Set parent defaults
@@ -18,11 +18,11 @@ class WPLM_List_Licenses extends WP_List_Table {
 
     }
 
-    function column_default($item, $column_name){
-    	return $item[$column_name];
+    function column_default($item, $column_name) {
+        return $item[$column_name];
     }
 
-    function column_id($item){
+    function column_id($item) {
         $row_id = $item['id'];
         $actions = array(
             'edit' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id),
@@ -35,7 +35,7 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
 
-    function column_cb($item){
+    function column_cb($item) {
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label
@@ -43,12 +43,8 @@ class WPLM_List_Licenses extends WP_List_Table {
        );
     }
 
-    function column_active($item){
-        if ($item['active'] == 1){
-            return 'active';
-        } else{
-            return 'inactive';
-        }
+    function column_active($item) {
+        return 1 == $item['active'] ? 'active' : 'inactive';
     }
 
 	function get_columns() {
@@ -87,20 +83,19 @@ class WPLM_List_Licenses extends WP_List_Table {
     }
 
     function process_bulk_action() {
-        if('delete'===$this->current_action())
-        {
+        if ('delete' === $this->current_action()) {
             //Process delete bulk actions
-            if(!isset($_REQUEST['item'])){
+            if (!isset($_REQUEST['item'])) {
                 $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
                 echo '<div id="message" class="error fade">'.$error_msg.'</div>';
                 return;
-            }else {
-        	$nvp_key = $this->_args['singular'];
-        	$records_to_delete = $_GET[$nvp_key];
-        	foreach ($records_to_delete as $row){
+            } else {
+                $nvp_key = $this->_args['singular'];
+                $records_to_delete = $_GET[$nvp_key];
+                foreach ($records_to_delete as $row) {
                     SLM_Utility::delete_license_key_by_row_id($row);
-        	}
-        	echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
+                }
+                echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
             }
         }
     }
@@ -140,8 +135,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 		 * Ordering parameters:
 		 * Parameters that are going to be used to order the result.
 		 */
-                $orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
-                $order = !empty($_GET["order"]) ? strip_tags($_GET["order"]) : 'DESC';
+		$orderby = !empty($_GET['orderby']) ? strip_tags($_GET['orderby']) : 'id';
+		$order = !empty($_GET['order']) ? strip_tags($_GET['order']) : 'DESC';
 
 		if ( ! empty( $_POST['slm_search'] ) ) {
 			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );

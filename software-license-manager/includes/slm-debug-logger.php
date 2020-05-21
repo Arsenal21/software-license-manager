@@ -26,7 +26,7 @@ class SLM_Debug_Logger
         $this->log_folder_path = WP_LICENSE_MANAGER_PATH . '/logs';
         //Check config and if debug is enabled then set the enabled flag to true
         $options = get_option('slm_plugin_options');
-        if(!empty($options['enable_debug'])){//Debugging is enabled
+        if (!empty($options['enable_debug'])) {//Debugging is enabled
             $this->debug_enabled = true;            
         }
     }
@@ -39,10 +39,9 @@ class SLM_Debug_Logger
     function get_debug_status($level)
     {
         $size = count($this->debug_status);
-        if($level >= $size){
+        if ($level >= $size) {
             return 'UNKNOWN';
-        }
-        else{
+        } else {
             return $this->debug_status[$level];
         }
     }
@@ -57,7 +56,7 @@ class SLM_Debug_Logger
     
     function reset_log_file($file_name='')
     {
-        if(empty($file_name)){
+        if (empty($file_name)) {
             $file_name = $this->default_log_file;
         }
         $debug_log_file = $this->log_folder_path.'/'.$file_name;
@@ -69,9 +68,9 @@ class SLM_Debug_Logger
     
     function append_to_file($content,$file_name)
     {
-        if(empty($file_name))$file_name = $this->default_log_file;
+        if (empty($file_name))$file_name = $this->default_log_file;
         $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $fp=fopen($debug_log_file,'a');
+        $fp=fopen($debug_log_file, 'a');
         fwrite($fp, $content);
         fclose($fp);
     }
@@ -102,7 +101,7 @@ class SLM_Debug_Logger
     static function log_debug_st($message,$level=0,$section_break=false,$file_name='')
     {
         $options = get_option('slm_plugin_options');
-        if(empty($options['enable_debug'])){//Debugging is disabled
+        if (empty($options['enable_debug'])) {//Debugging is disabled
            return;
         }
         $content = '['.date('m/d/Y g:i A').'] - STATUS : '. $message . "\n";

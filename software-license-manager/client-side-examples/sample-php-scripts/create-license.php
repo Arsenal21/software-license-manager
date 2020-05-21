@@ -1,12 +1,12 @@
 <?php
 
 // Post URL
-$postURL = "http://localhost:81/wp/wp7";
+$postURL = 'http://localhost:81/wp/wp7';
 // The Secret key
-$secretKey = "541fc9967d4b43.07908805";
-$firstname = "John";
-$lastname = "Doe";
-$email = "john.doe@gmail.com";
+$secretKey = '541fc9967d4b43.07908805';
+$firstname = 'John';
+$lastname = 'Doe';
+$email = 'john.doe@gmail.com';
 
 // prepare the data
 $data = array ();

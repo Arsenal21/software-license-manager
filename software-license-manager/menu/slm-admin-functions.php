@@ -20,9 +20,9 @@ function wp_lic_mgr_admin_fnc_menu() {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $returnValue = curl_exec($ch);
 
-        $msg = "";
-        if ($returnValue == "Success") {
-            $msg .= "Success message returned from the remote host.";
+        $msg = '';
+        if ('Success' === $returnValue) {
+            $msg .= 'Success message returned from the remote host.';
         }
         echo '<div id="message" class="updated fade"><p>';
         echo 'Request sent to the specified URL!';

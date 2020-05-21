@@ -14,7 +14,7 @@ function wp_lic_mgr_settings_menu() {
 
 function wp_lic_mgr_general_settings() {
 
-    if (isset($_REQUEST['slm_reset_log'])){
+    if (isset($_REQUEST['slm_reset_log'])) {
         //$slm_logger = new SLM_Debug_Logger();
         global $slm_debug_logger;
         $slm_debug_logger->reset_log_file("log.txt");
@@ -24,15 +24,15 @@ function wp_lic_mgr_general_settings() {
 
     if (isset($_POST['slm_save_settings'])) {
 
-        if (!is_numeric($_POST["default_max_domains"])) {//Set it to one by default if incorrect value is entered
-            $_POST["default_max_domains"] = '1';
+        if (!is_numeric($_POST['default_max_domains'])) {//Set it to one by default if incorrect value is entered
+            $_POST['default_max_domains'] = '1';
         }
 
         $options = array(
-            'lic_creation_secret' => trim($_POST["lic_creation_secret"]),
-            'lic_prefix' => trim($_POST["lic_prefix"]),
-            'default_max_domains' => trim($_POST["default_max_domains"]),
-            'lic_verification_secret' => trim($_POST["lic_verification_secret"]),
+            'lic_creation_secret' => trim($_POST['lic_creation_secret']),
+            'lic_prefix' => trim($_POST['lic_prefix']),
+            'default_max_domains' => trim($_POST['default_max_domains']),
+            'lic_verification_secret' => trim($_POST['lic_verification_secret']),
             'enable_auto_key_expiry' => isset($_POST['enable_auto_key_expiry']) ? '1':'',
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );
