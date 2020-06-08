@@ -170,7 +170,14 @@ class WPLM_List_Licenses extends WP_List_Table {
 				ARRAY_A
 			);
 		} else {
-			$data = $wpdb->get_results( "SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order", ARRAY_A );
+			$data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY %s %s",
+					$orderby,
+					$order
+				),
+				ARRAY_A
+			);
 		}
 
 		$current_page = $this->get_pagenum();
