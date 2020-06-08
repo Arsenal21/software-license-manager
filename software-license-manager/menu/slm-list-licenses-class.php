@@ -145,11 +145,27 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 		if ( ! empty( $_POST['slm_search'] ) ) {
 			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
-			$placeholder = '%%%1$s%%';
+			$placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$data        = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` WHERE `lk`.`license_key` LIKE '$placeholder' OR `lk`.`email` LIKE '$placeholder' OR `lk`.`txn_id` LIKE '$placeholder' OR `lk`.`first_name` LIKE '$placeholder' OR `lk`.`last_name` LIKE '$placeholder' OR `rd`.`registered_domain` LIKE '$placeholder' GROUP BY `lk`.`id` ORDER BY $orderby $order",
-					$search_term
+					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` 
+					FROM `$license_table` `lk` 
+					LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` 
+					WHERE `lk`.`license_key` LIKE %s 
+					OR `lk`.`email` LIKE %s 
+					OR `lk`.`txn_id` LIKE %s 
+					OR `lk`.`first_name` LIKE %s 
+					OR `lk`.`last_name` LIKE %s
+					OR `rd`.`registered_domain` LIKE %s 
+					GROUP BY `lk`.`id` ORDER BY %s %s",
+					$placeholder,
+					$placeholder,
+					$placeholder,
+					$placeholder,
+					$placeholder,
+					$placeholder,
+					$orderby,
+					$order
 				),
 				ARRAY_A
 			);
