@@ -148,15 +148,15 @@ class WPLM_List_Licenses extends WP_List_Table {
 			$placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
 			$data        = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` 
-					FROM `$license_table` `lk` 
-					LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` 
-					WHERE `lk`.`license_key` LIKE %s 
-					OR `lk`.`email` LIKE %s 
-					OR `lk`.`txn_id` LIKE %s 
-					OR `lk`.`first_name` LIKE %s 
+					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains`
+					FROM `$license_table` `lk`
+					LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id`
+					WHERE `lk`.`license_key` LIKE %s
+					OR `lk`.`email` LIKE %s
+					OR `lk`.`txn_id` LIKE %s
+					OR `lk`.`first_name` LIKE %s
 					OR `lk`.`last_name` LIKE %s
-					OR `rd`.`registered_domain` LIKE %s 
+					OR `rd`.`registered_domain` LIKE %s
 					GROUP BY `lk`.`id` ORDER BY %s %s",
 					$placeholder,
 					$placeholder,
@@ -171,11 +171,7 @@ class WPLM_List_Licenses extends WP_List_Table {
 			);
 		} else {
 			$data = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY %s %s",
-					$orderby,
-					$order
-				),
+				$wpdb->prepare("SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order"),
 				ARRAY_A
 			);
 		}
