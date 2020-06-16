@@ -144,6 +144,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 		$orderby = ! empty( $_GET['orderby'] ) ? strip_tags( $_GET['orderby'] ) : 'id';
 		$order   = ! empty( $_GET['order'] ) ? strip_tags( $_GET['order'] ) : 'DESC';
 
+		$order_str = sanitize_sql_orderby( $orderby . ' ' . $order );
+
 		if ( ! empty( $_POST['slm_search'] ) ) {
 			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
 			$placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
@@ -158,23 +160,26 @@ class WPLM_List_Licenses extends WP_List_Table {
 					OR `lk`.`first_name` LIKE %s
 					OR `lk`.`last_name` LIKE %s
 					OR `rd`.`registered_domain` LIKE %s
-					GROUP BY `lk`.`id` ORDER BY %s %s",
+					GROUP BY `lk`.`id` ORDER BY $order_str",
 					$placeholder,
 					$placeholder,
 					$placeholder,
 					$placeholder,
 					$placeholder,
 					$placeholder,
-					$orderby,
-					$order
 				),
 				ARRAY_A
 			);
 		} else {
-			$data = $wpdb->get_results(
-				$wpdb->prepare( "SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order" ),
-				ARRAY_A
-			);
+			$q    = "SELECT `lk`.*, 
+				CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) 
+				AS `max_allowed_domains` 
+				FROM `$license_table` `lk` 
+				LEFT JOIN `$domain_table` `rd` 
+				ON `lk`.`id` = `rd`.`lic_key_id` 
+				GROUP BY `lk`.`id` 
+				ORDER BY $order_str";
+			$data = $wpdb->get_results( $q, ARRAY_A );
 		}
 
 		$current_page = $this->get_pagenum();
