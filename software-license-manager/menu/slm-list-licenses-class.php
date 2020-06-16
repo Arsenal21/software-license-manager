@@ -1,55 +1,58 @@
 <?php
 
-if (!class_exists('WP_List_Table')) {
-    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
 class WPLM_List_Licenses extends WP_List_Table {
 
-    function __construct(){
-        global $status, $page;
+	function __construct() {
+		global $status, $page;
 
-        //Set parent defaults
-        parent::__construct( array(
-            'singular'  => 'item',     //singular name of the listed records
-            'plural'    => 'items',    //plural name of the listed records
-            'ajax'      => false        //does this table support ajax?
-        ) );
+		//Set parent defaults
+		parent::__construct(
+			array(
+				'singular' => 'item',     //singular name of the listed records
+				'plural'   => 'items',    //plural name of the listed records
+				'ajax'     => false,        //does this table support ajax?
+			)
+		);
 
-    }
+	}
 
-    function column_default($item, $column_name){
-    	return $item[$column_name];
-    }
+	function column_default( $item, $column_name ) {
+		return $item[ $column_name ];
+	}
 
-    function column_id($item){
-        $row_id = $item['id'];
-        $actions = array(
-            'edit' => sprintf('<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id),
-            'delete' => sprintf('<a href="admin.php?page=slm-main&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',$row_id),
-        );
-        return sprintf('%1$s <span style="color:silver"></span>%2$s',
-            /*$1%s*/ $item['id'],
-            /*$2%s*/ $this->row_actions($actions)
-        );
-    }
+	function column_id( $item ) {
+		$row_id  = $item['id'];
+		$actions = array(
+			'edit'   => sprintf( '<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id ),
+			'delete' => sprintf( '<a href="admin.php?page=slm-main&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>', $row_id ),
+		);
+		return sprintf(
+			'%1$s <span style="color:silver"></span>%2$s',
+			/*$1%s*/ $item['id'],
+			/*$2%s*/ $this->row_actions( $actions )
+		);
+	}
 
 
-    function column_cb($item){
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label
-            /*$2%s*/ $item['id']                //The value of the checkbox should be the record's id
-       );
-    }
+	function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label
+			/*$2%s*/ $item['id']                //The value of the checkbox should be the record's id
+		);
+	}
 
-    function column_active($item){
-        if ($item['active'] == 1){
-            return 'active';
-        } else{
-            return 'inactive';
-        }
-    }
+	function column_active( $item ) {
+		if ( $item['active'] == 1 ) {
+			return 'active';
+		} else {
+			return 'inactive';
+		}
+	}
 
 	function get_columns() {
 		$columns = array(
@@ -67,56 +70,54 @@ class WPLM_List_Licenses extends WP_List_Table {
 		return $columns;
 	}
 
-    function get_sortable_columns() {
-        $sortable_columns = array(
-            'id' => array('id',false),
-            'license_key' => array('license_key',false),
-            'lic_status' => array('lic_status',false),
-            'date_created' => array('date_created',false),
-            'date_renewed' => array('date_renewed',false),
-            'date_expiry' => array('date_expiry',false),
-        );
-        return $sortable_columns;
-    }
+	function get_sortable_columns() {
+		$sortable_columns = array(
+			'id'           => array( 'id', false ),
+			'license_key'  => array( 'license_key', false ),
+			'lic_status'   => array( 'lic_status', false ),
+			'date_created' => array( 'date_created', false ),
+			'date_renewed' => array( 'date_renewed', false ),
+			'date_expiry'  => array( 'date_expiry', false ),
+		);
+		return $sortable_columns;
+	}
 
-    function get_bulk_actions() {
-        $actions = array(
-            'delete' => 'Delete',
-        );
-        return $actions;
-    }
+	function get_bulk_actions() {
+		$actions = array(
+			'delete' => 'Delete',
+		);
+		return $actions;
+	}
 
-    function process_bulk_action() {
-        if('delete'===$this->current_action())
-        {
-            //Process delete bulk actions
-            if(!isset($_REQUEST['item'])){
-                $error_msg = '<p>'.__('Error - Please select some records using the checkboxes', 'slm').'</p>';
-                echo '<div id="message" class="error fade">'.$error_msg.'</div>';
-                return;
-            }else {
-        	$nvp_key = $this->_args['singular'];
-        	$records_to_delete = $_GET[$nvp_key];
-        	foreach ($records_to_delete as $row){
-                    SLM_Utility::delete_license_key_by_row_id($row);
-        	}
-        	echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
-            }
-        }
-    }
+	function process_bulk_action() {
+		if ( 'delete' === $this->current_action() ) {
+			//Process delete bulk actions
+			if ( ! isset( $_REQUEST['item'] ) ) {
+				$error_msg = '<p>' . __( 'Error - Please select some records using the checkboxes', 'slm' ) . '</p>';
+				echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+				return;
+			} else {
+				$nvp_key           = $this->_args['singular'];
+				$records_to_delete = $_GET[ $nvp_key ];
+				foreach ( $records_to_delete as $row ) {
+					SLM_Utility::delete_license_key_by_row_id( $row );
+				}
+				echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
+			}
+		}
+	}
 
 
-    /*
-     * This function will delete the selected license key entries from the DB.
-     */
-    function delete_license_key($key_row_id)
-    {
-        SLM_Utility::delete_license_key_by_row_id($key_row_id);
-        $success_msg = '<div id="message" class="updated"><p><strong>';
-        $success_msg .= 'The selected entry was deleted successfully!';
-        $success_msg .= '</strong></p></div>';
-        echo $success_msg;
-    }
+	/*
+	 * This function will delete the selected license key entries from the DB.
+	 */
+	function delete_license_key( $key_row_id ) {
+		SLM_Utility::delete_license_key_by_row_id( $key_row_id );
+		$success_msg  = '<div id="message" class="updated"><p><strong>';
+		$success_msg .= 'The selected entry was deleted successfully!';
+		$success_msg .= '</strong></p></div>';
+		echo $success_msg;
+	}
 
 
 	function prepare_items() {
@@ -140,8 +141,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 		 * Ordering parameters:
 		 * Parameters that are going to be used to order the result.
 		 */
-                $orderby = !empty($_GET["orderby"]) ? strip_tags($_GET["orderby"]) : 'id';
-                $order = !empty($_GET["order"]) ? strip_tags($_GET["order"]) : 'DESC';
+		$orderby = ! empty( $_GET['orderby'] ) ? strip_tags( $_GET['orderby'] ) : 'id';
+		$order   = ! empty( $_GET['order'] ) ? strip_tags( $_GET['order'] ) : 'DESC';
 
 		if ( ! empty( $_POST['slm_search'] ) ) {
 			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
@@ -171,7 +172,7 @@ class WPLM_List_Licenses extends WP_List_Table {
 			);
 		} else {
 			$data = $wpdb->get_results(
-				$wpdb->prepare("SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order"),
+				$wpdb->prepare( "SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains` FROM `$license_table` `lk` LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id` GROUP BY `lk`.`id` ORDER BY $orderby $order" ),
 				ARRAY_A
 			);
 		}
