@@ -27,7 +27,9 @@ function wp_lic_mgr_manage_licenses_menu() {
 		}
 	</style>
 	<div class="wrap">
-		<h2>Manage Licenses</h2>
+		<h2>Manage Licenses
+		<a href="<?php echo add_query_arg( 'page', 'wp_lic_mgr_addedit', get_admin_url( null, 'admin.php' ) ); ?>" class="page-title-action">Add New License</a>
+		</h2>
 		<div id="poststuff">
 			<div id="post-body">
 				<div class="postbox">
