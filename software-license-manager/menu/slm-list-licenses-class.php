@@ -166,18 +166,18 @@ class WPLM_List_Licenses extends WP_List_Table {
 					$placeholder,
 					$placeholder,
 					$placeholder,
-					$placeholder,
+					$placeholder
 				),
 				ARRAY_A
 			);
 		} else {
-			$q    = "SELECT `lk`.*, 
-				CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) 
-				AS `max_allowed_domains` 
-				FROM `$license_table` `lk` 
-				LEFT JOIN `$domain_table` `rd` 
-				ON `lk`.`id` = `rd`.`lic_key_id` 
-				GROUP BY `lk`.`id` 
+			$q    = "SELECT `lk`.*,
+				CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` )
+				AS `max_allowed_domains`
+				FROM `$license_table` `lk`
+				LEFT JOIN `$domain_table` `rd`
+				ON `lk`.`id` = `rd`.`lic_key_id`
+				GROUP BY `lk`.`id`
 				ORDER BY $order_str";
 			$data = $wpdb->get_results( $q, ARRAY_A );
 		}
