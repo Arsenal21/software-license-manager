@@ -549,3 +549,6 @@ span.days-left {
 .show_if_slm_license.slm-display, .slm-display {
 display: block !important
 }
+.stats .description{
+    padding: 10px 15px 0px 15px;
+}
