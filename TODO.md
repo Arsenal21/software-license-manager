@@ -6,7 +6,8 @@
 - [x] Add Ajax Validation to Forms
 - [x] Fix single product meta boxes
 - [ ] Combine single and variation products functionality
-- [ ] Make Expiry and Renewal dates optional (V4.5)
+- [x] Make Expiry and Renewal dates optional (V4.5)
+- [ ] Subscription support
 
 
 Feedback and ideas are welcome. :)s
