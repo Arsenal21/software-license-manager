@@ -183,8 +183,14 @@ class SLM_API_Listener {
 
             $key                = $fields['lic_key'];
 
-            $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
-            $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            //Enable item_reference verification during activation
+            if ($options['slm_multiple_items']==1){
+                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s AND item_reference = %s", $key, $item_reference);
+                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            }else{
+                $sql_prep1          = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $key);
+                $retLic             = $wpdb->get_row($sql_prep1, OBJECT);
+            }
 
             $sql_prep2          = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $key);
             $reg_domains        = $wpdb->get_results($sql_prep2, OBJECT);
