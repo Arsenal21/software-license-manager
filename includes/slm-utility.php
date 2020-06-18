@@ -440,7 +440,7 @@ class SLM_Utility {
         global $wpdb;
         $slm_log_table  = SLM_TBL_LICENSE_KEYS;
 
-        $result = $wpdb->get_results(" SELECT * FROM  $slm_log_table LIMIT $amount");
+        $result = $wpdb->get_results(" SELECT * FROM  $slm_log_table ORDER BY id DESC LIMIT $amount");
 
         foreach ($result as $license) {
             echo '<tr>
