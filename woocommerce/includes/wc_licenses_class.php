@@ -63,6 +63,8 @@ class SLM_Woo_Account{
 
     public function endpoint_content(){
         global $wpdb, $wp_query;
+        $slm_options = get_option('slm_plugin_options');
+        $allow_domain_removal = $slm_options['allow_user_activation_removal']==1 ? true : false; 
         $class_ = 0;
         $class_id_ = 0;
         $get_user_info = $get_user_email = '';
@@ -180,11 +182,11 @@ class SLM_Woo_Account{
                                             <br>
                                             <div class="row" style="width: 100%;">
                                                 <div class="slm-activated-on domains-list col-md-6">
-                                                    <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, 'Domains'); ?>
+                                                    <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, 'Domains', $allow_domain_removal); ?>
                                                 </div>
 
                                                 <div class="slm-activated-on domains-list col-md-6">
-                                                    <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, 'Devices'); ?>
+                                                    <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, 'Devices', $allow_domain_removal); ?>
                                                 </div>
                                             </div>
                                             <div class="clear"></div>
@@ -210,6 +212,9 @@ class SLM_Woo_Account{
                 </tbody>
             </table>
         </div>
+        <?php
+        if($allow_domain_removal == true):
+        ?>
         <script>
             jQuery(document).ready(function() {
                 jQuery('.deactivate_lic_key').click(function(event) {
@@ -231,6 +236,7 @@ class SLM_Woo_Account{
             });
         </script>
         <?php
+        endif;
 }
 
 /**

@@ -515,7 +515,7 @@ class SLM_Utility {
         </div>';
     }
 
-    static function get_license_activation($license_key, $tablename, $item_name) {
+    static function get_license_activation($license_key, $tablename, $item_name, $allow_removal = true) {
         ?>
         <div class="table">
             <h5> <?php echo $item_name; ?> </h5>
@@ -540,9 +540,11 @@ class SLM_Utility {
                                     echo '<input type="text" class="form-control" placeholder="' .$activation->registered_domain .'" aria-label="' .$activation->registered_domain .'" aria-describedby="' .$activation->registered_domain .'" value="' .$activation->registered_domain .'" readonly>';
                                 }
                             ?>
+                            <?php if ($allow_removal ==true) : ?>
                             <div class="input-group-append">
                                 <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo $activation->lic_key; ?>'" id="<?php echo $activation->id; ?>" data-id="<?php echo $activation->id; ?>"> Remove</button>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                             <?php $count++; ?>

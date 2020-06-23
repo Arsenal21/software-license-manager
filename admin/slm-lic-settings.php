@@ -43,12 +43,14 @@ function slm_general_settings(){
                 'enable_debug'              => isset($_POST['enable_debug']) ? '1' : '',
                 'slm_woo'                   => isset($_POST['slm_woo']) ? '1' : '',
                 'slm_woo_downloads'         => isset($_POST['slm_woo_downloads']) ? '1' : '',
+                'slm_woo_affect_downloads'  => isset($_POST['slm_woo_affect_downloads']) ? '1' : '',
                 'slm_stats'                 => isset($_POST['slm_stats']) ? '1' : '',
                 'slm_adminbar'              => isset($_POST['slm_adminbar']) ? '1' : '',
                 'slm_conflictmode'          => isset($_POST['slm_conflictmode']) ? '1' : '',
                 'slm_wpestores'             => isset($_POST['slm_wpestores']) ? '1' : '',
                 'slm_dl_manager'            => isset($_POST['slm_dl_manager']) ? '1' : '',
                 'slm_multiple_items'         => isset($_POST['slm_multiple_items']) ? '1' : '',
+                'allow_user_activation_removal'  => isset($_POST['allow_user_activation_removal']) ? '1' : '',
                 'expiration_reminder_text'  => sanitize_text_field($_POST['expiration_reminder_text'])
             );
             update_option('slm_plugin_options', $options);
@@ -183,6 +185,15 @@ function slm_general_settings(){
                         </tr>
 
                         <tr>
+                            <th scope="row"><?php _e('User permissions', 'softwarelicensemanager'); ?></th>
+                            <td>
+                                <input name="allow_user_activation_removal" type="checkbox" <?php if ($options['allow_user_activation_removal'] != '') echo ' checked="checked"'; ?> value="1" />
+                                <?php _e('Allow users to remove domains/devices in My account.', 'softwarelicensemanager'); ?>
+                                <p class="description"><?php _e("When enabled, users will be able to remove registered domains or devices in their account.", 'softwarelicensemanager'); ?></p>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <th scope="row">Bootstrap library</th>
                             <td>
                                 <input name="slm_conflictmode" type="checkbox" <?php if ($options['slm_conflictmode'] != '') echo ' checked="checked"'; ?> value="1" />
@@ -208,6 +219,13 @@ function slm_general_settings(){
                                 <td>
                                     <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
                                     <?php _e('Disable woocommerce download page. Process downloads though license order info page.', 'softwarelicensemanager'); ?></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"></th>
+                                <td>
+                                    <input name="slm_woo_affect_downloads" type="checkbox" <?php if ($options['slm_woo_affect_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
+                                    <?php _e('Expire WooCommerce downloads. Downloads will expire together with corresponding license.', 'softwarelicensemanager'); ?>
+                                </td>
                             </tr>
                             <!-- <tr valign="top">
                                 <th scope="row"> <?php _e('Download Manager Support', 'softwarelicensemanager'); ?></th>
