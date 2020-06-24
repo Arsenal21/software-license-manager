@@ -140,14 +140,16 @@ $options = array(
     'lic_verification_secret' => SLM_Utility::create_secret_keys(),
     'enable_debug'            => '',
     'slm_woo'                 => '1',
-    'slm_wpestores'           => '',
     'slm_woo_downloads'       => '',
+    'slm_woo_affect_downloads'=> '1',
+    'slm_wpestores'           => '',
     'slm_stats'               => '1',
     'slm_adminbar'            => '1',
     'slm_multiple_items'      => '',
     'slm_conflictmode'        => '1',
     'enable_auto_key_expiration' => '1',
     'slm_dl_manager'          => '',
+    'allow_user_activation_removal'  => '1',
     'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It’s a smart investment');
 
 //Bugfix - Prevention of overwriting existing settings

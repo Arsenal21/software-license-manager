@@ -10,6 +10,7 @@ add_action('woocommerce_process_product_meta', 'wc_slm_save_data');
 add_action('woocommerce_product_data_panels', 'wc_slm_data_panel');
 //add_filter('product_type_options', 'add_wc_slm_data_tab_enabled_product_option'); //legacy
 add_action('init', 'slm_register_product_type');
+add_filter( 'woocommerce_product_class', 'slm_register_product_class', 10, 2 );
 add_filter('product_type_selector', 'slm_add_product_type');
 add_action('admin_footer', 'slm_license_admin_custom_js');
 /**
@@ -269,6 +270,13 @@ function wcpp_custom_style()
                     }
                 }
             }
+ 
+            function slm_register_product_class( $classname, $product_type ) {
+                if ( $product_type == 'slm_license' ) { 
+                    $classname = 'WC_Product_SLM_License';
+                }
+                return $classname;
+            }
 
             function slm_add_product_type($types){
                 $types['slm_license'] = __('License product', 'softwarelicensemanager');
@@ -278,6 +286,8 @@ function wcpp_custom_style()
                 if ('product' != get_post_type()) :
                     return;
                 endif;
+                $slm_options = get_option('slm_plugin_options');
+                $affect_downloads = $slm_options['slm_woo_affect_downloads']==1 ? true : false; 
                 ?>
     <script type='text/javascript'>
         jQuery(document).ready(function() {
@@ -288,8 +298,14 @@ function wcpp_custom_style()
                 console.log('yes lifetime');
                 jQuery('._license_renewal_period_field').hide();
                 jQuery('._license_renewal_period_term_field').hide();
+                <?php
+                if($affect_downloads == true):
+                ?>
                 jQuery('#_download_limit').val('');
                 jQuery('#_download_expiry').val('');
+                <?php
+                endif;
+                ?>
             }
             else {
                 console.log('no - is subscription based');
@@ -297,10 +313,32 @@ function wcpp_custom_style()
                 jQuery('._license_renewal_period_term_field').show();
             }
 
+            <?php
+            if($affect_downloads == true):
+            ?>
+            jQuery('#_download_limit').on('change', function() {
+                if (jQuery('#_license_type').find(":selected").val() == 'lifetime'){
+                    jQuery(this).val('');
+                }
+            });
+            jQuery('#_download_expiry').on('change', function() {
+                if (jQuery('#_license_type').find(":selected").val() == 'lifetime'){
+                    jQuery(this).val('');
+                }
+            });
+            <?php
+            endif;
+            ?>
             jQuery('#_license_type').on('change', function() {
                 if (jQuery(this).find(":selected").val() == 'lifetime') {
+                    <?php
+                    if($affect_downloads == true):
+                    ?>
                     jQuery('#_download_expiry').val('');
                     jQuery('#_download_limit').val('');
+                    <?php
+                    endif;
+                    ?>
                     jQuery('._license_renewal_period_field').hide();
                     jQuery('._license_renewal_period_term_field').hide();
                 }

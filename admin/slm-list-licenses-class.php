@@ -84,6 +84,7 @@ class SLM_List_Licenses extends WP_List_Table
             'id'                    => 'ID',
             'lic_status'            => 'Status',
             'license_key'           => 'Key',
+            'item_reference'        => 'Item reference',
             'lic_type'              => 'License type',
             'email'                 => 'Email',
             'max_allowed_domains'   => 'Domains',
@@ -184,7 +185,8 @@ class SLM_List_Licenses extends WP_List_Table
             'lic_type'      => array('lic_type', true),
             'until'         => array('until', true),
             'current_ver'   => array('current_ver', true),
-            'lic_status'    => array('lic_status', true)
+            'lic_status'    => array('lic_status', true),
+            'item_reference' => array('item_reference', true),
         );
 
         return $sortable_columns;

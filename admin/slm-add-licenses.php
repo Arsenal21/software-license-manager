@@ -613,17 +613,20 @@ function slm_add_licenses_menu(){
                                                                     <div class="form-group col-md-12">
                                                                     <label for="item_reference">Item reference</label>
                                                                         <select name="item_reference" class="form-control">
-                                                                            <option value="select one" selected> Select one ...</option>
                                                                             <?php
+                                                                                $was_selected = false;
                                                                                 foreach ($values_item_refs as $item_reference) {
                                                                                     $sel_val        = esc_attr(trim($item_reference->meta_value));
                                                                                     $is_selected    = $lic_item_ref==$sel_val;
+                                                                                    //remember is it was selected during the process
+                                                                                    $was_selected = $was_selected==false ? $is_selected : $was_selected;
                                                                                     // filter out empty values
                                                                                     if (!empty($sel_val)) {
-                                                                                       echo '<option value="'. $sel_val .'">'.$sel_val .'</option>';
+                                                                                       echo '<option value="'. $sel_val .'"'.($is_selected==true ? ' selected' : '').'>'.$sel_val .'</option>';
                                                                                     }
                                                                                 }
                                                                             ?>
+                                                                            <option value="select one"<?php echo ($was_selected==false ? ' selected' : '') ?>> Select one ...</option>
                                                                         </select>
                                                                         <small class="form-text text-muted"><?php _e('Item reference of your software');?></small>
                                                                     </div>
