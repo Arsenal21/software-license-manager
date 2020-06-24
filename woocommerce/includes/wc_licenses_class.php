@@ -125,7 +125,7 @@ class SLM_Woo_Account{
                                         $expiration = new DateTime($license_info->date_expiry);
                                         $today      = new DateTime();
 
-                                        if ($license_info->lic_type == 'subscription'){
+                                        if ($license_info->lic_type == 'subscription' && $license_info->date_expiry != '0000-00-00'){
                                             if($expiration < $today){
                                                 echo "<span style='color: red'><strong>Expired</strong></span>";
                                             }
