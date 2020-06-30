@@ -396,7 +396,7 @@ class SLM_Plugin
 
     public function slm_add_admin_menu()
     {
-        $icon_svg = SLM_ASSETS_URL . 'icons/logo/slm_small.svg';
+        $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
 
         add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
