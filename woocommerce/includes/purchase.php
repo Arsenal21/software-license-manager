@@ -18,7 +18,7 @@ global $post, $woocommerce, $product;
 $slm_options = get_option('slm_plugin_options');
 $affect_downloads = $slm_options['slm_woo_affect_downloads']==1 ? true : false; 
 //add_action('woocommerce_checkout_update_order_meta', 'slm_add_lic_key_meta_update');
-//add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
+add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
 add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
 if($affect_downloads == true){
 	add_action('woocommerce_order_status_completed', 'wc_slm_access_expiration', 82);
@@ -498,13 +498,15 @@ function slm_add_lic_key_meta_update($order_id)
  */
 
 function slm_add_lic_key_meta_display($order){
-	echo '<p><strong>' . __('License key') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . '</p>';
-	echo '<p><strong>' . __('License expiration') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_expires', true) . '</p>';
-	echo '<p><strong>' . __('License type') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_type', true) . '</p>';
-	echo '<p><strong>' . __('License item reference') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_item_ref', true) . '</p>';
-	echo '<p><strong>' . __('License status') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_status', true) . '</p>';
-	echo '<p><strong>' . __('License current version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_version', true) . '</p>';
-	echo '<p><strong>' . __('Supported until version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_until_version', true) . '</p>';
+	if(!empty(get_post_meta($order->get_id(), 'slm_wc_license_order_key', true))){
+		echo '<p><strong>' . __('License key') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . '</p>';
+		echo '<p><strong>' . __('License expiration') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_expires', true) . '</p>';
+		echo '<p><strong>' . __('License type') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_type', true) . '</p>';
+		echo '<p><strong>' . __('License item reference') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_item_ref', true) . '</p>';
+		echo '<p><strong>' . __('License status') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_status', true) . '</p>';
+		echo '<p><strong>' . __('License current version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_version', true) . '</p>';
+		echo '<p><strong>' . __('Supported until version') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_until_version', true) . '</p>';
+	}
 }
 
 /**
