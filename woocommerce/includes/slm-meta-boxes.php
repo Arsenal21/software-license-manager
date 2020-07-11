@@ -88,38 +88,47 @@ function wcpp_custom_style()
 
             function wc_slm_data_panel(){
                 global $post;
+                $product_id=get_the_ID();
                 $slm_options = get_option('slm_plugin_options');
     ?>
     <div id='wc_slm_meta' class='panel woocommerce_options_panel'>
         <?php ?>
         <div class='options_group'>
             <?php
+                $value = get_post_meta($product_id, '_domain_licenses',true);
+                if($value === ''){
+                    $value =  SLM_Helper_Class::slm_get_option('default_max_domains');
+                }
                 woocommerce_wp_text_input(
                     array(
                         'id'            => '_domain_licenses',
                         'label'         => __('Domain Licenses', 'softwarelicensemanager'),
                         'placeholder'   => SLM_Helper_Class::slm_get_option('default_max_domains'),
                         'desc_tip'      => 'true',
-                        'value'         => SLM_Helper_Class::slm_get_option('default_max_domains'),
+                        'value'         => $value,
                         'type'          => 'number',
                         'custom_attributes' => array(
  					        'step' 	=> 'any',
- 					        'min'	=> SLM_Helper_Class::slm_get_option('default_max_domains')
+ 					        'min'	=> 0,
                         ),
                         'description'   => __('Enter the allowed amount of domains this license can have (websites).', 'softwarelicensemanager')
                     )
                 );
+                $value = get_post_meta($product_id, '_devices_licenses',true);
+                if($value === ''){
+                    $value =  SLM_Helper_Class::slm_get_option('default_max_devices');
+                }
                 woocommerce_wp_text_input(
                     array(
                         'id'            => '_devices_licenses',
                         'label'         => __('Devices Licenses', 'softwarelicensemanager'),
                         'placeholder'   => SLM_Helper_Class::slm_get_option('default_max_devices'),
-                        'value'         => SLM_Helper_Class::slm_get_option('default_max_devices'),
                         'desc_tip'      => 'true',
+                        'value'         => $value,
                         'type'          => 'number',
                         'custom_attributes' => array(
  					        'step' 	=> 'any',
- 					        'min'	=> SLM_Helper_Class::slm_get_option('default_max_devices')
+ 					        'min'	=> 0,
                         ),
                         'description'   => __('Enter the allowed amount of devices this license can have (computers, mobile, etc).', 'softwarelicensemanager')
                     )
@@ -210,9 +219,7 @@ function wcpp_custom_style()
                 // _license_until_version
 
                 $_domain_licenses = $_POST['_domain_licenses'];
-                if (!empty($_domain_licenses)) {
-                    update_post_meta($post_id, '_domain_licenses', esc_attr($_domain_licenses));
-                }
+                update_post_meta($post_id, '_domain_licenses', esc_attr($_domain_licenses));
 
                 $is_wc_slm_data_tab_enabled = isset($_POST['_wc_slm_data_tab_enabled']) ? 'yes' : 'no';
                 update_post_meta($post_id, '_wc_slm_data_tab_enabled', $is_wc_slm_data_tab_enabled);
@@ -231,9 +238,7 @@ function wcpp_custom_style()
                 }
 
                 $_devices_licenses = $_POST['_devices_licenses'];
-                if (!empty($_devices_licenses)) {
-                    update_post_meta($post_id, '_devices_licenses', esc_attr($_devices_licenses));
-                }
+                update_post_meta($post_id, '_devices_licenses', esc_attr($_devices_licenses));
 
                 $_license_renewal_period = $_POST['_license_renewal_period'];
                 if (!empty($_license_renewal_period)  && $_license_type == 'lifetime') {
@@ -252,14 +257,10 @@ function wcpp_custom_style()
                 }
 
                 $_license_current_version = $_POST['_license_current_version'];
-                if (!empty($_license_current_version)) {
-                    update_post_meta($post_id, '_license_current_version', esc_attr($_license_current_version));
-                }
+                update_post_meta($post_id, '_license_current_version', esc_attr($_license_current_version));
 
                 $_license_until_version = $_POST['_license_until_version'];
-                if (!empty($_license_until_version)) {
-                    update_post_meta($post_id, '_license_until_version', esc_attr($_license_until_version));
-                }
+                update_post_meta($post_id, '_license_until_version', esc_attr($_license_until_version));
             }
 
             function slm_register_product_type(){
