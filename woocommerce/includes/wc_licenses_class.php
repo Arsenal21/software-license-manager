@@ -140,7 +140,7 @@ class SLM_Woo_Account{
 
                                 </td>
 
-                                <td class="slm-view"><a href="#" class="woocommerce-button button view">View</a></td>
+                                <td class="slm-view"><a href="" class="woocommerce-button button view">View</a></td>
                             </tr>
 
                             <tr class="parent">

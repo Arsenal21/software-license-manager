@@ -53,12 +53,12 @@ function slm_hide_order_meta($hide_meta){
 function slm_display_nice_item_meta($item_id, $item, $product){
 	?>
 	<div class="view">
-	<?php if ( $meta_data = $item->get_meta('_slm_lic_key', false) ) : ?>
+	<?php if ( $meta_data = wc_get_order_item_meta($item_id,'_slm_lic_key',false) ) : ?>
 		<table cellspacing="0" class="display_meta">
 			<?php
 			$admin_link = get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=';
 			foreach ( $meta_data as $meta ) :
-				$lic_key = $meta->__get('value');
+				$lic_key = $meta;
 				$lic_id = wc_slm_get_license_id($lic_key);
 				if(!empty($lic_id)){
 					$cur_link = '<a href="' . $admin_link . $lic_id . '" target="_blank">' . $lic_key . '</a>';
@@ -90,7 +90,6 @@ function wc_slm_create_license_keys($order_id) {
 
 	$order	 			= wc_get_order($order_id);
 	$purchase_id_ 		= $order->get_id();
-	$variations_items_ 	= $order->get_items();
 
 	// SLM_Helper_Class::write_log('purchase_id_ -- '.$purchase_id_ );
 	// SLM_Helper_Class::write_log('purchase_id_ -- '.$user_id  );
@@ -223,9 +222,9 @@ function wc_slm_create_license_keys($order_id) {
 							'version' 	=>	$_license_current_version,
 							'until' 	=>	$_license_until_version
 						);
-						$values->add_meta_data( '_slm_lic_key', $license_key);
-						$values->add_meta_data( '_slm_lic_type', $license_type);
-						$values->save_meta_data();
+						$item_id = $values->get_id();
+            			wc_add_order_item_meta($item_id,'_slm_lic_key',$license_key);
+            			wc_add_order_item_meta($item_id,'_slm_lic_type',$license_type);
 					}
 				}
 			}
@@ -518,27 +517,17 @@ function slm_order_details($order){
 
 	$items 			= $order->get_items();
 	$licences = array();
-	$lic_index = $type_index = 0;
 	foreach ($items as $item_key => $item_details){
 		$product 		= $item_details->get_product();
 		if ($product->is_type( 'slm_license' )){
-			if ( $meta_data = $item_details->get_formatted_meta_data('') ){
-				foreach($meta_data as $meta_row){
-					if($meta_row->key == '_slm_lic_key'){
-						if(isset($licences[$lic_index]['lic_key'])){
-							$lic_index++;
-						}
-						$licences[$lic_index]['lic_key'] = $meta_row->value;
-					}
-					if($meta_row->key == '_slm_lic_type'){
-						if(isset($licences[$type_index]['lic_type'])){
-							$type_index++;
-						}
-						$licences[$type_index]['lic_type'] = $meta_row->value;
-					}
-				}
-				//To make them equal if some meta is missing
-				$lic_index = $type_index = $lic_index>$type_index ? $lic_index : $type_index; 
+			if ( $lic_keys = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_key',false) ){
+				$lic_types = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_type',false);
+				$licences = array_map(function($keys,$types){
+					return array(
+						'lic_key' => $keys,
+						'lic_type' => $types		
+					);
+				},$lic_keys,$lic_types);
 			}
 		}
 	}
@@ -582,9 +571,50 @@ add_action('woocommerce_email_before_order_table', 'slm_add_license_to_order_con
 function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_text, $email)
 {
 	if ($email->id == 'customer_completed_order') {
-		echo '
-		<table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family:"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;"> <thead> <tr> <th class="td" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;"> License key</th> </tr> </thead> <tbody> <tr> <td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;"> ' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . ' </td> </tr> </tbody> </table><br><br>
-		';
+		$items 			= $order->get_items();
+		$licences = array();
+		foreach ($items as $item_key => $item_details){
+			$product 		= $item_details->get_product();
+			if ($product->is_type( 'slm_license' )){
+				$meta_data = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_key',false);
+				foreach($meta_data as $meta_row){
+					$licences[] = array(
+						'product' => $product->get_name(),
+						'lic_key' => $meta_row,
+					);
+				}
+			}
+		}
+		if($licences){
+			echo '
+				<table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family:"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
+					<thead>
+						<tr>
+							<th class="td" colspan="2" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
+								License keys
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+			';
+			foreach ($licences as $lic_row){
+				echo '
+						<tr>
+							<td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
+								' . $lic_row['product'] . '
+							</td>
+							<td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
+								' . $lic_row['lic_key'] . '
+							</td>
+						</tr>
+				'; 
+			}
+			echo '
+					</tbody>
+				</table>
+				<br><br>
+			';
+		}
 	}
 }
 
