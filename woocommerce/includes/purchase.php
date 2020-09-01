@@ -1,6 +1,5 @@
 <?php
 /**
- * Runs on Uninstall of Software License Manager
  * https://businessbloomer.com/woocommerce-easily-get-order-info-total-items-etc-from-order-object/
  * @package   Software License Manager
  * @author    Michel Velis
@@ -16,7 +15,7 @@ if (!defined('ABSPATH')) {
 global $post, $woocommerce, $product;
 
 $slm_options = get_option('slm_plugin_options');
-$affect_downloads = $slm_options['slm_woo_affect_downloads']==1 ? true : false; 
+$affect_downloads = $slm_options['slm_woo_affect_downloads']==1 ? true : false;
 //add_action('woocommerce_checkout_update_order_meta', 'slm_add_lic_key_meta_update');
 add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
 add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
@@ -48,7 +47,7 @@ function slm_hide_order_meta($hide_meta){
  * @param int $item_id
  * @param object $item
  * @param object $product
- * 
+ *
  */
 function slm_display_nice_item_meta($item_id, $item, $product){
 	?>
@@ -126,13 +125,13 @@ function wc_slm_create_license_keys($order_id) {
 					 * @since 1.0.3
 					 */
 					$expiration = '';
-		
+
 					$renewal_period = (int) wc_slm_get_licensing_renewal_period($product_id);
 					$renewal_term 	= wc_slm_get_licensing_renewal_period_term($product_id);
-		
+
 					$slm_billing_length = $renewal_period;
 					$slm_billing_interval = $renewal_term;
-		
+
 					if ($renewal_period == 'onetime') {
 						$expiration = '0000-00-00';
 					}
@@ -145,20 +144,20 @@ function wc_slm_create_license_keys($order_id) {
 					// SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
 					// SLM_Helper_Class::write_log('exp -- ' . $expiration);
 					// SLM_Helper_Class::write_log('term -- ' . $renewal_term);
-		
+
 					// Sites allowed get license meta from variation
 					$sites_allowed 			= wc_slm_get_sites_allowed($product_id);
-		
+
 					if (!$sites_allowed) {
 						$sites_allowed_error = __('License could not be created: Invalid sites allowed number.', 'softwarelicensemanager');
 						$int = wc_insert_payment_note($purchase_id_, $sites_allowed_error);
 						break;
 					}
-		
+
 					// Get the custumer ID
 					// $user_id = $order->get_user_id();
 					$order_data = $order->get_data(); // The Order data
-		
+
 					## Access Order Items data properties (in an array of values) ##
 					$item_data 					= $values->get_data();
 					$product_name 				= $item_data['name'];
@@ -169,13 +168,13 @@ function wc_slm_create_license_keys($order_id) {
 					$current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
 					$license_type 				= get_post_meta( $product_id, '_license_type', true );
 					$lic_item_ref				= get_post_meta( $product_id, '_license_item_reference', true );
-		
+
 					// Transaction id
 					$transaction_id = wc_get_payment_transaction_id($product_id);
-		
+
 					// Build item name
 					$item_name = $product->get_title();
-		
+
 					// Build parameters
 					$api_params = array();
 					$api_params['slm_action'] 			= 'slm_create_new';
@@ -198,7 +197,7 @@ function wc_slm_create_license_keys($order_id) {
 					$api_params['subscr_id'] 			= $order->get_customer_id();
 					$api_params['lic_type'] 			= $license_type;
 					$api_params['item_reference'] 		= $lic_item_ref;
-		
+
 					//access_expires
 					//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
 					// Send query to the license manager server
@@ -207,7 +206,7 @@ function wc_slm_create_license_keys($order_id) {
 					$url 			= 'http://' . $url;
 					$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
 					$license_key 	= wc_slm_get_license_key($response);
-		
+
 					// Collect license keys
 					if ($license_key) {
 						$licenses[] = array(
@@ -234,9 +233,9 @@ function wc_slm_create_license_keys($order_id) {
 	if(count($licenses)>0){
 		// Payment note
 		wc_slm_payment_note($order_id, $licenses);
-	
+
 		// Assign licenses
-		
+
 		//What does this do? The meta is not used in the plugin anywhere
 		//wc_slm_assign_licenses($order_id, $licenses);
 	}
@@ -456,10 +455,10 @@ function slm_show_msg( $order_id ) {
 	    $amount_of_licenses     = wc_slm_get_sites_allowed($product_id);
 
 	    // is a licensed product
-	    //var_dump(get_post_meta($product_id));
+		//var_dump(get_post_meta($product_id));
 
 	    if ($amount_of_licenses) {
-			echo '<div class="woocommerce-order-details"> <h2 class="woocommerce-order-details__title">My subscriptions</h2> <table class="woocommerce-table woocommerce-table--order-details shop_table order_details"> <thead> <tr> <th class="woocommerce-table__product-name product-name">My Account</th> </tr> </thead> <tbody> <tr class="woocommerce-table__line-item order_item"> <td class="woocommerce-table__product-name product-name" > You can see and manage your licenses inside your account. <a href="/my-account/my-licenses/">Manage Licenses</a></td> </tr> </tbody> </table> </div>';
+			echo '<div class="woocommerce-order-details"> <h2 class="woocommerce-order-details__title">'. __('My subscriptions') .'</h2> <table class="woocommerce-table woocommerce-table--order-details shop_table order_details"> <thead> <tr> <th class="woocommerce-table__product-name product-name"'. __('My Account') .'</th> </tr> </thead> <tbody> <tr class="woocommerce-table__line-item order_item"> <td class="woocommerce-table__product-name product-name" > '. __('You can see and manage your licenses inside your account') .' <a href="/my-account/my-licenses/">'. __('Manage Licenses') .'</a></td> </tr> </tbody> </table> </div>';
 		}
 	}
 }
@@ -525,7 +524,7 @@ function slm_order_details($order){
 				$licences = array_map(function($keys,$types){
 					return array(
 						'lic_key' => $keys,
-						'lic_type' => $types		
+						'lic_type' => $types
 					);
 				},$lic_keys,$lic_types);
 			}
@@ -533,12 +532,12 @@ function slm_order_details($order){
 	}
 	if($licences){
 		echo '
-			<h2 class="woocommerce-order-details__title">License details</h2>
+			<h2 class="woocommerce-order-details__title">' . __('License details') . '</h2>
 			<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
 				<thead>
 					<tr>
-						<th class="woocommerce-table__product-name product-name">License key</th>
-						<th class="woocommerce-table__product-table product-total">Type</th>
+						<th class="woocommerce-table__product-name product-name">' . __('License key') . '</th>
+						<th class="woocommerce-table__product-table product-total">' . __('Type') . '</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -547,7 +546,7 @@ function slm_order_details($order){
 			echo '
 					<tr class="woocommerce-table__line-item order_item">
 						<td class="woocommerce-table__product-name product-name">
-							' . $lic_row['lic_key'] . ' - <a href="'.get_permalink( wc_get_page_id( 'myaccount' ) ).'/my-licenses">  view my licenses</a>
+							' . $lic_row['lic_key'] . ' - <a href="'.get_permalink( wc_get_page_id( 'myaccount' ) ).'/my-licenses"> ' . __('view my licenses') . '</a>
 						</td>
 						<td class="woocommerce-table__product-total product-total">
 							' . $lic_row['lic_type'] . '
@@ -591,7 +590,7 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 					<thead>
 						<tr>
 							<th class="td" colspan="2" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
-								License keys
+								' . __('License keys') . '
 							</th>
 						</tr>
 					</thead>
@@ -607,7 +606,7 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 								' . $lic_row['lic_key'] . '
 							</td>
 						</tr>
-				'; 
+				';
 			}
 			echo '
 					</tbody>
@@ -617,4 +616,3 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 		}
 	}
 }
-

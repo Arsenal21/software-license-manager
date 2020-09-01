@@ -4,7 +4,7 @@ function slm_add_licenses_menu(){
     $slm_options    = get_option('slm_plugin_options');
     //initialise some variables
     $id             = '';
-    $item_reference ='';
+    $item_reference = '';
     $license_key    = '';
     $max_domains    = SLM_Helper_Class::slm_get_option('default_max_domains');
     $max_devices    = SLM_Helper_Class::slm_get_option('default_max_devices');
@@ -165,7 +165,8 @@ function slm_add_licenses_menu(){
             if ($result === false) {
                 $errors .= __('Record could not be inserted into the database!', 'softwarelicensemanager');
             }
-        } else {
+        }
+        else {
             //Update record
             $where = array('id' => $id);
             $updated = $wpdb->update($lk_table, $fields, $where);
@@ -174,7 +175,6 @@ function slm_add_licenses_menu(){
                 $errors .= __('Update of the license key table failed!', 'softwarelicensemanager');
             }
         }
-
         $data = array('row_id' => $id, 'key' => $license_key);
         do_action('slm_add_edit_interface_save_record_processed', $data);
     }
@@ -309,7 +309,7 @@ function slm_add_licenses_menu(){
                                                             <div class="slm-img-ico">
                                                                 <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'locked.png');?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('License key and status');?></h3>
+                                                            <h3 class="slm-tab-title"><?php __('License key and status');?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
@@ -720,8 +720,8 @@ function slm_add_licenses_menu(){
                 var form = jQuery(".slm_license_form")
                 if (form[0].checkValidity() === false) {
                     jQuery('#userinfo-tab').css("color", "red");
-                    event.preventDefault()
-                    event.stopPropagation()
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
                 form.addClass('was-validated');
             });
@@ -744,5 +744,5 @@ function slm_add_licenses_menu(){
             });
         });
     </script>
-<?php
+    <?php
 }
