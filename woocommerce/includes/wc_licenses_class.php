@@ -147,7 +147,6 @@ class SLM_Woo_Account
                             </td>
                             <td class="slm-view" data-title="<?php echo __('view', 'softwarelicensemanager'); ?>><a href="" class=" woocommerce-button button view"><?php echo _e('view'); ?></a></td>
                         </tr>
-
                         <tr class="parent">
                             <td colspan="5" class="hiddenRow">
                                 <div class="collapse demo<?php echo $class_id_++; ?> slm-shadow">
