@@ -92,6 +92,12 @@ class SLM_Woo_Account
         }
 ?>
 
+        <?php
+        if (SLM_Helper_Class::slm_get_option('slm_front_conflictmode') == 1) : ?>
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" />
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <?php endif; ?>
+
         <div class="woocommerce-slm-content" <?php echo $slm_hide; ?>>
             <table id="slm_licenses_table" class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table" style="border-collapse:collapse;">
                 <thead>

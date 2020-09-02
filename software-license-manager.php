@@ -20,8 +20,8 @@ global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
 define('SLM_VERSION',               '5.5.6');
-define('SLM_DB_VERSION',            '4.2.8');
-define('SLM_REWRITE_VERSION',       '2.3.9');
+define('SLM_DB_VERSION',            '4.2.9');
+define('SLM_REWRITE_VERSION',       '2.4.0');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL   . '/public/assets/');
