@@ -14,10 +14,16 @@ class SLM_API_Listener {
     function __construct() {
 
         if (isset($_REQUEST['slm_action']) && isset($_REQUEST['secret_key'])) {
-            
+
+            //Log debug
+            global $slm_debug_logger;
+            $action_type = sanitize_text_field($_REQUEST['slm_action']);
+            $ip_address = SLM_Utility::get_ip_address();
+            $slm_debug_logger->log_debug("API - Request received from IP: " . $ip_address . ", Action type: " . $action_type);
+
             //Trigger an action hook
-            do_action('slm_api_listener_init');  
-            
+            do_action('slm_api_listener_init');
+
             //This is an API query for the license manager. Handle the query.
             $this->creation_api_listener();
             $this->activation_api_listener();
@@ -37,9 +43,9 @@ class SLM_API_Listener {
             SLM_API_Utility::verify_secret_key_for_creation(); //Verify the secret key first.
 
             $slm_debug_logger->log_debug("API - license creation (slm_create_new) request received.");
-            
+
             //Action hook
-            do_action('slm_api_listener_slm_create_new');            
+            do_action('slm_api_listener_slm_create_new');
 
             $fields = array();
             if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
@@ -92,9 +98,9 @@ class SLM_API_Listener {
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
             $slm_debug_logger->log_debug("API - license activation (slm_activate) request received.");
-            
+
             //Action hook
-            do_action('slm_api_listener_slm_activate');             
+            do_action('slm_api_listener_slm_activate');
 
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
@@ -134,12 +140,12 @@ class SLM_API_Listener {
                     }
                     $fields['lic_key_id'] = $retLic->id;
                     $wpdb->insert($reg_table, $fields);
-                    
+
                     $slm_debug_logger->log_debug("Updating license key status to active.");
                     $data = array('lic_status' => 'active');
                     $where = array('id' => $retLic->id);
                     $updated = $wpdb->update($tbl_name, $data, $where);
-                    
+
                     $args = (array('result' => 'success', 'message' => 'License key activated'));
                     SLM_API_Utility::output_api_response($args);
                 } else {
@@ -152,7 +158,7 @@ class SLM_API_Listener {
                             SLM_API_Utility::output_api_response($args);
                         }
                     }
-                    
+
                     //Not used on an existing domain. Return error: REACHED_MAX_DOMAINS
                     $args = (array('result' => 'error', 'message' => 'Reached maximum allowable domains', 'error_code' => SLM_Error_Codes::REACHED_MAX_DOMAINS));
                     SLM_API_Utility::output_api_response($args);
@@ -172,9 +178,9 @@ class SLM_API_Listener {
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
             $slm_debug_logger->log_debug("API - license deactivation (slm_deactivate) request received.");
-            
+
             //Action hook
-            do_action('slm_api_listener_slm_deactivate');            
+            do_action('slm_api_listener_slm_deactivate');
 
             if (empty($_REQUEST['registered_domain'])) {
                 $args = (array('result' => 'error', 'message' => 'Registered domain information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
@@ -208,14 +214,14 @@ class SLM_API_Listener {
             SLM_API_Utility::verify_secret_key(); //Verify the secret key first.
 
             $slm_debug_logger->log_debug("API - license check (slm_check) request received.");
-            
+
             $fields = array();
             $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key']);
 
             //Action hook
             do_action('slm_api_listener_slm_check');
-            
+
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
             $reg_table = SLM_TBL_LIC_DOMAIN;
@@ -227,7 +233,7 @@ class SLM_API_Listener {
             $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
             if ($retLic) {//A license key exists
                 $args = apply_filters( 'slm_check_response_args', array(
-                    'result' => 'success', 
+                    'result' => 'success',
                     'message' => 'License key details retrieved.',
                     'license_key' => $retLic->license_key,
                     'status' => $retLic->lic_status,
@@ -249,7 +255,7 @@ class SLM_API_Listener {
             } else {
                 $args = (array('result' => 'error', 'message' => 'Invalid license key', 'error_code' => SLM_Error_Codes::LICENSE_INVALID));
                 SLM_API_Utility::output_api_response($args);
-            }            
+            }
         }
     }
 
