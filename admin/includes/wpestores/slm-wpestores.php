@@ -6,16 +6,17 @@
 add_filter('eStore_notification_email_body_filter', 'slm_handle_estore_email_body_filter', 10, 3); //Standard sale notification email
 add_filter('eStore_squeeze_form_email_body_filter', 'slm_handle_estore_email_body_filter', 10, 3); //Squeeze form email
 
-function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) {
+function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items)
+{
     global $slm_debug_logger, $wpdb;
     $slm_debug_logger->log_debug("WP eStore integration - checking if a license key needs to be created for this transaction.");
     $products_table_name = $wpdb->prefix . "wp_eStore_tbl";
     $slm_data = "";
 
     //Check if this is a recurring payment.
-    if ( function_exists('is_paypal_recurring_payment') ) {
+    if (function_exists('is_paypal_recurring_payment')) {
         $recurring_payment = is_paypal_recurring_payment($payment_data);
-        if( $recurring_payment ){
+        if ($recurring_payment) {
             $slm_debug_logger->log_debug("This is a recurring payment. No need to create a new license key.");
             do_action('slm_estore_recurring_payment_received', $payment_data, $cart_items);
             return $body;
@@ -26,7 +27,7 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
         $prod_id = $current_cart_item['item_number'];
         $item_name = $current_cart_item['item_name'];
         $quantity = $current_cart_item['quantity'];
-        if(empty($quantity)){
+        if (empty($quantity)) {
             $quantity = 1;
         }
         $slm_debug_logger->log_debug('License Manager - Item Number: ' . $prod_id . ', Quantity: ' . $quantity . ', Item Name: ' . $item_name);
@@ -52,7 +53,8 @@ function slm_handle_estore_email_body_filter($body, $payment_data, $cart_items) 
     return $body;
 }
 
-function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity){
+function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_data, $cart_items, $item_name, $quantity)
+{
     $prod_key_data = "";
     for ($i = 0; $i < $quantity; $i++) {
         $prod_key_data .= slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name);
@@ -60,7 +62,8 @@ function slm_estore_check_and_create_key_for_qty($retrieved_product, $payment_da
     return $prod_key_data;
 }
 
-function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name) {
+function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $cart_items, $item_name)
+{
     global $slm_debug_logger;
     $license_data = '';
 
@@ -74,7 +77,8 @@ function slm_estore_check_and_generate_key($retrieved_product, $payment_data, $c
     return $license_data;
 }
 
-function slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name) {
+function slm_estore_create_license($retrieved_product, $payment_data, $cart_items, $item_name)
+{
     global $slm_debug_logger;
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
@@ -98,10 +102,10 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     if ($product_meta) {
         //Found product specific SLM config data.
         $num_days_before_expiry = $product_meta->meta_value;
-        $slm_date_of_expiry = date('Y-m-d', strtotime('+'.$num_days_before_expiry.' days'));
+        $slm_date_of_expiry = wp_date('Y-m-d', strtotime('+' . $num_days_before_expiry . ' days'));
     } else {
         //Use the default value (1 year from today).
-        $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+        $current_date_plus_1year = wp_date('Y-m-d', strtotime('+1 year'));
         $slm_date_of_expiry = $current_date_plus_1year;
     }
 
@@ -115,9 +119,9 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['company_name'] = $payment_data['company_name'];
     $fields['txn_id'] = $payment_data['txn_id'];
     $fields['max_allowed_domains'] = $max_domains;
-    $fields['date_created'] = date("Y-m-d"); //Today's date
+    $fields['date_created'] = wp_date("Y-m-d"); //Today's date
     $fields['date_expiry'] = $slm_date_of_expiry;
-    $fields['product_ref'] = $prod_id;//WP eStore product ID
+    $fields['product_ref'] = $prod_id; //WP eStore product ID
     $fields['subscr_id'] = isset($payment_data['subscr_id']) ? $payment_data['subscr_id'] : '';
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
@@ -155,7 +159,8 @@ add_action('eStore_new_product_added', 'slm_estore_new_product_added', 10, 2); /
 add_action('eStore_product_updated', 'slm_estore_product_updated', 10, 2); //Handle the DB update after a product edit.
 add_action('eStore_product_deleted', 'slm_estore_product_deleted'); //Handle the DB delete after a product delete.
 
-function slm_estore_product_configuration_html($product_config_html, $prod_id) {
+function slm_estore_product_configuration_html($product_config_html, $prod_id)
+{
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
@@ -181,7 +186,6 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
         } else {
             $slm_date_of_expiry = "";
         }
-
     }
 
     $product_config_html .= '<div class="msg_head">Software License Manager Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
@@ -201,7 +205,8 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id) {
     return $product_config_html;
 }
 
-function slm_estore_new_product_added($prod_dat_array, $prod_id) {
+function slm_estore_new_product_added($prod_dat_array, $prod_id)
+{
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
@@ -224,10 +229,10 @@ function slm_estore_new_product_added($prod_dat_array, $prod_id) {
     if (!$result) {
         //insert query failed
     }
-
 }
 
-function slm_estore_product_updated($prod_dat_array, $prod_id) {
+function slm_estore_product_updated($prod_dat_array, $prod_id)
+{
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 
@@ -240,7 +245,6 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         $meta_value = $prod_dat_array['slm_max_allowed_domains'];
         $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
         $results = $wpdb->query($update_db_qry);
-
     } else {
         //No value for this field was there so lets insert one.
         $fields = array();
@@ -259,7 +263,6 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         $meta_value = $prod_dat_array['slm_date_of_expiry'];
         $update_db_qry = "UPDATE $product_meta_table_name SET meta_value='$meta_value' WHERE prod_id='$prod_id' AND meta_key='$meta_key_name'";
         $results = $wpdb->query($update_db_qry);
-
     } else {
         //No value for this field was there so lets insert one.
         $fields = array();
@@ -268,10 +271,10 @@ function slm_estore_product_updated($prod_dat_array, $prod_id) {
         $fields['meta_value'] = $prod_dat_array['slm_date_of_expiry'];
         $result = $wpdb->insert($product_meta_table_name, $fields);
     }
-
 }
 
-function slm_estore_product_deleted($prod_id) {
+function slm_estore_product_deleted($prod_id)
+{
     global $wpdb;
     $product_meta_table_name = WP_ESTORE_PRODUCTS_META_TABLE_NAME;
 

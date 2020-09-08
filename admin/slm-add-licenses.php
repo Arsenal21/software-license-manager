@@ -32,8 +32,10 @@ function slm_add_licenses_menu()
     $lic_item_ref   = '';
     $slm_billing_length   = '';
     $slm_billing_interval   = '';
-    $current_date   = (date("Y-m-d"));
-    $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+    //$current_date   = (date("Y-m-d"));
+    $current_date   = wp_date("Y-m-d");
+    $current_time = wp_date("H:i:s");
+    $current_date_plus_1year = wp_date('Y-m-d', strtotime('+1 year'));
 
     echo '<div class="wrap">';
     // echo '<h2>Add/Edit Licenses</h2>';

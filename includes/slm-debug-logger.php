@@ -11,12 +11,13 @@
  * SLM_Debug_Logger::log_debug_st("Some debug message");
  */
 
-class SLM_Debug_Logger{
+class SLM_Debug_Logger
+{
     var $log_folder_path;
     var $default_log_file = 'log.txt';
     var $default_log_file_cron = 'log-cron-job.txt';
     var $debug_enabled = false;
-    var $debug_status = array('SUCCESS','STATUS','NOTICE','WARNING','FAILURE','CRITICAL');
+    var $debug_status = array('SUCCESS', 'STATUS', 'NOTICE', 'WARNING', 'FAILURE', 'CRITICAL');
     var $section_break_marker = "\n----------------------------------------------------------\n\n";
     var $log_reset_marker = "-------- Log File Reset --------\n";
 
@@ -25,23 +26,22 @@ class SLM_Debug_Logger{
         $this->log_folder_path = SLM_PATH . '/logs';
         //Check config and if debug is enabled then set the enabled flag to true
         $options = get_option('slm_plugin_options');
-        if(!empty($options['enable_debug'])){//Debugging is enabled
+        if (!empty($options['enable_debug'])) { //Debugging is enabled
             $this->debug_enabled = true;
         }
     }
 
     function get_debug_timestamp()
     {
-        return '['.date('m/d/Y g:i A').'] - ';
+        return '[' . wp_date('m/d/Y g:i A') . '] - ';
     }
 
     function get_debug_status($level)
     {
         $size = count($this->debug_status);
-        if($level >= $size){
+        if ($level >= $size) {
             return 'UNKNOWN';
-        }
-        else{
+        } else {
             return $this->debug_status[$level];
         }
     }
@@ -54,43 +54,43 @@ class SLM_Debug_Logger{
         return "";
     }
 
-    function reset_log_file($file_name='')
+    function reset_log_file($file_name = '')
     {
-        if(empty($file_name)){
+        if (empty($file_name)) {
             $file_name = $this->default_log_file;
         }
-        $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $content = $this->get_debug_timestamp().$this->log_reset_marker;
-        $fp=fopen($debug_log_file,'w');
+        $debug_log_file = $this->log_folder_path . '/' . $file_name;
+        $content = $this->get_debug_timestamp() . $this->log_reset_marker;
+        $fp = fopen($debug_log_file, 'w');
         fwrite($fp, $content);
         fclose($fp);
     }
 
-    function append_to_file($content,$file_name)
+    function append_to_file($content, $file_name)
     {
-        if(empty($file_name))$file_name = $this->default_log_file;
-        $debug_log_file = $this->log_folder_path.'/'.$file_name;
-        $fp=fopen($debug_log_file,'a');
+        if (empty($file_name)) $file_name = $this->default_log_file;
+        $debug_log_file = $this->log_folder_path . '/' . $file_name;
+        $fp = fopen($debug_log_file, 'a');
         fwrite($fp, $content);
         fclose($fp);
     }
 
-    function log_debug($message,$level=0,$section_break=false,$file_name='')
+    function log_debug($message, $level = 0, $section_break = false, $file_name = '')
     {
         if (!$this->debug_enabled) return;
-        $content = $this->get_debug_timestamp();//Timestamp
-        $content .= $this->get_debug_status($level);//Debug status
+        $content = $this->get_debug_timestamp(); //Timestamp
+        $content .= $this->get_debug_status($level); //Debug status
         $content .= ' : ';
         $content .= $message . "\n";
         $content .= $this->get_section_break($section_break);
         $this->append_to_file($content, $file_name);
     }
 
-    function log_debug_cron($message,$level=0,$section_break=false)
+    function log_debug_cron($message, $level = 0, $section_break = false)
     {
         if (!$this->debug_enabled) return;
-        $content = $this->get_debug_timestamp();//Timestamp
-        $content .= $this->get_debug_status($level);//Debug status
+        $content = $this->get_debug_timestamp(); //Timestamp
+        $content .= $this->get_debug_status($level); //Debug status
         $content .= ' : ';
         $content .= $message . "\n";
         $content .= $this->get_section_break($section_break);
@@ -98,17 +98,16 @@ class SLM_Debug_Logger{
         $this->append_to_file($content, $this->default_log_file_cron);
     }
 
-    static function log_debug_st($message,$level=0,$section_break=false,$file_name='')
+    static function log_debug_st($message, $level = 0, $section_break = false, $file_name = '')
     {
         $options = get_option('slm_plugin_options');
-        if(empty($options['enable_debug'])){//Debugging is disabled
-           return;
+        if (empty($options['enable_debug'])) { //Debugging is disabled
+            return;
         }
-        $content = '['.date('m/d/Y g:i A').'] - STATUS : '. $message . "\n";
+        $content = '[' . wp_date('m/d/Y g:i A') . '] - STATUS : ' . $message . "\n";
         $debug_log_file = SLM_PUBLIC . '/logs/log.txt';
-        $fp=fopen($debug_log_file,'a');
+        $fp = fopen($debug_log_file, 'a');
         fwrite($fp, $content);
         fclose($fp);
     }
-
 }

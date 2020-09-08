@@ -1,45 +1,45 @@
 {
-    "name": "software-license-manager",
-    "version": "5.5.6",
-    "description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
-    "scripts": {
-        "changelog": "auto-changelog -p && git add CHANGELOG.md"
-    },
-    "auto-changelog": {
-        "output": "CHANGELOG.md",
-        "template": "keepachangelog",
-        "issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
-        "unreleased": true,
-        "commitLimit": false,
-        "includeBranch": [
-            "release-v2",
-            "release-v3"
-        ]
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://michelve@github.com/michelve/software-license-manager.git"
-    },
-    "keywords": [
-        "software",
-        "license",
-        "license",
-        "license",
-        "manager",
-        "wordpress",
-        "license",
-        "manager",
-        "slm",
-        "woocommerce",
-        "lcienses"
-    ],
-    "author": "Michel Velis and Tips and Tricks HQ",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/michelve/software-license-manager/issues"
-    },
-    "homepage": "https://github.com/michelve/software-license-manager#readme",
-    "devDependencies": {
-        "auto-changelog": "^1.14.1"
-    }
+	"name": "software-license-manager",
+	"version": "5.5.8",
+	"description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
+	"scripts": {
+		"changelog": "auto-changelog -p && git add CHANGELOG.md"
+	},
+	"auto-changelog": {
+		"output": "CHANGELOG.md",
+		"template": "keepachangelog",
+		"issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
+		"unreleased": true,
+		"commitLimit": false,
+		"includeBranch": [
+			"release-v2",
+			"release-v3"
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://michelve@github.com/michelve/software-license-manager.git"
+	},
+	"keywords": [
+		"software",
+		"license",
+		"license",
+		"license",
+		"manager",
+		"wordpress",
+		"license",
+		"manager",
+		"slm",
+		"woocommerce",
+		"lcienses"
+	],
+	"author": "Michel Velis and Tips and Tricks HQ",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/michelve/software-license-manager/issues"
+	},
+	"homepage": "https://github.com/michelve/software-license-manager#readme",
+	"devDependencies": {
+		"auto-changelog": "^1.14.1"
+	}
 }

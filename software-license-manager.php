@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 5.5.7
+Version: 5.5.8
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -9,7 +9,7 @@ Description: Software license management solution for your web applications (Wor
 Author2: <a href="https://www.tipsandtricks-hq.com/">Tips and Tricks HQ</a>
 Text Domain: softwarelicensemanager
 Domain Path: /i18n/languages/
-WC tested up to: 4.2.1
+WC tested up to: 4.3.0
 */
 
 // If this file is called directly, abort.
@@ -19,9 +19,9 @@ if (!defined('WPINC')) {
 global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',               '5.5.7');
-define('SLM_DB_VERSION',            '4.2.9');
-define('SLM_REWRITE_VERSION',       '2.4.0');
+define('SLM_VERSION',               '5.5.8');
+define('SLM_DB_VERSION',            '4.3.0');
+define('SLM_REWRITE_VERSION',       '2.4.1');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL   . '/public/assets/');
