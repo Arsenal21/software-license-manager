@@ -1,5 +1,5 @@
 ---
-name: Question
+name: :question: Question
 about: More information is needed or I have questions
 title: ""
 labels: ""
