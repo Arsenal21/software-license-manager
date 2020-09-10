@@ -236,6 +236,5 @@ function wc_print_pretty($args)
 function wc_log($msg)
 {
     $log = ABSPATH . DIRECTORY_SEPARATOR . 'slm_log.txt';
-    file_put_contents($log, $msg . '
-', FILE_APPEND);
+    file_put_contents($log, $msg . '', FILE_APPEND);
 }

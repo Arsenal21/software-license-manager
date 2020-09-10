@@ -1,9 +1,10 @@
 {
-	"name": "software-license-manager",
+	"name": "@michelve/software-license-manager",
 	"version": "5.5.8",
 	"description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
 	"scripts": {
-		"changelog": "auto-changelog -p && git add CHANGELOG.md"
+		"changelog": "auto-changelog -p && git add CHANGELOG.md",
+		"postpublish": "npm publish --ignore-scripts --@michelve:registry='https://registry.npmjs.org'"
 	},
 	"auto-changelog": {
 		"output": "CHANGELOG.md",
@@ -18,12 +19,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://michelve@github.com/michelve/software-license-manager.git"
+		"url": "git+https://github.com/michelve/software-license-manager.git"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
 	},
 	"keywords": [
 		"software",
-		"license",
-		"license",
+		"license manager",
+		"software license",
 		"license",
 		"manager",
 		"wordpress",
@@ -31,7 +35,7 @@
 		"manager",
 		"slm",
 		"woocommerce",
-		"lcienses"
+		"license key generator"
 	],
 	"author": "Michel Velis and Tips and Tricks HQ",
 	"license": "MIT",
@@ -41,5 +45,6 @@
 	"homepage": "https://github.com/michelve/software-license-manager#readme",
 	"devDependencies": {
 		"auto-changelog": "^1.14.1"
-	}
+	},
+	"main": "software-license-manager.php"
 }
