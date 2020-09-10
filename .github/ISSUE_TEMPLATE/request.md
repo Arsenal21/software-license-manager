@@ -1,8 +1,8 @@
 ---
-name: :earth_asia: Feature Request
-about: More information is needed or I have questions
+name: Feature Request
+about: New features and enhacements
 title: ""
-labels: "Enhancement"
+labels: "enhancement, feature request"
 assignees: ""
 ---
 
