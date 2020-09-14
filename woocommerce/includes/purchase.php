@@ -1,4 +1,5 @@
 <?php
+
 /**
  * https://businessbloomer.com/woocommerce-easily-get-order-info-total-items-etc-from-order-object/
  * @package   Software License Manager
@@ -15,18 +16,18 @@ if (!defined('ABSPATH')) {
 global $post, $woocommerce, $product;
 
 $slm_options = get_option('slm_plugin_options');
-$affect_downloads = $slm_options['slm_woo_affect_downloads']==1 ? true : false;
+$affect_downloads = $slm_options['slm_woo_affect_downloads'] == 1 ? true : false;
 //add_action('woocommerce_checkout_update_order_meta', 'slm_add_lic_key_meta_update');
 add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
 add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
-if($affect_downloads == true){
+if ($affect_downloads == true) {
 	add_action('woocommerce_order_status_completed', 'wc_slm_access_expiration', 82);
 }
 add_action('woocommerce_order_details_after_order_table', 'slm_order_details', 10, 1);
 // add_action('woocommerce_thankyou', 'slm_show_msg', 80);
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
-add_filter( 'woocommerce_hidden_order_itemmeta', 'slm_hide_order_meta',10,1);
-add_action( 'woocommerce_after_order_itemmeta','slm_display_nice_item_meta',10,3);
+add_filter('woocommerce_hidden_order_itemmeta', 'slm_hide_order_meta', 10, 1);
+add_action('woocommerce_after_order_itemmeta', 'slm_display_nice_item_meta', 10, 3);
 
 /**
  * Disable display of some metadata
@@ -34,7 +35,8 @@ add_action( 'woocommerce_after_order_itemmeta','slm_display_nice_item_meta',10,3
  * @param array $hide_meta - list of meta data to hide
  * @return array modified list of meta data to hide
  */
-function slm_hide_order_meta($hide_meta){
+function slm_hide_order_meta($hide_meta)
+{
 	$hide_meta[] = '_slm_lic_key';
 	$hide_meta[] = '_slm_lic_type';
 	return $hide_meta;
@@ -49,41 +51,44 @@ function slm_hide_order_meta($hide_meta){
  * @param object $product
  *
  */
-function slm_display_nice_item_meta($item_id, $item, $product){
-	?>
+function slm_display_nice_item_meta($item_id, $item, $product)
+{
+?>
 	<div class="view">
-	<?php if ( $meta_data = wc_get_order_item_meta($item_id,'_slm_lic_key',false) ) : ?>
-		<table cellspacing="0" class="display_meta">
-			<?php
-			$admin_link = get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=';
-			foreach ( $meta_data as $meta ) :
-				$lic_key = $meta;
-				$lic_id = wc_slm_get_license_id($lic_key);
-				if(!empty($lic_id)){
-					$cur_link = '<a href="' . $admin_link . $lic_id . '" target="_blank">' . $lic_key . '</a>';
-				}else{
-					$cur_link = $lic_key . ' - Licence not exists anymore';
-				}
-			?>
-				<tr>
-					<th><?php echo 'Licence key: ';?></th>
-					<td><?php echo $cur_link;?></td>
-				</tr>
-			<?php endforeach; ?>
-		</table>
-	<?php endif; ?>
+		<?php if ($meta_data = wc_get_order_item_meta($item_id, '_slm_lic_key', false)) : ?>
+			<table cellspacing="0" class="display_meta">
+				<?php
+				$admin_link = get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=';
+				foreach ($meta_data as $meta) :
+					$lic_key = $meta;
+					$lic_id = wc_slm_get_license_id($lic_key);
+					if (!empty($lic_id)) {
+						$cur_link = '<a href="' . $admin_link . $lic_id . '" target="_blank">' . $lic_key . '</a>';
+					} else {
+						$cur_link = $lic_key . ' - Licence not exists anymore';
+					}
+				?>
+					<tr>
+						<th><?php echo 'Licence key: '; ?></th>
+						<td><?php echo $cur_link; ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
 	</div>
 <?php
 }
 
-function wc_slm_on_complete_purchase($order_id) {
+function wc_slm_on_complete_purchase($order_id)
+{
 	//SLM_Helper_Class::write_log('loading wc_slm_on_complete_purchase');
-	if (SLM_SITE_URL != '' && WOO_SLM_API_SECRET != '') {
+	if (SLM_SITE_HOME_URL != '' && WOO_SLM_API_SECRET != '') {
 		wc_slm_create_license_keys($order_id);
 	}
 }
 
-function wc_slm_create_license_keys($order_id) {
+function wc_slm_create_license_keys($order_id)
+{
 
 	// SLM_Helper_Class::write_log('loading wc_slm_create_license_keys');
 
@@ -113,13 +118,13 @@ function wc_slm_create_license_keys($order_id) {
 	foreach ($items as $item => $values) {
 		$download_id 	= $product_id = $values['product_id'];
 		$product 		= $values->get_product();
-		if ($product->is_type( 'slm_license' )){
+		if ($product->is_type('slm_license')) {
 			$download_quantity = absint($values['qty']);
 			for ($i = 1; $i <= $download_quantity; $i++) {
 				//Get all existing licence keys of the product
 				$order_item_lic_key = $values->get_meta('_slm_lic_key', false);
 				//Create keys only if there are not keys created already
-				if(count($order_item_lic_key)<$download_quantity){
+				if (count($order_item_lic_key) < $download_quantity) {
 					/**
 					 * Calculate Expire date
 					 * @since 1.0.3
@@ -139,7 +144,7 @@ function wc_slm_create_license_keys($order_id) {
 					// 	$renewal_period = date('Y-m-d', strtotime('+' . 31 . ' days'));
 					// }
 					else {
-						$expiration = date('Y-m-d', strtotime('+' . $renewal_period .' '. $renewal_term));
+						$expiration = date('Y-m-d', strtotime('+' . $renewal_period . ' ' . $renewal_term));
 					}
 					// SLM_Helper_Class::write_log('renewal_period -- '.$renewal_period  );
 					// SLM_Helper_Class::write_log('exp -- ' . $expiration);
@@ -162,12 +167,12 @@ function wc_slm_create_license_keys($order_id) {
 					$item_data 					= $values->get_data();
 					$product_name 				= $item_data['name'];
 					$product_id 				= $item_data['product_id'];
-					$_license_current_version 	= get_post_meta( $product_id, '_license_current_version', true );
+					$_license_current_version 	= get_post_meta($product_id, '_license_current_version', true);
 					$_license_until_version 	= get_post_meta($product_id, '_license_until_version', true);
 					$amount_of_licenses_devices = wc_slm_get_devices_allowed($product_id);
-					$current_version 			= (int)get_post_meta( $product_id, '_license_current_version', true);
-					$license_type 				= get_post_meta( $product_id, '_license_type', true );
-					$lic_item_ref				= get_post_meta( $product_id, '_license_item_reference', true );
+					$current_version 			= (int)get_post_meta($product_id, '_license_current_version', true);
+					$license_type 				= get_post_meta($product_id, '_license_type', true);
+					$lic_item_ref				= get_post_meta($product_id, '_license_item_reference', true);
 
 					// Transaction id
 					$transaction_id = wc_get_payment_transaction_id($product_id);
@@ -201,7 +206,7 @@ function wc_slm_create_license_keys($order_id) {
 					//access_expires
 					//SLM_Helper_Class::write_log('license_type -- ' . $license_type );
 					// Send query to the license manager server
-					$url 			= SLM_SITE_URL . '?' . http_build_query($api_params);
+					$url 			= SLM_SITE_HOME_URL . '?' . http_build_query($api_params);
 					$url 			= str_replace(array('http://', 'https://'), '', $url);
 					$url 			= 'http://' . $url;
 					$response 		= wp_remote_get($url, array('timeout' => 20, 'sslverify' => false));
@@ -216,21 +221,21 @@ function wc_slm_create_license_keys($order_id) {
 							'type' 		=>	$license_type,
 							'item_ref'	=>	$lic_item_ref,
 							'slm_billing_length' => $slm_billing_length,
-							'slm_billing_interval' =>$slm_billing_interval,
+							'slm_billing_interval' => $slm_billing_interval,
 							'status' 	=>	'pending',
 							'version' 	=>	$_license_current_version,
 							'until' 	=>	$_license_until_version
 						);
 						$item_id = $values->get_id();
-            			wc_add_order_item_meta($item_id,'_slm_lic_key',$license_key);
-            			wc_add_order_item_meta($item_id,'_slm_lic_type',$license_type);
+						wc_add_order_item_meta($item_id, '_slm_lic_key', $license_key);
+						wc_add_order_item_meta($item_id, '_slm_lic_type', $license_type);
 					}
 				}
 			}
 		}
 	}
 
-	if(count($licenses)>0){
+	if (count($licenses) > 0) {
 		// Payment note
 		wc_slm_payment_note($order_id, $licenses);
 
@@ -241,7 +246,8 @@ function wc_slm_create_license_keys($order_id) {
 	}
 }
 
-function wc_slm_get_license_key($response) {
+function wc_slm_get_license_key($response)
+{
 	// Check for error in the response
 	if (is_wp_error($response)) {
 		return false;
@@ -257,19 +263,21 @@ function wc_slm_get_license_key($response) {
 	return $license_data->key;
 }
 
-function wc_slm_get_license_id($license){
+function wc_slm_get_license_id($license)
+{
 	global $wpdb;
-	$license_id = $wpdb->get_row("SELECT ID, license_key FROM ". $wpdb->prefix . "lic_key_tbl" . " WHERE license_key = '".$license."' ORDER BY id DESC LIMIT 0,1");
+	$license_id = $wpdb->get_row("SELECT ID, license_key FROM " . $wpdb->prefix . "lic_key_tbl" . " WHERE license_key = '" . $license . "' ORDER BY id DESC LIMIT 0,1");
 	return $license_id->ID;
 }
 
-function wc_slm_payment_note($order_id, $licenses) {
+function wc_slm_payment_note($order_id, $licenses)
+{
 	if ($licenses && count($licenses) != 0) {
 		$message = __('License Key(s) generated', 'softwarelicensemanager');
 
 		foreach ($licenses as $license) {
 			$license_key = $license['key'];
-			$message .= '<br />' . $license['item'] . ': <a href="'. get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=' . wc_slm_get_license_id($license_key).'">' . $license_key . '</a>';
+			$message .= '<br />' . $license['item'] . ': <a href="' . get_admin_url() . 'admin.php?page=slm_manage_license&edit_record=' . wc_slm_get_license_id($license_key) . '">' . $license_key . '</a>';
 
 			//These data are irrelevant - they work only when the order is completed and just for one licence key
 
@@ -283,8 +291,7 @@ function wc_slm_payment_note($order_id, $licenses) {
 
 			//SLM_Helper_Class::write_log($license_key);
 		}
-	}
-	else {
+	} else {
 		$message = __('License Key(s) could not be created.', 'softwarelicensemanager');
 	}
 
@@ -293,27 +300,28 @@ function wc_slm_payment_note($order_id, $licenses) {
 }
 
 
-function wc_slm_access_expiration($order_id, $lic_expiry = ''){
+function wc_slm_access_expiration($order_id, $lic_expiry = '')
+{
 	global $wpdb;
 
 	$order	 		= wc_get_order($order_id);
 	$items 			= $order->get_items();
-	foreach ($items as $item_key => $item_details){
+	foreach ($items as $item_key => $item_details) {
 		$product_id = $item_details['product_id'];
 		$product 		= wc_get_product($product_id);
-		if ($product->is_type( 'slm_license' )){
+		if ($product->is_type('slm_license')) {
 			//Get any existing licence key
 			$order_item_lic_key = $item_details->get_meta('_slm_lic_key', true);
-			if(!empty($order_item_lic_key)){
+			if (!empty($order_item_lic_key)) {
 				$licence = get_licence_by_key($order_item_lic_key);
-				if(!empty($licence)){
+				if (!empty($licence)) {
 					$lic_expiry 	= $licence['date_expiry'];
-					if($lic_expiry == '0000-00-00'){
+					if ($lic_expiry == '0000-00-00') {
 						$lic_expiry = 'NULL';
-					}else{
-						$lic_expiry = "'".$lic_expiry."'";
+					} else {
+						$lic_expiry = "'" . $lic_expiry . "'";
 					}
-					$query = "UPDATE " . $wpdb->prefix ."woocommerce_downloadable_product_permissions SET access_expires = ". $lic_expiry ." WHERE order_id = ". $order_id ." AND product_id = " . $product_id . ";";
+					$query = "UPDATE " . $wpdb->prefix . "woocommerce_downloadable_product_permissions SET access_expires = " . $lic_expiry . " WHERE order_id = " . $order_id . " AND product_id = " . $product_id . ";";
 					$wpdb->query($query);
 				}
 			}
@@ -328,12 +336,13 @@ function wc_slm_access_expiration($order_id, $lic_expiry = ''){
  * @param array $licence_key - licence key for which to retrieve licence
  * @return array all the licence fields
  */
-function get_licence_by_key($licence_key){
+function get_licence_by_key($licence_key)
+{
 	global $wpdb;
 
-	if(empty($licence_key)){
+	if (empty($licence_key)) {
 		return false;
-	}else{
+	} else {
 		$licence_key = esc_attr($licence_key);
 	}
 	$lic_keys_table       = SLM_TBL_LICENSE_KEYS;
@@ -342,14 +351,16 @@ function get_licence_by_key($licence_key){
 	return $record;
 }
 
-function wc_slm_assign_licenses($order_id, $licenses) {
+function wc_slm_assign_licenses($order_id, $licenses)
+{
 	if (count($licenses) != 0) {
 		add_post_meta($order_id, '_wc_slm_payment_licenses', $licenses);
 	}
 }
 
 
-function wc_slm_get_sites_allowed($product_id) {
+function wc_slm_get_sites_allowed($product_id)
+{
 	$wc_slm_sites_allowed = absint(get_post_meta($product_id, '_domain_licenses', true));
 	if (empty($wc_slm_sites_allowed)) {
 		return false;
@@ -357,7 +368,8 @@ function wc_slm_get_sites_allowed($product_id) {
 	return $wc_slm_sites_allowed;
 }
 
-function wc_slm_get_lic_type($product_id) {
+function wc_slm_get_lic_type($product_id)
+{
 	$_license_type = absint(get_post_meta($product_id, '_license_type', true));
 	if (empty($_license_type)) {
 		return false;
@@ -365,7 +377,8 @@ function wc_slm_get_lic_type($product_id) {
 	return $_license_type;
 }
 
-function wc_slm_get_devices_allowed($product_id) {
+function wc_slm_get_devices_allowed($product_id)
+{
 	$_devices_licenses = absint(get_post_meta($product_id, '_devices_licenses', true));
 	if (empty($_devices_licenses)) {
 		return false;
@@ -373,7 +386,8 @@ function wc_slm_get_devices_allowed($product_id) {
 	return $_devices_licenses;
 }
 
-function wc_slm_get_licenses_qty($product_id) {
+function wc_slm_get_licenses_qty($product_id)
+{
 	$amount_of_licenses = absint(get_post_meta($product_id, '_amount_of_licenses', true));
 	if (empty($amount_of_licenses)) {
 		return false;
@@ -381,7 +395,8 @@ function wc_slm_get_licenses_qty($product_id) {
 	return $amount_of_licenses;
 }
 
-function wc_slm_get_licensing_renewal_period($product_id) {
+function wc_slm_get_licensing_renewal_period($product_id)
+{
 	$_license_renewal_period = absint(get_post_meta($product_id, '_license_renewal_period', true));
 	if (empty($_license_renewal_period)) {
 		return 0;
@@ -396,27 +411,30 @@ function wc_slm_get_licensing_renewal_period_term($product_id)
 	return $term;
 }
 
-function wc_slm_is_licensing_enabled($download_id) {
+function wc_slm_is_licensing_enabled($download_id)
+{
 	$licensing_enabled = absint(get_post_meta($download_id, '_wc_slm_licensing_enabled', true));
 	// Set defaults
 	if ($licensing_enabled) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
 
-function wc_insert_payment_note($order_id, $msg) {
+function wc_insert_payment_note($order_id, $msg)
+{
 	$order = new WC_Order($order_id);
 	$order->add_order_note($msg);
 }
 
-function wc_get_payment_transaction_id($order_id) {
+function wc_get_payment_transaction_id($order_id)
+{
 	return get_post_meta($order_id, '_transaction_id', true);
 }
 
-function slm_order_completed( $order_id ) {
+function slm_order_completed($order_id)
+{
 
 	global $user_id, $wpdb;
 	$get_user_info = '';
@@ -434,31 +452,32 @@ function slm_order_completed( $order_id ) {
 	$billing_address 		= $order_billing_email;
 
 	// The text for the note
-	$note = __("Order confirmation email sent to: <a href='mailto:". $billing_address ."'>" . $billing_address . "</a>" );
+	$note = __("Order confirmation email sent to: <a href='mailto:" . $billing_address . "'>" . $billing_address . "</a>");
 	// Add the note
-	$order->add_order_note( $note );
+	$order->add_order_note($note);
 	// Save the data
 	$order->save();
 	//SLM_Helper_Class::write_log($to_email . 'License details'. $message . $headers );
 }
 
-function slm_show_msg( $order_id ) {
-	$order_id 		=  new WC_Order( $order_id );
+function slm_show_msg($order_id)
+{
+	$order_id 		=  new WC_Order($order_id);
 	$purchase_id_ 	= $order_id->get_id();
-	$order 			= wc_get_order( $order_id );
+	$order 			= wc_get_order($order_id);
 	$items 			= $order->get_items();
 
-	foreach ( $items as $item ) {
-	    $product_name 			= $item->get_name();
-	    $product_id 			= $item->get_product_id();
-	    $product_variation_id 	= $item->get_variation_id();
-	    $amount_of_licenses     = wc_slm_get_sites_allowed($product_id);
+	foreach ($items as $item) {
+		$product_name 			= $item->get_name();
+		$product_id 			= $item->get_product_id();
+		$product_variation_id 	= $item->get_variation_id();
+		$amount_of_licenses     = wc_slm_get_sites_allowed($product_id);
 
-	    // is a licensed product
+		// is a licensed product
 		//var_dump(get_post_meta($product_id));
 
-	    if ($amount_of_licenses) {
-			echo '<div class="woocommerce-order-details"> <h2 class="woocommerce-order-details__title">'. __('My subscriptions') .'</h2> <table class="woocommerce-table woocommerce-table--order-details shop_table order_details"> <thead> <tr> <th class="woocommerce-table__product-name product-name"'. __('My Account') .'</th> </tr> </thead> <tbody> <tr class="woocommerce-table__line-item order_item"> <td class="woocommerce-table__product-name product-name" > '. __('You can see and manage your licenses inside your account') .' <a href="/my-account/my-licenses/">'. __('Manage Licenses') .'</a></td> </tr> </tbody> </table> </div>';
+		if ($amount_of_licenses) {
+			echo '<div class="woocommerce-order-details"> <h2 class="woocommerce-order-details__title">' . __('My subscriptions') . '</h2> <table class="woocommerce-table woocommerce-table--order-details shop_table order_details"> <thead> <tr> <th class="woocommerce-table__product-name product-name"' . __('My Account') . '</th> </tr> </thead> <tbody> <tr class="woocommerce-table__line-item order_item"> <td class="woocommerce-table__product-name product-name" > ' . __('You can see and manage your licenses inside your account') . ' <a href="/my-account/my-licenses/">' . __('Manage Licenses') . '</a></td> </tr> </tbody> </table> </div>';
 		}
 	}
 }
@@ -495,8 +514,9 @@ function slm_add_lic_key_meta_update($order_id)
  * Display field value on the order edit page
  */
 
-function slm_add_lic_key_meta_display($order){
-	if(!empty(get_post_meta($order->get_id(), 'slm_wc_license_order_key', true))){
+function slm_add_lic_key_meta_display($order)
+{
+	if (!empty(get_post_meta($order->get_id(), 'slm_wc_license_order_key', true))) {
 		echo '<p><strong>' . __('License key') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_order_key', true) . '</p>';
 		echo '<p><strong>' . __('License expiration') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_expires', true) . '</p>';
 		echo '<p><strong>' . __('License type') . ':</strong> <br/>' . get_post_meta($order->get_id(), 'slm_wc_license_type', true) . '</p>';
@@ -511,26 +531,27 @@ function slm_add_lic_key_meta_display($order){
  * Display values on the order details page
  */
 
-function slm_order_details($order){
+function slm_order_details($order)
+{
 	global $wpdb;
 
 	$items 			= $order->get_items();
 	$licences = array();
-	foreach ($items as $item_key => $item_details){
+	foreach ($items as $item_key => $item_details) {
 		$product 		= $item_details->get_product();
-		if ($product->is_type( 'slm_license' )){
-			if ( $lic_keys = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_key',false) ){
-				$lic_types = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_type',false);
-				$licences = array_map(function($keys,$types){
+		if ($product->is_type('slm_license')) {
+			if ($lic_keys = wc_get_order_item_meta($item_details->get_id(), '_slm_lic_key', false)) {
+				$lic_types = wc_get_order_item_meta($item_details->get_id(), '_slm_lic_type', false);
+				$licences = array_map(function ($keys, $types) {
 					return array(
 						'lic_key' => $keys,
 						'lic_type' => $types
 					);
-				},$lic_keys,$lic_types);
+				}, $lic_keys, $lic_types);
 			}
 		}
 	}
-	if($licences){
+	if ($licences) {
 		echo '
 			<h2 class="woocommerce-order-details__title">' . __('License details') . '</h2>
 			<table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
@@ -542,11 +563,11 @@ function slm_order_details($order){
 				</thead>
 				<tbody>
 		';
-		foreach ($licences as $lic_row){
+		foreach ($licences as $lic_row) {
 			echo '
 					<tr class="woocommerce-table__line-item order_item">
 						<td class="woocommerce-table__product-name product-name">
-							' . $lic_row['lic_key'] . ' - <a href="'.get_permalink( wc_get_page_id( 'myaccount' ) ).'/my-licenses"> ' . __('view my licenses') . '</a>
+							' . $lic_row['lic_key'] . ' - <a href="' . get_permalink(wc_get_page_id('myaccount')) . '/my-licenses"> ' . __('view my licenses') . '</a>
 						</td>
 						<td class="woocommerce-table__product-total product-total">
 							' . $lic_row['lic_type'] . '
@@ -572,11 +593,11 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 	if ($email->id == 'customer_completed_order') {
 		$items 			= $order->get_items();
 		$licences = array();
-		foreach ($items as $item_key => $item_details){
+		foreach ($items as $item_key => $item_details) {
 			$product 		= $item_details->get_product();
-			if ($product->is_type( 'slm_license' )){
-				$meta_data = wc_get_order_item_meta($item_details->get_id(),'_slm_lic_key',false);
-				foreach($meta_data as $meta_row){
+			if ($product->is_type('slm_license')) {
+				$meta_data = wc_get_order_item_meta($item_details->get_id(), '_slm_lic_key', false);
+				foreach ($meta_data as $meta_row) {
 					$licences[] = array(
 						'product' => $product->get_name(),
 						'lic_key' => $meta_row,
@@ -584,7 +605,7 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 				}
 			}
 		}
-		if($licences){
+		if ($licences) {
 			echo '
 				<table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family:"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
 					<thead>
@@ -596,7 +617,7 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 					</thead>
 					<tbody>
 			';
-			foreach ($licences as $lic_row){
+			foreach ($licences as $lic_row) {
 				echo '
 						<tr>
 							<td class="td" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">

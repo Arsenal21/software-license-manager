@@ -87,25 +87,25 @@ class SLM_Woo_Account
         $slm_hide = '';
 
         if (empty($result)) {
-            ?>
+?>
             <div class="woocommerce-Message woocommerce-Message--info woocommerce-info">
-              <a class="woocommerce-Button button" href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>"><?php echo esc_html__( 'Browse products', 'softwarelicensemanager' ); ?>
-              </a>
-              <?php echo esc_html__( 'No licenses available yet.', 'softwarelicensemanager' ); ?>
-             </div>
-            <?php
+                <a class="woocommerce-Button button" href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>"><?php echo esc_html__('Browse products', 'softwarelicensemanager'); ?>
+                </a>
+                <?php echo esc_html__('No licenses available yet.', 'softwarelicensemanager'); ?>
+            </div>
+        <?php
             $slm_hide = 'style="display:none"';
         }
-?>
+        ?>
 
         <?php
         if (SLM_Helper_Class::slm_get_option('slm_front_conflictmode') == 1) : ?>
-          <?php
-          add_action( 'wp_footer', function() {
-            wp_enqueue_style( 'slm-bootstrap', esc_url( "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" ), array(), '', 'all' );
-            wp_enqueue_script( 'slm-bootstrap', esc_url( 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js' ), array(), '', true );
-          } );
-          ?>
+            <?php
+            add_action('wp_footer', function () {
+                wp_enqueue_style('slm-bootstrap', esc_url("https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"), array(), '', 'all');
+                wp_enqueue_script('slm-bootstrap', esc_url('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'), array(), '', true);
+            });
+            ?>
         <?php endif; ?>
 
         <div class="woocommerce-slm-content" <?php echo $slm_hide; ?>>
@@ -124,7 +124,7 @@ class SLM_Woo_Account
                     <?php
                     foreach ($result as $license_info) : ?>
                         <tr data-toggle="collapse" data-target=".demo<?php echo $class_++; ?>" class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
-                            <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'softwarelicensemanager'); ?>"><a href="<?php echo get_site_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
+                            <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'softwarelicensemanager'); ?>"><a href="<?php echo get_home_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
 
                             <td class="slm-status" data-title="<?php echo __('Status', 'softwarelicensemanager'); ?>">
                                 <?php $key_status = $license_info->lic_status; ?>
@@ -161,7 +161,7 @@ class SLM_Woo_Account
                                 }
                                 ?>
                             </td>
-                            <td class="slm-view" data-title="<?php echo __('view', 'softwarelicensemanager'); ?>"><a href="" class=" woocommerce-button button view"><?php echo _e('view', 'softwarelicensemanager' ); ?></a></td>
+                            <td class="slm-view" data-title="<?php echo __('view', 'softwarelicensemanager'); ?>"><a href="" class=" woocommerce-button button view"><?php echo _e('view', 'softwarelicensemanager'); ?></a></td>
                         </tr>
                         <tr class="parent">
                             <td colspan="5" class="hiddenRow">
@@ -175,7 +175,7 @@ class SLM_Woo_Account
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th data-title=<?php echo __('Expiration', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__( 'Expiration', 'softwarelicensemanager' ); ?></th>
+                                                    <th data-title=<?php echo __('Expiration', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?></th>
                                                     <th data-title=<?php echo __('Allowed devices', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Allowed devices', 'softwarelicensemanager'); ?></th>
                                                     <th data-title=<?php echo __('Allowed Domains', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Allowed Domains', 'softwarelicensemanager'); ?></th>
                                                     <th data-title=<?php echo __('License type', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('License type', 'softwarelicensemanager'); ?></th>
@@ -196,11 +196,11 @@ class SLM_Woo_Account
                                         <br>
                                         <div class="row" style="width: 100%;">
                                             <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, esc_html__( 'Domains','softwarelicensemanager' ), $allow_domain_removal); ?>
+                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, esc_html__('Domains', 'softwarelicensemanager'), $allow_domain_removal); ?>
                                             </div>
 
                                             <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, esc_html__( 'Devices','softwarelicensemanager' ), $allow_domain_removal); ?>
+                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, esc_html__('Devices', 'softwarelicensemanager'), $allow_domain_removal); ?>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -210,7 +210,7 @@ class SLM_Woo_Account
                                             $license_key_json_data  = json_encode(array_values($detailed_license_info));
                                             ?>
                                             <div class="col-md-12 slm-action-export">
-                                                <input type="button" id="export-lic-key" data-licdata='<?php echo $license_key_json_data; ?>' value="<?php echo _e('Export license', 'softwarelicensemanager' ); ?>" class="btn btn-secondary slm-button" />
+                                                <input type="button" id="export-lic-key" data-licdata='<?php echo $license_key_json_data; ?>' value="<?php echo _e('Export license', 'softwarelicensemanager'); ?>" class="btn btn-secondary slm-button" />
                                             </div>
                                         </div>
                                     </div>
@@ -240,9 +240,9 @@ class SLM_Woo_Account
                         jQuery.get('<?php echo get_bloginfo("url"); ?>' + '/wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
                             if (data == 'success') {
                                 jQuery(class_name).remove();
-                                jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__( 'License key was deactivated!', 'softwarelicensemanager' ); ?></div>');
+                                jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__('License key was deactivated!', 'softwarelicensemanager'); ?></div>');
                             } else {
-                                jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> <?php echo esc_html__( 'License key was not deactivated!', 'softwarelicensemanager' ); ?></div>');
+                                jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> <?php echo esc_html__('License key was not deactivated!', 'softwarelicensemanager'); ?></div>');
                             }
                         });
                     });

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 5.5.8
+Version: 5.5.9
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://www.epikly.com/
@@ -19,9 +19,9 @@ if (!defined('WPINC')) {
 global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',               '5.5.8');
-define('SLM_DB_VERSION',            '4.3.0');
-define('SLM_REWRITE_VERSION',       '2.4.1');
+define('SLM_VERSION',               '5.5.9');
+define('SLM_DB_VERSION',            '4.3.1');
+define('SLM_REWRITE_VERSION',       '2.4.2');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL   . '/public/assets/');
@@ -33,7 +33,7 @@ define('SLM_ADMIN_ADDONS',          SLM_ADMIN . 'includes/');
 define('SLM_CRONS',                 SLM_ADMIN_ADDONS . 'cronjobs/');
 define('SLM_PUBLIC',                SLM_PATH  . 'public/');
 define('SLM_TEAMPLATES',            SLM_PATH  . 'templates/');
-define('SLM_SITE_HOME_URL',         home_url());
+define('SLM_SITE_HOME_URL',         get_home_url());
 define('SLM_SITE_URL',              get_site_url() . '/');
 define('SLM_TBL_LICENSE_KEYS',      $wpdb->prefix . "lic_key_tbl");
 define('SLM_TBL_EMAILS',            $wpdb->prefix . "lic_emails_tbl");
