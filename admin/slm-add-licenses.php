@@ -730,7 +730,7 @@ function slm_add_licenses_menu()
                     var lic_type = jQuery(this).attr('lic_type');
                     var class_name = '.lic-entry-' + id;
                     jQuery(this).text('Removing');
-                    jQuery.get('<?php echo get_bloginfo("url"); ?>' + '/wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
+                    jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
                         if (data == 'success') {
                             jQuery(class_name).remove();
                             jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"> License key was deactivated! </div>');

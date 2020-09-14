@@ -108,16 +108,16 @@ class SLM_Woo_Account
             ?>
         <?php endif; ?>
 
-        <div class="woocommerce-slm-content" <?php echo $slm_hide; ?>>
+        <div class="woocommerce-slm-content" <?php echo esc_html__($slm_hide); ?>>
             <table id="slm_licenses_table" class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table" style="border-collapse:collapse;">
                 <thead>
                     <tr>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('Order', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('Status', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('Product', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('License key', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('Renews on', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php _e('Info', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Order', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Status', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Product', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('License key', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Renews on', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Info', 'softwarelicensemanager'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,13 +126,13 @@ class SLM_Woo_Account
                         <tr data-toggle="collapse" data-target=".demo<?php echo $class_++; ?>" class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
                             <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'softwarelicensemanager'); ?>"><a href="<?php echo get_home_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
 
-                            <td class="slm-status" data-title="<?php echo __('Status', 'softwarelicensemanager'); ?>">
+                            <td class="slm-status" data-title="<?php echo esc_html__('Status', 'softwarelicensemanager'); ?>">
                                 <?php $key_status = $license_info->lic_status; ?>
                                 <div class="slm-key-status"> <span class="key-status <?php echo $key_status; ?>"><?php echo $key_status; ?></span>
                                 </div>
                             </td>
 
-                            <td class="slm-product-reference" data-title="<?php echo __('Product', 'softwarelicensemanager'); ?>">
+                            <td class="slm-product-reference" data-title="<?php echo esc_html__('Product', 'softwarelicensemanager'); ?>">
                                 <?php
                                 $product_id     = $license_info->product_ref;
                                 $product_name   = get_the_title($product_id);
@@ -143,25 +143,25 @@ class SLM_Woo_Account
                                 ?>
                             </td>
 
-                            <td class="slm-key" data-title="<?php echo __('License Key', 'softwarelicensemanager'); ?>"><?php echo $license_info->license_key; ?></td>
+                            <td class="slm-key" data-title="<?php echo esc_html__('License Key', 'softwarelicensemanager'); ?>"><?php echo $license_info->license_key; ?></td>
 
-                            <td class="slm-renewal" data-title="<?php echo __('Renews on', 'softwarelicensemanager'); ?>">
+                            <td class="slm-renewal" data-title="<?php echo esc_html__('Renews on', 'softwarelicensemanager'); ?>">
                                 <?php
                                 $expiration = new DateTime($license_info->date_expiry);
                                 $today      = new DateTime();
 
                                 if ($license_info->lic_type == 'subscription' && $license_info->date_expiry != '0000-00-00') {
                                     if ($expiration < $today) {
-                                        echo "<span style='color: red'><strong>" . _e('Expired') . "</strong></span>";
+                                        echo "<span style='color: red'><strong>" . esc_html__('Expired') . "</strong></span>";
                                     } else {
                                         echo $license_info->date_expiry;
                                     }
                                 } else {
-                                    echo __('Lifetime');
+                                    echo esc_html__('Lifetime');
                                 }
                                 ?>
                             </td>
-                            <td class="slm-view" data-title="<?php echo __('view', 'softwarelicensemanager'); ?>"><a href="" class=" woocommerce-button button view"><?php echo _e('view', 'softwarelicensemanager'); ?></a></td>
+                            <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>"><a href="" class=" woocommerce-button button view"><?php echo esc_html__('view', 'softwarelicensemanager'); ?></a></td>
                         </tr>
                         <tr class="parent">
                             <td colspan="5" class="hiddenRow">
@@ -175,21 +175,21 @@ class SLM_Woo_Account
                                         <table>
                                             <thead>
                                                 <tr>
-                                                    <th data-title=<?php echo __('Expiration', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo __('Allowed devices', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Allowed devices', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo __('Allowed Domains', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Allowed Domains', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo __('License type', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('License type', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo __('Date renewed', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Date renewed', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo __('Activation Date', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo _e('Activation Date', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('License type', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('License type', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?></th>
+                                                    <th data-title=<?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?></th>
                                                 </tr>
                                             </thead>
                                             <tr>
                                                 <td data-title=<?php echo __('Expiration', 'softwarelicensemanager'); ?> class="slm-expiration"><time datetime="<?php echo $license_info->date_expiry; ?>"><?php echo $license_info->date_expiry; ?></time></td>
-                                                <td data-title=<?php echo __('Allowed Devices', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_devices; ?></td>
-                                                <td data-title=<?php echo __('Allowed Domains', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_domains; ?></td>
-                                                <td data-title=<?php echo __('License type', 'softwarelicensemanager'); ?>><?php echo $license_info->lic_type; ?></td>
-                                                <td data-title=<?php echo __('Date renewed', 'softwarelicensemanager'); ?>><?php echo $license_info->date_renewed; ?></td>
-                                                <td data-title=<?php echo __('Activation date', 'softwarelicensemanager'); ?>><?php echo $license_info->date_activated; ?></td>
+                                                <td data-title=<?php echo esc_html__('Allowed Devices', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_devices; ?></td>
+                                                <td data-title=<?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_domains; ?></td>
+                                                <td data-title=<?php echo esc_html__('License type', 'softwarelicensemanager'); ?>><?php echo $license_info->lic_type; ?></td>
+                                                <td data-title=<?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?>><?php echo $license_info->date_renewed; ?></td>
+                                                <td data-title=<?php echo esc_html__('Activation date', 'softwarelicensemanager'); ?>><?php echo $license_info->date_activated; ?></td>
                                             </tr>
                                         </table>
 
@@ -210,7 +210,7 @@ class SLM_Woo_Account
                                             $license_key_json_data  = json_encode(array_values($detailed_license_info));
                                             ?>
                                             <div class="col-md-12 slm-action-export">
-                                                <input type="button" id="export-lic-key" data-licdata='<?php echo $license_key_json_data; ?>' value="<?php echo _e('Export license', 'softwarelicensemanager'); ?>" class="btn btn-secondary slm-button" />
+                                                <input type="button" id="export-lic-key" data-licdata='<?php echo esc_html__($license_key_json_data); ?>' value="<?php echo esc_html__('Export license', 'softwarelicensemanager'); ?>" class="btn btn-secondary slm-button" />
                                             </div>
                                         </div>
                                     </div>
@@ -237,7 +237,7 @@ class SLM_Woo_Account
                         var class_name = '.lic-entry-' + id;
 
                         jQuery(this).text('Removing');
-                        jQuery.get('<?php echo get_bloginfo("url"); ?>' + '/wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
+                        jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
                             if (data == 'success') {
                                 jQuery(class_name).remove();
                                 jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__('License key was deactivated!', 'softwarelicensemanager'); ?></div>');
