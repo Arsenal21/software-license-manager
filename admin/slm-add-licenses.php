@@ -433,20 +433,19 @@ function slm_add_licenses_menu()
                                                                     <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains'); ?></label>
                                                                     <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
                                                                     <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used'); ?></small>
-                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains'); ?>
+                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains'); ?>
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label for="max_allowed_devices">Maximum Allowed Devices</label>
                                                                     <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
                                                                     <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
-                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices'); ?>
+                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices'); ?>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
                                                         </div>
                                                         <div class="clear"></div>
                                                     </div>
-
 
                                                     <div class="tab-pane fade show " id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
 
@@ -727,10 +726,11 @@ function slm_add_licenses_menu()
             jQuery(document).ready(function() {
                 jQuery('.deactivate_lic_key').click(function(event) {
                     var id = jQuery(this).attr("id");
-                    var lic_type = jQuery(this).attr('lic_type');
+                    var activation_type = jQuery(this).attr('data-activation_type');
                     var class_name = '.lic-entry-' + id;
+
                     jQuery(this).text('Removing');
-                    jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
+                    jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&activation_type=' + activation_type, function(data) {
                         if (data == 'success') {
                             jQuery(class_name).remove();
                             jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"> License key was deactivated! </div>');

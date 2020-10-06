@@ -530,7 +530,7 @@ class SLM_Utility
         </div>';
     }
 
-    static function get_license_activation($license_key, $tablename, $item_name, $allow_removal = true)
+    static function get_license_activation($license_key, $tablename, $item_name, $activation_type, $allow_removal = true)
     {
 ?>
         <div class="table">
@@ -557,7 +557,7 @@ class SLM_Utility
                                 ?>
                                 <?php if ($allow_removal == true) : ?>
                                     <div class="input-group-append">
-                                        <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo $activation->lic_key; ?>'" id="<?php echo $activation->id; ?>" data-id="<?php echo $activation->id; ?>"> Remove</button>
+                                        <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo $activation->lic_key; ?>'" id="<?php echo $activation->id; ?>" data-activation_type="<?php echo $activation_type;?>" data-id="<?php echo $activation->id; ?>"> Remove</button>
                                     </div>
                                 <?php endif; ?>
                             </div>

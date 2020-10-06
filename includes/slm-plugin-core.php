@@ -211,11 +211,11 @@ function slm_del_reg_devices()
 function slm_remove_activation()
 {
     global $wpdb;
-    $table = '';
-    $id      = strip_tags($_GET['id']);
-    $lic_type     = strip_tags($_GET['lic_type']);
+    $table              = '';
+    $id                 = strip_tags($_GET['id']);
+    $activation_type    = strip_tags($_GET['activation_type']);
 
-    if ($lic_type == 'Devices') {
+    if ($activation_type == 'Devices') {
         $table = SLM_TBL_LIC_DEVICES;
     } else {
         $table = SLM_TBL_LIC_DOMAIN;
