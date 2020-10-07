@@ -84,6 +84,7 @@ class SLM_List_Licenses extends WP_List_Table
             'id'                    => 'ID',
             'lic_status'            => 'Status',
             'license_key'           => 'Key',
+            'item_reference'        => 'Item reference',
             'lic_type'              => 'License type',
             'email'                 => 'Email',
             'max_allowed_domains'   => 'Domains',
@@ -184,7 +185,8 @@ class SLM_List_Licenses extends WP_List_Table
             'lic_type'      => array('lic_type', true),
             'until'         => array('until', true),
             'current_ver'   => array('current_ver', true),
-            'lic_status'    => array('lic_status', true)
+            'lic_status'    => array('lic_status', true),
+            'item_reference' => array('item_reference', true),
         );
 
         return $sortable_columns;
@@ -394,7 +396,7 @@ class SLM_Plugin
 
     public function slm_add_admin_menu()
     {
-        $icon_svg = SLM_ASSETS_URL . 'icons/logo/slm_small.svg';
+        $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
 
         add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");

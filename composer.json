@@ -1,0 +1,22 @@
+{
+	"name": "michelve/software-license-manager",
+	"description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"software license"
+	],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Michel",
+			"email": "michel@epikly.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=5.3.2",
+		"composer/installers": "v1.0.6"
+	}
+}

@@ -28,7 +28,7 @@ function add_toolbar_items($admin_bar){
     $admin_bar->add_menu(array(
         'id'    => 'slm-menu',
         'title' => '<span class="ab-icon"></span>' . __('SLM', 'softwarelicensemanager'),
-        'href'  => '#',
+        'href'  => admin_url('admin.php?page=slm_overview'),
         'meta'  => array(
             'title' => __('SLM'),
         ),

@@ -1,10 +1,11 @@
 <?php
-function slm_add_licenses_menu(){
+function slm_add_licenses_menu()
+{
     global $wpdb;
     $slm_options    = get_option('slm_plugin_options');
     //initialise some variables
     $id             = '';
-    $item_reference ='';
+    $item_reference = '';
     $license_key    = '';
     $max_domains    = SLM_Helper_Class::slm_get_option('default_max_domains');
     $max_devices    = SLM_Helper_Class::slm_get_option('default_max_devices');
@@ -31,8 +32,10 @@ function slm_add_licenses_menu(){
     $lic_item_ref   = '';
     $slm_billing_length   = '';
     $slm_billing_interval   = '';
-    $current_date   = (date("Y-m-d"));
-    $current_date_plus_1year = date('Y-m-d', strtotime('+1 year'));
+    //$current_date   = (date("Y-m-d"));
+    $current_date   = wp_date("Y-m-d");
+    $current_time = wp_date("H:i:s");
+    $current_date_plus_1year = wp_date('Y-m-d', strtotime('+1 year'));
 
     echo '<div class="wrap">';
     // echo '<h2>Add/Edit Licenses</h2>';
@@ -101,22 +104,20 @@ function slm_add_licenses_menu(){
         $subscr_id      = $_POST['subscr_id'];
         $lic_type       = $_POST['lic_type'];
 
-        if("" == trim($_POST['item_reference'])){
+        if ("" == trim($_POST['item_reference'])) {
             $lic_item_ref   = 'default';
-        }
-        else {
+        } else {
             $lic_item_ref   = trim($_POST['item_reference']);
         }
 
 
         $slm_billing_length = trim($_POST['slm_billing_length']);
-        $slm_billing_interval= trim($_POST['slm_billing_interval']);
+        $slm_billing_interval = trim($_POST['slm_billing_interval']);
 
         $expiry_date    = '';
-        if ($_POST['lic_type'] == 'lifetime'){
+        if ($_POST['lic_type'] == 'lifetime') {
             $expiry_date       = '0000-00-00';
-        }
-        else {
+        } else {
             $expiry_date    = $_POST['date_expiry'];
         }
 
@@ -174,24 +175,27 @@ function slm_add_licenses_menu(){
                 $errors .= __('Update of the license key table failed!', 'softwarelicensemanager');
             }
         }
-
         $data = array('row_id' => $id, 'key' => $license_key);
         do_action('slm_add_edit_interface_save_record_processed', $data);
     }
-    ?>
+?>
     <?php
-        if(SLM_Helper_Class::slm_get_option('slm_conflictmode') == 1){
-            echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    if (SLM_Helper_Class::slm_get_option('slm_conflictmode') == 1) {
+        echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>';
-        }
+    }
     ?>
-    <style> .wp-admin select { height: calc(2.25rem + 2px); } </style>
+    <style>
+        .wp-admin select {
+            height: calc(2.25rem + 2px);
+        }
+    </style>
 
     <div id="container-2" class="container slm-container">
         <div class="mx-auto" style="">
             <div class="row pb-4">
                 <div class="slm-logo col-md-1">
-                    <img src="<?php echo SLM_Utility::slm_get_icon_url('logo', 'slm-large.svg');?>" alt="">
+                    <img src="<?php echo SLM_Utility::slm_get_icon_url('logo', 'slm-large.svg'); ?>" alt="">
                 </div>
                 <div class="heading col-md-10">
                     <h1 class="woocommerce-order-data__heading">
@@ -281,7 +285,6 @@ function slm_add_licenses_menu(){
                                                 <?php endif; ?>
                                             </ul>
                                         </div>
-
                                         <div class="col-9 sml-col-left">
                                             <form method="post" class="slm_license_form row" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
                                                 <?php
@@ -307,21 +310,21 @@ function slm_add_licenses_menu(){
                                                         <div class="license col-full">
 
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'locked.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'locked.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('License key and status');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('License key and status'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
                                                             <div class="form-group">
-                                                                <label for="license_key"><?php _e('License Key');?></label>
+                                                                <label for="license_key"><?php _e('License Key'); ?></label>
                                                                 <input name="license_key" class="form-control" aria-describedby="licInfo" type="text" id="license_key" value="<?php echo $license_key; ?>" readonly />
-                                                                <small id="licInfo" class="form-text text-muted"><?php _e('The unique license key.');?></small>
+                                                                <small id="licInfo" class="form-text text-muted"><?php _e('The unique license key.'); ?></small>
                                                             </div>
 
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="lic_status"><?php _e('License Status');?></label>
+                                                                    <label for="lic_status"><?php _e('License Status'); ?></label>
                                                                     <select name="lic_status" class="form-control">
                                                                         <option value="pending" <?php if ($license_status == 'pending') {
                                                                                                     echo 'selected="selected"';
@@ -347,12 +350,12 @@ function slm_add_licenses_menu(){
                                                                     <select name="lic_type" class="form-control">
                                                                         <option value="subscription" <?php if ($lic_type == 'subscription') {
                                                                                                             echo 'selected="selected"';
-                                                                                                        } ?>> <?php _e('Subscription');?> </option>
+                                                                                                        } ?>> <?php _e('Subscription'); ?> </option>
                                                                         <option value="lifetime" <?php if ($lic_type == 'lifetime') {
                                                                                                         echo 'selected="selected"';
-                                                                                                    } ?>> <?php _e('Life-time');?></option>
+                                                                                                    } ?>> <?php _e('Life-time'); ?></option>
                                                                     </select>
-                                                                    <small class="form-text text-muted"><?php _e('type of license: subscription base or lifetime');?></small>
+                                                                    <small class="form-text text-muted"><?php _e('type of license: subscription base or lifetime'); ?></small>
                                                                 </div>
                                                                 <div class="clear"></div>
                                                             </div>
@@ -364,37 +367,37 @@ function slm_add_licenses_menu(){
                                                         <div class="col-full">
 
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'circle-09.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'circle-09.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('User Information');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('User Information'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="first_name"><?php _e('First Name');?></label>
+                                                                    <label for="first_name"><?php _e('First Name'); ?></label>
                                                                     <input name="first_name" type="text" id="first_name" value="<?php echo $first_name; ?>" class="form-control required" required />
-                                                                    <small class="form-text text-muted"><?php _e('License user\'s first name');?> </small>
+                                                                    <small class="form-text text-muted"><?php _e('License user\'s first name'); ?> </small>
                                                                 </div>
 
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="last_name"><?php _e(' Last Name');?></label>
+                                                                    <label for="last_name"><?php _e(' Last Name'); ?></label>
                                                                     <input name="last_name" type="text" id="last_name" value="<?php echo $last_name; ?>" class="form-control required" required />
-                                                                    <small class="form-text text-muted"><?php _e('License user\'s last name');?> </small>
+                                                                    <small class="form-text text-muted"><?php _e('License user\'s last name'); ?> </small>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
 
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="email"><?php _e('Subscriber ID');?></label>
+                                                                    <label for="email"><?php _e('Subscriber ID'); ?></label>
                                                                     <input name="subscr_id" class="form-control" type=" text" id="subscr_id" value="<?php echo $subscr_id; ?>" />
-                                                                    <small class="form-text text-muted"><?php _e('The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.');?></small>
+                                                                    <small class="form-text text-muted"><?php _e('The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.'); ?></small>
                                                                 </div>
 
 
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="email"><?php _e('Email Address');?></label>
+                                                                    <label for="email"><?php _e('Email Address'); ?></label>
                                                                     <input name="email" type="email" class="form-control" id="email" value="<?php echo $email; ?>" class="form-control required" required />
                                                                     <?php
                                                                     if (isset($_GET['edit_record'])) : ?>
@@ -419,24 +422,24 @@ function slm_add_licenses_menu(){
                                                     <div class="tab-pane fade show " id="devicesinfo" role="tabpanel" aria-labelledby="devicesinfo-tab">
                                                         <div class="devicesinfo col-full">
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'l-system-update.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'l-system-update.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('Allowed Activations');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('Allowed Activations'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
                                                             <div class="slm_ajax_msg"></div>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
-                                                                    <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains');?></label>
+                                                                    <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains'); ?></label>
                                                                     <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
-                                                                    <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used');?></small>
-                                                                        <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains'); ?>
+                                                                    <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used'); ?></small>
+                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains'); ?>
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label for="max_allowed_devices">Maximum Allowed Devices</label>
                                                                     <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
                                                                     <small class="form-text text-muted">Number of domains/installs in which this license can be used</small>
-                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices'); ?>
+                                                                    <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices'); ?>
                                                                 </div>
                                                             </div>
                                                             <div class="clear"></div>
@@ -444,14 +447,13 @@ function slm_add_licenses_menu(){
                                                         <div class="clear"></div>
                                                     </div>
 
-
                                                     <div class="tab-pane fade show " id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
 
                                                         <div class="col-full">
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'detail.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'detail.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('Advanced Details');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('Advanced Details'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
@@ -482,37 +484,34 @@ function slm_add_licenses_menu(){
                                                                     <div class="form-group">
                                                                         <label for="order_date">Billing Interval</label>
                                                                         <select name="slm_billing_interval" class="form-control">
-                                                                            <option value="days"
-                                                                                <?php
-                                                                                    if ($slm_billing_interval == 'days') {
-                                                                                        echo 'selected="selected"';
-                                                                                    }
-                                                                                ?>>
-                                                                                <?php _e('Days');?>
+                                                                            <option value="days" <?php
+                                                                                                    if ($slm_billing_interval == 'days') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    }
+                                                                                                    ?>>
+                                                                                <?php _e('Days'); ?>
                                                                             </option>
-                                                                            <option value="months"
-                                                                                <?php
-                                                                                    if ($slm_billing_interval == 'months') {
-                                                                                        echo 'selected="selected"';
-                                                                                    }
-                                                                                ?>>
-                                                                                <?php _e('Months');?>
+                                                                            <option value="months" <?php
+                                                                                                    if ($slm_billing_interval == 'months') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    }
+                                                                                                    ?>>
+                                                                                <?php _e('Months'); ?>
                                                                             </option>
-                                                                            <option value="years"
-                                                                                <?php
-                                                                                    if ($slm_billing_interval == 'years') {
-                                                                                        echo 'selected="selected"';
-                                                                                    }
-                                                                                ?>>
-                                                                                <?php _e('Years');?>
+                                                                            <option value="years" <?php
+                                                                                                    if ($slm_billing_interval == 'years') {
+                                                                                                        echo 'selected="selected"';
+                                                                                                    }
+                                                                                                    ?>>
+                                                                                <?php _e('Years'); ?>
                                                                             </option>
                                                                         </select>
                                                                         <small class="form-text text-muted">Frequency period: in days, months, years</small>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                             <div class="clear"></div>
-                                                                <hr>
+                                                            <div class="clear"></div>
+                                                            <hr>
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
                                                                     <label for="order_date">Date Created</label>
@@ -522,16 +521,16 @@ function slm_add_licenses_menu(){
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label for="date_expiry">Expiration Date</label>
-                                                                     <?php
-                                                                        if ($lic_type == 'lifetime') : ?>
+                                                                    <?php
+                                                                    if ($lic_type == 'lifetime') : ?>
 
-                                                                            <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" disabled/>
+                                                                        <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" disabled />
 
-                                                                        <?php else: ?>
+                                                                    <?php else : ?>
 
-                                                                             <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" />
+                                                                        <input name="date_expiry" type="date" id="date_expiry" class="form-control wplm_pick_date" value="<?php echo $expiry_date; ?>" />
 
-                                                                        <?php endif;
+                                                                    <?php endif;
                                                                     ?>
                                                                     <small class="form-text text-muted">Expiry date of license</small>
                                                                 </div>
@@ -557,9 +556,9 @@ function slm_add_licenses_menu(){
 
                                                         <div class="col-full">
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'box-2.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'box-2.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('Product Informations');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('Product Informations'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
@@ -594,38 +593,41 @@ function slm_add_licenses_menu(){
                                                                     <input name="until" type="text" class="form-control" id="until" value="<?php echo $until; ?>" />
                                                                     <small class="form-text text-muted">Until what version this product is supported</small>
                                                                 </div>
-                                                            <div class="form-group col-md-6">
-                                                                <label for="current_ver">Current Version</label>
-                                                                <input name="current_ver" type="text" class="form-control" id="current_ver" value="<?php echo $current_ver; ?>" />
-                                                                <small class="form-text text-muted">What is the current version of this product</small>
-                                                            </div>
-                                                            <div class="clear"></div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label for="current_ver">Current Version</label>
+                                                                    <input name="current_ver" type="text" class="form-control" id="current_ver" value="<?php echo $current_ver; ?>" />
+                                                                    <small class="form-text text-muted">What is the current version of this product</small>
+                                                                </div>
+                                                                <div class="clear"></div>
                                                             </div>
                                                             <?php
-                                                                if ($slm_options['slm_multiple_items']==1) :
-                                                                    global $wpdb;
-                                                                    $post_meta_tbl      = $wpdb->prefix . 'postmeta';
-                                                                    $item_ref_meta      = '_license_item_reference';
-                                                                    $sql_prep           = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
-                                                                    $values_item_refs   = $wpdb->get_results($sql_prep, OBJECT);
-                                                                ?>
+                                                            if ($slm_options['slm_multiple_items'] == 1) :
+                                                                global $wpdb;
+                                                                $post_meta_tbl      = $wpdb->prefix . 'postmeta';
+                                                                $item_ref_meta      = '_license_item_reference';
+                                                                $sql_prep           = $wpdb->prepare("SELECT DISTINCT(meta_value) FROM $post_meta_tbl WHERE meta_key = %s", $item_ref_meta);
+                                                                $values_item_refs   = $wpdb->get_results($sql_prep, OBJECT);
+                                                            ?>
                                                                 <div class="row">
                                                                     <div class="form-group col-md-12">
-                                                                    <label for="item_reference">Item reference</label>
+                                                                        <label for="item_reference">Item reference</label>
                                                                         <select name="item_reference" class="form-control">
-                                                                            <option value="select one" selected> Select one ...</option>
                                                                             <?php
-                                                                                foreach ($values_item_refs as $item_reference) {
-                                                                                    $sel_val        = esc_attr(trim($item_reference->meta_value));
-                                                                                    $is_selected    = $lic_item_ref==$sel_val;
-                                                                                    // filter out empty values
-                                                                                    if (!empty($sel_val)) {
-                                                                                       echo '<option value="'. $sel_val .'">'.$sel_val .'</option>';
-                                                                                    }
+                                                                            $was_selected = false;
+                                                                            foreach ($values_item_refs as $item_reference) {
+                                                                                $sel_val        = esc_attr(trim($item_reference->meta_value));
+                                                                                $is_selected    = $lic_item_ref == $sel_val;
+                                                                                //remember is it was selected during the process
+                                                                                $was_selected = $was_selected == false ? $is_selected : $was_selected;
+                                                                                // filter out empty values
+                                                                                if (!empty($sel_val)) {
+                                                                                    echo '<option value="' . $sel_val . '"' . ($is_selected == true ? ' selected' : '') . '>' . $sel_val . '</option>';
                                                                                 }
+                                                                            }
                                                                             ?>
+                                                                            <option value="select one" <?php echo ($was_selected == false ? ' selected' : '') ?>> Select one ...</option>
                                                                         </select>
-                                                                        <small class="form-text text-muted"><?php _e('Item reference of your software');?></small>
+                                                                        <small class="form-text text-muted"><?php _e('Item reference of your software'); ?></small>
                                                                     </div>
                                                                 </div>
                                                             <?php endif; ?>
@@ -638,18 +640,18 @@ function slm_add_licenses_menu(){
                                                         <div class="tab-pane fade show " id="export-license" role="tabpanel" aria-labelledby="export-license-tab">
 
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'share-right.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'share-right.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('Export License');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('Export License'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
 
                                                             <div class="export-license col-full">
                                                                 <div class="license_export_info" style="min-width: 100%; max-width: 900px">
                                                                     <?php
-                                                                        $lic_info = SLM_Utility::slm_get_licinfo ('slm_info', $license_key);
+                                                                    $lic_info = SLM_Utility::slm_get_licinfo('slm_info', $license_key);
 
-                                                                        echo '<figure class="highlight"><pre><code id="lic-json-data" data-lickey="'.$license_key.'">' . json_encode($lic_info, JSON_PRETTY_PRINT) . '</code></pre></figure>';
+                                                                    echo '<figure class="highlight"><pre><code id="lic-json-data" data-lickey="' . $license_key . '">' . json_encode($lic_info, JSON_PRETTY_PRINT) . '</code></pre></figure>';
                                                                     ?>
                                                                     <a href="#" class="button-secondary" onclick="slm_exportlicense()">Export License</a>
                                                                 </div>
@@ -658,9 +660,9 @@ function slm_add_licenses_menu(){
 
                                                         <div class="tab-pane fade show " id="activity-log" role="tabpanel" aria-labelledby="activity-log-tab">
                                                             <div class="slm-img-ico">
-                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'server-rack.png');?>" alt="">
+                                                                <img src="<?php echo SLM_Utility::slm_get_icon_url('1x', 'server-rack.png'); ?>" alt="">
                                                             </div>
-                                                            <h3 class="slm-tab-title"><?php _e('Activity Log');?></h3>
+                                                            <h3 class="slm-tab-title"><?php _e('Activity Log'); ?></h3>
                                                             <div class="clear clear-fix"></div>
                                                             <div class="sml-sep"></div>
                                                             <div class="lic-activity-log" style="min-height: 325px; min-width: 100%; max-width: 900px">
@@ -682,8 +684,7 @@ function slm_add_licenses_menu(){
                                                         $save_label = '';
                                                         if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) {
                                                             $save_label = 'Save changes';
-                                                        }
-                                                        else {
+                                                        } else {
                                                             $save_label = 'Create license';
                                                         }
                                                         ?>
@@ -717,23 +718,23 @@ function slm_add_licenses_menu(){
                 var form = jQuery(".slm_license_form")
                 if (form[0].checkValidity() === false) {
                     jQuery('#userinfo-tab').css("color", "red");
-                    event.preventDefault()
-                    event.stopPropagation()
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
                 form.addClass('was-validated');
             });
             jQuery(document).ready(function() {
                 jQuery('.deactivate_lic_key').click(function(event) {
-                    var id          = jQuery(this).attr("id");
-                    var lic_type    = jQuery(this).attr('lic_type');
-                    var class_name  = '.lic-entry-' + id;
+                    var id = jQuery(this).attr("id");
+                    var activation_type = jQuery(this).attr('data-activation_type');
+                    var class_name = '.lic-entry-' + id;
+
                     jQuery(this).text('Removing');
-                    jQuery.get('<?php echo get_bloginfo("url"); ?>' + '/wp-admin/admin-ajax.php?action=del_activation&id=' + id +'&lic_type=' + lic_type, function(data) {
+                    jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&activation_type=' + activation_type, function(data) {
                         if (data == 'success') {
                             jQuery(class_name).remove();
                             jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"> License key was deactivated! </div>');
-                        }
-                        else {
+                        } else {
                             jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> License key was not deactivated! </div>');
                         }
                     });
