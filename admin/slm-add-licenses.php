@@ -664,7 +664,9 @@ function slm_add_licenses_menu()
                                                             </div>
                                                             <h3 class="slm-tab-title"><?php _e('Activity Log'); ?></h3>
                                                             <div class="clear clear-fix"></div>
+
                                                             <div class="sml-sep"></div>
+
                                                             <div class="lic-activity-log" style="min-height: 325px; min-width: 100%; max-width: 900px">
                                                                 <?php SLM_Utility::get_lic_activity($license_key); ?>
                                                             </div>

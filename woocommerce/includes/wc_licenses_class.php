@@ -108,6 +108,42 @@ class SLM_Woo_Account
             ?>
         <?php endif; ?>
 
+
+
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
         <div class="woocommerce-slm-content" <?php echo esc_html__($slm_hide); ?>>
             <table id="slm_licenses_table" class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table" style="border-collapse:collapse;">
                 <thead>
@@ -161,9 +197,14 @@ class SLM_Woo_Account
                                 }
                                 ?>
                             </td>
-                            <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>"><a href="" class=" woocommerce-button button view"><?php echo esc_html__('view', 'softwarelicensemanager'); ?></a></td>
+                            <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>">
+                                <a href="" class="woocommerce-button button view">
+                                    <?php echo esc_html__('view', 'softwarelicensemanager'); ?>
+                                </a>
+                            </td>
                         </tr>
                         <tr class="parent">
+
                             <td colspan="5" class="hiddenRow">
                                 <div class="collapse demo<?php echo $class_id_++; ?> slm-shadow">
                                     <div class="slm_ajax_msg"></div>
@@ -229,15 +270,16 @@ class SLM_Woo_Account
         <?php
         if ($allow_domain_removal == true) :
         ?>
+
             <script>
                 jQuery(document).ready(function() {
                     jQuery('.deactivate_lic_key').click(function(event) {
                         var id = jQuery(this).attr("id");
-                        var lic_type = jQuery(this).attr('lic_type');
+                        var activation_type = jQuery(this).attr('data-activation_type');
                         var class_name = '.lic-entry-' + id;
 
                         jQuery(this).text('Removing');
-                        jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&lic_type=' + lic_type, function(data) {
+                        jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&activation_type=' + activation_type, function(data) {
                             if (data == 'success') {
                                 jQuery(class_name).remove();
                                 jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__('License key was deactivated!', 'softwarelicensemanager'); ?></div>');

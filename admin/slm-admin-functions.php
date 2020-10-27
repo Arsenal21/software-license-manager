@@ -35,7 +35,15 @@ function slm_admin_tools_menu()
         echo '<br />' . $msg;
         echo '</p></div>';
     }
-    ?>
+    if (isset($_POST['slm_clear_log'])) {
+        global $wpdb;
+        $table = SLM_TBL_LIC_LOG;
+        $slm_log_clean = $wpdb->query("TRUNCATE TABLE $table");
+
+        echo '<div id="message" class="updated fade"><p> Log was cleared succesfully!</p></div>';
+
+    }
+?>
     <br />
     <div class="postbox">
         <h3 class="hndle"><label for="title"><?php _e('Send Deactivation Message for a License', 'softwarelicensemanager'); ?></label></h3>
@@ -51,7 +59,19 @@ function slm_admin_tools_menu()
             </form>
         </div>
     </div>
-    <?php
+
+    <div class="postbox">
+        <h3 class="hndle"><label for="title"><?php _e('Clean activity log', 'softwarelicensemanager'); ?></label></h3>
+        <div class="inside">
+            <p><?php _e('This will clear/reset license keys activities', 'softwarelicensemanager'); ?></p>
+            <form method="post" action="">
+                <div class="submit">
+                    <input type="submit" name="slm_clear_log" value="Clear Log" class="button" />
+                </div>
+            </form>
+        </div>
+    </div>
+<?php
     echo '</div></div>';
     echo '</div>';
 }
