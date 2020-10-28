@@ -1,6 +1,6 @@
 {
 	"name": "@michelve/software-license-manager",
-	"version": "5.5.10",
+	"version": "5.5.11",
 	"description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
 	"scripts": {
 		"changelog": "auto-changelog -p && git add CHANGELOG.md",
