@@ -4,7 +4,6 @@ if (!defined('WPINC')) {
     die;
 }
 
-
 function slm_admin_tools_menu()
 {
 
@@ -36,12 +35,13 @@ function slm_admin_tools_menu()
         echo '</p></div>';
     }
     if (isset($_POST['slm_clear_log'])) {
-        global $wpdb;
+        global $wpdb, $slm_debug_logger;
         $table = SLM_TBL_LIC_LOG;
         $slm_log_clean = $wpdb->query("TRUNCATE TABLE $table");
-
+        $slm_logger = new SLM_Debug_Logger();
+        $slm_debug_logger->reset_log_file("log.txt");
+        $slm_debug_logger->reset_log_file("log-cron-job.txt");
         echo '<div id="message" class="updated fade"><p> Log was cleared succesfully!</p></div>';
-
     }
 ?>
     <br />

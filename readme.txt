@@ -4,7 +4,7 @@ Donate link: http://paypal.me/mvelis
 Tags: license, software license
 Requires at least: 4.1
 Tested up to: 5.7
-Stable tag: 5.5.11
+Stable tag: 5.5.12
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
