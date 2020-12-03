@@ -73,6 +73,4 @@ function slm_manage_licenses_menu()
         </div>
     </div>
 <?php
-
-
 }

@@ -16,3 +16,4 @@ function slm_exportlicense(){
     var filename = "license-" + filelicname + ".json";
     download(filename, text);
 }
+
