@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
-Tested up to: 5.6
-Stable tag: 4.4.5
+Tested up to: 5.7
+Stable tag: 4.4.6
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.4.6 =
+- Added sanitization and nonce check for the settings interface to prevent any potential CSRF attack issue. Thanks to Koken for pointing it out.
 
 = 4.4.5 =
 - The IP address is logged in the debug log file for an API request (if debug option is enabled in settings).

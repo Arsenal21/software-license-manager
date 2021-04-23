@@ -24,6 +24,12 @@ function wp_lic_mgr_general_settings() {
 
     if (isset($_POST['slm_save_settings'])) {
 
+        //Check nonce
+        if ( !isset($_POST['slm_settings_nonce_val']) || !wp_verify_nonce($_POST['slm_settings_nonce_val'], 'slm_settings_nonce_action' )){
+            //Nonce check failed.
+            wp_die("Error! Nonce verification failed for settings save action.");
+        }
+
         if (!is_numeric($_POST["default_max_domains"])) {//Set it to one by default if incorrect value is entered
             $_POST["default_max_domains"] = '1';
         }
@@ -37,8 +43,8 @@ function wp_lic_mgr_general_settings() {
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );
         update_option('slm_plugin_options', $options);
-        
-        echo '<div id="message" class="updated fade"><p>';        
+
+        echo '<div id="message" class="updated fade"><p>';
         echo 'Options Updated!';
         echo '</p></div>';
     }
@@ -66,6 +72,7 @@ function wp_lic_mgr_general_settings() {
         </div></div>
 
     <form method="post" action="">
+        <?php wp_nonce_field('slm_settings_nonce_action', 'slm_settings_nonce_val' ) ?>
 
         <div class="postbox">
             <h3 class="hndle"><label for="title">General License Manager Settings</label></h3>
@@ -74,36 +81,36 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Secret Key for License Creation</th>
-                        <td><input type="text" name="lic_creation_secret" value="<?php echo $secret_key; ?>" size="40" />
+                        <td><input type="text" name="lic_creation_secret" value="<?php echo esc_attr($secret_key); ?>" size="40" />
                             <br />This secret key will be used to authenticate any license creation request. You can change it with something random.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Secret Key for License Verification Requests</th>
-                        <td><input type="text" name="lic_verification_secret" value="<?php echo $secret_verification_key; ?>" size="40" />
+                        <td><input type="text" name="lic_verification_secret" value="<?php echo esc_attr($secret_verification_key); ?>" size="40" />
                             <br />This secret key will be used to authenticate any license verification request from customer's site. Important! Do not change this value once your customers start to use your product(s)!</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">License Key Prefix</th>
-                        <td><input type="text" name="lic_prefix" value="<?php echo $options['lic_prefix']; ?>" size="40" />
+                        <td><input type="text" name="lic_prefix" value="<?php echo esc_attr($options['lic_prefix']); ?>" size="40" />
                             <br />You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.</td>
                     </tr>
 
                     <tr valign="top">
                         <th scope="row">Maximum Allowed Domains</th>
-                        <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
+                        <td><input type="text" name="default_max_domains" value="<?php echo esc_attr($options['default_max_domains']); ?>" size="6" />
                             <br />Maximum number of domains/installs which each license is valid for (default value).</td>
                     </tr>
-                    
+
                     <tr valign="top">
                         <th scope="row">Auto Expire License Keys</th>
-                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if (isset($options['enable_auto_key_expiry']) && $options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>                            
-                            <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached. 
+                        <td><input name="enable_auto_key_expiry" type="checkbox"<?php if (isset($options['enable_auto_key_expiry']) && $options['enable_auto_key_expiry'] != '') echo ' checked="checked"'; ?> value="1"/>
+                            <p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached.
                                 It doesn't remotely deactivate a key. It simply changes the status of the key in your database to expired.</p>
                         </td>
                     </tr>
-                    
+
 
                 </table>
             </div></div>
@@ -115,8 +122,8 @@ function wp_lic_mgr_general_settings() {
 
                     <tr valign="top">
                         <th scope="row">Enable Debug Logging</th>
-                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>                            
-                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>                            
+                        <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
+                            <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
                             <br />- View debug log file by clicking <a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">here</a>.
                             <br />- Reset debug log file by clicking <a href="admin.php?page=wp_lic_mgr_settings&slm_reset_log=1" target="_blank">here</a>.
                         </td>
