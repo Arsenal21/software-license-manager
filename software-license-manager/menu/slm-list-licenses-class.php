@@ -91,6 +91,7 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 	function process_bulk_action() {
 		if ( 'delete' === $this->current_action() ) {
+			check_admin_referer( 'bulk-' . $this->_args['plural'] );
 			//Process delete bulk actions
 			if ( ! isset( $_REQUEST['item'] ) ) {
 				$error_msg = '<p>' . __( 'Error - Please select some records using the checkboxes', 'slm' ) . '</p>';
@@ -119,6 +120,40 @@ class WPLM_List_Licenses extends WP_List_Table {
 		echo $success_msg;
 	}
 
+	function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}
+		?>
+
+<div class="postbox">
+	<h3 class="hndle"><label for="title">License Search</label></h3>
+	<div class="inside">
+		<p>Search for a license by using email, name, key, domain or transaction ID</p>
+		<label class="screen-reader-text" for="<?php echo $input_id; ?>"><?php echo $text; ?>:</label>
+		<input type="search" id="<?php echo $input_id; ?>" name="s" size="40" value="<?php _admin_search_query(); ?>" />
+		<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
+	</div>
+</div>
+
+
+		<?php
+	}
 
 	function prepare_items() {
 		/**
@@ -149,8 +184,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 		$limit_from = ( $current_page - 1 ) * $per_page;
 
-		if ( ! empty( $_POST['slm_search'] ) ) {
-			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
+		if ( ! empty( $_REQUEST['s'] ) ) {
+			$search_term = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) );
 			$placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
 
 			$select = "SELECT `lk` . * , CONCAT( COUNT( `rd` . `lic_key_id` ), '/', `lk` . `max_allowed_domains` ) AS `max_allowed_domains`";
