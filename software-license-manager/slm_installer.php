@@ -33,7 +33,8 @@ $lk_tbl_sql = "CREATE TABLE " . $lic_key_table . " (
       date_expiry date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
       subscr_id varchar(128) NOT NULL default '',
-      PRIMARY KEY (id)
+      PRIMARY KEY (id),
+      KEY `max_allowed_domains` (`max_allowed_domains`)
       )" . $charset_collate . ";";
 dbDelta($lk_tbl_sql);
 
@@ -43,7 +44,8 @@ $ld_tbl_sql = "CREATE TABLE " .$lic_domain_table. " (
       lic_key varchar(255) NOT NULL ,
       registered_domain text NOT NULL ,
       item_reference varchar(255) NOT NULL,
-      PRIMARY KEY ( id )
+      PRIMARY KEY ( id ),
+      KEY `lic_key_id` (`lic_key_id`)
       )" . $charset_collate . ";";
 dbDelta($ld_tbl_sql);
 
