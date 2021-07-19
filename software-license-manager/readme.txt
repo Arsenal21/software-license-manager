@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
-Tested up to: 5.7
-Stable tag: 4.4.6
+Tested up to: 5.8
+Stable tag: 4.4.7
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -52,6 +52,12 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.4.7 =
+- It is recommended that you backup your license database before upgrading this version (just to be sure).
+- Improved the database query of the manage license page to be more efficient so it loads faster.
+- Improved the database query of the manage license page's search function to make it more efficient.
+- Added nonce check to the bulk delete action.
 
 = 4.4.6 =
 - Added sanitization and nonce check for the settings interface to prevent any potential CSRF attack issue. Thanks to Koken for pointing it out.

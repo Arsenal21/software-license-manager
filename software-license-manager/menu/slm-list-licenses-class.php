@@ -91,6 +91,7 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 	function process_bulk_action() {
 		if ( 'delete' === $this->current_action() ) {
+			check_admin_referer( 'bulk-' . $this->_args['plural'] );
 			//Process delete bulk actions
 			if ( ! isset( $_REQUEST['item'] ) ) {
 				$error_msg = '<p>' . __( 'Error - Please select some records using the checkboxes', 'slm' ) . '</p>';
@@ -119,15 +120,50 @@ class WPLM_List_Licenses extends WP_List_Table {
 		echo $success_msg;
 	}
 
+	function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
+		}
+
+		$input_id = $input_id . '-search-input';
+
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['post_mime_type'] ) ) {
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['detached'] ) ) {
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}
+		?>
+
+<div class="postbox">
+	<h3 class="hndle"><label for="title">License Search</label></h3>
+	<div class="inside">
+		<p>Search for a license by using email, name, key, domain or transaction ID</p>
+		<label class="screen-reader-text" for="<?php echo $input_id; ?>"><?php echo $text; ?>:</label>
+		<input type="search" id="<?php echo $input_id; ?>" name="s" size="40" value="<?php _admin_search_query(); ?>" />
+		<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
+	</div>
+</div>
+
+
+		<?php
+	}
 
 	function prepare_items() {
 		/**
 		 * First, lets decide how many records per page to show
 		 */
-		$per_page = 50;
-		$columns  = $this->get_columns();
-		$hidden   = array();
-		$sortable = $this->get_sortable_columns();
+		$per_page     = 50;
+		$current_page = $this->get_pagenum();
+		$columns      = $this->get_columns();
+		$hidden       = array();
+		$sortable     = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
@@ -146,21 +182,31 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 		$order_str = sanitize_sql_orderby( $orderby . ' ' . $order );
 
-		if ( ! empty( $_POST['slm_search'] ) ) {
-			$search_term = trim( sanitize_text_field( wp_unslash( $_POST['slm_search'] ) ) );
+		$limit_from = ( $current_page - 1 ) * $per_page;
+
+		if ( ! empty( $_REQUEST['s'] ) ) {
+			$search_term = trim( sanitize_text_field( wp_unslash( $_REQUEST['s'] ) ) );
 			$placeholder = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$data        = $wpdb->get_results(
+
+			$select = "SELECT `lk` . * , CONCAT( COUNT( `rd` . `lic_key_id` ), '/', `lk` . `max_allowed_domains` ) AS `max_allowed_domains`";
+
+			$after_select = "FROM `$license_table` `lk`
+			LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id`
+			WHERE `lk`.`license_key` LIKE %s
+			OR `lk`.`email` LIKE %s
+			OR `lk`.`txn_id` LIKE %s
+			OR `lk`.`first_name` LIKE %s
+			OR `lk`.`last_name` LIKE %s
+			OR `rd`.`registered_domain` LIKE %s";
+
+			$after_query = "GROUP BY `lk` . `id` ORDER BY $order_str
+			LIMIT $limit_from, $per_page";
+
+			$q = "$select $after_select $after_query";
+
+			$data = $wpdb->get_results(
 				$wpdb->prepare(
-					"SELECT `lk`.*, CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` ) AS `max_allowed_domains`
-					FROM `$license_table` `lk`
-					LEFT JOIN `$domain_table` `rd` ON `lk`.`id` = `rd`.`lic_key_id`
-					WHERE `lk`.`license_key` LIKE %s
-					OR `lk`.`email` LIKE %s
-					OR `lk`.`txn_id` LIKE %s
-					OR `lk`.`first_name` LIKE %s
-					OR `lk`.`last_name` LIKE %s
-					OR `rd`.`registered_domain` LIKE %s
-					GROUP BY `lk`.`id` ORDER BY $order_str",
+					$q,
 					$placeholder,
 					$placeholder,
 					$placeholder,
@@ -170,22 +216,41 @@ class WPLM_List_Licenses extends WP_List_Table {
 				),
 				ARRAY_A
 			);
+
+			$found_rows_q = $wpdb->prepare(
+				"SELECT COUNT( * )
+				$after_select",
+				$placeholder,
+				$placeholder,
+				$placeholder,
+				$placeholder,
+				$placeholder,
+				$placeholder
+			);
+
+			$total_items = intval( $wpdb->get_var( $found_rows_q ) );
 		} else {
-			$q    = "SELECT `lk`.*,
-				CONCAT( COUNT( `rd`.`lic_key_id` ), '/', `lk`.`max_allowed_domains` )
-				AS `max_allowed_domains`
-				FROM `$license_table` `lk`
-				LEFT JOIN `$domain_table` `rd`
-				ON `lk`.`id` = `rd`.`lic_key_id`
-				GROUP BY `lk`.`id`
-				ORDER BY $order_str";
+			$after_select = "FROM `$license_table` `lk`
+			LEFT JOIN `$domain_table` `rd`
+			ON `lk` . `id` = `rd` . `lic_key_id`";
+
+			$after_query = "GROUP BY `lk` . `id`
+			ORDER BY $order_str
+			LIMIT $limit_from, $per_page";
+
+			$q = "SELECT `lk` . * ,
+				CONCAT( COUNT( `rd` . `lic_key_id` ), '/', `lk` . `max_allowed_domains` ) as `max_allowed_domains`
+				$after_select$after_query";
+
 			$data = $wpdb->get_results( $q, ARRAY_A );
+
+			$found_rows_q = "SELECT COUNT( * )
+			$after_select";
+
+			$total_items = intval( $wpdb->get_var( $found_rows_q ) );
 		}
 
-		$current_page = $this->get_pagenum();
-		$total_items  = count( $data );
-		$data         = array_slice( $data, ( $current_page - 1 ) * $per_page, $per_page );
-		$this->items  = $data;
+		$this->items = $data;
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,                     // WE have to calculate the total number of items.
