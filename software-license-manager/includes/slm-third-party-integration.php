@@ -121,27 +121,8 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields['subscr_id'] = isset($payment_data['subscr_id']) ? $payment_data['subscr_id'] : '';
 
     $slm_debug_logger->log_debug('Inserting license data into the license manager DB table.');
-    $fields = array_filter($fields); //Remove any null values.
 
-
-    $tbl_name = SLM_TBL_LICENSE_KEYS;
-    $result = $wpdb->insert($tbl_name, $fields);
-    if (!$result) {
-        $slm_debug_logger->log_debug('Notice! initial database table insert failed on license key table (User Email: ' . $fields['email'] . '). Trying again by converting charset', true);
-        //Convert the default PayPal IPN charset to UTF-8 format
-        $first_name = mb_convert_encoding($fields['first_name'], "UTF-8", "windows-1252");
-        $fields['first_name'] = esc_sql($first_name);
-        $last_name = mb_convert_encoding($fields['last_name'], "UTF-8", "windows-1252");
-        $fields['last_name'] = esc_sql($last_name);
-        $company_name = mb_convert_encoding($fields['company_name'], "UTF-8", "windows-1252");
-        $fields['company_name'] = esc_sql($company_name);
-
-        $result = $wpdb->insert($tbl_name, $fields);
-        if (!$result) {
-            $slm_debug_logger->log_debug('Error! Failed to update license key table. DB insert query failed.', false);
-        }
-    }
-    //SLM_API_Utility::insert_license_data_internal($fields);
+    SLM_API_Utility::insert_license_data_internal($fields);
 
     $prod_args = array('estore_prod_id' => $prod_id, 'estore_item_name' => $item_name);
     do_action('slm_estore_license_created', $prod_args, $payment_data, $cart_items, $fields);
