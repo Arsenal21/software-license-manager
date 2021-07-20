@@ -52,10 +52,23 @@ class SLM_API_Utility {
           //$fields['txn_id']
           //$fields['max_allowed_domains']
          */
-        global $wpdb;
+        global $wpdb, $slm_debug_logger;
         $tbl_name = SLM_TBL_LICENSE_KEYS;
         $fields = array_filter($fields);//Remove any null values.
         $result = $wpdb->insert($tbl_name, $fields);
+		if ( ! $result ) {
+			$slm_debug_logger->log_debug( 'Notice! initial database table insert failed on license key table (User Email: ' . $fields['email'] . '). Trying again by converting charset', true );
+			//Convert the default charset to UTF-8 format
+            foreach( array( 'first_name', 'last_name', 'company_name' ) as $name ) {
+                if ( isset( $fields[ $name ] ) ) {
+                    $fields[ $name ] = esc_sql( mb_convert_encoding( $fields[ $name ], "UTF-8", "windows-1252" ) );
+                }
+            }
+			$result = $wpdb->insert( $tbl_name, $fields );
+			if ( ! $result ) {
+				$slm_debug_logger->log_debug( 'Error! Failed to update license key table. DB insert query failed.', false );
+			}
+		}        
     }
 
 }
