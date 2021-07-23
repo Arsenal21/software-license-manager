@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 4.4.7
+Stable tag: 4.4.8
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -27,6 +27,9 @@ You can also create license keys manually from the admin dashboard of this plugi
 = Please note that this plugin is ONLY for developers =
 
 Check [license manager documentation](https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress) to learn more.
+
+= Integration with WP Express Checkout Plugin =
+Check [WP Express Checkout integration documentation](https://wp-express-checkout.com/integrate-software-license-manager-plugin-with-wp-express-checkout/)
 
 = Integration with WP eStore plugin =
 Check [WP eStore integration documentation](https://www.tipsandtricks-hq.com/ecommerce/integrate-wp-estore-with-software-license-manager-plugin-3731)
@@ -52,6 +55,10 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.4.8 =
+- Sanitize the "edit_record" parameter in the "Edit License" menu. Thanks to WPScan team for pointing it out.
+- Integration with the WP Express Checkout plugin.
 
 = 4.4.7 =
 - It is recommended that you backup your license database before upgrading this version (just to be sure).

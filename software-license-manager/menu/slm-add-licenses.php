@@ -30,7 +30,7 @@ function wp_lic_mgr_add_licenses_menu() {
     //If product is being edited, grab current product info
     if (isset($_GET['edit_record'])) {
         $errors = '';
-        $id = $_GET['edit_record'];
+        $id = intval($_GET['edit_record']);
         $lk_table = SLM_TBL_LICENSE_KEYS;
         $sql_prep = $wpdb->prepare("SELECT * FROM $lk_table WHERE id = %s", $id);
         $record = $wpdb->get_row($sql_prep, OBJECT);
@@ -104,7 +104,7 @@ function wp_lic_mgr_add_licenses_menu() {
         $fields['product_ref'] = $product_ref;
         $fields['subscr_id'] = $subscr_id;
 
-        $id = isset($_POST['edit_record'])?$_POST['edit_record']:'';
+        $id = isset($_POST['edit_record'])? intval($_POST['edit_record']) : '';
         $lk_table = SLM_TBL_LICENSE_KEYS;
         if (empty($id)) {//Insert into database
             $result = $wpdb->insert( $lk_table, $fields);
@@ -197,7 +197,7 @@ function wp_lic_mgr_add_licenses_menu() {
 
                     <?php
                     if ($id != '') {
-                        echo '<input name="edit_record" type="hidden" value="' . $id . '" />';
+                        echo '<input name="edit_record" type="hidden" value="' . esc_attr($id) . '" />';
                     } else {
                         if(!isset($editing_record)){//Create an empty object
                             $editing_record = new stdClass();
