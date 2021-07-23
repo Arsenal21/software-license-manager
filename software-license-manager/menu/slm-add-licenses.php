@@ -62,20 +62,20 @@ function wp_lic_mgr_add_licenses_menu() {
         do_action('slm_add_edit_interface_save_submission');
 
         //TODO - do some validation
-        $license_key = $_POST['license_key'];
-        $max_domains = $_POST['max_allowed_domains'];
-        $license_status = $_POST['lic_status'];
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $email = $_POST['email'];
-        $company_name = $_POST['company_name'];
-        $txn_id = $_POST['txn_id'];
-        $reset_count = $_POST['manual_reset_count'];
-        $created_date = $_POST['date_created'];
-        $renewed_date = $_POST['date_renewed'];
-        $expiry_date = $_POST['date_expiry'];
-        $product_ref = $_POST['product_ref'];
-        $subscr_id = $_POST['subscr_id'];
+        $license_key = sanitize_text_field( $_POST['license_key'] );
+        $max_domains = intval( $_POST['max_allowed_domains'] );
+        $license_status = sanitize_text_field( $_POST['lic_status'] );
+        $first_name = sanitize_text_field( $_POST['first_name'] );
+        $last_name = sanitize_text_field( $_POST['last_name'] );
+        $email = sanitize_email( $_POST['email'] );
+        $company_name = sanitize_text_field( $_POST['company_name'] );
+        $txn_id = sanitize_text_field( $_POST['txn_id'] );
+        $reset_count = sanitize_text_field( $_POST['manual_reset_count'] );
+        $created_date = sanitize_text_field( $_POST['date_created'] );
+        $renewed_date = sanitize_text_field( $_POST['date_renewed'] );
+        $expiry_date = sanitize_text_field( $_POST['date_expiry'] );
+        $product_ref = sanitize_text_field( $_POST['product_ref'] );
+        $subscr_id = sanitize_text_field( $_POST['subscr_id'] );
 
         if(empty($created_date)){
             $created_date = $current_date;
