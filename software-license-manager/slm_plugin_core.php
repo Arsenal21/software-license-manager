@@ -53,7 +53,7 @@ add_action('wp_ajax_del_reistered_domain', 'slm_del_reg_dom');
 function slm_del_reg_dom() {
     global $wpdb;
     $reg_table = SLM_TBL_LIC_DOMAIN;
-    $id = strip_tags($_GET['id']);
+    $id = sanitize_text_field($_GET['id']);
     $ret = $wpdb->query("DELETE FROM $reg_table WHERE id='$id'");
     echo ($ret) ? 'success' : 'failed';
     exit(0);

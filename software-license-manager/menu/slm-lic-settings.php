@@ -35,10 +35,10 @@ function wp_lic_mgr_general_settings() {
         }
 
         $options = array(
-            'lic_creation_secret' => trim($_POST["lic_creation_secret"]),
-            'lic_prefix' => trim($_POST["lic_prefix"]),
-            'default_max_domains' => trim($_POST["default_max_domains"]),
-            'lic_verification_secret' => trim($_POST["lic_verification_secret"]),
+            'lic_creation_secret' => sanitize_text_field( trim($_POST["lic_creation_secret"]) ),
+            'lic_prefix' => sanitize_text_field( trim($_POST["lic_prefix"]) ),
+            'default_max_domains' => sanitize_text_field( trim($_POST["default_max_domains"]) ),
+            'lic_verification_secret' => sanitize_text_field( trim($_POST["lic_verification_secret"]) ),
             'enable_auto_key_expiry' => isset($_POST['enable_auto_key_expiry']) ? '1':'',
             'enable_debug' => isset($_POST['enable_debug']) ? '1':'',
         );

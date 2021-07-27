@@ -58,6 +58,7 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 = 4.4.8 =
 - Sanitize the "edit_record" parameter in the "Edit License" menu. Thanks to WPScan team for pointing it out.
+- Sanitize the prefix parameter in the settings menu. Thanks to WPScan team for pointing it out.
 - Integration with the WP Express Checkout plugin.
 
 = 4.4.7 =
