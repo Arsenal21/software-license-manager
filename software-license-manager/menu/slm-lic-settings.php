@@ -18,7 +18,7 @@ function wp_lic_mgr_general_settings() {
         check_admin_referer( 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' );
         //$slm_logger = new SLM_Debug_Logger();
         global $slm_debug_logger;
-        $slm_debug_logger->reset_log_file("log.txt");
+        $slm_debug_logger->reset_log_file();
         $slm_debug_logger->reset_log_file("log-cron-job.txt");
         echo '<div id="message" class="updated fade"><p>Debug log files have been reset!</p></div>';
     }
@@ -125,8 +125,8 @@ function wp_lic_mgr_general_settings() {
                         <th scope="row">Enable Debug Logging</th>
                         <td><input name="enable_debug" type="checkbox"<?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1"/>
                             <p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
-                            <br />- View debug log file by clicking <a href="<?php echo WP_LICENSE_MANAGER_URL. '/logs/log.txt'; ?>" target="_blank">here</a>.
-                            <br />- Reset debug log file by clicking <a href="<?php echo wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_reset_log=1', 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' ); ?>" target="_blank">here</a>.
+                            <br />- View debug log file by clicking <a href="<?php echo wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_view_log=1', 'slm_view_debug_log', 'slm_view_debug_log_nonce' ); ?>" target="_blank">here</a>.
+                            <br />- Reset debug log file by clicking <a href="<?php echo wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_reset_log=1', 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' ); ?>" target="_blank" onclick="return confirm('Are you sure want to reset debug log file?');">here</a>.
                         </td>
                     </tr>
 

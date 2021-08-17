@@ -13,8 +13,9 @@
 
 class SLM_Debug_Logger
 {
-    var $log_folder_path;
-    var $default_log_file = 'log.txt';
+	protected static $instance;
+    protected $log_folder_path;
+    protected $default_log_file = 'log.txt';
     var $default_log_file_cron = 'log-cron-job.txt';
     var $debug_enabled = false;
     var $debug_status = array('SUCCESS','STATUS','NOTICE','WARNING','FAILURE','CRITICAL');
@@ -23,14 +24,33 @@ class SLM_Debug_Logger
     
     function __construct()
     {
+		self::$instance = $this;
         $this->log_folder_path = WP_LICENSE_MANAGER_PATH . '/logs';
         //Check config and if debug is enabled then set the enabled flag to true
         $options = get_option('slm_plugin_options');
         if(!empty($options['enable_debug'])){//Debugging is enabled
             $this->debug_enabled = true;            
         }
-    }
+		$this->init_default_log_file();
+	}
     
+	public static function get_instance() {
+		return empty (self::$instance) ? new self() : self::$instance;
+	}
+
+	function init_default_log_file() {
+		$options = get_option( 'slm_plugin_options' );
+		if ( empty( $options['default_log_file'] ) ) {
+			$this->default_log_file = uniqid() . '-log.txt';
+			$options['default_log_file'] = $this->default_log_file;
+			update_option( 'slm_plugin_options', $options );
+			$this->reset_log_file();
+		} else {
+			$this->default_log_file = $options['default_log_file'];
+		}
+	}
+
+
     function get_debug_timestamp()
     {
         return '['.date('m/d/Y g:i A').'] - ';
@@ -46,6 +66,24 @@ class SLM_Debug_Logger
             return $this->debug_status[$level];
         }
     }
+
+	function view_log($file_name = '') {
+		if(empty($file_name)){
+            $file_name = $this->default_log_file;
+        }
+		$log_file = $this->log_folder_path.'/'.$file_name;
+		if ( ! file_exists( $log_file ) ) {
+			echo 'Log file is empty';
+			exit();
+		}
+		$logfile = fopen( $log_file, 'rb' );
+		if ( ! $logfile ) {
+			wp_die( 'Can\'t open log file.' );
+		}
+		header( 'Content-Type: text/plain' );
+		fpassthru( $logfile );
+		exit();
+	}
     
     function get_section_break($section_break)
     {
@@ -105,8 +143,9 @@ class SLM_Debug_Logger
         if(empty($options['enable_debug'])){//Debugging is disabled
            return;
         }
+		self::get_instance();
         $content = '['.date('m/d/Y g:i A').'] - STATUS : '. $message . "\n";
-        $debug_log_file = WP_LICENSE_MANAGER_PATH . '/logs/log.txt';        
+        $debug_log_file = self::get_instance()->log_folder_path.'/'.self::get_instance()->default_log_file;
         $fp=fopen($debug_log_file,'a');
         fwrite($fp, $content);
         fclose($fp);

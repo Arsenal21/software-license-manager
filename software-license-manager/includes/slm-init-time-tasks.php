@@ -7,6 +7,12 @@ class SLM_Init_Time_Tasks{
         
         //Add other init time operations here        
         add_action ('slm_daily_cron_event', array(&$this, 'slm_daily_cron_event_handler'));
+ 
+        //View debug log
+        if (!empty($_REQUEST['slm_view_log'])) {
+            check_admin_referer( 'slm_view_debug_log', 'slm_view_debug_log_nonce' );
+            SLM_Debug_Logger::get_instance()->view_log();
+        }
     }
     
     function load_scripts()
