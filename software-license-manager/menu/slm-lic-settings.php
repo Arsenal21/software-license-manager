@@ -37,7 +37,7 @@ function wp_lic_mgr_general_settings() {
 
         $options = array(
             'lic_creation_secret' => sanitize_text_field( trim($_POST["lic_creation_secret"]) ),
-            'lic_prefix' => sanitize_text_field( trim($_POST["lic_prefix"]) ),
+            'lic_prefix' => SLM_Utility::sanitize_strip_trim_slm_text( $_POST["lic_prefix"] ),
             'default_max_domains' => sanitize_text_field( trim($_POST["default_max_domains"]) ),
             'lic_verification_secret' => sanitize_text_field( trim($_POST["lic_verification_secret"]) ),
             'enable_auto_key_expiry' => isset($_POST['enable_auto_key_expiry']) ? '1':'',
@@ -95,7 +95,7 @@ function wp_lic_mgr_general_settings() {
                     <tr valign="top">
                         <th scope="row">License Key Prefix</th>
                         <td><input type="text" name="lic_prefix" value="<?php echo esc_attr($options['lic_prefix']); ?>" size="40" />
-                            <br />You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.</td>
+                            <br />You can optionally specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.</td>
                     </tr>
 
                     <tr valign="top">

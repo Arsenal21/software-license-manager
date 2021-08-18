@@ -49,24 +49,24 @@ class SLM_API_Listener {
 
             $fields = array();
             if (isset($_REQUEST['license_key']) && !empty($_REQUEST['license_key'])){
-                $fields['license_key'] = strip_tags($_REQUEST['license_key']);//Use the key you pass via the request
+                $fields['license_key'] = SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['license_key'] );//Use the key you pass via the request
             }else{
-                $fields['license_key'] = uniqid($lic_key_prefix);//Use random generated key
+                $fields['license_key'] = uniqid( $lic_key_prefix );//Use random generated key
             }
-            $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( strip_tags( $_REQUEST['lic_status'] ) ) : 'pending';
-            $fields['first_name'] = wp_unslash(strip_tags($_REQUEST['first_name']));
-            $fields['last_name'] = wp_unslash(strip_tags($_REQUEST['last_name']));
-            $fields['email'] = strip_tags($_REQUEST['email']);
-            $fields['company_name'] = isset( $_REQUEST['company_name'] ) ? wp_unslash( strip_tags( $_REQUEST['company_name'] ) ) : '';
-            $fields['txn_id'] = strip_tags($_REQUEST['txn_id']);
+            $fields['lic_status'] = isset( $_REQUEST['lic_status'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['lic_status'] ) ) : 'pending';
+            $fields['first_name'] = wp_unslash(SLM_Utility::sanitize_strip_trim_slm_text($_REQUEST['first_name']));
+            $fields['last_name'] = wp_unslash(SLM_Utility::sanitize_strip_trim_slm_text($_REQUEST['last_name']));
+            $fields['email'] = sanitize_email( $_REQUEST['email'] );
+            $fields['company_name'] = isset( $_REQUEST['company_name'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['company_name'] ) ) : '';
+            $fields['txn_id'] = SLM_Utility::sanitize_strip_trim_slm_text($_REQUEST['txn_id']);
             if (empty($_REQUEST['max_allowed_domains'])) {
                 $fields['max_allowed_domains'] = $options['default_max_domains'];
             } else {
-                $fields['max_allowed_domains'] = strip_tags($_REQUEST['max_allowed_domains']);
+                $fields['max_allowed_domains'] = intval($_REQUEST['max_allowed_domains']);
             }
-            $fields['date_created'] = isset($_REQUEST['date_created'])?strip_tags($_REQUEST['date_created']):date("Y-m-d");
-            $fields['date_expiry'] = isset($_REQUEST['date_expiry'])?strip_tags($_REQUEST['date_expiry']):'';
-            $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( strip_tags( $_REQUEST['product_ref'] ) ) : '';
+            $fields['date_created'] = isset($_REQUEST['date_created']) ? sanitize_text_field($_REQUEST['date_created']) : date("Y-m-d");
+            $fields['date_expiry'] = isset($_REQUEST['date_expiry']) ? sanitize_text_field($_REQUEST['date_expiry']) : '';
+            $fields['product_ref'] = isset( $_REQUEST['product_ref'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['product_ref'] ) ) : '';
 
             global $wpdb;
             $tbl_name = SLM_TBL_LICENSE_KEYS;
@@ -103,9 +103,9 @@ class SLM_API_Listener {
             do_action('slm_api_listener_slm_activate');
 
             $fields = array();
-            $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
-            $fields['registered_domain'] = trim(wp_unslash(strip_tags($_REQUEST['registered_domain']))); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
-            $fields['item_reference'] = trim(strip_tags($_REQUEST['item_reference']));
+            $fields['lic_key'] = SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['license_key'] );
+            $fields['registered_domain'] = trim(wp_unslash(sanitize_text_field( $_REQUEST['registered_domain'] ))); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            $fields['item_reference'] = trim(sanitize_text_field( $_REQUEST['item_reference'] ));
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $fields['registered_domain']);
 
             global $wpdb;
@@ -129,7 +129,7 @@ class SLM_API_Listener {
                 if (count($reg_domains) < floor($retLic->max_allowed_domains)) {
                     foreach ($reg_domains as $reg_domain) {
                         if (isset($_REQUEST['migrate_from']) && (trim($_REQUEST['migrate_from']) == $reg_domain->registered_domain)) {
-                            $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim(strip_tags($_REQUEST['migrate_from']))));
+                            $wpdb->update($reg_table, array('registered_domain' => $fields['registered_domain']), array('registered_domain' => trim(sanitize_text_field($_REQUEST['migrate_from']))));
                             $args = (array('result' => 'success', 'message' => 'Registered domain has been updated'));
                             SLM_API_Utility::output_api_response($args);
                         }
@@ -186,8 +186,8 @@ class SLM_API_Listener {
                 $args = (array('result' => 'error', 'message' => 'Registered domain information is missing', 'error_code' => SLM_Error_Codes::DOMAIN_MISSING));
                 SLM_API_Utility::output_api_response($args);
             }
-            $registered_domain = trim(wp_unslash(strip_tags($_REQUEST['registered_domain'])));
-            $license_key = trim(strip_tags($_REQUEST['license_key']));
+            $registered_domain = trim(wp_unslash(sanitize_text_field($_REQUEST['registered_domain'])));
+            $license_key = SLM_Utility::sanitize_strip_trim_slm_text($_REQUEST['license_key']);
             $slm_debug_logger->log_debug("License key: " . $license_key . " Domain: " . $registered_domain);
 
             global $wpdb;
@@ -216,7 +216,7 @@ class SLM_API_Listener {
             $slm_debug_logger->log_debug("API - license check (slm_check) request received.");
 
             $fields = array();
-            $fields['lic_key'] = trim(strip_tags($_REQUEST['license_key']));
+            $fields['lic_key'] = SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['license_key'] );
             $slm_debug_logger->log_debug("License key: " . $fields['lic_key']);
 
             //Action hook
