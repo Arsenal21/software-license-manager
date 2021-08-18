@@ -95,9 +95,9 @@ class SLM_Utility {
     }
 
     static function sanitize_strip_trim_slm_text( $text ){
+        $text = strip_tags( $text );
         $text = htmlspecialchars( $text );
         $text = sanitize_text_field( $text );
-        $text = strip_tags( $text );
         $text = trim( $text );
         return $text;
     }
