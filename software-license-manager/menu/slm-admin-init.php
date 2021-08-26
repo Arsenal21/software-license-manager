@@ -8,11 +8,11 @@
 add_action( 'admin_menu', 'wp_lic_mgr_add_admin_menu' );
 
 //Include menu handling files
-require_once( WP_LICENSE_MANAGER_PATH . '/menu/slm-manage-licenses.php' );
-require_once( WP_LICENSE_MANAGER_PATH . '/menu/slm-add-licenses.php' );
-require_once( WP_LICENSE_MANAGER_PATH . '/menu/slm-lic-settings.php' );
-require_once( WP_LICENSE_MANAGER_PATH . '/menu/slm-admin-functions.php' );
-require_once( WP_LICENSE_MANAGER_PATH . '/menu/slm-integration-help-page.php' );
+require_once WP_LICENSE_MANAGER_PATH . '/menu/slm-manage-licenses.php';
+require_once WP_LICENSE_MANAGER_PATH . '/menu/slm-add-licenses.php';
+require_once WP_LICENSE_MANAGER_PATH . '/menu/slm-lic-settings.php';
+require_once WP_LICENSE_MANAGER_PATH . '/menu/slm-admin-functions.php';
+require_once WP_LICENSE_MANAGER_PATH . '/menu/slm-integration-help-page.php';
 
 function wp_lic_mgr_add_admin_menu() {
 	add_menu_page( 'License Manager', 'License Manager', SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, 'wp_lic_mgr_manage_licenses_menu', SLM_MENU_ICON );
