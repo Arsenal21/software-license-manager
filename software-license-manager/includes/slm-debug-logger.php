@@ -16,6 +16,7 @@ class SLM_Debug_Logger {
 	protected static $instance;
 	protected $log_folder_path;
 	protected $default_log_file = 'log.txt';
+	protected $overwrite        = false;
 	var $default_log_file_cron  = 'log-cron-job.txt';
 	var $debug_enabled          = false;
 	var $debug_status           = array( 'SUCCESS', 'STATUS', 'NOTICE', 'WARNING', 'FAILURE', 'CRITICAL' );
@@ -92,11 +93,10 @@ class SLM_Debug_Logger {
 		if ( empty( $file_name ) ) {
 			$file_name = $this->default_log_file;
 		}
-		$debug_log_file = $this->log_folder_path . '/' . $file_name;
-		$content        = $this->get_debug_timestamp() . $this->log_reset_marker;
-		$fp             = fopen( $debug_log_file, 'w' );
-		fwrite( $fp, $content );
-		fclose( $fp );
+		$content = $this->get_debug_timestamp() . $this->log_reset_marker;
+
+		$this->overwrite = true;
+		$this->append_to_file( $content, $file_name );
 	}
 
 	function append_to_file( $content, $file_name ) {
@@ -104,7 +104,8 @@ class SLM_Debug_Logger {
 			$file_name = $this->default_log_file;
 		}
 		$debug_log_file = $this->log_folder_path . '/' . $file_name;
-		$fp             = fopen( $debug_log_file, 'a' );
+		$f_opts         = $this->overwrite ? 'w' : 'a';
+		$fp             = fopen( $debug_log_file, $f_opts );
 		fwrite( $fp, $content );
 		fclose( $fp );
 	}
