@@ -11,23 +11,23 @@ function lic_mgr_integration_help_menu() {
 	$creation_secret_key     = $options['lic_creation_secret'];
 	$secret_verification_key = $options['lic_verification_secret'];
 
-	echo '<h2>License Manager Integration Help v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
 	echo '<div class="wrap">';
+	echo '<h2>License Manager Integration Help v' . esc_html( WP_LICENSE_MANAGER_VERSION ) . '</h2>';
 	echo '<div id="poststuff"><div id="post-body">';
 
 	echo '<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>';
 
 	$api_query_post_url = SLM_SITE_HOME_URL;
 	echo '<strong>The License API Query POST URL For Your Installation</strong>';
-	echo '<div class="lic_mgr_code">' . $api_query_post_url . '</div>';
+	echo '<div class="lic_mgr_code">' . esc_url( $api_query_post_url ) . '</div>';
 
 	echo '<strong>The License Activation or Deactivation API secret key</strong>';
-	echo '<div class="lic_mgr_code">' . $secret_verification_key . '</div>';
+	echo '<div class="lic_mgr_code">' . esc_html( $secret_verification_key ) . '</div>';
 
 	echo '<strong>The License Creation API secret key</strong>';
-	echo '<div class="lic_mgr_code">' . $creation_secret_key . '</div>';
+	echo '<div class="lic_mgr_code">' . esc_html( $creation_secret_key ) . '</div>';
 	?>
-	<h2>3rd Party Integration</h2>
+	<h3>3rd Party Integration</h3>
 
 	Integrating a 3rd party payment system or shopping cart with License Manager is easy.
 	<br /><br />
@@ -75,18 +75,16 @@ function lic_mgr_integration_help_menu() {
 	1. The first line is an indication of success or error
 	<br />2. The second line is the result.
 	<br />3. The third line is additional message that resulted from the request.
-	<br /><br />
-	<strong>Sample PHP Code</strong>
-	<br />
+	<h3>Sample PHP Code</h3>
 	Below is a sample PHP code that shows how you can create a license via the API
 	<br />
 
 	<div class="lic_mgr_code">
 		/*** Mandatory data ***/
 		<br />// Post URL
-		<br />$postURL = "<?php echo isset( $LicenseCreationPostURL ) ? $LicenseCreationPostURL : ''; ?>";
+		<br />$postURL = "<?php echo isset( $license_creation_post_url ) ? esc_html( $license_creation_post_url ) : ''; ?>";
 		<br />// The Secret key
-		<br />$secretKey = "<?php echo $creation_secret_key; ?>";
+		<br />$secretKey = "<?php echo esc_html( $creation_secret_key ); ?>";
 		<br /> 
 		<br />/*** Optional Data ***/
 		<br />$firstname = "John";
