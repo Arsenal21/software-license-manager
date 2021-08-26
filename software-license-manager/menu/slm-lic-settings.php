@@ -3,7 +3,7 @@
 function wp_lic_mgr_settings_menu() {
 
 	echo '<div class="wrap">';
-	echo '<h2>WP License Manager Settings v' . WP_LICENSE_MANAGER_VERSION . '</h2>';
+	echo '<h2>WP License Manager Settings v' . esc_html( WP_LICENSE_MANAGER_VERSION ) . '</h2>';
 	echo '<div id="poststuff"><div id="post-body">';
 
 	wp_lic_mgr_general_settings();
@@ -26,23 +26,33 @@ function wp_lic_mgr_general_settings() {
 	if ( isset( $_POST['slm_save_settings'] ) ) {
 
 		//Check nonce
-		if ( ! isset( $_POST['slm_settings_nonce_val'] ) || ! wp_verify_nonce( $_POST['slm_settings_nonce_val'], 'slm_settings_nonce_action' ) ) {
-			//Nonce check failed.
-			wp_die( 'Error! Nonce verification failed for settings save action.' );
-		}
+		check_admin_referer( 'slm_settings_nonce_action', 'slm_settings_nonce_val' );
 
-		if ( ! is_numeric( $_POST['default_max_domains'] ) ) {//Set it to one by default if incorrect value is entered
-			$_POST['default_max_domains'] = '1';
-		}
+		$default_max_domains = filter_input( INPUT_POST, 'default_max_domains', FILTER_SANITIZE_NUMBER_INT );
+		$default_max_domains = empty( $default_max_domains ) ? 1 : $default_max_domains;
+
+		$lic_creation_secret = filter_input( INPUT_POST, 'lic_creation_secret', FILTER_SANITIZE_STRING );
+		$lic_creation_secret = empty( $lic_creation_secret ) ? '' : sanitize_text_field( $lic_creation_secret );
+
+		$lic_prefix = filter_input( INPUT_POST, 'lic_prefix', FILTER_SANITIZE_STRING );
+		$lic_prefix = empty( $lic_prefix ) ? '' : SLM_Utility::sanitize_strip_trim_slm_text( $lic_prefix );
+
+		$lic_verification_secret = filter_input( INPUT_POST, 'lic_verification_secret', FILTER_SANITIZE_STRING );
+		$lic_verification_secret = empty( $lic_verification_secret ) ? '' : sanitize_text_field( $lic_verification_secret );
+
+		$curr_opts = get_option( 'slm_plugin_options' );
 
 		$options = array(
-			'lic_creation_secret'     => sanitize_text_field( trim( $_POST['lic_creation_secret'] ) ),
-			'lic_prefix'              => SLM_Utility::sanitize_strip_trim_slm_text( $_POST['lic_prefix'] ),
-			'default_max_domains'     => sanitize_text_field( trim( $_POST['default_max_domains'] ) ),
-			'lic_verification_secret' => sanitize_text_field( trim( $_POST['lic_verification_secret'] ) ),
+			'lic_creation_secret'     => $lic_creation_secret,
+			'lic_prefix'              => $lic_prefix,
+			'default_max_domains'     => $default_max_domains,
+			'lic_verification_secret' => $lic_verification_secret,
 			'enable_auto_key_expiry'  => isset( $_POST['enable_auto_key_expiry'] ) ? '1' : '',
 			'enable_debug'            => isset( $_POST['enable_debug'] ) ? '1' : '',
 		);
+
+		$options = array_merge( $curr_opts, $options );
+
 		update_option( 'slm_plugin_options', $options );
 
 		echo '<div id="message" class="updated fade"><p>';
@@ -135,8 +145,8 @@ function wp_lic_mgr_general_settings() {
 						?>
 						 value="1"/>
 							<p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
-							<br />- View debug log file by clicking <a href="<?php echo wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_view_log=1', 'slm_view_debug_log', 'slm_view_debug_log_nonce' ); ?>" target="_blank">here</a>.
-							<br />- Reset debug log file by clicking <a href="<?php echo wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_reset_log=1', 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' ); ?>" target="_blank" onclick="return confirm('Are you sure want to reset debug log file?');">here</a>.
+							<br />- View debug log file by clicking <a href="<?php echo esc_attr( wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_view_log=1', 'slm_view_debug_log', 'slm_view_debug_log_nonce' ) ); ?>" target="_blank">here</a>.
+							<br />- Reset debug log file by clicking <a href="<?php echo esc_attr( wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_reset_log=1', 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' ) ); ?>" target="_blank" onclick="return confirm('Are you sure want to reset debug log file?');">here</a>.
 						</td>
 					</tr>
 
@@ -144,7 +154,7 @@ function wp_lic_mgr_general_settings() {
 			</div></div>
 
 		<div class="submit">
-			<input type="submit" class="button-primary" name="slm_save_settings" value=" <?php _e( 'Update Options', 'slm' ); ?>" />
+			<input type="submit" class="button-primary" name="slm_save_settings" value=" <?php esc_html_e( 'Update Options', 'slm' ); ?>" />
 		</div>
 	</form>
 	<?php
