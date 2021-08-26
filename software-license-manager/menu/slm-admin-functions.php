@@ -8,25 +8,28 @@ function wp_lic_mgr_admin_fnc_menu() {
 
 	$slm_options = get_option( 'slm_plugin_options' );
 
+	$post_url = '';
+
 	if ( isset( $_POST['send_deactivation_request'] ) ) {
-		$postURL                  = $_POST['lic_mgr_deactivation_req_url'];
+		check_admin_referer( 'slm_send_deact_req' );
+		$post_url                 = filter_input( INPUT_POST, 'lic_mgr_deactivation_req_url', FILTER_SANITIZE_URL );
 		$secretKeyForVerification = $slm_options['lic_verification_secret'];
 		$data                     = array();
 		$data['secret_key']       = $secretKeyForVerification;
 
-		$ch = curl_init( $postURL );
+		$ch = curl_init( $post_url );
 		curl_setopt( $ch, CURLOPT_POST, true );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		$returnValue = curl_exec( $ch );
+		$return_value = curl_exec( $ch );
 
 		$msg = '';
-		if ( $returnValue == 'Success' ) {
+		if ( 'Success' === $return_value ) {
 			$msg .= 'Success message returned from the remote host.';
 		}
 		echo '<div id="message" class="updated fade"><p>';
 		echo 'Request sent to the specified URL!';
-		echo '<br />' . $msg;
+		echo '<br />' . esc_html( $msg );
 		echo '</p></div>';
 	}
 	?>
@@ -37,8 +40,8 @@ function wp_lic_mgr_admin_fnc_menu() {
 			<br /><strong>Enter the URL where the license deactivation message will be sent to</strong>
 			<br /><br />
 			<form method="post" action="">
-
-				<input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php isset( $_POST['lic_mgr_deactivation_req_url'] ) ? $_POST['lic_mgr_deactivation_req_url'] : ''; ?>"/>
+				<?php wp_nonce_field( 'slm_send_deact_req' ); ?>
+				<input name="lic_mgr_deactivation_req_url" type="text" size="100" value="<?php esc_attr( $post_url ); ?>"/>
 				<div class="submit">
 					<input type="submit" name="send_deactivation_request" value="Send Request" class="button" />
 				</div>
