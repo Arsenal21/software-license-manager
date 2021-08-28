@@ -1,7 +1,7 @@
 <?php
 //***** Installer *****
 global $wpdb;
-require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 //***Installer variables***
 $lic_key_table    = SLM_TBL_LICENSE_KEYS;

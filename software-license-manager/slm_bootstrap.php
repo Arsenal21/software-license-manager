@@ -22,7 +22,7 @@ define( 'WP_LICENSE_MANAGER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SLM_SITE_HOME_URL', home_url() );
 define( 'SLM_WP_SITE_URL', site_url() );
 
-include_once( 'slm_plugin_core.php' );
+require_once 'slm_plugin_core.php';
 
 //Activation handler
 function slm_activate_handler() {
@@ -47,6 +47,6 @@ register_deactivation_hook( __FILE__, 'slm_deactivate_handler' );
 
 //Installer function
 function slm_db_install() {
-	 //run the installer
-	require_once( dirname( __FILE__ ) . '/slm_installer.php' );
+	//run the installer
+	require_once dirname( __FILE__ ) . '/slm_installer.php';
 }

@@ -31,7 +31,7 @@ class SLM_API_Utility {
 				'message'    => 'Verification API secret key is invalid',
 				'error_code' => SLM_Error_Codes::VERIFY_KEY_INVALID,
 			) );
-			SLM_API_Utility::output_api_response( $args );
+			self::output_api_response( $args );
 		}
 	}
 
@@ -45,7 +45,7 @@ class SLM_API_Utility {
 				'message'    => 'License Creation API secret key is invalid',
 				'error_code' => SLM_Error_Codes::CREATE_KEY_INVALID,
 			) );
-			SLM_API_Utility::output_api_response( $args );
+			self::output_api_response( $args );
 		}
 	}
 

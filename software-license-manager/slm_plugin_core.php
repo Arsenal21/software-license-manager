@@ -9,17 +9,17 @@ define( 'SLM_MAIN_MENU_SLUG', 'slm-main' );
 define( 'SLM_MENU_ICON', 'dashicons-lock' );
 
 //Includes
-include_once( 'includes/slm-debug-logger.php' );
-include_once( 'includes/slm-error-codes.php' );
-include_once( 'includes/slm-utility.php' );
-include_once( 'includes/slm-init-time-tasks.php' );
-include_once( 'includes/slm-api-utility.php' );
-include_once( 'includes/slm-api-listener.php' );
-include_once( 'includes/slm-third-party-integration.php' );
+require_once 'includes/slm-debug-logger.php';
+require_once 'includes/slm-error-codes.php';
+require_once 'includes/slm-utility.php';
+require_once 'includes/slm-init-time-tasks.php';
+require_once 'includes/slm-api-utility.php';
+require_once 'includes/slm-api-listener.php';
+require_once 'includes/slm-third-party-integration.php';
 //Include admin side only files
 if ( is_admin() ) {
-	include_once( 'menu/slm-admin-init.php' );
-	include_once( 'menu/includes/slm-list-table-class.php' ); //Load our own WP List Table class
+	include_once 'menu/slm-admin-init.php';
+	include_once 'menu/includes/slm-list-table-class.php'; //Load our own WP List Table class
 }
 
 //Action hooks
@@ -42,7 +42,7 @@ function slm_plugins_loaded_handler() {
 	if ( is_admin() ) {
 		//Check if db update needed
 		if ( get_option( 'wp_lic_mgr_db_version' ) != WP_LICENSE_MANAGER_DB_VERSION ) {
-			require_once( dirname( __FILE__ ) . '/slm_installer.php' );
+			require_once dirname( __FILE__ ) . '/slm_installer.php';
 		}
 	}
 
