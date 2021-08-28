@@ -1,7 +1,7 @@
 {
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2,
     "phpSniffer.snippetExcludeSniffs": [
+
     
-    ]
+    ],
+    "phpSniffer.standard": "./phpcs.xml"
 }
