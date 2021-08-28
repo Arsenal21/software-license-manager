@@ -1,7 +1,7 @@
 <?php
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class WPLM_List_Licenses extends WP_List_Table {
@@ -28,7 +28,11 @@ class WPLM_List_Licenses extends WP_List_Table {
 		$row_id  = $item['id'];
 		$actions = array(
 			'edit'   => sprintf( '<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id ),
-			'delete' => sprintf( '<a href="admin.php?page=slm-main&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>', $row_id ),
+			'delete' => sprintf(
+				'<a href="admin.php?page=slm-main&action=delete_license&id=%s&_wpnonce=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',
+				$row_id,
+				wp_create_nonce( 'slm-delete-license-' . $row_id )
+			),
 		);
 		return sprintf(
 			'%1$s <span style="color:silver"></span>%2$s',
