@@ -1,7 +1,7 @@
 <?php
 
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class WPLM_List_Licenses extends WP_List_Table {
@@ -28,7 +28,11 @@ class WPLM_List_Licenses extends WP_List_Table {
 		$row_id  = $item['id'];
 		$actions = array(
 			'edit'   => sprintf( '<a href="admin.php?page=wp_lic_mgr_addedit&edit_record=%s">Edit</a>', $row_id ),
-			'delete' => sprintf( '<a href="admin.php?page=slm-main&action=delete_license&id=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>', $row_id ),
+			'delete' => sprintf(
+				'<a href="admin.php?page=slm-main&action=delete_license&id=%s&_wpnonce=%s" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a>',
+				$row_id,
+				wp_create_nonce( 'slm-delete-license-' . $row_id )
+			),
 		);
 		return sprintf(
 			'%1$s <span style="color:silver"></span>%2$s',
@@ -94,12 +98,12 @@ class WPLM_List_Licenses extends WP_List_Table {
 			check_admin_referer( 'bulk-' . $this->_args['plural'] );
 			//Process delete bulk actions
 			if ( ! isset( $_REQUEST['item'] ) ) {
-				$error_msg = '<p>' . __( 'Error - Please select some records using the checkboxes', 'slm' ) . '</p>';
-				echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+				$error_msg = __( 'Error - Please select some records using the checkboxes', 'slm' );
+				echo '<div id="message" class="error fade"><p>' . esc_html( $error_msg ) . '</p></div>';
 				return;
 			} else {
 				$nvp_key           = $this->_args['singular'];
-				$records_to_delete = $_GET[ $nvp_key ];
+				$records_to_delete = filter_input( INPUT_GET, $nvp_key, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 				foreach ( $records_to_delete as $row ) {
 					SLM_Utility::delete_license_key_by_row_id( $row );
 				}
@@ -114,10 +118,9 @@ class WPLM_List_Licenses extends WP_List_Table {
 	 */
 	function delete_license_key( $key_row_id ) {
 		SLM_Utility::delete_license_key_by_row_id( $key_row_id );
-		$success_msg  = '<div id="message" class="updated"><p><strong>';
-		$success_msg .= 'The selected entry was deleted successfully!';
-		$success_msg .= '</strong></p></div>';
-		echo $success_msg;
+		echo '<div id="message" class="updated"><p><strong>';
+		echo 'The selected entry was deleted successfully!';
+		echo '</strong></p></div>';
 	}
 
 	function search_box( $text, $input_id ) {
@@ -145,8 +148,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 	<h3 class="hndle"><label for="title">License Search</label></h3>
 	<div class="inside">
 		<p>Search for a license by using email, name, key, domain or transaction ID</p>
-		<label class="screen-reader-text" for="<?php echo $input_id; ?>"><?php echo $text; ?>:</label>
-		<input type="search" id="<?php echo $input_id; ?>" name="s" size="40" value="<?php _admin_search_query(); ?>" />
+		<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+		<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" size="40" value="<?php _admin_search_query(); ?>" />
 		<?php submit_button( $text, 'button', false, false, array( 'id' => 'search-submit' ) ); ?>
 	</div>
 </div>
@@ -177,8 +180,8 @@ class WPLM_List_Licenses extends WP_List_Table {
 		 * Ordering parameters:
 		 * Parameters that are going to be used to order the result.
 		 */
-		$orderby = ! empty( $_GET['orderby'] ) ? strip_tags( $_GET['orderby'] ) : 'id';
-		$order   = ! empty( $_GET['order'] ) ? strip_tags( $_GET['order'] ) : 'DESC';
+		$orderby = ! empty( $_GET['orderby'] ) ? wp_strip_all_tags( $_GET['orderby'] ) : 'id';
+		$order   = ! empty( $_GET['order'] ) ? wp_strip_all_tags( $_GET['order'] ) : 'DESC';
 
 		$order_str = sanitize_sql_orderby( $orderby . ' ' . $order );
 
