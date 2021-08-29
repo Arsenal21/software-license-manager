@@ -4,7 +4,7 @@ Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-fo
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
 Tested up to: 5.8
-Stable tag: 4.4.9
+Stable tag: 4.5.0
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -55,6 +55,13 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.5.0 =
+- More variable escaping and sanitization.
+- Replaced CURL with wp_remote_get() function.
+- Removed example/sample plugin code file from the plugin.
+- Added the sample plugin download option on our website.
+- Removed the unused list table class.
 
 = 4.4.9 =
 - Added nonce check for debug log reset
