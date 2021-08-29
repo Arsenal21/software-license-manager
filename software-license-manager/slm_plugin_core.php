@@ -19,7 +19,6 @@ require_once 'includes/slm-third-party-integration.php';
 //Include admin side only files
 if ( is_admin() ) {
 	include_once 'menu/slm-admin-init.php';
-	include_once 'menu/includes/slm-list-table-class.php'; //Load our own WP List Table class
 }
 
 //Action hooks
