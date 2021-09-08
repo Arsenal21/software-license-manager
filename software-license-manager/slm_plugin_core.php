@@ -53,7 +53,13 @@ function slm_del_reg_dom() {
 	global $wpdb;
 	$reg_table = SLM_TBL_LIC_DOMAIN;
 	$id        = sanitize_text_field( $_GET['id'] );
-	$ret       = $wpdb->query( "DELETE FROM $reg_table WHERE id='$id'" );
+
+	if ( ! check_ajax_referer( 'slm_delete_domain_' . $id, false, false ) ) {
+		echo 'failed';
+		exit();
+	};
+
+	$ret = $wpdb->query( "DELETE FROM $reg_table WHERE id='$id'" );
 	echo ( $ret ) ? 'success' : 'failed';
 	exit( 0 );
 }

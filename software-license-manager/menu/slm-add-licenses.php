@@ -374,7 +374,7 @@ function wp_lic_mgr_add_licenses_menu() {
 			$msg.html( 'Loading ...' ).show();
 
 			$.get(
-				'<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>' + '?action=del_reistered_domain&id=' + id,
+				'<?php echo esc_html( wp_nonce_url( admin_url( 'admin-ajax.php' ), 'slm_delete_domain_' . $id ) ); ?>' + '&action=del_reistered_domain&id=' + id,
 				function( data ) {
 					if ( 'success' == data ) {
 						$msg.addClass( 'success' ).html( 'Deleted' );
