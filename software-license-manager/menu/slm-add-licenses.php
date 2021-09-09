@@ -249,10 +249,31 @@ function wp_lic_mgr_add_licenses_menu() {
 										<table cellpadding="0" cellspacing="0" class="domain-license-table">
 											<?php
 											$count = 0;
+											$tpl   = '<a class="slm-remove-domain-btn del" data-domain-id="%s" data-nonce="%s" data-lic-id="' . $id . '" title="' . __( 'Delete domain', 'slm' ) . '" href="#">&times;</a>';
 											foreach ( $reg_domains as $reg_domain ) :
 												?>
 												<tr <?php echo ( $count % 2 ) ? 'class="alternate"' : ''; ?>>
-													<td class="remove-domain"><a class="del" id="<?php echo esc_attr( $reg_domain->id ); ?>" href="#remove-domain">&times;</a></td>
+													<td class="remove-domain">
+													<?php
+													echo wp_kses(
+														sprintf(
+															$tpl,
+															esc_attr( $reg_domain->id ),
+															esc_attr( wp_create_nonce( sprintf( 'slm_delete_domain_lic_%s_id_%s', $id, $reg_domain->id ) ) ),
+														),
+														array(
+															'a' => array(
+																'class' => array(),
+																'href' => array(),
+																'title' => array(),
+																'data-domain-id' => array(),
+																'data-lic-id' => array(),
+																'data-nonce' => array(),
+															),
+														),
+													);
+													?>
+													</td>
 													<td><?php echo esc_html( $reg_domain->registered_domain ); ?></td>
 												</tr>
 												<?php
@@ -355,12 +376,12 @@ function wp_lic_mgr_add_licenses_menu() {
 
 	<script type="text/javascript">
 	jQuery( function( $ ) {
-		$( '.del' ).on( 'click', function( e ) {
+		$( 'a.slm-remove-domain-btn' ).on( 'click', function( e ) {
 			e.preventDefault();
 
 			var $link = $( this );
 
-			if ( ! confirm( 'Are you sure you want to remove this domain?' ) ) {
+			if ( ! confirm( '<?php echo esc_js( __( 'Are you sure you want to remove this domain?', 'slm' ) ); ?>' ) ) {
 				$link.blur();
 				return false;
 			}
@@ -371,34 +392,50 @@ function wp_lic_mgr_add_licenses_menu() {
 			var id = $link.attr( 'id' ),
 				$msg = $( '#reg_del_msg' );
 
-			$msg.html( 'Loading ...' ).show();
+			$msg.html( '<?php echo esc_js( __( 'Loading...', 'slm' ) ); ?>' ).show();
 
-			$.get(
-				'<?php echo esc_html( wp_nonce_url( admin_url( 'admin-ajax.php' ), 'slm_delete_domain_' . $id ) ); ?>' + '&action=del_reistered_domain&id=' + id,
-				function( data ) {
-					if ( 'success' == data ) {
-						$msg.addClass( 'success' ).html( 'Deleted' );
+			var req = jQuery.ajax({
+				url: '<?php echo esc_html( admin_url( 'admin-ajax.php' ) ); ?>',
+				type: 'post',
+				data: { action: 'slm_delete_domain', domain_id: jQuery(this).data('domain-id'), 'lic_id': jQuery(this).data('lic-id'), '_ajax_nonce': jQuery(this).data('nonce') }
+			});
 
-						var $tr = $link.parents( 'tr:first' );
-						$tr.fadeOut( 'fast', function() {
-							$tr.remove();
+			req.done(function (data) {
+				if (data.status!=='success') {
+					slmDeleteDomainError(data);
+					return false;
+				}
 
-							// Check if any more rows exist.
-							if ( ! $( '.domain-license-table tbody tr' ).length ) {
-								var $none  =$( '<p />' ).html( 'No domains activated.' ).hide();
-								$( '.domain-licenses' ).after( $none ).hide();
-								$none.fadeIn( 'fast' );
-							} else {
-								// Restripe table.
-								$( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
-								$( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
-							}
-						} );
+				$msg.addClass( 'success' ).html( '<?php echo esc_js( __( 'Deleted', 'slm' ) ); ?>' );
+
+				var $tr = $link.parents( 'tr:first' );
+				$tr.fadeOut( 'fast', function() {
+					$tr.remove();
+
+					// Check if any more rows exist.
+					if ( ! $( '.domain-license-table tbody tr' ).length ) {
+						var $none  =$( '<p />' ).html( '<?php echo esc_js( __( 'No domains activated.', 'slm' ) ); ?>' ).hide();
+						$( '.domain-licenses' ).after( $none ).hide();
+						$none.fadeIn( 'fast' );
 					} else {
-						$msg.addClass( 'error' ).html( 'Failed' );
+						// Restripe table.
+						$( '.domain-license-table tbody tr.alternate' ).removeClass( 'alternate' );
+						$( '.domain-license-table tbody tr:even' ).addClass( 'alternate' );
 					}
-				} // ajax callback function.
-			); // get/ajax.
+				});
+
+			});
+
+			req.fail(function (data) {
+				slmDeleteDomainError(data);
+			});
+
+			function slmDeleteDomainError(data) {
+				$msg.addClass( 'error' ).html( '<?php echo esc_js( __( 'Failed', 'slm' ) ); ?>' );
+				jQuery($spinner).remove();
+				jQuery($link).show();
+			}
+
 		}); // click event.
 	}); // document ready.
 	</script>

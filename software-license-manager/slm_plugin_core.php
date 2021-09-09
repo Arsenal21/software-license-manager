@@ -48,18 +48,31 @@ function slm_plugins_loaded_handler() {
 }
 
 //TODO - need to move this to an ajax handler file
-add_action( 'wp_ajax_del_reistered_domain', 'slm_del_reg_dom' );
+add_action( 'wp_ajax_slm_delete_domain', 'slm_del_reg_dom' );
 function slm_del_reg_dom() {
-	global $wpdb;
-	$reg_table = SLM_TBL_LIC_DOMAIN;
-	$id        = sanitize_text_field( $_GET['id'] );
+	$out = array( 'status' => 'fail' );
 
-	if ( ! check_ajax_referer( 'slm_delete_domain_' . $id, false, false ) ) {
-		echo 'failed';
-		exit();
+	if ( ! current_user_can( 'administrator' ) ) {
+		wp_send_json( $out );
+	}
+
+	global $wpdb;
+
+	$lic_id    = filter_input( INPUT_POST, 'lic_id', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT );
+	$domain_id = filter_input( INPUT_POST, 'domain_id', FILTER_SANITIZE_NUMBER_INT, FILTER_VALIDATE_INT );
+
+	if ( empty( $lic_id ) || empty( $domain_id ) ) {
+		wp_send_json( $out );
+	}
+
+	$reg_table = SLM_TBL_LIC_DOMAIN;
+
+	if ( ! check_ajax_referer( sprintf( 'slm_delete_domain_lic_%s_id_%s', $lic_id, $domain_id ), false, false ) ) {
+		wp_send_json( $out );
 	};
 
-	$ret = $wpdb->query( "DELETE FROM $reg_table WHERE id='$id'" );
-	echo ( $ret ) ? 'success' : 'failed';
-	exit( 0 );
+	$wpdb->query( $wpdb->prepare( "DELETE FROM $reg_table WHERE id=%d", $domain_id ) ); //phpcs:ignore
+
+	$out['status'] = 'success';
+	wp_send_json( $out );
 }
