@@ -355,14 +355,11 @@ function wp_lic_mgr_add_licenses_menu() {
 				</table>
 
 				<?php
-				$data         = array(
+				$data = array(
 					'row_id' => $id,
 					'key'    => $license_key,
 				);
-				$extra_output = apply_filters( 'slm_add_edit_interface_above_submit', '', $data );
-				if ( ! empty( $extra_output ) ) {
-					echo $extra_output;
-				}
+				do_action( 'slm_add_edit_interface_above_submit', $data );
 				?>
 
 				<div class="submit">
