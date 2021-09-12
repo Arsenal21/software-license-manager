@@ -259,7 +259,7 @@ function wp_lic_mgr_add_licenses_menu() {
 														sprintf(
 															$tpl,
 															esc_attr( $reg_domain->id ),
-															esc_attr( wp_create_nonce( sprintf( 'slm_delete_domain_lic_%s_id_%s', $id, $reg_domain->id ) ) ),
+															esc_attr( wp_create_nonce( sprintf( 'slm_delete_domain_lic_%s_id_%s', $id, $reg_domain->id ) ) )
 														),
 														array(
 															'a' => array(
@@ -270,7 +270,7 @@ function wp_lic_mgr_add_licenses_menu() {
 																'data-lic-id' => array(),
 																'data-nonce' => array(),
 															),
-														),
+														)
 													);
 													?>
 													</td>
