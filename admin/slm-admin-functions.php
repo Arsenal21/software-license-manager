@@ -8,7 +8,7 @@ function slm_admin_tools_menu()
 {
 
     echo '<div class="wrap">';
-    echo '<h2 class="imgh2"><img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo"> Admin Tools</h2>';
+    echo '<h2 class="imgh2"><img src="' . SLM_ASSETS_URL . 'images/slm_logo.svg" alt="slm logo">'. __('Admin Tools', 'softwarelicensemanager').'</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
     $slm_options = get_option('slm_plugin_options');
