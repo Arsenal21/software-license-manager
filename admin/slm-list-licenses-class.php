@@ -24,7 +24,7 @@ class SLM_List_Licenses extends WP_List_Table
 
     public function no_items()
     {
-        _e('No licenses avaliable.', 'slm');
+        _e('No licenses avaliable.', 'softwarelicensemanager');
     }
 
     function get_views()
@@ -40,35 +40,35 @@ class SLM_List_Licenses extends WP_List_Table
                 $link_html,
                 esc_url(remove_query_arg('view', $base)),
                 $current === 'all' || $current == '' ? ' class="current"' : '',
-                esc_html__('All', 'slm'),
+                esc_html__('All', 'softwarelicensemanager'),
                 SLM_Utility::get_total_licenses()
             ),
             'active'   => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'active', $base . '&s=active')),
                 $current === 'active' ? ' class="current"' : '',
-                esc_html__('active', 'slm'),
+                esc_html__('active', 'softwarelicensemanager'),
                 SLM_Utility::count_licenses('active')
             ),
             'pending' => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'pending', $base . '&s=pending')),
                 $current === 'pending' ? ' class="current"' : '',
-                esc_html__('pending', 'slm'),
+                esc_html__('pending', 'softwarelicensemanager'),
                 SLM_Utility::count_licenses('pending')
             ),
             'expired'  => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'expired', $base . '&s=expired')),
                 $current === 'expired' ? ' class="current"' : '',
-                esc_html__('expired', 'slm'),
+                esc_html__('expired', 'softwarelicensemanager'),
                 SLM_Utility::count_licenses('expired')
             ),
             'blocked'  => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'blocked', $base . '&s=blocked')),
                 $current === 'blocked' ? ' class="current"' : '',
-                esc_html__('blocked', 'slm'),
+                esc_html__('blocked', 'softwarelicensemanager'),
                 SLM_Utility::count_licenses('blocked')
             )
         );
@@ -81,21 +81,21 @@ class SLM_List_Licenses extends WP_List_Table
     {
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
-            'id'                    => 'ID',
-            'lic_status'            => 'Status',
-            'license_key'           => 'Key',
-            'item_reference'        => 'Item reference',
-            'lic_type'              => 'License type',
-            'email'                 => 'Email',
-            'max_allowed_domains'   => 'Domains',
-            'max_allowed_devices'   => 'Devices',
-            'purchase_id_'          => 'Order #',
-            'date_created'          => 'Created on',
-            'date_renewed'          => 'Renewed on',
-            'date_activated'        => 'Activated on',
-            'date_expiry'           => 'Expiration',
-            'until'                 => 'Until Ver.',
-            'current_ver'           => 'Current Ver.'
+            'id'                    => __('ID', 'softwarelicensemanager'),
+            'lic_status'            => __('Status', 'softwarelicensemanager'),
+            'license_key'           => __('Key', 'softwarelicensemanager'),
+            'item_reference'        => __('Item reference', 'softwarelicensemanager'),
+            'lic_type'              => __('License type', 'softwarelicensemanager'),
+            'email'                 => __('Email', 'softwarelicensemanager'),
+            'max_allowed_domains'   => __('Domains', 'softwarelicensemanager'),
+            'max_allowed_devices'   => __('Devices', 'softwarelicensemanager'),
+            'purchase_id_'          => __('Order #', 'softwarelicensemanager'),
+            'date_created'          => __('Created on', 'softwarelicensemanager'),
+            'date_renewed'          => __('Renewed on', 'softwarelicensemanager'),
+            'date_activated'        => __('Activated on', 'softwarelicensemanager'),
+            'date_expiry'           => __('Expiration', 'softwarelicensemanager'),
+            'until'                 => __('Until Ver.', 'softwarelicensemanager'),
+            'current_ver'           => __('Current Ver.', 'softwarelicensemanager')
         );
         return $columns;
     }
@@ -117,7 +117,7 @@ class SLM_List_Licenses extends WP_List_Table
                 $date_today = time();
 
                 if ($expiration == '0000-00-00') {
-                    return '<span class="tag license-date-valid"> Lifetime  </span>' . '<span class="days-left"> </span>';
+                    return '<span class="tag license-date-valid">'. __(' Lifetime ','softwarelicensemanager'). '</span>' . '<span class="days-left"> </span>';
                 }
 
 
@@ -209,7 +209,7 @@ class SLM_List_Licenses extends WP_List_Table
         if ('delete' === $this->current_action()) {
             //Process delete bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm') . '</p>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'softwarelicensemanager') . '</p>';
                 echo '<div id="message" class="error fade">' . $error_msg . '</div>';
                 return;
             } else {
@@ -226,7 +226,7 @@ class SLM_List_Licenses extends WP_List_Table
         if ('blocked' === $this->current_action()) {
             //Process blocked bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm') . '</p>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'softwarelicensemanager') . '</p>';
                 echo '<div id="message" class="error fade">' . $error_msg . '</div>';
                 return;
             } else {
@@ -243,7 +243,7 @@ class SLM_List_Licenses extends WP_List_Table
         if ('expired' === $this->current_action()) {
             //Process blocked bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm') . '</p>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'softwarelicensemanager') . '</p>';
                 echo '<div id="message" class="error fade">' . $error_msg . '</div>';
                 return;
             } else {
@@ -260,7 +260,7 @@ class SLM_List_Licenses extends WP_List_Table
         if ('active' === $this->current_action()) {
             //Process blocked bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm') . '</p>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'softwarelicensemanager') . '</p>';
                 echo '<div id="message" class="error fade">' . $error_msg . '</div>';
                 return;
             } else {
@@ -398,16 +398,16 @@ class SLM_Plugin
     {
         $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
 
-        add_menu_page("SLM", "SLM", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
-        $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, "Manage Licenses", "Manage Licenses", SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
+        add_menu_page(__( 'SLM', 'softwarelicensemanager'), __( 'SLM', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
+        $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, __('Manage Licenses', 'softwarelicensemanager'), __('Manage Licenses', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
 
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Create license', 'softwarelicensemanager'), __( 'Create license', 'softwarelicensemanager') , SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "Subscribers", "Subscribers", SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "Tools", "Tools", SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "Settings", "Settings", SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "Help", "Help", SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Subscribers', 'softwarelicensemanager'), __( 'Subscribers', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Tools', 'softwarelicensemanager'), __( 'Tools', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Settings', 'softwarelicensemanager'), __( 'Settings', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Help', 'softwarelicensemanager'), __( 'Help', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
 
-        add_submenu_page(SLM_MAIN_MENU_SLUG, "About", "About", SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'About', 'softwarelicensemanager'),__( 'About', 'softwarelicensemanager'), SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
 
         add_action("load-" . $hook, [$this, 'screen_option']);
     }
