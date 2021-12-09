@@ -83,7 +83,7 @@ function slm_general_settings()
 
     ?>
     <div class="wrap">
-        <h1>Settings - Software License Manager </h1>
+        <h1><?php _e('Settings - Software License Manager', 'softwarelicensemanager'); ?> </h1>
 
         <div id="icon-options-general" class="icon32"></div>
         <h2 class="nav-tab-wrapper">
@@ -197,7 +197,7 @@ function slm_general_settings()
                         </tr>
 
                         <tr>
-                            <th scope="row">Bootstrap library</th>
+                            <th scope="row"><?php _e('Bootstrap library', 'softwarelicensemanager'); ?></th>
                             <td>
                                 <input name="slm_conflictmode" type="checkbox" <?php if ($options['slm_conflictmode'] != '') echo ' checked="checked"'; ?> value="1" />
                                 <?php _e('Enable Bootstrap javascript libray.', 'softwarelicensemanager'); ?></td>
@@ -283,7 +283,7 @@ function slm_general_settings()
                 </div>
 
                 <div class="submit">
-                    <input type="submit" class="button-primary" name="slm_save_settings" value=" <?php _e('Update Options', 'softwarelicensemanager', 'softwarelicensemanager'); ?>" />
+                    <input type="submit" class="button-primary" name="slm_save_settings" value=" <?php _e('Update Options', 'softwarelicensemanager'); ?>" />
                 </div>
             </form>
         </div>
