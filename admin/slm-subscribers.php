@@ -82,10 +82,10 @@ class Subscribers_List_Table extends WP_List_Table
     {
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
-            'id'                    => 'ID',
-            'first_name'           => 'First Name',
-            'last_name'            => 'Last Name',
-            'email'                 => 'Email Address'
+            'id'                    => __('ID', 'softwarelicensemanager'),
+            'first_name'           => __('First Name', 'softwarelicensemanager'),
+            'last_name'            => __('Last Name', 'softwarelicensemanager'),
+            'email'                 => __('Email Address', 'softwarelicensemanager')
         );
         return $columns;
     }
@@ -130,8 +130,6 @@ class Subscribers_List_Table extends WP_List_Table
         }
         return -$result;
     }
-
-
 
     function prepare_items()
     {
@@ -216,7 +214,7 @@ function slm_subscribers_menu()
                                 <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
                                 <?php
                                 $subscribers_list->prepare_items();
-                                $subscribers_list->search_box(__('Search'), 'search-box-id');
+                                $subscribers_list->search_box(__('Search', 'softwarelicensemanager'), 'search-box-id');
                                 $subscribers_list->views();
                                 $subscribers_list->display(); ?>
                             </form>
