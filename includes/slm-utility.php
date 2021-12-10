@@ -500,7 +500,7 @@ class SLM_Utility
                             <td scope="row">' . $slm_user["id"] . '</td>
                             <td scope="row">' . $slm_user["license_key"] . '</td>
                             <td scope="row">' . $slm_user["lic_status"] . '</td>
-                            <td scope="row"><a href="' . admin_url('admin.php?page=slm_manage_license&edit_record=' . $slm_user["id"] . '') . '"> view </a></td>
+                            <td scope="row"><a href="' . admin_url('admin.php?page=slm_manage_license&edit_record=' . $slm_user["id"] . '') . '">'. __(' view', 'softwarelicensemanager'). ' </a></td>
                         </tr>';
             }
         }
@@ -512,7 +512,7 @@ class SLM_Utility
         $slm_log_table  = SLM_TBL_LIC_LOG;
 
         echo '
-        <div class="table-responsive"> <table class="table table-striped table-hover table-sm"> <thead> <tr> <th scope="col">ID</th> <th scope="col">Request</th> </tr> </thead> <tbody>
+        <div class="table-responsive"> <table class="table table-striped table-hover table-sm"> <thead> <tr> <th scope="col">'. __('ID', 'softwarelicensemanager'). '</th> <th scope="col">'. __('Request', 'softwarelicensemanager'). '</th> </tr> </thead> <tbody>
         ';
         $activity = $wpdb->get_results("SELECT * FROM " . $slm_log_table . " WHERE license_key='" .  $license_key . "';");
         foreach ($activity as $log) {
@@ -520,8 +520,8 @@ class SLM_Utility
                 <tr>' .
                 '<th scope="row">' . $log->id . '</th>' .
                 '<td> <span class="badge badge-primary">' . $log->slm_action  . '</span>' .
-                '<p class="text-muted"> <b>Source: </b> ' . $log->source .
-                '</p><p class="text-muted"> <b>Time: </b> ' . $log->time . '</td>
+                '<p class="text-muted"> <b>'. __('Source:', 'softwarelicensemanager'). ' </b> ' . $log->source .
+                '</p><p class="text-muted"> <b>'. __('Time:', 'softwarelicensemanager'). ' </b> ' . $log->time . '</td>
                 </tr>';
         }
         echo '
@@ -567,7 +567,7 @@ class SLM_Utility
                     </table>
                 </div>
             <?php else : ?>
-                <?php echo '<div class="alert alert-danger" role="alert">Not registered yet</div>'; ?>
+                <?php echo '<div class="alert alert-danger" role="alert">'.__('Not registered yet', 'softwarelicensemanager').'</div>'; ?>
             <?php endif; ?>
         </div>
 <?php
@@ -597,11 +597,11 @@ class SLM_Utility
         {
             global $product;
             // The new tab content
-            echo '<h2>License information</h2>';
-            echo 'License type: ' . get_post_meta($product->get_id(), '_license_type', true) . '<br>';
-            echo 'Domains allowed: ' . get_post_meta($product->get_id(), '_domain_licenses', true) . '<br>';
-            echo 'Devices allowed: ' . get_post_meta($product->get_id(), '_devices_licenses', true) . '<br>';
-            echo 'Renews every ' . get_post_meta($product->get_id(), '_license_renewal_period', true) . ' ' . get_post_meta($product->get_id(), '_license_renewal_period_term', true) . '<br>';
+            echo '<h2>'.__('License information', 'softwarelicensemanager') .'</h2>';
+            echo __('License type: ', 'softwarelicensemanager')  . get_post_meta($product->get_id(), '_license_type', true) . '<br>';
+            echo __('Domains allowed: ', 'softwarelicensemanager') . get_post_meta($product->get_id(), '_domain_licenses', true) . '<br>';
+            echo __('Devices allowed: ', 'softwarelicensemanager') . get_post_meta($product->get_id(), '_devices_licenses', true) . '<br>';
+            echo __('Renews every ', 'softwarelicensemanager') . get_post_meta($product->get_id(), '_license_renewal_period', true) . ' ' . get_post_meta($product->get_id(), '_license_renewal_period_term', true) . '<br>';
         }
     }
 }
