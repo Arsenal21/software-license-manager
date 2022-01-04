@@ -212,7 +212,7 @@ function slm_add_licenses_menu()
         <?php
         //save_record - messages
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            echo '<div class="alert alert-primary" role="alert"> <strong>Done!</strong> License was successfully generated <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div>';
+            echo '<div class="alert alert-primary" role="alert"> <strong>'.__('Done!', 'softwarelicensemanager').'</strong>' .__('License was successfully generated', 'softwarelicensemanager'). '<button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div>';
         }
         //edit
         elseif (isset($_GET['edit_record'])) {
