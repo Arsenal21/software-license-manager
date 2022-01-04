@@ -198,7 +198,7 @@ class SLM_Woo_Account
                                 ?>
                             </td>
                             <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>">
-                                <a href="" class="woocommerce-button button view">
+                                <a href="#" class="woocommerce-button button view">
                                     <?php echo esc_html__('view', 'softwarelicensemanager'); ?>
                                 </a>
                             </td>
@@ -237,11 +237,11 @@ class SLM_Woo_Account
                                         <br>
                                         <div class="row" style="width: 100%;">
                                             <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, esc_html__('Domains', 'softwarelicensemanager'), $allow_domain_removal); ?>
+                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains', $allow_domain_removal); ?>
                                             </div>
 
                                             <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, esc_html__('Devices', 'softwarelicensemanager'), $allow_domain_removal); ?>
+                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices', $allow_domain_removal); ?>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
