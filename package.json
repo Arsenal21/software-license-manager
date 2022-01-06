@@ -1,50 +1,51 @@
 {
-	"name": "@michelve/software-license-manager",
-	"version": "5.6.1",
-	"description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
-	"scripts": {
-		"changelog": "auto-changelog -p && git add CHANGELOG.md",
-		"postpublish": "npm publish --ignore-scripts --@michelve:registry='https://registry.npmjs.org'"
-	},
-	"auto-changelog": {
-		"output": "CHANGELOG.md",
-		"template": "keepachangelog",
-		"issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
-		"unreleased": true,
-		"commitLimit": false,
-		"includeBranch": [
-			"release-v2",
-			"release-v3"
-		]
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/michelve/software-license-manager.git"
-	},
-	"publishConfig": {
-		"registry": "https://npm.pkg.github.com"
-	},
-	"keywords": [
-		"software",
-		"license manager",
-		"software license",
-		"license",
-		"manager",
-		"wordpress",
-		"license",
-		"manager",
-		"slm",
-		"woocommerce",
-		"license key generator"
-	],
-	"author": "Michel Velis and Tips and Tricks HQ",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/michelve/software-license-manager/issues"
-	},
-	"homepage": "https://github.com/michelve/software-license-manager#readme",
-	"devDependencies": {
-		"auto-changelog": "^1.14.1"
-	},
-	"main": "software-license-manager.php"
+  "name": "@michelve/software-license-manager",
+  "version": "5.6.1",
+  "description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
+  "scripts": {
+    "changelog": "auto-changelog -p && git add CHANGELOG.md",
+    "postpublish": "npm publish --ignore-scripts --@michelve:registry='https://registry.npmjs.org'"
+  },
+  "auto-changelog": {
+    "output": "CHANGELOG.md",
+    "template": "keepachangelog",
+    "issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
+    "unreleased": true,
+    "commitLimit": false,
+    "includeBranch": [
+      "release-v2",
+      "release-v3"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michelve/software-license-manager.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "keywords": [
+    "software",
+    "license manager",
+    "software license",
+    "license",
+    "manager",
+    "wordpress",
+    "license",
+    "manager",
+    "slm",
+    "woocommerce",
+    "license key generator"
+  ],
+  "author": "Michel Velis and Tips and Tricks HQ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michelve/software-license-manager/issues"
+  },
+  "homepage": "https://github.com/michelve/software-license-manager#readme",
+  "devDependencies": {
+    "auto-changelog": "^1.14.1"
+  },
+  "main": "software-license-manager.php",
+  "dependencies": {}
 }
