@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 5.5.12
+Version: 5.6.1
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
-Author URI: https://www.epikly.com/
-Description: Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
+Author URI: http://www.epikly.com/
+Description: Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based license software script etc.). Supports WooCommerce.
 Author2: <a href="https://www.tipsandtricks-hq.com/">Tips and Tricks HQ</a>
 Text Domain: softwarelicensemanager
 Domain Path: /i18n/languages/
-WC tested up to: 4.3.0
+WC tested up to: 5.9.2
 */
 
 // If this file is called directly, abort.
@@ -19,9 +19,9 @@ if (!defined('WPINC')) {
 global $wpdb, $slm_debug_logger;
 
 //Short name/slug "SLM" or "slm"
-define('SLM_VERSION',               '5.5.12');
-define('SLM_DB_VERSION',            '4.3.3');
-define('SLM_REWRITE_VERSION',       '2.4.4');
+define('SLM_VERSION',               '5.6.1');
+define('SLM_DB_VERSION',            '4.3.5');
+define('SLM_REWRITE_VERSION',       '2.4.5');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL   . '/public/assets/');
@@ -48,10 +48,6 @@ define('SLM_MENU_ICON',             'dashicons-lock');
 
 if (file_exists(SLM_LIB .  'slm-plugin-core.php')) {
     include_once SLM_LIB . 'slm-plugin-core.php';
-}
-// TODO: Addons Loader
-if (file_exists(SLM_ADDONS .  'stripe/stripe.php')) {
-    include_once SLM_ADDONS . 'stripe/stripe.php';
 }
 
 // Options and filters

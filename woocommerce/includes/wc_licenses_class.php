@@ -5,6 +5,11 @@
  * @link   https://github.com/michelve/software-license-manager
  */
 
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die();
+}
+
 class SLM_Woo_Account
 {
     public static $endpoint = 'my-licenses';
@@ -98,52 +103,6 @@ class SLM_Woo_Account
         }
         ?>
 
-        <?php
-        if (SLM_Helper_Class::slm_get_option('slm_front_conflictmode') == 1) : ?>
-            <?php
-            add_action('wp_footer', function () {
-                wp_enqueue_style('slm-bootstrap', esc_url("https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"), array(), '', 'all');
-                wp_enqueue_script('slm-bootstrap', esc_url('https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js'), array(), '', true);
-            });
-            ?>
-        <?php endif; ?>
-
-
-
-
-        <!-- Button trigger modal -->
-        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            Launch demo modal
-        </button> -->
-
-        <!-- Modal -->
-        <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-
-
-
-
-
-
-
         <div class="woocommerce-slm-content" <?php echo esc_html__($slm_hide); ?>>
             <table id="slm_licenses_table" class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table" style="border-collapse:collapse;">
                 <thead>
@@ -159,7 +118,7 @@ class SLM_Woo_Account
                 <tbody>
                     <?php
                     foreach ($result as $license_info) : ?>
-                        <tr data-toggle="collapse" data-target=".demo<?php echo $class_++; ?>" class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
+                        <tr class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
                             <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'softwarelicensemanager'); ?>"><a href="<?php echo get_home_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
 
                             <td class="slm-status" data-title="<?php echo esc_html__('Status', 'softwarelicensemanager'); ?>">
@@ -198,60 +157,107 @@ class SLM_Woo_Account
                                 ?>
                             </td>
                             <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>">
-                                <a href="#" class="woocommerce-button button view">
-                                    <?php echo esc_html__('view', 'softwarelicensemanager'); ?>
-                                </a>
+
+
+                                <button type="button" class="btn btn-default lic-view-details-btn" data-toggle="modal" data-target="#licModal_<?php echo $license_info->id; ?>">
+                                    View
+                                </button>
+
                             </td>
                         </tr>
-                        <tr class="parent">
+                        <tr>
 
-                            <td colspan="5" class="hiddenRow">
-                                <div class="collapse demo<?php echo $class_id_++; ?> slm-shadow">
-                                    <div class="slm_ajax_msg"></div>
+                            <td colspan="5">
+                                <div>
+
                                     <?php
                                     global $wpdb;
-                                    $detailed_license_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE `license_key` = '" . $license_info->license_key . "' ORDER BY `id` LIMIT 0,1000;", ARRAY_A);
+                                    $detailed_license_info =  $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "lic_key_tbl WHERE `id` = '" . $license_info->id . "' ORDER BY `id` LIMIT 0,1000;", ARRAY_A);
                                     ?>
-                                    <div class="row" style="padding: 16px;">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th data-title=<?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo esc_html__('License type', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('License type', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?></th>
-                                                    <th data-title=<?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?> class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?></th>
-                                                </tr>
-                                            </thead>
-                                            <tr>
-                                                <td data-title=<?php echo __('Expiration', 'softwarelicensemanager'); ?> class="slm-expiration"><time datetime="<?php echo $license_info->date_expiry; ?>"><?php echo $license_info->date_expiry; ?></time></td>
-                                                <td data-title=<?php echo esc_html__('Allowed Devices', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_devices; ?></td>
-                                                <td data-title=<?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?>><?php echo $license_info->max_allowed_domains; ?></td>
-                                                <td data-title=<?php echo esc_html__('License type', 'softwarelicensemanager'); ?>><?php echo $license_info->lic_type; ?></td>
-                                                <td data-title=<?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?>><?php echo $license_info->date_renewed; ?></td>
-                                                <td data-title=<?php echo esc_html__('Activation date', 'softwarelicensemanager'); ?>><?php echo $license_info->date_activated; ?></td>
-                                            </tr>
-                                        </table>
+                                    <div>
 
-                                        <br>
-                                        <div class="row" style="width: 100%;">
-                                            <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains', $allow_domain_removal); ?>
-                                            </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="licModal_<?php echo $license_info->id; ?>" tabindex="-1" role="dialog" aria-labelledby="licModal_<?php echo $license_info->id; ?>Label" aria-hidden="true">
+                                            <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="Label"><?php echo esc_html__('License Key:', 'softwarelicensemanager'); ?> <span class="badge badge-dark"><?php echo $license_info->license_key; ?></span></h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
 
-                                            <div class="slm-activated-on domains-list col-md-6">
-                                                <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices', $allow_domain_removal); ?>
-                                            </div>
-                                        </div>
-                                        <div class="clear"></div>
+                                                        <ul class="nav nav-tabs npm" id="myLics" role="tablist">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active" id="lic-info-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-info-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-info-<?php echo $license_info->id; ?>" aria-selected="true"><?php echo esc_html__('License Information', 'softwarelicensemanager'); ?></a>
+                                                            </li>
 
-                                        <div class="row slm-export">
-                                            <?php
-                                            $license_key_json_data  = json_encode(array_values($detailed_license_info));
-                                            ?>
-                                            <div class="col-md-12 slm-action-export">
-                                                <input type="button" id="export-lic-key" data-licdata='<?php echo esc_html__($license_key_json_data); ?>' value="<?php echo esc_html__('Export license', 'softwarelicensemanager'); ?>" class="btn btn-secondary slm-button" />
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="lic-devices-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-devices-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-devices-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Activations', 'softwarelicensemanager'); ?></a>
+                                                            </li>
+
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" id="lic-code-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-code-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-code-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Copy License', 'softwarelicensemanager'); ?></a>
+                                                            </li>
+                                                        </ul>
+
+                                                        <div class="tab-content" id="MyLicDetails">
+                                                            <div class="tab-pane fade show active" id="lic-info-<?php echo $license_info->id; ?>" role="tabpanel" aria-labelledby="lic-info-<?php echo $license_info->id; ?>-tab">
+
+                                                                <div class="card" style="width: 18rem;">
+                                                                    <div class="card-header">
+                                                                        <?php echo esc_html__('License information', 'softwarelicensemanager'); ?>
+                                                                    </div>
+                                                                    <ul class="list-group list-group-flush lic-group-details">
+                                                                        <li class="list-group-item"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?> <span><time datetime="<?php echo $license_info->date_expiry; ?>"><?php echo $license_info->date_expiry; ?></time></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?> <span><?php echo $license_info->max_allowed_devices; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?> <span><?php echo $license_info->max_allowed_domains; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('License type', 'softwarelicensemanager'); ?> <span class="badge badge-pill badge-info"><?php echo $license_info->lic_type; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?> <span><?php echo $license_info->date_renewed; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?> <span><?php echo $license_info->date_activated; ?></span></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+
+                                                            <div class="tab-pane fade" id="lic-devices-<?php echo $license_info->id; ?>" role="tabpanel" aria-labelledby="lic-devices-<?php echo $license_info->id; ?>-tab">
+                                                                <div class="row" style="width: 100%;">
+                                                                    <div class="slm-activated-on domains-list col-md-6">
+                                                                        <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains', $allow_domain_removal); ?>
+                                                                    </div>
+
+                                                                    <div class="slm-activated-on domains-list col-md-6">
+                                                                        <?php SLM_Utility::get_license_activation($license_info->license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices', $allow_domain_removal); ?>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="clear"></div>
+                                                                <div class="slm_ajax_msg"></div>
+                                                                <div class="clear"></div>
+                                                            </div>
+                                                            <div class="clear"></div>
+
+                                                            <div class="tab-pane fade" id="lic-code-<?php echo $license_info->id; ?>" role="tabpanel" aria-labelledby="lic-code-<?php echo $license_info->id; ?>-tab">
+                                                                <div class="row">
+
+                                                                    <div class="col-md-12 lic-copy-code">
+                                                                        <pre style="max-height: 200px;">
+                                                                            <?php
+                                                                            $license_key_json_data  = json_encode($detailed_license_info, JSON_PRETTY_PRINT);
+                                                                            echo esc_html__($license_key_json_data);
+                                                                            ?>
+                                                                        </pre>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer lic-details-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -268,9 +274,8 @@ class SLM_Woo_Account
             </table>
         </div>
         <?php
-        if ($allow_domain_removal == true) :
+        if ($allow_domain_removal == true && is_user_logged_in()) :
         ?>
-
             <script>
                 jQuery(document).ready(function() {
                     jQuery('.deactivate_lic_key').click(function(event) {

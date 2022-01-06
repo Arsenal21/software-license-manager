@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die();
+}
+
 // add admin styles and scipts
 function slm_admin_assets()
 {
@@ -9,13 +14,11 @@ function slm_admin_assets()
 }
 
 // load frontend styles
-function slm_js_license()
-{
-    wp_enqueue_script('slm_js', SLM_ASSETS_URL . 'js/slm-js.js', array('jquery'), '1.0.1', true);
+function slm_js_license(){
+    //wp_enqueue_script('slm_js', SLM_ASSETS_URL . 'js/slm-js.js', array('jquery'), '1.0.1', true);
 }
 
-function slm_frontend_assets()
-{
+function slm_frontend_assets(){
     /**
      * Check if WooCommerce is activated
      */
@@ -30,7 +33,7 @@ function slm_frontend_assets()
     wp_enqueue_style('softwarelicensemanager', SLM_ASSETS_URL . 'css/slm-front-end.css');
 }
 
-//add_action('wp_enqueue_scripts', 'slm_frontend_assets');
+add_action('wp_enqueue_scripts', 'slm_frontend_assets');
 add_action('admin_enqueue_scripts', 'slm_admin_assets');
 
 
@@ -43,7 +46,7 @@ if (is_plugin_active('woocommerce/woocommerce.php')) {
     function slm_get_page()
     {
         if (is_page('my-account')) {
-            add_action('wp_enqueue_scripts', 'slm_js_license');
+            //add_action('wp_enqueue_scripts', 'slm_js_license');
         }
     }
 }
