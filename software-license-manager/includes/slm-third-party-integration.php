@@ -105,6 +105,11 @@ function slm_estore_create_license( $retrieved_product, $payment_data, $cart_ite
 		$slm_date_of_expiry      = $current_date_plus_1year;
 	}
 
+        //Get emember ID from custom fields (if available)
+        $customvariables = isset($payment_data['custom']) ? eStore_get_payment_custom_var($payment_data['custom']) : array();
+        $emember_id = isset($customvariables['eMember_id']) ? $customvariables['eMember_id'] : '';
+
+        //Create the fields array
 	$fields                        = array();
 	$fields['license_key']         = uniqid( $lic_key_prefix );
 	$fields['lic_status']          = 'pending';
@@ -118,6 +123,7 @@ function slm_estore_create_license( $retrieved_product, $payment_data, $cart_ite
 	$fields['date_expiry']         = $slm_date_of_expiry;
 	$fields['product_ref']         = $prod_id;//WP eStore product ID
 	$fields['subscr_id']           = isset( $payment_data['subscr_id'] ) ? $payment_data['subscr_id'] : '';
+        $fields['user_ref']            = $emember_id;//WP eMember member ID (if available)
 
 	$slm_debug_logger->log_debug( 'Inserting license data into the license manager DB table.' );
 	$fields = array_filter( $fields ); //Remove any null values.
@@ -294,3 +300,39 @@ function slm_estore_product_deleted( $prod_id ) {
 /************************************/
 /*** End of WP eStore integration ***/
 /************************************/
+
+
+/*********************************************/
+/*** WP eMember Plugin Integration Related ***/
+/*********************************************/
+
+add_shortcode( 'emember_show_slm_license_key', 'handle_emember_show_slm_license_key');
+
+function handle_emember_show_slm_license_key( $args ){
+    if ( !class_exists('Emember_Auth')) {
+        return "Error! WP eMember plugin is not active";
+    }
+
+    $emember_auth = Emember_Auth::getInstance();
+    if ( !$emember_auth->isLoggedIn() ) {
+        return "You are not logged into the site. Please log in.";
+    }
+    global $wpdb;
+    $output = "";
+
+    //The member is logged-in. Find the WP eMember ID.
+    $member_id = $emember_auth->getUserInfo('member_id');
+    $lk_table = SLM_TBL_LICENSE_KEYS;
+    $sql_prep = $wpdb->prepare( "SELECT * FROM $lk_table WHERE user_ref = %s", $member_id );
+    $record = $wpdb->get_row( $sql_prep, OBJECT );
+
+    if ( $record ){
+        $license_key = $record->license_key;
+        $output .= '<div class="emember_slm_license_key">Your license key is: ' . $license_key . '</div>';
+    } else {
+        //Could not find a record
+        $output .= '<div class="emember_slm_license_key_not_found">Could not find a key for your account.</div>';
+    }
+
+    return $output;
+}

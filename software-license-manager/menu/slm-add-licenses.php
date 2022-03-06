@@ -20,6 +20,7 @@ function wp_lic_mgr_add_licenses_menu() {
 	$current_date_plus_1year = date( 'Y-m-d', strtotime( '+1 year' ) );
 	$product_ref             = '';
 	$subscr_id               = '';
+        $user_ref                = '';
 
 	$slm_options = get_option( 'slm_plugin_options' );
 
@@ -48,6 +49,7 @@ function wp_lic_mgr_add_licenses_menu() {
 		$expiry_date    = $record->date_expiry;
 		$product_ref    = $record->product_ref;
 		$subscr_id      = $record->subscr_id;
+                $user_ref      = $record->user_ref;
 	}
 
 	if ( isset( $_POST['save_record'] ) ) {
@@ -72,6 +74,7 @@ function wp_lic_mgr_add_licenses_menu() {
 		$expiry_date    = sanitize_text_field( $_POST['date_expiry'] );
 		$product_ref    = sanitize_text_field( $_POST['product_ref'] );
 		$subscr_id      = sanitize_text_field( $_POST['subscr_id'] );
+                $user_ref       = sanitize_text_field( $_POST['user_ref'] );
 
 		if ( empty( $created_date ) ) {
 			$created_date = $current_date;
@@ -99,6 +102,7 @@ function wp_lic_mgr_add_licenses_menu() {
 		$fields['date_expiry']         = $expiry_date;
 		$fields['product_ref']         = $product_ref;
 		$fields['subscr_id']           = $subscr_id;
+                $fields['user_ref']            = $user_ref;
 
 		$id       = isset( $_POST['edit_record'] ) ? intval( $_POST['edit_record'] ) : '';
 		$lk_table = SLM_TBL_LICENSE_KEYS;
@@ -350,6 +354,12 @@ function wp_lic_mgr_add_licenses_menu() {
 						<th scope="row">Subscriber ID</th>
 						<td><input name="subscr_id" type="text" id="subscr_id" value="<?php echo esc_attr( $subscr_id ); ?>" size="50" />
 							<br/>The Subscriber ID (if any). Can be useful if you are using the license key with a recurring payment plan.</td>
+					</tr>
+
+					<tr valign="top">
+						<th scope="row">User Reference</th>
+						<td><input name="user_ref" type="text" id="user_ref" value="<?php echo esc_attr( $user_ref ); ?>" size="30" />
+							<br/>The User ID of the user that this license applies to (if any). Can be useful if you want to connect your licenses to some kind of member/user management system.</td>
 					</tr>
 
 				</table>

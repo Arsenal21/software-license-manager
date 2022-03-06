@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Software License Manager
-Version: 4.5.2
+Version: 4.5.3
 Plugin URI: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Author: Tips and Tricks HQ
 Author URI: https://www.tipsandtricks-hq.com/
@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 //Short name/slug "SLM" or "slm"
 
-define( 'WP_LICENSE_MANAGER_VERSION', '4.5.2' );
-define( 'WP_LICENSE_MANAGER_DB_VERSION', '1.5' );
+define( 'WP_LICENSE_MANAGER_VERSION', '4.5.3' );
+define( 'WP_LICENSE_MANAGER_DB_VERSION', '1.6' );
 define( 'WP_LICENSE_MANAGER_FOLDER', dirname( plugin_basename( __FILE__ ) ) );
 define( 'WP_LICENSE_MANAGER_URL', plugins_url( '', __FILE__ ) );
 define( 'WP_LICENSE_MANAGER_PATH', plugin_dir_path( __FILE__ ) );

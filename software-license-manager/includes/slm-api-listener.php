@@ -67,6 +67,8 @@ class SLM_API_Listener {
 			$fields['date_created'] = isset( $_REQUEST['date_created'] ) ? sanitize_text_field( $_REQUEST['date_created'] ) : date( 'Y-m-d' );
 			$fields['date_expiry']  = isset( $_REQUEST['date_expiry'] ) ? sanitize_text_field( $_REQUEST['date_expiry'] ) : '';
 			$fields['product_ref']  = isset( $_REQUEST['product_ref'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['product_ref'] ) ) : '';
+                        $fields['subscr_id'] = isset( $_REQUEST['subscr_id'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['subscr_id'] ) ) : '';
+                        $fields['user_ref'] = isset( $_REQUEST['user_ref'] ) ? wp_unslash( SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['user_ref'] ) ) : '';
 
 			global $wpdb;
 			$tbl_name = SLM_TBL_LICENSE_KEYS;

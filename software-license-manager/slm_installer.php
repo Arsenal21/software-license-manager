@@ -21,7 +21,7 @@ $lk_tbl_sql = 'CREATE TABLE ' . $lic_key_table . " (
       id int(12) NOT NULL auto_increment,
       license_key varchar(255) NOT NULL,
       max_allowed_domains int(12) NOT NULL,
-      lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',         
+      lic_status ENUM('pending', 'active', 'blocked', 'expired') NOT NULL DEFAULT 'pending',
       first_name varchar(32) NOT NULL default '',
       last_name varchar(32) NOT NULL default '',
       email varchar(64) NOT NULL,
@@ -33,6 +33,7 @@ $lk_tbl_sql = 'CREATE TABLE ' . $lic_key_table . " (
       date_expiry date NOT NULL DEFAULT '0000-00-00',
       product_ref varchar(255) NOT NULL default '',
       subscr_id varchar(128) NOT NULL default '',
+      user_ref varchar(255) NOT NULL default '',
       PRIMARY KEY (id),
       KEY `max_allowed_domains` (`max_allowed_domains`)
       )" . $charset_collate . ';';
