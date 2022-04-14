@@ -129,6 +129,9 @@ class SLM_API_Listener {
 			$reg_domains = $wpdb->get_results( $sql_prep2, OBJECT );
 			if ( $retLic ) {
 				if ( $retLic->lic_status == 'blocked' ) {
+                                        //Trigger action hook
+                                        do_action( 'slm_api_listener_slm_activate_key_blocked', $key );
+
 					$args = ( array(
 						'result'     => 'error',
 						'message'    => 'Your License key is blocked',
@@ -136,6 +139,9 @@ class SLM_API_Listener {
 					) );
 					SLM_API_Utility::output_api_response( $args );
 				} elseif ( $retLic->lic_status == 'expired' ) {
+                                        //Trigger action hook
+                                        do_action( 'slm_api_listener_slm_activate_key_expired', $key );
+
 					$args = ( array(
 						'result'     => 'error',
 						'message'    => 'Your License key has expired',
