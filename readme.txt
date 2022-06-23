@@ -3,8 +3,8 @@ Contributors: Michel Velis
 Donate link: http://paypal.me/mvelis
 Tags: license, software license
 Requires at least: 4.1
-Tested up to: 5.9.2
-Stable tag: 5.6.1
+Tested up to: 6.1.0
+Stable tag: 5.6.2
 Requires PHP: 5.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

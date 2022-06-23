@@ -192,9 +192,16 @@ class SLM_API_Listener
 
             if ($retLic) {
                 if ($retLic->lic_status == 'blocked') {
+                    //Trigger action hook
+                    do_action('slm_api_listener_slm_activate_key_blocked', $key);
+
+
                     $args = (array('result' => 'error', 'message' => 'Your license key is blocked', 'error_code' => SLM_Error_Codes::LICENSE_BLOCKED));
                     SLM_API_Utility::output_api_response($args);
                 } elseif ($retLic->lic_status == 'expired') {
+                    //Trigger action hook
+                    do_action('slm_api_listener_slm_activate_key_expired', $key);
+
                     $args = (array('result' => 'error', 'message' => 'Your license key has expired', 'error_code' => SLM_Error_Codes::LICENSE_EXPIRED));
                     SLM_API_Utility::output_api_response($args);
                 }
