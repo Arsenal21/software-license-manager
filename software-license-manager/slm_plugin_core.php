@@ -71,8 +71,12 @@ function slm_del_reg_dom() {
 		wp_send_json( $out );
 	};
 
+  do_action( 'slm_before_registered_domain_delete', $domain_id );
+  
 	$wpdb->query( $wpdb->prepare( "DELETE FROM $reg_table WHERE id=%d", $domain_id ) ); //phpcs:ignore
 
 	$out['status'] = 'success';
+  $out = apply_filters( 'slm_registered_domain_delete_response', $out );
+  
 	wp_send_json( $out );
 }
