@@ -69,14 +69,14 @@ function slm_del_reg_dom() {
 
 	if ( ! check_ajax_referer( sprintf( 'slm_delete_domain_lic_%s_id_%s', $lic_id, $domain_id ), false, false ) ) {
 		wp_send_json( $out );
-	};
+	}
 
-  do_action( 'slm_before_registered_domain_delete', $domain_id );
+        do_action( 'slm_before_registered_domain_delete', $domain_id );
   
 	$wpdb->query( $wpdb->prepare( "DELETE FROM $reg_table WHERE id=%d", $domain_id ) ); //phpcs:ignore
 
 	$out['status'] = 'success';
-  $out = apply_filters( 'slm_registered_domain_delete_response', $out );
+        $out = apply_filters( 'slm_registered_domain_delete_response', $out );
   
 	wp_send_json( $out );
 }

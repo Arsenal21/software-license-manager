@@ -212,7 +212,7 @@ function wp_lic_mgr_add_licenses_menu() {
 						} else {
 							$license_key = uniqid();
 						}
-            $license_key = apply_filters( 'slm_generate_license_key', $license_key );
+                                                $license_key = apply_filters( 'slm_generate_license_key', $license_key );
 					}
 					?>
 
@@ -414,9 +414,8 @@ function wp_lic_mgr_add_licenses_menu() {
 					return false;
 				}
 
-				$msg.addClass( 'success' ).html( '<?php echo esc_js( __( 'Deleted', 'slm' ) ); ?>' );
-        console.log(data);
-        
+				$msg.addClass( 'success' ).html( '<?php echo esc_js( __( 'Deleted', 'slm' ) ); ?>' )
+                                
 				var $tr = $link.parents( 'tr:first' );
 				$tr.fadeOut( 'fast', function() {
 					$tr.remove();
@@ -440,10 +439,9 @@ function wp_lic_mgr_add_licenses_menu() {
 			});
 
 			function slmDeleteDomainError(data) {
-        $msg.addClass( 'error' ).html( '<?php echo esc_js( __( 'Failed', 'slm' ) ); ?>' );
+                                $msg.addClass( 'error' ).html( '<?php echo esc_js( __( 'Failed', 'slm' ) ); ?>' );
 				jQuery($spinner).remove();
 				jQuery($link).show();
-        console.log(data);
 			}
 
 		}); // click event.
