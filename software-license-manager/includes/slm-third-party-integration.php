@@ -93,16 +93,17 @@ function slm_estore_create_license( $retrieved_product, $payment_data, $cart_ite
 	} else {
 		//Use the default value from settings (the $max_domains variable contains the default value already).
 	}
+        
+        //Use the default value (1 year from today). If a product specific one is set, it will be overriden later.
+        $current_date_plus_1year = date( 'Y-m-d', strtotime( '+1 year' ) );
+        $slm_date_of_expiry      = $current_date_plus_1year;
+
 	//Lets check if any product specific expiry date is set
-	$product_meta = $wpdb->get_row( "SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT );
+	$product_meta = $wpdb->get_row( "SELECT * FROM $product_meta_table_name WHERE prod_id = '$prod_id' AND meta_key='slm_date_of_expiry'", OBJECT );       
 	if ( $product_meta ) {
-		//Found product specific SLM config data.
+		//Found product specific SLM config data. Override the expiry date using the product specific configuration.
 		$num_days_before_expiry = $product_meta->meta_value;
 		$slm_date_of_expiry     = date( 'Y-m-d', strtotime( '+' . $num_days_before_expiry . ' days' ) );
-	} else {
-		//Use the default value (1 year from today).
-		$current_date_plus_1year = date( 'Y-m-d', strtotime( '+1 year' ) );
-		$slm_date_of_expiry      = $current_date_plus_1year;
 	}
 
         //Get emember ID from custom fields (if available)

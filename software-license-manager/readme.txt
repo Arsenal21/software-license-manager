@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
-Tested up to: 5.9
-Stable tag: 4.5.3
+Tested up to: 6.0
+Stable tag: 4.5.4
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -56,10 +56,11 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
-= WIP =
+= 4.5.4 =
 - Added a new action hook for when it receives an activation request for an expired license key (slm_api_listener_slm_activate_key_expired).
 - Added new hook in the add license interface.
 - Added hooks to the delete license domain interface.
+- WP eStore Integration: it will use the default 1 year expiry date if a product specific expiry configuration is not set.
 
 = 4.5.3 =
 - Added a new database column named "user_ref" for allowing a user reference to be saved in the database with a license key (if applicable).
