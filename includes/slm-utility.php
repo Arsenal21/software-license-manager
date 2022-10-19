@@ -23,9 +23,12 @@ class SLM_Helper_Class
     {
         $option_name    = '';
         $slm_opts       = get_option('slm_plugin_options');
-        $option_name    = $slm_opts[$option];
+        if (is_array($slm_opts) && array_key_exists($option,$slm_opts)) {
+            return $slm_opts[$option];
+        }
         return $option_name;
     }
+
     static function write_log($log)
     {
         if (true === WP_DEBUG) {
