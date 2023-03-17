@@ -189,8 +189,8 @@ class SLM_Woo_Account
                                                     <div class="modal-body">
 
                                                         <ul class="nav nav-tabs npm" id="myLics" role="tablist">
-                                                            <li class="nav-item">
-                                                                <a class="nav-link active" id="lic-info-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-info-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-info-<?php echo $license_info->id; ?>" aria-selected="true"><?php echo esc_html__('License Information', 'softwarelicensemanager'); ?></a>
+                                                            <li class="nav-item active">
+                                                                <a class="nav-link" id="lic-info-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-info-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-info-<?php echo $license_info->id; ?>" aria-selected="true"><?php echo esc_html__('License Information', 'softwarelicensemanager'); ?></a>
                                                             </li>
 
                                                             <li class="nav-item">
@@ -203,7 +203,7 @@ class SLM_Woo_Account
                                                         </ul>
 
                                                         <div class="tab-content" id="MyLicDetails">
-                                                            <div class="tab-pane fade show active" id="lic-info-<?php echo $license_info->id; ?>" role="tabpanel" aria-labelledby="lic-info-<?php echo $license_info->id; ?>-tab">
+                                                            <div class="tab-pane fade active in" id="lic-info-<?php echo $license_info->id; ?>" role="tabpanel" aria-labelledby="lic-info-<?php echo $license_info->id; ?>-tab">
 
                                                                 <div class="card" style="width: 18rem;">
                                                                     <div class="card-header">
