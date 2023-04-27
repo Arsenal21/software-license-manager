@@ -3,8 +3,8 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 4.5.4
+Tested up to: 6.2
+Stable tag: 4.5.5
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -55,6 +55,9 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.5.5 =
+- Added the current date to the slm_check API response.
 
 = 4.5.4 =
 - Added a new action hook for when it receives an activation request for an expired license key (slm_api_listener_slm_activate_key_expired).

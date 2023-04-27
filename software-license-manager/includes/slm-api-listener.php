@@ -302,6 +302,7 @@ class SLM_API_Listener {
 						'date_created'        => $retLic->date_created,
 						'date_renewed'        => $retLic->date_renewed,
 						'date_expiry'         => $retLic->date_expiry,
+                                                'date'                => date("Y-m-d"),
 						'product_ref'         => $retLic->product_ref,
 						'first_name'          => $retLic->first_name,
 						'last_name'           => $retLic->last_name,
