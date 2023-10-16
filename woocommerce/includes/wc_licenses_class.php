@@ -167,7 +167,7 @@ class SLM_Woo_Account
                         </tr>
                         <tr>
 
-                            <td colspan="5">
+                            <td colspan="6">
                                 <div>
 
                                     <?php
