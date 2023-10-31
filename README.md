@@ -1,17 +1,21 @@
+> :warning: **Future Updates and maintenance**: I don't have the time I used to have before to maintain this project, but I can always merge new pull requests!
+
+
+
 # Welcome to software license manager 👋
 
 ![Version](https://img.shields.io/badge/version-5.6.1-blue.svg?cacheSeconds=2592000)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md)
 
-> Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.
+> Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP-based membership script, etc.). Supports WooCommerce.
 
 ### 🏠 [Homepage](https://github.com/michelve/software-license-manager#readme)
 
 ## 🔧 Install
 
 ```text
-1. Go to the Add New plugins screen in your WordPress admin area
+1. Go to the Add New Plugins screen in your WordPress admin area
 2. Click the upload tab
 3. Browse for the plugin file (software-license-manager.zip)
 4. Click Install Now and then activate the plugin
@@ -25,7 +29,7 @@
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!
+Contributions, issues, and feature requests are welcome!
 
 Feel free to check [issues page](https://github.com/michelve/software-license-manager/issues).
 
@@ -40,7 +44,7 @@ Give a ⭐️ if this project helped you!
 ## 📦 Features:
 
 -   Create license keys
--   Check the status of a license key from from your application (remotely)
+-   Check the status of a license key from your application (remotely)
 -   Activate a license key from your application (remotely)
 -   Deactivate a license key (remotely)
 -   Delete a license key (remotely)
@@ -56,11 +60,11 @@ Give a ⭐️ if this project helped you!
 -   License activity log, track requests and activations per license (new)
 -   Admin stats widgets (new)
 -   Send emails on expiration and activation
--   Language support (spanish and english)
+-   Language support (Spanish and English)
 -   Woocommerce product type
 -   Pass license info to woocommerce order
 -   Expiration reminder (Emails the user when the license expires)
--   User can manager and view licenses from my account's page
+-   User can manage and view licenses from my account's page
 
 ## ✅ Compatibility
 
