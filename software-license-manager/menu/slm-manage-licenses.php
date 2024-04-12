@@ -5,7 +5,7 @@ function wp_lic_mgr_manage_licenses_menu() {
 	$license_list = new WPLM_List_Licenses();
 	// Do list table form row action tasks.
 
-	$action = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+        $action = isset( $_GET['action'] ) ? sanitize_text_field( stripslashes ( $_GET['action'] ) ) : '';
 
 	if ( ! empty( $action ) ) {
 		$id = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
@@ -27,8 +27,7 @@ function wp_lic_mgr_manage_licenses_menu() {
 			break;
 	}
 
-	$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
-	$page = empty( $page ) ? '' : $page;
+        $page = isset( $_GET['page'] ) ? sanitize_text_field( stripslashes ( $_GET['page'] ) ) : '';
 
 	// Fetch, prepare, sort, and filter our data...
 	$license_list->prepare_items();

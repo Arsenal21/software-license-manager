@@ -31,14 +31,12 @@ function wp_lic_mgr_general_settings() {
 		$default_max_domains = filter_input( INPUT_POST, 'default_max_domains', FILTER_SANITIZE_NUMBER_INT );
 		$default_max_domains = empty( $default_max_domains ) ? 1 : $default_max_domains;
 
-		$lic_creation_secret = filter_input( INPUT_POST, 'lic_creation_secret', FILTER_SANITIZE_STRING );
-		$lic_creation_secret = empty( $lic_creation_secret ) ? '' : sanitize_text_field( $lic_creation_secret );
+                $lic_creation_secret = isset( $_POST['lic_creation_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_creation_secret'] ) ) : '';
 
-		$lic_prefix = filter_input( INPUT_POST, 'lic_prefix', FILTER_SANITIZE_STRING );
+                $lic_prefix = isset( $_POST['lic_prefix'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_prefix'] ) ) : '';
 		$lic_prefix = empty( $lic_prefix ) ? '' : SLM_Utility::sanitize_strip_trim_slm_text( $lic_prefix );
 
-		$lic_verification_secret = filter_input( INPUT_POST, 'lic_verification_secret', FILTER_SANITIZE_STRING );
-		$lic_verification_secret = empty( $lic_verification_secret ) ? '' : sanitize_text_field( $lic_verification_secret );
+                $lic_verification_secret = isset( $_POST['lic_verification_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_verification_secret'] ) ) : '';
 
 		$curr_opts = get_option( 'slm_plugin_options' );
 
