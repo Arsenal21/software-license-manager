@@ -31,12 +31,12 @@ function wp_lic_mgr_general_settings() {
 		$default_max_domains = filter_input( INPUT_POST, 'default_max_domains', FILTER_SANITIZE_NUMBER_INT );
 		$default_max_domains = empty( $default_max_domains ) ? 1 : $default_max_domains;
 
-                $lic_creation_secret = isset( $_POST['lic_creation_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_creation_secret'] ) ) : '';
+        $lic_creation_secret = isset( $_POST['lic_creation_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_creation_secret'] ) ) : '';
 
-                $lic_prefix = isset( $_POST['lic_prefix'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_prefix'] ) ) : '';
+        $lic_prefix = isset( $_POST['lic_prefix'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_prefix'] ) ) : '';
 		$lic_prefix = empty( $lic_prefix ) ? '' : SLM_Utility::sanitize_strip_trim_slm_text( $lic_prefix );
 
-                $lic_verification_secret = isset( $_POST['lic_verification_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_verification_secret'] ) ) : '';
+        $lic_verification_secret = isset( $_POST['lic_verification_secret'] ) ? sanitize_text_field( stripslashes ( $_POST['lic_verification_secret'] ) ) : '';
 
 		$curr_opts = get_option( 'slm_plugin_options' );
 
@@ -60,14 +60,19 @@ function wp_lic_mgr_general_settings() {
 
 	$options = get_option( 'slm_plugin_options' );
 
-	$secret_key = $options['lic_creation_secret'];
+	$secret_key = isset($options['lic_creation_secret']) && !empty($options['lic_creation_secret']) ? $options['lic_creation_secret'] : '';
 	if ( empty( $secret_key ) ) {
 		$secret_key = uniqid( '', true );
 	}
-	$secret_verification_key = $options['lic_verification_secret'];
+	$secret_verification_key = isset($options['lic_verification_secret']) && !empty($options['lic_verification_secret']) ? $options['lic_verification_secret'] : '';
 	if ( empty( $secret_verification_key ) ) {
 		$secret_verification_key = uniqid( '', true );
 	}
+
+    $lic_prefix = isset($options['lic_prefix']) && !empty($options['lic_prefix']) ? $options['lic_prefix'] : '';
+    $default_max_domains = isset($options['default_max_domains']) && !empty($options['default_max_domains']) ? $options['default_max_domains'] : '';
+    $enable_auto_key_expiry = isset($options['enable_auto_key_expiry']) && !empty($options['enable_auto_key_expiry']) ? 'checked="checked"' : '';
+    $enable_debug_checked = isset($options['enable_debug']) && !empty($options['enable_debug']) ? 'checked="checked"' : '';
 	?>
 	<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>
 
@@ -102,30 +107,23 @@ function wp_lic_mgr_general_settings() {
 
 					<tr valign="top">
 						<th scope="row">License Key Prefix</th>
-						<td><input type="text" name="lic_prefix" value="<?php echo esc_attr( $options['lic_prefix'] ); ?>" size="40" />
+						<td><input type="text" name="lic_prefix" value="<?php echo esc_attr( $lic_prefix ); ?>" size="40" />
 							<br />You can optionally specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.</td>
 					</tr>
 
 					<tr valign="top">
 						<th scope="row">Maximum Allowed Domains</th>
-						<td><input type="text" name="default_max_domains" value="<?php echo esc_attr( $options['default_max_domains'] ); ?>" size="6" />
+						<td><input type="text" name="default_max_domains" value="<?php echo esc_attr( $default_max_domains ); ?>" size="6" />
 							<br />Maximum number of domains/installs which each license is valid for (default value).</td>
 					</tr>
 
 					<tr valign="top">
 						<th scope="row">Auto Expire License Keys</th>
-						<td><input name="enable_auto_key_expiry" type="checkbox"
-						<?php
-						if ( isset( $options['enable_auto_key_expiry'] ) && $options['enable_auto_key_expiry'] != '' ) {
-							echo ' checked="checked"';}
-						?>
-						 value="1"/>
+						<td><input name="enable_auto_key_expiry" type="checkbox" <?php echo esc_attr($enable_auto_key_expiry) ?> value="1"/>
 							<p class="description">When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value of the key is reached.
 								It doesn't remotely deactivate a key. It simply changes the status of the key in your database to expired.</p>
 						</td>
 					</tr>
-
-
 				</table>
 			</div></div>
 
@@ -136,12 +134,7 @@ function wp_lic_mgr_general_settings() {
 
 					<tr valign="top">
 						<th scope="row">Enable Debug Logging</th>
-						<td><input name="enable_debug" type="checkbox"
-						<?php
-						if ( $options['enable_debug'] != '' ) {
-							echo ' checked="checked"';}
-						?>
-						 value="1"/>
+						<td><input name="enable_debug" type="checkbox" <?php echo esc_attr($enable_debug_checked) ?> value="1"/>
 							<p class="description">If checked, debug output will be written to log files (keep it disabled unless you are troubleshooting).</p>
 							<br />- View debug log file by clicking <a href="<?php echo esc_attr( wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_view_log=1', 'slm_view_debug_log', 'slm_view_debug_log_nonce' ) ); ?>" target="_blank">here</a>.
 							<br />- Reset debug log file by clicking <a href="<?php echo esc_attr( wp_nonce_url( 'admin.php?page=wp_lic_mgr_settings&slm_reset_log=1', 'slm_reset_debug_log', 'slm_reset_debug_log_nonce' ) ); ?>" target="_blank" onclick="return confirm('Are you sure want to reset debug log file?');">here</a>.

@@ -9,18 +9,18 @@ function lic_mgr_integration_help_menu() {
 	<?php
 
 	$options                 = get_option( 'slm_plugin_options' );
-	$creation_secret_key     = $options['lic_creation_secret'];
-	$secret_verification_key = $options['lic_verification_secret'];
+	$creation_secret_key     = isset($options['lic_creation_secret']) && !empty($options['lic_creation_secret']) ? $options['lic_creation_secret'] : '';
+	$secret_verification_key = isset($options['lic_verification_secret']) && !empty($options['lic_verification_secret']) ? $options['lic_verification_secret'] : '';
 
 	echo '<div class="wrap">';
 	echo '<h2>License Manager Integration Help</h2>';
 	echo '<div id="poststuff"><div id="post-body">';
 
-        echo '<div class="slm_yellow_box">';
+    echo '<div class="slm_yellow_box">';
 	echo '<p>For information, updates and documentation, please visit the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page.</p>';
-        echo '</div>';
+    echo '</div>';
 
-        echo '<h3>Some Key Variable Info for Your Install</h3>';
+    echo '<h3>Some Key Variable Info for Your Install</h3>';
 
 	$api_query_post_url = SLM_SITE_HOME_URL;
 	echo '<strong>The License API Query POST URL For Your Installation</strong>';
@@ -34,9 +34,9 @@ function lic_mgr_integration_help_menu() {
 
 	echo '<h3>3rd Party Integration Documentation</h3>';
 
-        echo '<div class="slm_yellow_box">';
-        echo '<p>Integration documentation is available on the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page. You can also download a sample plugin code from that page.</p>';
-        echo '</div>';
+    echo '<div class="slm_yellow_box">';
+    echo '<p>Integration documentation is available on the <a href="https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress" target="_blank">License Manager Documentation</a> page. You can also download a sample plugin code from that page.</p>';
+    echo '</div>';
 
 	echo '</div></div>';
 	echo '</div>';
