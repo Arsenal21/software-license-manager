@@ -206,13 +206,13 @@ function wp_lic_mgr_add_licenses_menu() {
 							$editing_record = new stdClass();
 						}
 						// Auto generate unique key.
-						$lic_key_prefix = $slm_options['lic_prefix'];
-						if ( ! empty( $lic_key_prefix ) ) {
+						$lic_key_prefix = isset($slm_options['lic_prefix']) && ! empty( $slm_options['lic_prefix'] ) ? $slm_options['lic_prefix'] : '';
+						if ( !empty($lic_key_prefix) ) {
 							$license_key = uniqid( $lic_key_prefix );
 						} else {
 							$license_key = uniqid();
 						}
-                                                $license_key = apply_filters( 'slm_generate_license_key', $license_key );
+                        $license_key = apply_filters( 'slm_generate_license_key', $license_key );
 					}
 					?>
 
