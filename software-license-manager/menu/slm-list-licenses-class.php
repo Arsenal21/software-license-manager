@@ -220,17 +220,20 @@ class WPLM_List_Licenses extends WP_List_Table {
 				ARRAY_A
 			);
 
-			$found_rows_q = $wpdb->prepare(
-				"SELECT COUNT( * )
-				$after_select",
-				$placeholder,
-				$placeholder,
-				$placeholder,
-				$placeholder,
-				$placeholder,
-				$placeholder
-			);
+                        // SQL query for counting the total number of distinct license keys.
+                        // Use COUNT(DISTINCT lk.id): This ensures that you're counting the number of distinct license keys (not the number of domains)
+                        $found_rows_q = $wpdb->prepare(
+                            "SELECT COUNT(DISTINCT `lk`.`id`)
+                             $after_select",
+                            $placeholder,
+                            $placeholder,
+                            $placeholder,
+                            $placeholder,
+                            $placeholder,
+                            $placeholder
+                        );
 
+                        // Get the total number of items.
 			$total_items = intval( $wpdb->get_var( $found_rows_q ) );
 		} else {
 			$after_select = "FROM `$license_table` `lk`
@@ -247,9 +250,12 @@ class WPLM_List_Licenses extends WP_List_Table {
 
 			$data = $wpdb->get_results( $q, ARRAY_A );
 
-			$found_rows_q = "SELECT COUNT( * )
-			$after_select";
+                        // SQL query for counting the total number of distinct license keys.
+			//$found_rows_q = "SELECT COUNT( * ) $after_select";//Old query.
+                        //Use COUNT(DISTINCT lk.id): This ensures that you're counting the number of distinct license keys (not the number of domains)
+                        $found_rows_q = "SELECT COUNT(DISTINCT `lk`.`id`) $after_select";
 
+                        // Get the total number of items.
 			$total_items = intval( $wpdb->get_var( $found_rows_q ) );
 		}
 
