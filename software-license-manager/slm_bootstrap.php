@@ -50,3 +50,13 @@ function slm_db_install() {
 	//run the installer
 	require_once dirname( __FILE__ ) . '/slm_installer.php';
 }
+
+// Add the settings link in the plugin's menu of WP Dashboard.
+function slm_add_settings_link( $links, $file ) {
+    if ( $file == plugin_basename( __FILE__ ) ) {
+	$settings_link = '<a href="admin.php?page=wp_lic_mgr_settings">' . (__( "Settings", "slm" )) . '</a>';
+	array_unshift( $links, $settings_link );
+    }
+    return $links;
+}
+add_filter( 'plugin_action_links', 'slm_add_settings_link', 10, 2 );
