@@ -3,8 +3,9 @@ Contributors: Tips and Tricks HQ, Ruhul Amin
 Donate link: https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 Tags: license key, serial key, manager, license, serial, key, selling, sell, license activation, manage license, software license, software license manager
 Requires at least: 5.0
-Tested up to: 6.6
-Stable tag: 4.5.7
+Tested up to: 6.7
+Stable tag: 4.5.8
+Requires PHP: 7.4.0
 License: GPLv2 or later
 
 Create and manage license keys for your software applications easily
@@ -55,6 +56,10 @@ See the following page:
 https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
+
+= 4.5.8 =
+- Added minimum PHP version requirement (PHP 7.4.0).
+- Added a condition to suppress the debug warning when the 'item_reference' parameter is not included in the API call.
 
 = 4.5.7 =
 - PHP 8.3 compatibility related updates.

@@ -114,8 +114,8 @@ class SLM_API_Listener {
 
 			$fields                      = array();
 			$fields['lic_key']           = SLM_Utility::sanitize_strip_trim_slm_text( $_REQUEST['license_key'] );
-			$fields['registered_domain'] = trim( wp_unslash( sanitize_text_field( $_REQUEST['registered_domain'] ) ) ); //gethostbyaddr($_SERVER['REMOTE_ADDR']);
-			$fields['item_reference']    = trim( sanitize_text_field( $_REQUEST['item_reference'] ) );
+			$fields['registered_domain'] = isset($_REQUEST['registered_domain']) ? trim( wp_unslash( sanitize_text_field( $_REQUEST['registered_domain'] ) ) ) : '';
+			$fields['item_reference']    = isset($_REQUEST['item_reference']) ? trim( sanitize_text_field( $_REQUEST['item_reference'] ) ) : '';
 			$slm_debug_logger->log_debug( 'License key: ' . $fields['lic_key'] . ' Domain: ' . $fields['registered_domain'] );
 
 			global $wpdb;
