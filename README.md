@@ -1,4 +1,4 @@
-> :warning: **Future Updates and maintenance**: I don't have the time I used to have before to maintain this project, but I can always merge new pull requests!
+> :warning: **Future Updates and maintenance**: I have released under the dev branch version 6.1.0
 
 
 
