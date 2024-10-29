@@ -8,41 +8,11 @@
  * @link      http://epikly.com
  */
 
+ 
 //Includes - utilities and cron jobs
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 require_once(SLM_LIB . 'slm-utility.php');
 require_once(SLM_CRONS . 'slm-tasks.php');
-
-// Filters for adding extra headers and customizing plugin row meta
-add_filter('extra_plugin_headers', 'slmplus_add_extra_headers');
-add_filter('plugin_row_meta', 'slmplus_filter_authors_row_meta', 1, 4);
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'slm_settings_link');
-
-function slmplus_add_extra_headers() {
-    return array('Author2');
-}
-
-function hyphenate($str) {
-    return implode("-", str_split($str, 5));
-}
-
-function slmplus_filter_authors_row_meta($plugin_meta, $plugin_file, $plugin_data, $status) {
-    if (!empty($plugin_data['Author2'])) {
-        $plugin_meta[1] .= ', ' . $plugin_data['Author2'];
-    }
-    return $plugin_meta;
-}
-
-// Add settings link
-function slm_settings_link($links)
-{
-    $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=slm_settings')) . '">' . __('Settings') . '</a>';
-    $github_link = '<a href="' . esc_url('https://github.com/michelve/software-license-manager') . '" target="_blank">' . __('GitHub') . '</a>';
-    $links[] = $settings_link;
-    $links[] = $github_link;
-    return $links;
-}
-
 
 // Includes for essential plugin components
 require_once(SLM_LIB . 'slm-debug-logger.php');
@@ -56,18 +26,25 @@ if (is_admin()) {
     require_once SLM_ADMIN . 'slm-admin-init.php';
 }
 
+if (!function_exists('hyphenate')) {
+    function hyphenate($str) {
+        return implode("-", str_split($str, 5));
+    }
+}
+
+
 // WP eStores integration
 if (SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
     require_once(SLM_ADMIN . 'includes/wpestores/slm-wpestores.php');
 }
 
 // Activation and deactivation hooks
-function activate_software_license_manager() {
+function activate_slm_plus() {
     require_once SLM_LIB . 'class-slm-activator.php';
     $slm_activator->activate();
 }
 
-function deactivate_software_license_manager() {
+function deactivate_slm_plus() {
     require_once SLM_LIB . 'class-slm-deactivator.php';
     $slm_deactivator->deactivate();
 }
@@ -77,8 +54,8 @@ function slm_get_license($lic_key_prefix = '')
     return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 10), true) . date('Y-m-d H:i:s') . time())));
 }
 
-register_activation_hook(__FILE__, 'activate_software_license_manager');
-register_deactivation_hook(__FILE__, 'deactivate_software_license_manager');
+register_activation_hook(__FILE__, 'activate_slm_plus');
+register_deactivation_hook(__FILE__, 'deactivate_slm_plus');
 
 // License key generator function
 function slmplus_get_license($lic_key_prefix = '') {

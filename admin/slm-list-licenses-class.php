@@ -199,7 +199,7 @@ class SLM_List_Licenses extends WP_List_Table
             'blocked'   => 'Block',
             'expired'   => 'Expire',
             'active'    => 'Activate',
-            'reminder'  => 'Send Reminder',
+            // 'reminder'  => 'Send Reminder',
             'export'    => 'Export',
         );
         return $actions;
