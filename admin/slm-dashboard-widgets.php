@@ -19,7 +19,7 @@ function slm_add_dashboard_widgets()
 
     wp_add_dashboard_widget(
         'slm_dashboard_widget',         // Widget slug.
-        'Software license manager',     // Title.
+        'SLM Plus',     // Title.
         'slm_dashboard_widget_function' // Display function.
     );
 }
@@ -27,7 +27,7 @@ function slm_add_dashboard_widgets()
 function add_toolbar_items($admin_bar){
     $admin_bar->add_menu(array(
         'id'    => 'slm-menu',
-        'title' => '<span class="ab-icon"></span>' . __('SLM', 'softwarelicensemanager'),
+        'title' => '<span class="ab-icon"></span>' . __('SLM', 'slmplus'),
         'href'  => admin_url('admin.php?page=slm_overview'),
         'meta'  => array(
             'title' => __('SLM'),

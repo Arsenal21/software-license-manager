@@ -8,7 +8,32 @@
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
     die();
+    
 }
+
+//slm_woo_downloads
+function slm_remove_downloads_from_account_menu($items) {
+    // Remove "Downloads" menu item.
+    unset($items['downloads']);
+    return $items;
+}
+
+function slm_disable_downloads_endpoint_redirect() {
+    // Check if the current endpoint is "downloads" and if it's part of the My Account page.
+    if (is_wc_endpoint_url('downloads')) {
+        // Redirect to the My Account dashboard.
+        wp_safe_redirect(wc_get_page_permalink('myaccount'));
+        exit;
+    }
+}
+
+$enable_downloads_page = SLM_API_Utility::get_slm_option('slm_woo_downloads');
+    // Check if the 'enable_downloads_page' option is enabled.
+    if ($enable_downloads_page == 1) {
+        // If the option is set and enabled, trigger the action.
+        add_action('template_redirect', 'slm_disable_downloads_endpoint_redirect');
+        add_filter('woocommerce_account_menu_items', 'slm_remove_downloads_from_account_menu', 10);
+    }
 
 class SLM_Woo_Account
 {
@@ -55,7 +80,7 @@ class SLM_Woo_Account
         $is_endpoint = isset($wp_query->query_vars[self::$endpoint]);
         if ($is_endpoint && !is_admin() && is_main_query() && in_the_loop() && is_account_page()) {
             // New page title.
-            $title = __('My Licenses', 'softwarelicensemanager');
+            $title = __('My Licenses', 'slmplus');
             remove_filter('the_title', array($this, 'endpoint_title'));
         }
         return $title;
@@ -67,7 +92,7 @@ class SLM_Woo_Account
         $logout = $items['customer-logout'];
         unset($items['customer-logout']);
         // Insert your custom endpoint.
-        $items[self::$endpoint] = __('My Licenses', 'softwarelicensemanager');
+        $items[self::$endpoint] = __('My Licenses', 'slmplus');
         // Insert back the logout item.
         $items['customer-logout'] = $logout;
         return $items;
@@ -94,9 +119,9 @@ class SLM_Woo_Account
         if (empty($result)) {
 ?>
             <div class="woocommerce-Message woocommerce-Message--info woocommerce-info">
-                <a class="woocommerce-Button button" href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>"><?php echo esc_html__('Browse products', 'softwarelicensemanager'); ?>
+                <a class="woocommerce-Button button" href="<?php echo esc_url(get_permalink(wc_get_page_id('shop'))); ?>"><?php echo esc_html__('Browse products', 'slmplus'); ?>
                 </a>
-                <?php echo esc_html__('No licenses available yet.', 'softwarelicensemanager'); ?>
+                <?php echo esc_html__('No licenses available yet.', 'slmplus'); ?>
             </div>
         <?php
             $slm_hide = 'style="display:none"';
@@ -107,27 +132,27 @@ class SLM_Woo_Account
             <table id="slm_licenses_table" class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table" style="border-collapse:collapse;">
                 <thead>
                     <tr>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Order', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Status', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Product', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('License key', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Renews on', 'softwarelicensemanager'); ?></th>
-                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Info', 'softwarelicensemanager'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Order', 'slmplus'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Status', 'slmplus'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Product', 'slmplus'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('License key', 'slmplus'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Renews on', 'slmplus'); ?></th>
+                        <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><?php echo esc_html__('Info', 'slmplus'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     foreach ($result as $license_info) : ?>
                         <tr class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
-                            <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'softwarelicensemanager'); ?>"><a href="<?php echo get_home_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
+                            <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number slm-order" data-title="<?php echo __('Order', 'slmplus'); ?>"><a href="<?php echo get_home_url() . '/my-account/view-order/' . $license_info->purchase_id_; ?>">#<?php echo $license_info->purchase_id_; ?></a></td>
 
-                            <td class="slm-status" data-title="<?php echo esc_html__('Status', 'softwarelicensemanager'); ?>">
+                            <td class="slm-status" data-title="<?php echo esc_html__('Status', 'slmplus'); ?>">
                                 <?php $key_status = $license_info->lic_status; ?>
                                 <div class="slm-key-status"> <span class="key-status <?php echo $key_status; ?>"><?php echo $key_status; ?></span>
                                 </div>
                             </td>
 
-                            <td class="slm-product-reference" data-title="<?php echo esc_html__('Product', 'softwarelicensemanager'); ?>">
+                            <td class="slm-product-reference" data-title="<?php echo esc_html__('Product', 'slmplus'); ?>">
                                 <?php
                                 $product_id     = $license_info->product_ref;
                                 $product_name   = get_the_title($product_id);
@@ -138,9 +163,9 @@ class SLM_Woo_Account
                                 ?>
                             </td>
 
-                            <td class="slm-key" data-title="<?php echo esc_html__('License Key', 'softwarelicensemanager'); ?>"><?php echo $license_info->license_key; ?></td>
+                            <td class="slm-key" data-title="<?php echo esc_html__('License Key', 'slmplus'); ?>"><?php echo $license_info->license_key; ?></td>
 
-                            <td class="slm-renewal" data-title="<?php echo esc_html__('Renews on', 'softwarelicensemanager'); ?>">
+                            <td class="slm-renewal" data-title="<?php echo esc_html__('Renews on', 'slmplus'); ?>">
                                 <?php
                                 $expiration = new DateTime($license_info->date_expiry);
                                 $today      = new DateTime();
@@ -156,7 +181,7 @@ class SLM_Woo_Account
                                 }
                                 ?>
                             </td>
-                            <td class="slm-view" data-title="<?php echo esc_html__('view', 'softwarelicensemanager'); ?>">
+                            <td class="slm-view" data-title="<?php echo esc_html__('view', 'slmplus'); ?>">
 
 
                                 <button type="button" class="btn btn-default lic-view-details-btn" data-toggle="modal" data-target="#licModal_<?php echo $license_info->id; ?>">
@@ -181,7 +206,7 @@ class SLM_Woo_Account
                                             <div class="modal-dialog modal-md modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="Label"><?php echo esc_html__('License Key:', 'softwarelicensemanager'); ?> <span class="badge badge-dark"><?php echo $license_info->license_key; ?></span></h5>
+                                                        <h5 class="modal-title" id="Label"><?php echo esc_html__('License Key:', 'slmplus'); ?> <span class="badge badge-dark"><?php echo $license_info->license_key; ?></span></h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -190,15 +215,15 @@ class SLM_Woo_Account
 
                                                         <ul class="nav nav-tabs npm" id="myLics" role="tablist">
                                                             <li class="nav-item active">
-                                                                <a class="nav-link" id="lic-info-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-info-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-info-<?php echo $license_info->id; ?>" aria-selected="true"><?php echo esc_html__('License Information', 'softwarelicensemanager'); ?></a>
+                                                                <a class="nav-link" id="lic-info-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-info-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-info-<?php echo $license_info->id; ?>" aria-selected="true"><?php echo esc_html__('License Information', 'slmplus'); ?></a>
                                                             </li>
 
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="lic-devices-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-devices-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-devices-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Activations', 'softwarelicensemanager'); ?></a>
+                                                                <a class="nav-link" id="lic-devices-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-devices-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-devices-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Activations', 'slmplus'); ?></a>
                                                             </li>
 
                                                             <li class="nav-item">
-                                                                <a class="nav-link" id="lic-code-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-code-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-code-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Copy License', 'softwarelicensemanager'); ?></a>
+                                                                <a class="nav-link" id="lic-code-<?php echo $license_info->id; ?>-tab" data-toggle="tab" href="#lic-code-<?php echo $license_info->id; ?>" role="tab" aria-controls="lic-code-<?php echo $license_info->id; ?>" aria-selected="false"><?php echo esc_html__('Copy License', 'slmplus'); ?></a>
                                                             </li>
                                                         </ul>
 
@@ -207,15 +232,15 @@ class SLM_Woo_Account
 
                                                                 <div class="card" style="width: 18rem;">
                                                                     <div class="card-header">
-                                                                        <?php echo esc_html__('License information', 'softwarelicensemanager'); ?>
+                                                                        <?php echo esc_html__('License information', 'slmplus'); ?>
                                                                     </div>
                                                                     <ul class="list-group list-group-flush lic-group-details">
-                                                                        <li class="list-group-item"><?php echo esc_html__('Expiration', 'softwarelicensemanager'); ?> <span><time datetime="<?php echo $license_info->date_expiry; ?>"><?php echo $license_info->date_expiry; ?></time></span></li>
-                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed devices', 'softwarelicensemanager'); ?> <span><?php echo $license_info->max_allowed_devices; ?></span></li>
-                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed Domains', 'softwarelicensemanager'); ?> <span><?php echo $license_info->max_allowed_domains; ?></span></li>
-                                                                        <li class="list-group-item"><?php echo esc_html__('License type', 'softwarelicensemanager'); ?> <span class="badge badge-pill badge-info"><?php echo $license_info->lic_type; ?></span></li>
-                                                                        <li class="list-group-item"><?php echo esc_html__('Date renewed', 'softwarelicensemanager'); ?> <span><?php echo $license_info->date_renewed; ?></span></li>
-                                                                        <li class="list-group-item"><?php echo esc_html__('Activation Date', 'softwarelicensemanager'); ?> <span><?php echo $license_info->date_activated; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Expiration', 'slmplus'); ?> <span><time datetime="<?php echo $license_info->date_expiry; ?>"><?php echo $license_info->date_expiry; ?></time></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed devices', 'slmplus'); ?> <span><?php echo $license_info->max_allowed_devices; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Allowed Domains', 'slmplus'); ?> <span><?php echo $license_info->max_allowed_domains; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('License type', 'slmplus'); ?> <span class="badge badge-pill badge-info"><?php echo $license_info->lic_type; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Date renewed', 'slmplus'); ?> <span><?php echo $license_info->date_renewed; ?></span></li>
+                                                                        <li class="list-group-item"><?php echo esc_html__('Activation Date', 'slmplus'); ?> <span><?php echo $license_info->date_activated; ?></span></li>
                                                                     </ul>
                                                                 </div>
                                                             </div>
@@ -287,9 +312,9 @@ class SLM_Woo_Account
                         jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&activation_type=' + activation_type, function(data) {
                             if (data == 'success') {
                                 jQuery(class_name).remove();
-                                jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__('License key was deactivated!', 'softwarelicensemanager'); ?></div>');
+                                jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"><?php echo esc_html__('License key was deactivated!', 'slmplus'); ?></div>');
                             } else {
-                                jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> <?php echo esc_html__('License key was not deactivated!', 'softwarelicensemanager'); ?></div>');
+                                jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> <?php echo esc_html__('License key was not deactivated!', 'slmplus'); ?></div>');
                             }
                         });
                     });

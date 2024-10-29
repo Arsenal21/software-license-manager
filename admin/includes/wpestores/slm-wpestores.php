@@ -188,7 +188,7 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id)
         }
     }
 
-    $product_config_html .= '<div class="msg_head">Software License Manager Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
+    $product_config_html .= '<div class="msg_head">SLM Plus Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
 
     $product_config_html .= '<tr valign="top"><th scope="row">Maximum Allowed Domains</th><td>';
     $product_config_html .= '<input name="slm_max_allowed_domains" type="text" id="slm_max_allowed_domains" value="' . $slm_max_allowed_domains . '" size="10" />';

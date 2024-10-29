@@ -82,10 +82,10 @@ class Subscribers_List_Table extends WP_List_Table
     {
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
-            'id'                    => __('ID', 'softwarelicensemanager'),
-            'first_name'           => __('First Name', 'softwarelicensemanager'),
-            'last_name'            => __('Last Name', 'softwarelicensemanager'),
-            'email'                 => __('Email Address', 'softwarelicensemanager')
+            'id'                    => __('ID', 'slmplus'),
+            'first_name'           => __('First Name', 'slmplus'),
+            'last_name'            => __('Last Name', 'slmplus'),
+            'email'                 => __('Email Address', 'slmplus')
         );
         return $columns;
     }
@@ -173,9 +173,9 @@ function slm_subscribers_menu()
     if (isset($_REQUEST['slm_subscriber_edit']) && $_REQUEST['slm_subscriber_edit'] == 'true') : ?>
 
         <div class="wrap">
-            <h1><?php _e('Overview - Manage Subscribers', 'softwarelicensemanager'); ?></h1>
+            <h1><?php _e('Overview - Manage Subscribers', 'slmplus'); ?></h1>
             <br>
-            <a href="<?php echo admin_url('admin.php?page=slm_subscribers') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('View all', 'softwarelicensemanager'); ?></a>
+            <a href="<?php echo admin_url('admin.php?page=slm_subscribers') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('View all', 'slmplus'); ?></a>
             <hr class="wp-header-end">
 
             <div id="poststuff">
@@ -184,9 +184,9 @@ function slm_subscribers_menu()
                         <div class="manage-user">
                             <table class="wp-list-table widefat fixed striped items">
                                 <tr>
-                                    <th scope="col" style="width: 32px"><?php _e('ID', 'softwarelicensemanager'); ?></th>
-                                    <th scope="col"><?php _e('License key', 'softwarelicensemanager'); ?></th>
-                                    <th scope="col"><?php _e('Status', 'softwarelicensemanager'); ?></th>
+                                    <th scope="col" style="width: 32px"><?php _e('ID', 'slmplus'); ?></th>
+                                    <th scope="col"><?php _e('License key', 'slmplus'); ?></th>
+                                    <th scope="col"><?php _e('Status', 'slmplus'); ?></th>
                                     <th scope="col"> </th>
                                 </tr>
 
@@ -203,7 +203,7 @@ function slm_subscribers_menu()
     <?php else : ?>
 
         <div class="wrap">
-            <h1><?php _e('Overview - All Subscribers', 'softwarelicensemanager'); ?></h1>
+            <h1><?php _e('Overview - All Subscribers', 'slmplus'); ?></h1>
             <br>
             <hr class="wp-header-end">
             <div id="poststuff">
@@ -214,7 +214,7 @@ function slm_subscribers_menu()
                                 <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
                                 <?php
                                 $subscribers_list->prepare_items();
-                                $subscribers_list->search_box(__('Search', 'softwarelicensemanager'), 'search-box-id');
+                                $subscribers_list->search_box(__('Search', 'slmplus'), 'search-box-id');
                                 $subscribers_list->views();
                                 $subscribers_list->display(); ?>
                             </form>

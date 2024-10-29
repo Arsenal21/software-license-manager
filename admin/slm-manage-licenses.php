@@ -12,7 +12,7 @@ function get_user_info()
     if (!current_user_can('manage_licenses')) {
         $response = array(
             'success' => false,
-            'message' => _e('You do not have permission to manage this license.', 'softwarelicensemanager'),
+            'message' => _e('You do not have permission to manage this license.', 'slmplus'),
         );
         echo json_encode($response);
         die();
@@ -33,9 +33,9 @@ function slm_manage_licenses_menu()
     <div class="stats">
     </div>
     <div class="wrap">
-        <h1><?php _e('Overview - Manage licenses', 'softwarelicensemanager'); ?></h1>
+        <h1><?php _e('Overview - Manage licenses', 'slmplus'); ?></h1>
         <br>
-        <a href="<?php echo admin_url('admin.php?page=slm_manage_license') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'softwarelicensemanager'); ?></a>
+        <a href="<?php echo admin_url('admin.php?page=slm_manage_license') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'slmplus'); ?></a>
 
         <hr class="wp-header-end">
 
