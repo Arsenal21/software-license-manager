@@ -134,6 +134,8 @@ function slm_add_licenses_menu()
     <div class="wrap">
         <h1><?php _e('License Management', 'slmplus'); ?></h1>
 
+        <div class="slm_ajax_msg"></div>
+
         <nav class="slm nav-tab-wrapper">
             <a href="?page=slm_manage_license<?php echo isset($_GET['edit_record']) ? '&slm_tab=default&edit_record=' . esc_attr($_GET['edit_record']) : ''; ?>" class="nav-tab <?php if ($slm_lic_tab === null): ?>nav-tab-active<?php endif; ?>">
                 <?php _e('License Information', 'slmplus'); ?>
@@ -148,67 +150,244 @@ function slm_add_licenses_menu()
         <div class="slm tab-content">
             <?php switch ($slm_lic_tab): 
                 case 'activation': ?>
-                <?php 
-                    $max_domains    = SLM_Helper_Class::slm_get_option('default_max_domains');
-                    $max_devices    = SLM_Helper_Class::slm_get_option('default_max_devices');
-                    $license_key    = esc_attr($data['license_key']);
+
+
+
+
+
+<?php
+// Make sure this runs only on the right page
+if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) {
+    global $wpdb;
+
+    $license_key = esc_attr($data['license_key']);
+    
+    // Fetch the max_allowed_domains and max_allowed_devices from the license key table
+    $license_info = $wpdb->get_row($wpdb->prepare(
+        "SELECT max_allowed_domains, max_allowed_devices FROM " . SLM_TBL_LICENSE_KEYS . " WHERE license_key = %s",
+        $license_key
+    ));
+    
+    // Ensure the max values are retrieved and set them to default values if not found
+    $max_domains = isset($license_info->max_allowed_domains) ? intval($license_info->max_allowed_domains) : 0;
+    $max_devices = isset($license_info->max_allowed_devices) ? intval($license_info->max_allowed_devices) : 0;
+    
+    // Fetch the current number of registered domains for this license key
+    $registered_domains = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM " . SLM_TBL_LIC_DOMAIN . " WHERE lic_key = %s",
+        $license_key
+    ));
+    
+    // Fetch the current number of registered devices for this license key
+    $registered_devices = $wpdb->get_var($wpdb->prepare(
+        "SELECT COUNT(*) FROM " . SLM_TBL_LIC_DEVICES . " WHERE lic_key = %s",
+        $license_key
+    ));
+    
+    // Ensure the count values are integers
+    $registered_domains = isset($registered_domains) ? intval($registered_domains) : 0;
+    $registered_devices = isset($registered_devices) ? intval($registered_devices) : 0;
+    
+    // Calculate how many domains and devices are left
+    $domains_left = $max_domains - $registered_domains;
+    $devices_left = $max_devices - $registered_devices;
+    
+    // Ensure the result is not negative (to handle edge cases)
+    $domains_left = max(0, $domains_left);
+    $devices_left = max(0, $devices_left);
+    
+    // Fetch all registered domains for this license key
+    $registered_domains_data = $wpdb->get_results($wpdb->prepare(
+        "SELECT id, registered_domain FROM " . SLM_TBL_LIC_DOMAIN . " WHERE lic_key = %s",
+        $license_key
+    ));
+    
+    // Fetch all registered devices for this license key
+    $registered_devices_data = $wpdb->get_results($wpdb->prepare(
+        "SELECT id, registered_devices FROM " . SLM_TBL_LIC_DEVICES . " WHERE lic_key = %s",
+        $license_key
+    ));
+    
+
+    $slm_ajax_uri ='';
+    $slm_deactivate_nonce = wp_create_nonce('slmplus_delete_activation_nonce');
+
+    // Render the table
+    ?>
+
+    <div class="wrap">
+        <h1><?php _e('License Management', 'slmplus'); ?></h1> 
+        <p>
+            <strong><?php _e('Domains Left', 'slmplus'); ?>:</strong> <?php echo esc_html($domains_left); ?><br>
+            <strong><?php _e('Devices Left', 'slmplus'); ?>:</strong> <?php echo esc_html($devices_left); ?>
+        </p>        
+
+        <table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th><?php _e('ID', 'slmplus'); ?></th>
+                    <th><?php _e('License Key', 'slmplus'); ?></th>
+                    <th><?php _e('Type', 'slmplus'); ?></th>
+                    <th><?php _e('Origin', 'slmplus'); ?></th> <!-- New column for Origin -->
+                    <th><?php _e('Action', 'slmplus'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($registered_domains_data): ?>
+                    <?php foreach ($registered_domains_data as $domain_entry): ?>
+                        <?php
+                            $slm_ajax_uri = esc_url(home_url('/')).'?slm_action=slm_deactivate&secret_key=' . VERIFY_KEY_API .'&license_key='.esc_html($license_key).'&registered_domain='. esc_html($domain_entry->registered_domain);
+                        ?>
+                        <tr id="activation-row-<?php echo esc_attr($domain_entry->id); ?>" class="lic-entry-<?php echo esc_attr($domain_entry->id); ?>">
+                            <td><?php echo esc_html($domain_entry->id); ?></td>
+                            <td><?php echo esc_html($license_key); ?></td>
+                            <td><?php _e('Domain', 'slmplus'); ?></td>
+                            <td><?php echo esc_html($domain_entry->registered_domain); ?></td> <!-- Display Domain Origin here -->
+                            <td>
+                            <button class="button deactivate_registration" data-activation_type="domain" data-id="<?php echo esc_attr($domain_entry->id); ?>" data-device="<?php echo esc_attr($domain_entry->registered_domain); ?>" data-table="registered_domain" data-ajax_uri="<?php echo $slm_ajax_uri; ?>"  data-nonce="<?php echo esc_attr($slm_deactivate_nonce); ?>">
+                                    <?php _e('Remove', 'slmplus'); ?>
+                            </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                <?php if ($registered_devices_data): ?>
+                    <?php foreach ($registered_devices_data as $device_entry): ?>
+                        <?php
+                            $slm_ajax_uri = esc_url(home_url('/')).'?slm_action=slm_deactivate&secret_key=' . VERIFY_KEY_API .'&license_key='.esc_html($license_key).'&registered_devices='. esc_html($device_entry->registered_devices);
+                        ?>
+
+                        <tr id="activation-row-<?php echo esc_attr($device_entry->id); ?>" class="lic-entry-<?php echo esc_attr($device_entry->id); ?>">
+                            <td><?php echo esc_html($device_entry->id); ?></td>
+                            <td><?php echo esc_html($license_key); ?></td>
+                            <td><?php _e('Device', 'slmplus'); ?></td>
+                            <td><?php echo esc_html($device_entry->registered_devices); ?></td> <!-- Display Device Origin here -->
+                            <td>
+
+
+                            <button class="button deactivate_registration" data-activation_type="device" data-id="<?php echo esc_attr($device_entry->id); ?>" data-device="<?php echo esc_attr($device_entry->registered_devices); ?>" data-table="registered_devices" data-ajax_uri="<?php echo $slm_ajax_uri; ?>" data-nonce="<?php echo esc_attr($slm_deactivate_nonce); ?>">
+                                    <?php _e('Remove', 'slmplus'); ?>
+                            </button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                <?php if (!$registered_domains_data && !$registered_devices_data): ?>
+                    <tr><td colspan="5"><?php _e('No activations found', 'slmplus'); ?></td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            // Event listener for the deactivate button
+            $('.deactivate_registration').click(function(event) {
+                event.preventDefault(); // Prevent default behavior
+
+                // Confirmation prompt
+                if (!confirm('Are you sure you want to deactivate this license? This action cannot be undone.')) {
+                    return; // If the user clicks "Cancel", do nothing
+                }
+
+                // Store the button element reference
+                var $button = $(this);
+
+                // Get the data-ajax_uri and data-nonce from the clicked button
+                var ajax_uri = $button.data('ajax_uri');
+                var nonce = $button.data('nonce'); // Get the nonce
+
+                // Change the button text to indicate action
+                $button.text('Removing');
+
+                // Make the AJAX POST request with nonce
+                $.post(ajax_uri, {
+                    _wpnonce: nonce // Include the nonce in the request
+                }, function(response) {
+                    console.log(response); // Debugging to ensure we're getting the response
+                    
+                    // Handle success response
+                    if (response.result === 'success') {
+                        // Show WordPress-style success message
+                        $('.slm_ajax_msg').html('<div class="notice notice-success is-dismissible"><p>' + response.message + '</p></div>');
+                        
+                        // Remove the entire row or element containing the button
+                        $button.closest('tr').remove(); // Adjust the selector to the parent element of the row or item you want to remove
+                    } else {
+                        // Show WordPress-style error message
+                        $('.slm_ajax_msg').html('<div class="notice notice-error is-dismissible"><p>License key was not deactivated!</p></div>');
+                    }
+                }).fail(function() {
+                    // Handle AJAX request failure
+                    $('.slm_ajax_msg').html('<div class="notice notice-error is-dismissible"><p>Error during the AJAX request.</p></div>');
+                });
+            });
+        });
+
+    </script>
+
+    <?php
+}
+
+                // Register AJAX handler for deleting activations (without page reload)
+                add_action('wp_ajax_delete_activation', function() {
+                    // Security check
+                    if (!isset($_POST['_wpnonce']) || !wp_verify_nonce($_POST['_wpnonce'], 'slmplus_delete_activation_nonce')) {
+                        wp_send_json_error([
+                            'result' => 'error',
+                            'message' => __('Nonce verification failed.', 'slmplus'),
+                            'error_code' => 401
+                        ]);
+                    }
+
+                    global $wpdb;
+
+                    // Check if the activation ID and type are provided and valid
+                    if (!isset($_POST['activation_id']) || !is_numeric($_POST['activation_id']) || !isset($_POST['activation_type'])) {
+                        wp_send_json_error([
+                            'result' => 'error',
+                            'message' => __('Invalid activation data.', 'slmplus'),
+                            'error_code' => 400
+                        ]);
+                    }
+
+                    $activation_id = intval($_POST['activation_id']);
+                    $activation_type = sanitize_text_field($_POST['activation_type']);
+
+                    // Delete the activation from the correct table
+                    if ($activation_type === 'domain') {
+                        $result = $wpdb->delete(SLM_TBL_LIC_DOMAIN, ['id' => $activation_id]);
+                    } elseif ($activation_type === 'device') {
+                        $result = $wpdb->delete(SLM_TBL_LIC_DEVICES, ['id' => $activation_id]);
+                    } else {
+                        wp_send_json_error([
+                            'result' => 'error',
+                            'message' => __('Invalid activation type.', 'slmplus'),
+                            'error_code' => 400
+                        ]);
+                    }
+
+                    // Handle result
+                    if ($result !== false) {
+                        wp_send_json_success([
+                            'result' => 'success',
+                            'message' => __('The license key has been deactivated for this domain.', 'slmplus'),
+                            'error_code' => 360
+                        ]);
+                    } else {
+                        wp_send_json_error([
+                            'result' => 'error',
+                            'message' => __('Error deleting activation.', 'slmplus'),
+                            'error_code' => 500
+                        ]);
+                    }
+                });
                 ?>
-                    <?php if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) : ?>
 
-                        <h1><?php _e('Activation Page', 'slmplus'); ?></h1>
-
-                        <div class="tab-pane fade show " id="devicesinfo" role="tabpanel" aria-labelledby="devicesinfo-tab">
-                            <div class="devicesinfo col-full">
-
-                                <div class="clear clear-fix"></div>
-                                <div class="sml-sep"></div>
-                                <div class="slm_ajax_msg"></div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="max_allowed_domains"><?php _e('Maximum Allowed Domains','softwarelicensemanager'); ?></label>
-                                        <input name="max_allowed_domains" class="form-control" type=" text" id="max_allowed_domains" value="<?php echo $max_domains; ?>" />
-                                        <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used','softwarelicensemanager'); ?></small>
-                                        <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DOMAIN, 'Domains', 'Domains'); ?>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="max_allowed_devices"><?php _e('Maximum Allowed Devices','softwarelicensemanager'); ?></label>
-                                        <input name="max_allowed_devices" class="form-control" type="text" id="max_allowed_devices" value="<?php echo $max_devices; ?>" />
-                                        <small class="form-text text-muted"><?php _e('Number of domains/installs in which this license can be used','softwarelicensemanager'); ?></small>
-                                        <?php SLM_Utility::get_license_activation($license_key, SLM_TBL_LIC_DEVICES, 'Devices', 'Devices'); ?>
-                                    </div>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-
-                        <script type="text/javascript">
-                            jQuery(document).ready(function() {
-                                jQuery(document).ready(function() {
-                                    jQuery('.deactivate_lic_key').click(function(event) {
-                                        var id = jQuery(this).attr("id");
-                                        var activation_type = jQuery(this).attr('data-activation_type');
-                                        var class_name = '.lic-entry-' + id;
-
-                                        jQuery(this).text('Removing');
-                                        jQuery.get('<?php echo esc_url(home_url('/')); ?>' + 'wp-admin/admin-ajax.php?action=del_activation&id=' + id + '&activation_type=' + activation_type, function(data) {
-                                            if (data == 'success') {
-                                                jQuery(class_name).remove();
-                                                jQuery('.slm_ajax_msg').html('<div class="alert alert-primary" role="alert"> License key was deactivated! </div>');
-                                            } else {
-                                                jQuery('.slm_ajax_msg').html('<div class="alert alert-danger" role="alert"> License key was not deactivated! </div>');
-                                            }
-                                        });
-                                    });
-                                });
-                            });
-                        </script>
-                    <?php endif; ?>
-
-
-
-                    <?php
-                    break;
+                <?php
+                break;
 
                 default: ?>
                     <form method="post" action="" id="slm_license_form">

@@ -137,10 +137,10 @@ class SLM_API_Utility
     public static function insert_license_data_internal($fields)
     {
         global $wpdb;
-        $tbl_name = SLM_TBL_LICENSE_KEYS;
+        $slm_lic_table = SLM_TBL_LICENSE_KEYS;
         $fields = array_filter($fields); // Remove any null values.
 
-        $wpdb->insert($tbl_name, $fields);
+        $wpdb->insert($slm_lic_table, $fields);
     }
 }
 
@@ -279,11 +279,11 @@ class SLM_Utility
     {
         global $wpdb;
         $current_date = current_time('Y-m-d');
-        $tbl_name = SLM_TBL_LICENSE_KEYS;
+        $slm_lic_table = SLM_TBL_LICENSE_KEYS;
 
         // Load the non-expired keys
         $licenses = $wpdb->get_results(
-            $wpdb->prepare("SELECT * FROM $tbl_name WHERE lic_status != %s", 'expired'),
+            $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE lic_status != %s", 'expired'),
             OBJECT
         );
 
@@ -309,7 +309,7 @@ class SLM_Utility
                 SLM_Debug_Logger::log_debug_st("This key (" . $key . ") has expired. Expiry date: " . $expiry_date . ". Setting license key status to expired.");
                 $data = array('lic_status' => 'expired');
                 $where = array('id' => intval($license->id));
-                $updated = $wpdb->update($tbl_name, $data, $where);
+                $updated = $wpdb->update($slm_lic_table, $data, $where);
 
                 do_action('slm_license_key_expired', $license->id);
                 self::check_for_expired_lic($key);
@@ -664,12 +664,12 @@ class SLM_Utility
     {
         global $slm_debug_logger;
         global $wpdb;
-        $reg_table = SLM_TBL_LIC_DOMAIN;
-        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key_id = %s", $key_row_id);
+        $reg_domain_table = SLM_TBL_LIC_DOMAIN;
+        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_domain_table WHERE lic_key_id = %s", $key_row_id);
         $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
         foreach ($reg_domains as $domain) {
             $row_to_delete = $domain->id;
-            $wpdb->delete($reg_table, array('id' => $row_to_delete));
+            $wpdb->delete($reg_domain_table, array('id' => $row_to_delete));
             $slm_debug_logger->log_debug("Registered domain with row id (" . $row_to_delete . ") deleted.");
         }
     }

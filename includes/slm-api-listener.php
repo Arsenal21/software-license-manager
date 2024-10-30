@@ -54,7 +54,7 @@ class SLM_API_Listener
     function creation_api_listener() {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_create_new') {
             global $slm_debug_logger, $wpdb;
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
+            $slm_lic_table = SLM_TBL_LICENSE_KEYS;
             $options = get_option('slm_plugin_options');
             $lic_key_prefix = $options['lic_prefix'] ?? 'SLM-'; // Use default prefix if missing
     
@@ -117,7 +117,7 @@ class SLM_API_Listener
             }
     
             // Insert the license into the database
-            $result = $wpdb->insert($tbl_name, $fields);
+            $result = $wpdb->insert($slm_lic_table, $fields);
     
             // Error handling for database insertion
             if ($result === false) {
@@ -147,41 +147,39 @@ class SLM_API_Listener
     function activation_api_listener() {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_activate') {
             global $slm_debug_logger, $wpdb;
+            $sql_prep1 = "";
             $options = get_option('slm_plugin_options');
     
             // Verify secret key first for security
             SLM_API_Utility::verify_secret_key();
-    
-            // Log the activation request for debugging
-            $slm_debug_logger->log_debug("API - license activation (slm_activate) request received.");
     
             // Trigger action hook for external integrations
             do_action('slm_api_listener_slm_activate');
     
             // Initialize fields
             $fields = [];
-            $fields['lic_key'] = sanitize_text_field($_REQUEST['license_key']);
-            $registered_domain = isset($_REQUEST['registered_domain']) ? sanitize_text_field($_REQUEST['registered_domain']) : '';
-            $registered_devices = isset($_REQUEST['registered_devices']) ? sanitize_text_field($_REQUEST['registered_devices']) : '';
-            $item_reference = isset($_REQUEST['item_reference']) ? sanitize_text_field($_REQUEST['item_reference']) : '';
-    
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Domain: " . $registered_domain);
-            $slm_debug_logger->log_debug("License key: " . $fields['lic_key'] . " Device: " . $registered_devices);
+            $fields['lic_key']      = sanitize_text_field($_REQUEST['license_key']);
+            $registered_domain      = isset($_REQUEST['registered_domain']) ? sanitize_text_field($_REQUEST['registered_domain']) : '';
+            $registered_devices     = isset($_REQUEST['registered_devices']) ? sanitize_text_field($_REQUEST['registered_devices']) : '';
+            $item_reference         = isset($_REQUEST['item_reference']) ? sanitize_text_field($_REQUEST['item_reference']) : '';
+
     
             // Table names
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
-            $reg_table = SLM_TBL_LIC_DOMAIN;
-            $reg_table_devices = SLM_TBL_LIC_DEVICES;
+            $slm_lic_table      = SLM_TBL_LICENSE_KEYS;
+            $reg_domain_table   = SLM_TBL_LIC_DOMAIN;
+            $reg_table_devices  = SLM_TBL_LIC_DEVICES;
     
             // Check if multiple items need verification
             if (!empty($item_reference) && $options['slm_multiple_items'] == 1) {
-                $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s AND item_reference = %s", $fields['lic_key'], $item_reference);
+                $sql_prep1 = $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE license_key = %s AND item_reference = %s", $fields['lic_key'], $item_reference);
             } else {
-                $sql_prep1 = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $fields['lic_key']);
+                $sql_prep1 = $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE license_key = %s", $fields['lic_key']);
             }
-    
+
             // Get the license details from the database
             $retLic = $wpdb->get_row($sql_prep1, OBJECT);
+
+            
             if (!$retLic) {
                 $args = ['result' => 'error', 'message' => 'Invalid license key, key was not found.', 'error_code' => SLM_Error_Codes::LICENSE_INVALID];
                 SLM_API_Utility::output_api_response($args);
@@ -202,17 +200,19 @@ class SLM_API_Listener
     
             // Handling registered domains
             if (!empty($registered_domain)) {
-                $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $fields['lic_key']);
+                $sql_prep2 = $wpdb->prepare("SELECT * FROM $reg_domain_table WHERE lic_key = %s", $fields['lic_key']);
                 $reg_domains = $wpdb->get_results($sql_prep2, OBJECT);
     
                 if (count($reg_domains) < intval($retLic->max_allowed_domains)) {
                     foreach ($reg_domains as $reg_domain) {
+
                         // Handle domain migration
                         if (!empty($_REQUEST['migrate_from']) && $reg_domain->registered_domain === sanitize_text_field($_REQUEST['migrate_from'])) {
-                            $wpdb->update($reg_table, ['registered_domain' => $registered_domain], ['registered_domain' => sanitize_text_field($_REQUEST['migrate_from'])]);
+                            $wpdb->update($reg_domain_table, ['registered_domain' => $registered_domain], ['registered_domain' => sanitize_text_field($_REQUEST['migrate_from'])]);
                             $args = ['result' => 'success', 'message' => 'Registered domain has been updated'];
                             SLM_API_Utility::output_api_response($args);
                         }
+
                         // Check if the domain is already in use
                         if ($reg_domain->registered_domain === $registered_domain) {
                             $args = [
@@ -226,13 +226,22 @@ class SLM_API_Listener
                             SLM_API_Utility::output_api_response($args);
                         }
                     }
+
                     // Register new domain
+                    // If the registered domain is provided, add it to the fields
+                    $fields['registered_domain'] = $registered_domain;
+
+                    // Assuming $retLic->id contains the license key ID, add it to the fields
                     $fields['lic_key_id'] = $retLic->id;
-                    $wpdb->insert($reg_table, $fields);
+
+                    // Insert into the registered domain table
+                    $wpdb->insert($reg_domain_table, $fields);
     
                     // Update license status to active
                     $current_date = wp_date('Y-m-d');
-                    $wpdb->update($tbl_name, ['lic_status' => 'active', 'date_activated' => $current_date], ['id' => $retLic->id]);
+                    $wpdb->update($slm_lic_table, ['lic_status' => 'active', 'date_activated' => $current_date], ['id' => $retLic->id]);
+
+                    //SLM_Helper_Class::write_log('LOG: ' . $url);
     
                     // Send activation email
                     $lic_email = SLM_Utility::slm_get_lic_email($fields['lic_key']);
@@ -251,8 +260,15 @@ class SLM_API_Listener
                     ];
                     SLM_Utility::create_log($fields['lic_key'], 'License key activated for domain ' . $registered_domain);
                     SLM_API_Utility::output_api_response($args);
-                } else {
-                    $args = ['result' => 'error', 'message' => 'Reached maximum allowable domains', 'error_code' => SLM_Error_Codes::REACHED_MAX_DOMAINS];
+                    
+                }
+
+                else {
+                    $args = [
+                        'result' => 'error', 
+                        'message' => 'Reached maximum allowable domains', 
+                        'error_code' => SLM_Error_Codes::REACHED_MAX_DOMAINS
+                    ];
                     SLM_Utility::create_log($fields['lic_key'], 'Reached maximum allowable domains');
                     SLM_API_Utility::output_api_response($args);
                 }
@@ -283,12 +299,18 @@ class SLM_API_Listener
                     }
     
                     // Register new device
+                    // If the registered device is provided, add it to the fields
+                    $fields['registered_devices'] = $registered_devices;
+
+                    // Assuming $retLic->id contains the license key ID, add it to the fields
                     $fields['lic_key_id'] = $retLic->id;
+
+                    // Insert into the registered device table
                     $wpdb->insert($reg_table_devices, $fields);
     
                     // Update license status
                     $current_date = wp_date('Y-m-d');
-                    $wpdb->update($tbl_name, ['lic_status' => 'active', 'date_activated' => $current_date], ['id' => $retLic->id]);
+                    $wpdb->update($slm_lic_table, ['lic_status' => 'active', 'date_activated' => $current_date], ['id' => $retLic->id]);
     
                     // Send activation email
                     $lic_email = SLM_Utility::slm_get_lic_email($fields['lic_key']);
@@ -306,7 +328,9 @@ class SLM_API_Listener
                     ];
                     SLM_Utility::create_log($fields['lic_key'], 'License key activated for device ' . $registered_devices);
                     SLM_API_Utility::output_api_response($args);
-                } else {
+                }
+                
+                else {
                     $args = [
                         'result' => 'error',
                         'icon_url' => SLM_Utility::slm_get_icon_url('1x', 'f-remove.png'),
@@ -335,8 +359,7 @@ class SLM_API_Listener
             $license_key = sanitize_text_field($_REQUEST['license_key']);
             $registered_domain = isset($_REQUEST['registered_domain']) ? sanitize_text_field($_REQUEST['registered_domain']) : '';
             $registered_devices = isset($_REQUEST['registered_devices']) ? sanitize_text_field($_REQUEST['registered_devices']) : '';
-    
-            $slm_debug_logger->log_debug("License key: " . $license_key . " Domain: " . $registered_domain);
+
     
             // Handle domain deactivation if domain info is provided
             if (!empty($registered_domain)) {
@@ -450,9 +473,9 @@ class SLM_API_Listener
             }
     
             // Update the license in the database
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
+            $slm_lic_table = SLM_TBL_LICENSE_KEYS;
             $where_clause = array('license_key' => $fields['license_key']);
-            $update_result = $wpdb->update($tbl_name, $fields, $where_clause);
+            $update_result = $wpdb->update($slm_lic_table, $fields, $where_clause);
     
             // Handle update result
             if ($update_result === false) {
@@ -504,17 +527,17 @@ class SLM_API_Listener
             do_action('slm_api_listener_slm_check');
     
             // Query license key details
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
-            $reg_table = SLM_TBL_LIC_DOMAIN;
+            $slm_lic_table = SLM_TBL_LICENSE_KEYS;
+            $reg_domain_table = SLM_TBL_LIC_DOMAIN;
             $reg_table_devices = SLM_TBL_LIC_DEVICES;
     
             // Retrieve the license key details from the database
-            $license_query = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $license_key);
+            $license_query = $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE license_key = %s", $license_key);
             $retLic = $wpdb->get_row($license_query, OBJECT);
     
             if ($retLic) {
                 // If the license exists, retrieve domain and device information
-                $domain_query = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $license_key);
+                $domain_query = $wpdb->prepare("SELECT * FROM $reg_domain_table WHERE lic_key = %s", $license_key);
                 $device_query = $wpdb->prepare("SELECT * FROM $reg_table_devices WHERE lic_key = %s", $license_key);
     
                 $registered_domains = $wpdb->get_results($domain_query, OBJECT);
@@ -586,16 +609,16 @@ class SLM_API_Listener
             do_action('slm_api_listener_slm_info');
     
             // Fetch license details from the database
-            $tbl_name = SLM_TBL_LICENSE_KEYS;
-            $reg_table = SLM_TBL_LIC_DOMAIN;
+            $slm_lic_table = SLM_TBL_LICENSE_KEYS;
+            $reg_domain_table = SLM_TBL_LIC_DOMAIN;
             $reg_table_devices = SLM_TBL_LIC_DEVICES;
     
-            $license_query = $wpdb->prepare("SELECT * FROM $tbl_name WHERE license_key = %s", $license_key);
+            $license_query = $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE license_key = %s", $license_key);
             $retLic = $wpdb->get_row($license_query, OBJECT);
     
             if ($retLic) {
                 // If the license exists, fetch associated domains and devices
-                $domain_query = $wpdb->prepare("SELECT * FROM $reg_table WHERE lic_key = %s", $license_key);
+                $domain_query = $wpdb->prepare("SELECT * FROM $reg_domain_table WHERE lic_key = %s", $license_key);
                 $device_query = $wpdb->prepare("SELECT * FROM $reg_table_devices WHERE lic_key = %s", $license_key);
     
                 $registered_domains = $wpdb->get_results($domain_query, OBJECT);

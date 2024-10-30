@@ -1,16 +1,16 @@
 <?php
 /*
 Plugin Name: SLM Plus
-Version: 6.1.0
+Version: 6.1.1
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://github.com/michelve/
 Description: A comprehensive software license management solution for web applications including WordPress plugins, themes, and PHP-based software. Seamlessly integrates with WooCommerce to offer license key generation, management, and validation. Ideal for developers managing software licenses across multiple platforms with built-in multilingual support and performance optimization.
 Text Domain: slmplus
 Domain Path: /i18n/languages/
-WC tested up to: 6.6.3
+WC tested up to: 6.7
 Requires at least: 5.6
-Stable tag: 6.6.2
+Stable tag: 6.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -32,9 +32,9 @@ add_action('plugins_loaded', 'slmplus_load_textdomain');
 global $wpdb, $slm_debug_logger;
 
 // Define constants for plugin paths, URLs, and database tables
-define('SLM_VERSION',               '6.1.0');
-define('SLM_DB_VERSION',            '5.0.3');
-define('SLM_REWRITE_VERSION',       '3.0.3');
+define('SLM_VERSION',               '6.1.1');
+define('SLM_DB_VERSION',            '5.0.4');
+define('SLM_REWRITE_VERSION',       '3.0.4');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL . '/public/assets/');
@@ -80,6 +80,7 @@ define('SLM_DEFAULT_MAX_DEVICES', SLM_API_Utility::get_slm_option('default_max_d
 // Use native WordPress function for setting options
 define('WOO_SLM_API_SECRET',    SLM_API_Utility::get_slm_option('lic_creation_secret'));
 define('KEY_API',               SLM_API_Utility::get_slm_option('lic_creation_secret'));
+define('VERIFY_KEY_API',        SLM_API_Utility::get_slm_option('lic_verification_secret'));
 define('KEY_API_PREFIX',        SLM_API_Utility::get_slm_option('lic_prefix'));
 
 
