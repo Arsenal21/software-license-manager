@@ -69,6 +69,7 @@ if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocom
 
     require_once SLM_WOO . 'includes/register-template.php';
 	require_once SLM_WOO . 'includes/purchase.php';
+    require_once SLM_WOO . 'includes/create-license-orders.php';
 
     // Build WooCommerce tabs
     SLM_Utility::slm_woo_build_tab();

@@ -145,16 +145,21 @@ dbDelta($ldv_tbl_sql);
 // Add new options if they don't exist and preserve old settings
 $new_options = array(
     'lic_creation_secret' => SLM_Utility::create_secret_keys(),
+    'lic_verification_secret' => SLM_Utility::create_secret_keys(),
     'lic_prefix' => 'SLM-',
     'default_max_domains' => '2',
     'default_max_devices' => '2',
-    'lic_verification_secret' => SLM_Utility::create_secret_keys(),
     'enable_debug' => '',
     'slm_woo' => '1',
+    'license_current_version' => '1.0.0',
+    'license_until_version' => '2.1.0',
+    'slm_wc_lic_generator' => '1',
     'slm_woo_downloads' => '',
     'slm_woo_affect_downloads' => '1',
     'slm_wpestores' => '',
     'slm_stats' => '1',
+    'slm_billing_length' => '1',
+    'slm_billing_interval' => 'years',
     'slm_adminbar' => '1',
     'slm_multiple_items' => '',
     'slm_conflictmode' => '1',
@@ -184,4 +189,3 @@ if (!file_exists($backup_dir_path)) {
 
 // Update the database version
 update_option("slm_db_version", SLM_DB_VERSION);
-

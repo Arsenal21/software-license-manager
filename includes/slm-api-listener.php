@@ -508,7 +508,6 @@ class SLM_API_Listener
         }
     }
     
-
     function check_api_listener()
     {
         if (isset($_REQUEST['slm_action']) && trim($_REQUEST['slm_action']) === 'slm_check') {
@@ -588,7 +587,6 @@ class SLM_API_Listener
             }
         }
     }
-    
 
     function check_api_info()
     {
@@ -666,5 +664,4 @@ class SLM_API_Listener
             }
         }
     }
-    
 }

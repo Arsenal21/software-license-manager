@@ -11,7 +11,7 @@ function slm_admin_tools_menu()
     }
 
     echo '<div class="wrap">';
-    echo '<h2 class="imgh2">'. __('Admin Tools', 'slmplus') . '</h2>';
+    echo '<h2 class="imgh2">'. __('SLM Plus Tools', 'slmplus') . '</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
     if (isset($_POST['send_deactivation_request'])) {
@@ -92,6 +92,103 @@ function slm_admin_tools_menu()
             ?>
         </div>
     </div>
+
+    <div class="postbox">
+        <h3 class="hndle"><label for="title"><?php _e('Generate License for WooCommerce Orders', 'slmplus'); ?></label></h3>
+        <div class="inside">
+            <p class="notice notice-error" style="padding: 10px; margin-top: 5px;">
+                <?php _e('This tool generates bulk licenses for WooCommerce orders placed before the plugin was activated or for orders that lack existing licenses.', 'slmplus'); ?>
+                <strong><?php _e('Warning:', 'slmplus'); ?></strong>
+                <?php _e('This action cannot be undone. Please back up your database before proceeding.', 'slmplus'); ?>
+            </p>
+
+            <form id="generate_licenses_form" method="post">
+                <?php wp_nonce_field('slm_generate_licenses_nonce', 'slm_generate_licenses_nonce_field'); ?>
+                <div class="slm_tools submit">
+                    <?php $slm_wc_lic_generator = SLM_API_Utility::get_slm_option('slm_wc_lic_generator'); ?>
+                    <table>
+
+                        <tr valign="top">
+                            <th scope="row"><label for="slm_product_id"><?php _e('Product ID', 'slmplus'); ?></label></th>
+                            <td>
+                                <input type="text" id="slm_product_id" name="slm_product_id" class="regular-text" placeholder="<?php _e('Enter Product ID', 'slmplus'); ?>" />
+                                <p class="description"><?php _e('Specify the default product ID for license generation.', 'slmplus'); ?></p>
+                            </td>
+                        </tr>
+
+                        <tr valign="top">
+                            <th scope="row"><label for="subscription_type"><?php _e('Subscription Type', 'slmplus'); ?></label></th>
+                            <td>
+                                <select id="subscription_type" name="subscription_type" class="regular-select">
+                                    <option value="subscription"><?php _e('Subscription', 'slmplus'); ?></option>
+                                    <option value="lifetime"><?php _e('Lifetime', 'slmplus'); ?></option>
+                                </select>
+                                <p class="description"><?php _e('Select the type of license for the order.', 'slmplus'); ?></p>
+                            </td>
+                        </tr>
+
+                        <tr valign="top">
+                            <td>
+                                <!-- Generate Licenses Button -->
+                                <input type="button" id="generate_licenses" value="<?php _e('Generate Licenses', 'slmplus'); ?>" class="button" <?php echo $slm_wc_lic_generator == '1' ? '' : 'disabled'; ?> />
+                                <?php if ($slm_wc_lic_generator != '1'): ?>
+                                    <!-- Message if option is not enabled -->
+                                    <p class="notice notice-info" style="padding: 10px; margin-top: 5px;">
+                                        <?php _e('Please enable the WooCommerce License Generator option to activate the Generate Licenses tool.', 'slmplus'); ?>
+                                    </p>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+
+            <div id="license-generation-result">
+                <h4><?php _e('License Generation Results:', 'slmplus'); ?></h4>
+                <ul id="license-result-list"></ul>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('#generate_licenses').click(function() {
+                $('#license-result-list').html(''); // Clear previous results
+
+                // Collect values from the form fields
+                var data = {
+                    action: 'slm_generate_licenses',
+                    security: $('#generate_licenses_form input[name="slm_generate_licenses_nonce_field"]').val(),
+                    slm_product_id: $('#slm_product_id').val(),           // Product ID field
+                    subscription_type: $('#subscription_type').val()      // Subscription type field
+                };
+
+
+                // Log the full URL being requested
+                var fullUrl = ajaxurl + '?' + $.param(data); // Build full URL with query parameters
+                console.log('Full AJAX URL: ' + fullUrl);    // Log the full URL
+
+                // Log the full data object being sent
+                console.log('Full data being sent: ', JSON.stringify(data, null, 2));
+
+                // Perform AJAX request
+                $.post(ajaxurl, data, function(response) {
+                    console.log('AJAX response:', response); // Log the response to check success/failure
+                    if (response.success) {
+                        $('#license-result-list').html(response.data.html); // Display the generated list of licenses
+                        alert('<?php _e('Licenses generated successfully!', 'slmplus'); ?>');
+                    } else {
+                        alert('<?php _e('Some licenses failed to generate.', 'slmplus'); ?>');
+                    }
+                }).fail(function(xhr, status, error) {
+                    console.error('AJAX error:', status, error); // Log any AJAX errors in the browser console
+                    alert('<?php _e('There was an error processing the request.', 'slmplus'); ?>');
+                });
+            });
+        });
+    </script>
+
 
     <?php
     echo '</div></div>';

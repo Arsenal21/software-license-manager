@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: SLM Plus
-Version: 6.1.1
+Version: 6.1.3
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://github.com/michelve/
@@ -32,9 +32,9 @@ add_action('plugins_loaded', 'slmplus_load_textdomain');
 global $wpdb, $slm_debug_logger;
 
 // Define constants for plugin paths, URLs, and database tables
-define('SLM_VERSION',               '6.1.1');
-define('SLM_DB_VERSION',            '5.0.4');
-define('SLM_REWRITE_VERSION',       '3.0.4');
+define('SLM_VERSION',               '6.1.3');
+define('SLM_DB_VERSION',            '5.0.9');
+define('SLM_REWRITE_VERSION',       '3.0.5');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
 define('SLM_ASSETS_URL',            SLM_URL . '/public/assets/');
@@ -58,6 +58,7 @@ define('SLM_TBL_LICENSE_STATUS',    $wpdb->prefix . "lic_status_tbl");
 define('SLM_MANAGEMENT_PERMISSION', 'manage_options');
 define('SLM_MAIN_MENU_SLUG',        'slm_overview');
 define('SLM_MENU_ICON',             'dashicons-lock');
+define('SLM_API_URL',               SLM_SITE_URL);
 
 // Load core plugin functionalities
 if (file_exists(SLM_LIB . 'slm-plugin-core.php')) {

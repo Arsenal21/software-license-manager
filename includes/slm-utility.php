@@ -114,7 +114,7 @@ class SLM_API_Utility
     {
         $slm_options_func =  get_option('slm_plugin_options', []);
         $option = $slm_options_func[$option];
-        return $option;
+        return sanitize_text_field($option);
     }
 
 

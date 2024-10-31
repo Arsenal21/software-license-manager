@@ -21,10 +21,6 @@ $slm_options = get_option('slm_plugin_options');
 $affect_downloads = isset($slm_options['slm_woo_affect_downloads']) && $slm_options['slm_woo_affect_downloads'] == '1';
 
 // Hooks for WooCommerce Integration
-
-// Display license metadata after billing address in admin order page
-add_action('woocommerce_admin_order_data_after_billing_address', 'slm_add_lic_key_meta_display', 10, 1);
-
 // Add license management for orders that are marked as completed
 add_action('woocommerce_order_status_completed', 'slm_order_completed', 81);
 
@@ -256,8 +252,13 @@ function wc_slm_create_license_keys($order_id)
                         'until' => $_license_until_version
                     );
                     $item_id = $values->get_id();
-                    wc_add_order_item_meta($item_id, '_slm_lic_key', $license_key);
-                    wc_add_order_item_meta($item_id, '_slm_lic_type', $license_type);
+                    // Store license details for the product in the order item meta
+                    wc_add_order_item_meta($item_id, '_slm_lic_key', sanitize_text_field($license_key));
+                    wc_add_order_item_meta($item_id, '_slm_lic_type', sanitize_text_field($license_type));
+                    wc_add_order_item_meta($item_id, 'Current Version: ', sanitize_text_field($_license_current_version));
+                    wc_add_order_item_meta($item_id, 'Until Version:', sanitize_text_field($_license_until_version));
+                    wc_add_order_item_meta($item_id, 'Max Devices', sanitize_text_field($amount_of_licenses_devices));
+                    wc_add_order_item_meta($item_id, 'Max Domains', sanitize_text_field($sites_allowed));
                 }
             }
         }
@@ -266,9 +267,9 @@ function wc_slm_create_license_keys($order_id)
     // If licenses were successfully generated, add a payment note
     if (count($licenses) > 0) {
         wc_slm_payment_note($order_id, $licenses);
+       //slm_add_lic_key_meta_update($order_id, $licenses);
     }
 }
-
 
 
 function wc_slm_get_license_key($response) 
@@ -634,76 +635,6 @@ function slm_order_completed($order_id)
     }
 }
 
-/**
- * Update the Order Meta with Custom License Fields
- * 
- * @param int $order_id The WooCommerce Order ID.
- * @return void
- */
-function slm_add_lic_key_meta_update($order_id) {
-    // Get the order object from the order ID
-    $order = wc_get_order($order_id);
-    
-    if (!$order) {
-       // SLM_Helper_Class::write_log('Order not found for order ID: ' . $order_id);
-        return;
-    }
-
-    // Debug to check if the function is called
-   // SLM_Helper_Class::write_log('slm_add_lic_key_meta_update called for order ID: ' . $order->get_id());
-
-    $fields = [
-        'slm_wc_license_order_key',
-        'slm_wc_license_expires',
-        'slm_wc_license_type',
-        'slm_wc_license_status',
-        'slm_wc_license_item_ref',
-        'slm_wc_license_version',
-    ];
-
-    foreach ($fields as $field) {
-        if (!empty($_POST[$field])) {
-            $order->update_meta_data($field, sanitize_text_field($_POST[$field]));
-           // SLM_Helper_Class::write_log('Added meta: ' . $field . ' with value: ' . sanitize_text_field($_POST[$field]));
-        } else {
-           // SLM_Helper_Class::write_log('Field ' . $field . ' not found in POST data.');
-        }
-    }
-    
-    // Save the order metadata changes
-    $order->save();
-}
-add_action('woocommerce_payment_complete', 'slm_add_lic_key_meta_update', 10, 1);
-
-
-/**
- * Display License Key Information on the Admin Order Edit Page
- * 
- * @param WC_Order $order The WooCommerce Order object.
- * @return void
- */
-function slm_add_lic_key_meta_display($order)
-{
-    // Meta keys for License Information
-    $meta_fields = [
-        'slm_wc_license_order_key' => __('License Key', 'slmplus'),
-        'slm_wc_license_expires' => __('License Expiration', 'slmplus'),
-        'slm_wc_license_type' => __('License Type', 'slmplus'),
-        'slm_wc_license_item_ref' => __('License Item Reference', 'slmplus'),
-        'slm_wc_license_status' => __('License Status', 'slmplus'),
-        'slm_wc_license_version' => __('License Current Version', 'slmplus'),
-        'slm_wc_until_version' => __('Supported Until Version', 'slmplus'),
-    ];
-
-    // Display license details if they are available
-    foreach ($meta_fields as $meta_key => $label) {
-        $meta_value = get_post_meta($order->get_id(), $meta_key, true);
-        if (!empty($meta_value)) {
-            echo '<p><strong>' . esc_html($label) . ':</strong> <br/>' . esc_html($meta_value) . '</p>';
-        }
-    }
-}
-add_action('woocommerce_admin_order_data_after_order_details', 'slm_add_lic_key_meta_display');
 
 /**
  * Display License Details on the Order Details Page for Customers
