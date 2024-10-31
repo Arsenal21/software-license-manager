@@ -146,7 +146,7 @@ msgid "Date Expiry"
 msgstr ""
 
 #: admin/slm-add-licenses.php:194
-msgid "Subscription ID"
+msgid "Subscriber ID"
 msgstr ""
 
 #: admin/slm-add-licenses.php:198

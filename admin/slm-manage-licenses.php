@@ -33,7 +33,7 @@ function slm_manage_licenses_menu()
     <div class="stats">
     </div>
     <div class="wrap">
-        <h1><?php _e('Overview - Manage licenses', 'slmplus'); ?></h1>
+        <h1><?php _e('SLM Plus - Manage Licenses', 'slmplus'); ?></h1>
         <br>
         <a href="<?php echo admin_url('admin.php?page=slm_manage_license') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'slmplus'); ?></a>
 

@@ -407,42 +407,31 @@ public static function export_license_data($license_ids)
 
     function prepare_items()
     {
-
+        global $wpdb;
         $user = get_current_user_id();
         $screen = get_current_screen();
         $option = $screen->get_option('per_page', 'option');
-
         $per_page = get_user_meta($user, $option, true);
 
         if (empty($per_page) || $per_page < 1) {
             $per_page = $screen->get_option('per_page', 'default');
         }
-
         $columns        = $this->get_columns();
         // $hidden         = array();
         $hidden         = get_hidden_columns( $screen );
         $sortable       = $this->get_sortable_columns();
-
         $this->_column_headers = array($columns, $hidden, $sortable);
         $this->process_bulk_action();
-
-        global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
-
         $search = (isset($_REQUEST['s'])) ? $_REQUEST['s'] : false;
         $search_term = trim(strip_tags($search));
-
         $do_search = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `lic_status` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
-
         $data = $wpdb->get_results($do_search, ARRAY_A);
-
         usort($data, array(&$this, 'sort_data'));
-
         $current_page   = $this->get_pagenum();
         $total_items    = count($data);
         $data           = array_slice($data, (($current_page - 1) * $per_page), $per_page);
         $this->items    = $data;
-
         $this->set_pagination_args(array(
             'total_items' => $total_items,                  //WE have to calculate the total number of items
             'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
@@ -453,7 +442,6 @@ public static function export_license_data($license_ids)
 
 class SLM_Plugin
 {
-
     // class instance
     static $instance;
 
@@ -475,21 +463,16 @@ class SLM_Plugin
     public function slm_add_admin_menu()
     {
         $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
-
-        add_menu_page(__( 'SLM', 'slmplus'), __( 'SLM', 'slmplus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
+        add_menu_page(__( 'SLM Plus', 'slmplus'), __( 'SLM Plus', 'slmplus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
         $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, __('Manage Licenses', 'slmplus'), __('Manage Licenses', 'slmplus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
-
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Create license', 'slmplus'), __( 'Create license', 'slmplus') , SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Subscribers', 'slmplus'), __( 'Subscribers', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Tools', 'slmplus'), __( 'Tools', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Settings', 'slmplus'), __( 'Settings', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Help', 'slmplus'), __( 'Help', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
-
         add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'About', 'slmplus'),__( 'About', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
-
         add_action("load-" . $hook, [$this, 'screen_option']);
     }
-
 
     /**
      * Screen options
@@ -514,8 +497,6 @@ class SLM_Plugin
 
         return self::$instance;
     }
-
-
 }
 
 add_action('plugins_loaded', function () {

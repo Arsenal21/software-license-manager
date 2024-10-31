@@ -65,12 +65,11 @@ if (file_exists(SLM_LIB . 'slm-plugin-core.php')) {
     require_once SLM_LIB . 'slm-plugin-core.php';
 }
 
-function slm_settings_link($links)
-{
+function slm_settings_link($links){
     $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=slm_settings')) . '">' . __('Settings') . '</a>';
-    $github_link = '<a href="' . esc_url('https://github.com/michelve/software-license-manager') . '" target="_blank">' . __('GitHub') . '</a>';
+   // $github_link = '<a href="' . esc_url('https://github.com/michelve/software-license-manager') . '" target="_blank">' . __('GitHub') . '</a>';
     $links[] = $settings_link;
-    $links[] = $github_link;
+    //$links[] = $github_link;
     return $links;
 }
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'slm_settings_link');
@@ -83,7 +82,6 @@ define('WOO_SLM_API_SECRET',    SLM_API_Utility::get_slm_option('lic_creation_se
 define('KEY_API',               SLM_API_Utility::get_slm_option('lic_creation_secret'));
 define('VERIFY_KEY_API',        SLM_API_Utility::get_slm_option('lic_verification_secret'));
 define('KEY_API_PREFIX',        SLM_API_Utility::get_slm_option('lic_prefix'));
-
 
 // Auto-updater integration for GitHub updates
 if (file_exists('plugin-update-checker/plugin-update-checker.php')) {

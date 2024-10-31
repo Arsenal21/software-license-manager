@@ -33,15 +33,10 @@
  */
 
 
-class SLM_API_Listener
-{
-    function __construct()
-    {
+class SLM_API_Listener{
+    function __construct(){
         if (isset($_REQUEST['slm_action']) && isset($_REQUEST['secret_key'])) {
-
-            //Trigger an action hook
             do_action('slm_api_listener_init');
-
             $this->creation_api_listener();
             $this->activation_api_listener();
             $this->deactivation_api_listener();

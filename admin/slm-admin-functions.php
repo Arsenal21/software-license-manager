@@ -11,7 +11,7 @@ function slm_admin_tools_menu()
     }
 
     echo '<div class="wrap">';
-    echo '<h2 class="imgh2">'. __('SLM Plus Tools', 'slmplus') . '</h2>';
+    echo '<h2 class="imgh2">'. __('SLM Plus - Tools', 'slmplus') . '</h2>';
     echo '<div id="poststuff"><div id="post-body">';
 
     if (isset($_POST['send_deactivation_request'])) {
@@ -111,7 +111,7 @@ function slm_admin_tools_menu()
                         <tr valign="top">
                             <th scope="row"><label for="slm_product_id"><?php _e('Product ID', 'slmplus'); ?></label></th>
                             <td>
-                                <input type="text" id="slm_product_id" name="slm_product_id" class="regular-text" placeholder="<?php _e('Enter Product ID', 'slmplus'); ?>" />
+                                <input type="text" id="slm_product_id" name="slm_product_id" class="regular-text" placeholder="<?php _e('Enter Product ID', 'slmplus'); ?>" required />
                                 <p class="description"><?php _e('Specify the default product ID for license generation.', 'slmplus'); ?></p>
                             </td>
                         </tr>
@@ -157,38 +157,52 @@ function slm_admin_tools_menu()
                 $('#license-result-list').html(''); // Clear previous results
 
                 // Collect values from the form fields
+                var productID = $('#slm_product_id').val();
+                var subscriptionType = $('#subscription_type').val();
+
+                // Validation: Check if fields are empty
+                if (!productID) {
+                    $('#license-result-list').html('<li><strong>Error:</strong> <?php _e("Product ID cannot be empty.", "slmplus"); ?></li>');
+                    alert('<?php _e("Product ID is required.", "slmplus"); ?>');
+                    return; // Stop submission if Product ID is empty
+                }
+                if (!subscriptionType) {
+                    $('#license-result-list').html('<li><strong>Error:</strong> <?php _e("Subscription Type cannot be empty.", "slmplus"); ?></li>');
+                    alert('<?php _e("Subscription Type is required.", "slmplus"); ?>');
+                    return; // Stop submission if Subscription Type is empty
+                }
+
+                // Prepare data for AJAX request after validation
                 var data = {
                     action: 'slm_generate_licenses',
                     security: $('#generate_licenses_form input[name="slm_generate_licenses_nonce_field"]').val(),
-                    slm_product_id: $('#slm_product_id').val(),           // Product ID field
-                    subscription_type: $('#subscription_type').val()      // Subscription type field
+                    slm_product_id: productID,
+                    subscription_type: subscriptionType
                 };
 
-
-                // Log the full URL being requested
-                var fullUrl = ajaxurl + '?' + $.param(data); // Build full URL with query parameters
-                console.log('Full AJAX URL: ' + fullUrl);    // Log the full URL
-
-                // Log the full data object being sent
-                console.log('Full data being sent: ', JSON.stringify(data, null, 2));
+                // Log the full URL and data being sent
+                var fullUrl = ajaxurl + '?' + $.param(data);
+                //console.log('Full AJAX URL: ' + fullUrl);
+                //console.log('Full data being sent: ', JSON.stringify(data, null, 2));
 
                 // Perform AJAX request
                 $.post(ajaxurl, data, function(response) {
-                    console.log('AJAX response:', response); // Log the response to check success/failure
+                    //console.log('AJAX response:', response);
                     if (response.success) {
-                        $('#license-result-list').html(response.data.html); // Display the generated list of licenses
+                        $('#license-result-list').html(response.data.html); 
                         alert('<?php _e('Licenses generated successfully!', 'slmplus'); ?>');
                     } else {
-                        alert('<?php _e('Some licenses failed to generate.', 'slmplus'); ?>');
+                        $('#license-result-list').html(response.data.html);
+                        alert('<?php _e('Some licenses failed to generate. Check the response for details.', 'slmplus'); ?>');
                     }
                 }).fail(function(xhr, status, error) {
-                    console.error('AJAX error:', status, error); // Log any AJAX errors in the browser console
+                    console.error('AJAX error:', status, error);
+                    $('#license-result-list').html('<li><strong>Error:</strong> <?php _e("There was an error processing the request. Please try again.", "slmplus"); ?></li>');
                     alert('<?php _e('There was an error processing the request.', 'slmplus'); ?>');
                 });
             });
         });
     </script>
-
 
     <?php
     echo '</div></div>';

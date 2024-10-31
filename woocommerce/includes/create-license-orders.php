@@ -17,18 +17,51 @@ function slm_generate_licenses_callback() {
     check_ajax_referer('slm_generate_licenses_nonce', 'security');
 
     global $wpdb;
-    $response_data = ['html' => ''];
-    $success_count = 0;
-    $failure_count = 0;
-    $skipped_orders = [];
+    $response_data      = ['html' => ''];
+    $success_count      = 0;
+    $failure_count      = 0;
+    $skipped_orders     = [];
+    $skipped_reasons    = [];
     $generated_licenses = [];
-    $skipped_reasons = [];
 
     // Retrieve Product ID and Subscription Type from the request
-    $default_product_id = isset($_POST['slm_product_id']) ? absint($_POST['slm_product_id']) : 38; // Fallback to 38 if not provided
-    $slm_lic_type = isset($_POST['subscription_type']) ? sanitize_text_field($_POST['subscription_type']) : 'subscription';
+    $default_product_id = isset($_POST['slm_product_id']) ? absint($_POST['slm_product_id']) : null;
+    $slm_lic_type = isset($_POST['subscription_type']) && in_array($_POST['subscription_type'], ['subscription', 'lifetime'])
+        ? sanitize_text_field($_POST['subscription_type'])
+        : 'subscription';
 
     SLM_Helper_Class::write_log("Starting license generation with Product ID: {$default_product_id} and License Type: {$slm_lic_type}.");
+
+    // Check if Product ID is missing; if so, log an error, add an error response, and exit.
+    if (empty($default_product_id)) {
+        SLM_Helper_Class::write_log('Error: Product ID is missing in the request.');
+
+        // Track failure and skip reason for the response
+        $failure_count++;
+        $skipped_orders[] = 0;
+        $skipped_reasons[0] = __('Product ID is missing in the request.', 'slmplus');
+
+        // Return early with a JSON error response for AJAX display
+        $response_data['html'] .= '<li><strong>Error:</strong> Product ID is missing in the request. Please provide a valid product ID.</li>';
+        wp_send_json_error($response_data);
+        return;
+    }
+
+    // Check if the Product ID corresponds to an existing WooCommerce product
+    $product = wc_get_product($default_product_id);
+    if (!$product) {
+        SLM_Helper_Class::write_log("Error: Product with ID $default_product_id does not exist in WooCommerce.");
+
+        // Track failure and skip reason for the response
+        $failure_count++;
+        $skipped_orders[] = 0;
+        $skipped_reasons[0] = __('The provided Product ID does not correspond to a valid WooCommerce product. Please check the ID and try again.', 'slmplus');
+
+        // Return early with a JSON error response for AJAX display
+        $response_data['html'] .= '<li><strong>Error:</strong> The provided Product ID does not correspond to a valid WooCommerce product. Please check the ID and try again.</li>';
+        wp_send_json_error($response_data);
+        return;
+    }
 
     // Query to get WooCommerce orders without a license key
     $orders_without_license = $wpdb->get_results("
@@ -66,8 +99,28 @@ function slm_generate_licenses_callback() {
         $slm_billing_interval = SLM_API_Utility::get_slm_option('slm_billing_interval');
         $subscr_id = $user_id;
 
-        // Calculate the expiry date based on billing interval and length
-        $date_expiry = date('Y-m-d', strtotime("+$slm_billing_interval $slm_billing_length", strtotime($date_created)));
+        // Check license type and set expiration date accordingly
+        if ($slm_lic_type === 'lifetime') {
+            $date_expiry = date('Y-m-d', strtotime("+120 years", strtotime($date_created)));
+        } else {
+            // Calculate expiration based on billing interval and length
+            switch ($slm_billing_interval) {
+                case 'years':
+                    $date_expiry = date('Y-m-d', strtotime("+$slm_billing_length years", strtotime($date_created)));
+                    break;
+                case 'months':
+                    $date_expiry = date('Y-m-d', strtotime("+$slm_billing_length months", strtotime($date_created)));
+                    break;
+                case 'days':
+                    $date_expiry = date('Y-m-d', strtotime("+$slm_billing_length days", strtotime($date_created)));
+                    break;
+                default:
+                    $date_expiry = $date_created;
+            }
+        }
+
+        SLM_Helper_Class::write_log("Interval: {$slm_billing_interval} - Length: {$slm_billing_length}");
+
         $order_items = $order->get_items();
 
         if (count($order_items) === 0) {
@@ -85,14 +138,12 @@ function slm_generate_licenses_callback() {
             $item->set_quantity(1);
             $item->set_total($product->get_price());
 
-            // Check if a license key already exists for this item
             if ($item->meta_exists('_slm_lic_key')) {
                 $skipped_orders[] = $order_id;
                 $skipped_reasons[$order_id] = 'Already has a license';
                 continue;
             }
 
-            // License data for API call
             $license_data = [
                 'slm_action'            => 'slm_create_new',
                 'lic_status'            => 'pending',
@@ -109,6 +160,7 @@ function slm_generate_licenses_callback() {
                 'date_expiry'           => $date_expiry,
                 'product_ref'           => $product->get_name(),
                 'current_ver'           => SLM_API_Utility::get_slm_option('license_current_version'),
+                'until'                 => SLM_API_Utility::get_slm_option('license_until_version'),
                 'subscr_id'             => $subscr_id,
                 'item_reference'        => $order_id,
                 'slm_billing_length'    => $slm_billing_length,
@@ -116,7 +168,6 @@ function slm_generate_licenses_callback() {
                 'secret_key'            => KEY_API
             ];
 
-            // Call the API to generate the license key
             $license_key = '';
             $response = wp_remote_post(SLM_API_URL, [
                 'method'    => 'POST',
@@ -133,14 +184,12 @@ function slm_generate_licenses_callback() {
                     $license_key = sanitize_text_field($api_response['key']);
                     $success_count++;
 
-                    // Add license meta data and note to the order
                     $item->add_meta_data('_slm_lic_key', $license_key, true);
                     $item->add_meta_data('_slm_lic_type', $slm_lic_type, true);
                     $order->add_order_note(
                         sprintf(__('License Key generated: %s', 'slmplus'), $license_key)
                     );
 
-                    // Collect for response message
                     $generated_licenses[] = [
                         'license_key' => $license_key,
                         'order_id' => $order_id,
@@ -154,45 +203,20 @@ function slm_generate_licenses_callback() {
 
             $order->add_item($item);
             $order->save();
-
         } else {
-            // Process orders with items
             foreach ($order_items as $item) {
                 $product_id = $item->get_product_id();
                 $product_name = $item->get_name();
 
-                // Skip if the item already has a license key
                 if ($item->meta_exists('_slm_lic_key')) {
                     $skipped_orders[] = $order_id;
                     $skipped_reasons[$order_id] = 'Already has a license';
                     continue;
                 }
 
-                // License data for API call
-                $license_data = [
-                    'slm_action'            => 'slm_create_new',
-                    'lic_status'            => 'pending',
-                    'lic_type'              => $slm_lic_type,
-                    'first_name'            => $first_name,
-                    'last_name'             => $last_name,
-                    'email'                 => $email,
-                    'purchase_id_'          => $purchase_id,
-                    'txn_id'                => $txn_id,
-                    'company_name'          => $company_name,
-                    'max_allowed_domains'   => SLM_DEFAULT_MAX_DOMAINS,
-                    'max_allowed_devices'   => SLM_DEFAULT_MAX_DEVICES,
-                    'date_created'          => $date_created,
-                    'date_expiry'           => $date_expiry,
-                    'product_ref'           => $product_name,
-                    'current_ver'           => SLM_API_Utility::get_slm_option('license_current_version'),
-                    'subscr_id'             => $subscr_id,
-                    'item_reference'        => $order_id,
-                    'slm_billing_length'    => $slm_billing_length,
-                    'slm_billing_interval'  => $slm_billing_interval,
-                    'secret_key'            => KEY_API
-                ];
-
+                $license_data['product_ref'] = $product_name;
                 $license_key = '';
+
                 $response = wp_remote_post(SLM_API_URL, [
                     'method'    => 'POST',
                     'body'      => $license_data,
@@ -220,28 +244,27 @@ function slm_generate_licenses_callback() {
                 } else {
                     $failure_count++;
                 }
-                $item->save(); // Save item meta
+                $item->save();
             }
             $order->save();
         }
     }
 
-    // Log grouped skipped orders
     if (!empty($skipped_orders)) {
         foreach ($skipped_orders as $order_id) {
             SLM_Helper_Class::write_log("Skipping Order ID {$order_id}: {$skipped_reasons[$order_id]}.");
         }
     }
 
-    // Summarize counts in log
-    SLM_Helper_Class::write_log("License generation completed. Success: {$success_count}, Failures: {$failure_count}, Skipped: " . count($skipped_orders));
-    
-    // Generate HTML response for display
     if (!empty($skipped_orders)) {
         $response_data['html'] .= '<li><strong>' . sprintf(__('%d orders were skipped:', 'slmplus'), count($skipped_orders)) . '</strong><ul>';
         foreach ($skipped_orders as $order_id) {
-            $order_link = admin_url('post.php?post=' . $order_id . '&action=edit');
-            $response_data['html'] .= '<li>' . sprintf(__('Order ID %d was skipped due to: %s. <a href="%s" target="_blank">View Order</a>', 'slmplus'), $order_id, esc_html($skipped_reasons[$order_id]), esc_url($order_link)) . '</li>';
+            if ($order_id !== 0) {
+                $order_link = admin_url('post.php?post=' . $order_id . '&action=edit');
+                $response_data['html'] .= '<li>' . sprintf(__('Order ID %d was skipped due to: %s. <a href="%s" target="_blank">View Order</a>', 'slmplus'), $order_id, esc_html($skipped_reasons[$order_id]), esc_url($order_link)) . '</li>';
+            } else {
+                $response_data['html'] .= '<li>' . esc_html($skipped_reasons[0]) . '</li>';
+            }
         }
         $response_data['html'] .= '</ul></li>';
     }
@@ -259,7 +282,5 @@ function slm_generate_licenses_callback() {
         $response_data['html'] .= '<li><strong>' . sprintf(__('%d licenses failed to generate.', 'slmplus'), $failure_count) . '</strong></li>';
     }
 
-    // Return the JSON response
     wp_send_json_success($response_data);
-
 }
