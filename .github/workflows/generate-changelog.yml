@@ -28,3 +28,4 @@ jobs:
           git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md for new release"
           git push
+
