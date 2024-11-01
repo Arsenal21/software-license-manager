@@ -11,12 +11,21 @@ function slm_add_licenses_menu()
     $id = !empty($_GET['edit_record']) ? intval($_GET['edit_record']) : 0; // Check for 'edit_record' parameter in the URL
     $slm_options = get_option('slm_options');
 
+    // Set initial variables for slm_billing_length and slm_billing_interval
+    $slm_billing_length = SLM_API_Utility::get_slm_option('slm_billing_length');
+    $slm_billing_interval = SLM_API_Utility::get_slm_option('slm_billing_interval');
+
+    // Calculate date_expiry based on slm_billing_length and slm_billing_interval
+    $date_created = date_i18n($slm_wp_date_format, strtotime('now'));
+    $date_expiry = date_i18n($slm_wp_date_format, strtotime("+$slm_billing_length $slm_billing_interval"));
+
+
     //Get the active tab from the $_GET param
     $slm_lic_default_tab = null;
     $slm_lic_tab = isset($_GET['slm_tab']) ? $_GET['slm_tab'] : $slm_lic_default_tab;
 
     // Check if the form is submitted
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['slm_save_license'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['slm_save_license'])) {
         // Verify the nonce before processing the form
         if (!isset($_POST['slm_nonce']) || !wp_verify_nonce($_POST['slm_nonce'], 'slm_save_license')) {
             die(__('Security check failed', 'slmplus'));
@@ -30,51 +39,37 @@ function slm_add_licenses_menu()
             'lic_status' => sanitize_text_field($_POST['lic_status']),
             'first_name' => sanitize_text_field($_POST['first_name']),
             'last_name' => sanitize_text_field($_POST['last_name']),
-            
-            // Validate email
             'email' => is_email($_POST['email']) ? sanitize_email($_POST['email']) : '',
-            
             'company_name' => sanitize_text_field($_POST['company_name']),
             'txn_id' => sanitize_text_field($_POST['txn_id']),
             'manual_reset_count' => intval($_POST['manual_reset_count']),
             'purchase_id_' => sanitize_text_field($_POST['purchase_id_']),
-            
-            // Date validation
-            'date_created' => SLM_API_Utility::slm_validate_date($_POST['date_created']),
+            'date_created' => isset($_POST['date_created']) ? SLM_API_Utility::slm_validate_date($_POST['date_created']) : date_i18n('Y-m-d'), // Default to today's date if not set
             'date_renewed' => SLM_API_Utility::slm_validate_date($_POST['date_renewed']),
             'date_activated' => SLM_API_Utility::slm_validate_date($_POST['date_activated']),
-            
             'product_ref' => sanitize_text_field($_POST['product_ref']),
             'until' => sanitize_text_field($_POST['until']),
             'current_ver' => sanitize_text_field($_POST['current_ver']),
             'subscr_id' => sanitize_text_field($_POST['subscr_id']),
             'lic_type' => sanitize_text_field($_POST['lic_type']),
-            
-            // Handle 'lifetime' license expiration properly
-            'date_expiry' => ($_POST['lic_type'] == 'lifetime') ? '0000-00-00' : SLM_API_Utility::slm_validate_date($_POST['date_expiry']),
-            
+            'date_expiry' => ($_POST['lic_type'] === 'lifetime') ? date('Y-m-d', strtotime('+200 years')) : SLM_API_Utility::slm_validate_date($_POST['date_expiry']),
             'item_reference' => sanitize_text_field($_POST['item_reference']),
             'slm_billing_length' => sanitize_text_field($_POST['slm_billing_length']),
             'slm_billing_interval' => sanitize_text_field($_POST['slm_billing_interval']),
             'reminder_sent' => intval($_POST['reminder_sent']),
-            
-            // Reminder date validation
-            'reminder_sent_date' => SLM_API_Utility::slm_validate_date($_POST['reminder_sent_date'])
+            'reminder_sent_date' => SLM_API_Utility::slm_validate_date($_POST['reminder_sent_date']),
         ];
 
         // Check for required fields
-        if (empty($data['email']) || empty($data['date_created']) || ($data['lic_type'] != 'lifetime' && empty($data['date_expiry'])) || empty($data['lic_type'])) {
-            // Custom error notice displayed inline
+        if (empty($data['email']) || empty($data['date_created']) || ($data['lic_type'] !== 'lifetime' && empty($data['date_expiry'])) || empty($data['lic_type'])) {
             echo '<div class="notice notice-error"><p>' . __('Required fields are missing.', 'slmplus') . '</p></div>';
         } else {
             // Insert or update the data in the database
             if ($id) {
                 $wpdb->update(SLM_TBL_LICENSE_KEYS, $data, ['id' => $id]);
-                // Custom success notice for updating a license
                 echo '<div class="notice notice-success is-dismissible"><p>' . __('License updated successfully.', 'slmplus') . '</p></div>';
             } else {
                 $wpdb->insert(SLM_TBL_LICENSE_KEYS, $data);
-                // Custom success notice for creating a license
                 echo '<div class="notice notice-success is-dismissible"><p>' . __('License created successfully.', 'slmplus') . '</p>';
                 echo '<a href="?page=slm_manage_license&edit_record=' . esc_attr($wpdb->insert_id) . '" class="button">' . __('View License', 'slmplus') . '</a></p></div>';
             }
@@ -82,7 +77,6 @@ function slm_add_licenses_menu()
     }
     else {
         // If editing, load existing data
-        // Ensure the correct data types and default values for new records
         if ($id) {
             $license = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE id = %d", $id));
             if ($license) {
@@ -111,10 +105,10 @@ function slm_add_licenses_menu()
                 'current_ver' => '',
                 'subscr_id' => '',
                 'lic_type' => 'subscription',
-                'date_expiry' => date_i18n($slm_wp_date_format, strtotime('+1 year')), // Use WP date format
+                'date_expiry' => $date_expiry, // Calculated expiration date
                 'item_reference' => '',
-                'slm_billing_length' => '',
-                'slm_billing_interval' => 'days', // Default value
+                'slm_billing_length' => $slm_billing_length,
+                'slm_billing_interval' => $slm_billing_interval,
                 'reminder_sent' => '0',
                 'reminder_sent_date' => '0000-00-00'
             ];
@@ -302,7 +296,7 @@ function slm_add_licenses_menu()
                                     $.post(ajax_uri, {
                                         _wpnonce: nonce // Include the nonce in the request
                                     }, function(response) {
-                                        console.log(response); // Debugging to ensure we're getting the response
+                                        ////console.log(response); // Debugging to ensure we're getting the response
                                         
                                         // Handle success response
                                         if (response.result === 'success') {
@@ -448,7 +442,25 @@ function slm_add_licenses_menu()
                                     <tr>
                                         <th scope="row"><label for="date_expiry"><?php _e('Date Expiry', 'slmplus'); ?> <span style="color: red;">*</span></label></th>
                                         <td><input name="date_expiry" type="date" id="date_expiry" value="<?php echo esc_attr($data['date_expiry']); ?>" class="regular-text datepicker" required />
-                                            <p class="description" id="new-admin-email-description"><?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?></p>
+                                            <p class="description" id="new-admin-email-description"><?php printf(__('Selecting a future date will automatically adjust the renewal term.<br>Choose this date to set when the license should renew or expire. <br>Format: %s (input: YYYY-MM-DD).', 'slmplus'), $slm_wp_date_format); ?></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"><label for="slm_billing_length"><?php _e('Billing Length', 'slmplus'); ?></label></th>
+                                        <td><input name="slm_billing_length" type="text" id="slm_billing_length" value="<?php echo esc_attr($data['slm_billing_length']); ?>" class="regular-text" />
+                                        <p class="description" id="billing_lengh_description"><?php _e('This sets the renewal frequency for the license.<br>For example, a length of 2 with a term of years means<br> the license renews every two years.','slmplus'); ?></p></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">
+                                            <label for="slm_billing_interval"><?php _e('Expiration Term', 'slmplus'); ?></label>
+                                        </th>
+                                        <td>
+                                            <select name="slm_billing_interval" id="slm_billing_interval" class="regular-text">
+                                                <option value="days" <?php selected($data['slm_billing_interval'], 'days'); ?>><?php _e('Day(s)', 'slmplus'); ?></option>
+                                                <option value="months" <?php selected($data['slm_billing_interval'], 'months'); ?>><?php _e('Month(s)', 'slmplus'); ?></option>
+                                                <option value="years" <?php selected($data['slm_billing_interval'], 'years'); ?>><?php _e('Year(s)', 'slmplus'); ?></option>
+                                            </select>
+                                            <p class="description" id="new-admin-email-description"><?php _e('Frequency period: in days, months, years','slmplus'); ?></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -538,24 +550,6 @@ function slm_add_licenses_menu()
                                         <th scope="row"><label for="current_ver"><?php _e('Current Version', 'slmplus'); ?></label></th>
                                         <td><input name="current_ver" type="text" id="current_ver" value="<?php echo esc_attr($data['current_ver']); ?>" class="regular-text" /></td>
                                     </tr>
-
-                                    <tr>
-                                        <th scope="row"><label for="slm_billing_length"><?php _e('Billing Length', 'slmplus'); ?></label></th>
-                                        <td><input name="slm_billing_length" type="text" id="slm_billing_length" value="<?php echo esc_attr($data['slm_billing_length']); ?>" class="regular-text" /></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <label for="slm_billing_interval"><?php _e('Expiration Term', 'slmplus'); ?></label>
-                                        </th>
-                                        <td>
-                                            <select name="slm_billing_interval" id="slm_billing_interval" class="regular-text">
-                                                <option value="days" <?php selected($data['slm_billing_interval'], 'days'); ?>><?php _e('Day(s)', 'slmplus'); ?></option>
-                                                <option value="months" <?php selected($data['slm_billing_interval'], 'months'); ?>><?php _e('Month(s)', 'slmplus'); ?></option>
-                                                <option value="years" <?php selected($data['slm_billing_interval'], 'years'); ?>><?php _e('Year(s)', 'slmplus'); ?></option>
-                                            </select>
-                                            <p class="description" id="new-admin-email-description"><?php _e('Frequency period: in days, months, years','softwarelicensemanager'); ?></p>
-                                        </td>
-                                    </tr>
                                     <tr>
                                         <th scope="row"><label for="reminder_sent"><?php _e('Reminder Sent', 'slmplus'); ?></label></th>
                                         <td><input name="reminder_sent" type="text" id="reminder_sent" value="<?php echo esc_attr($data['reminder_sent']); ?>" class="regular-text" /></td>
@@ -573,14 +567,12 @@ function slm_add_licenses_menu()
                                 </table>
                             </div>
                         </div>
-
                         <?php
                         if (isset($_GET['edit_record']) && !empty($_GET['edit_record'])) : ?>
                             <?php submit_button(__('Update License', 'slmplus'), 'primary', 'slm_save_license'); ?>
                         <?php else: ?>
                             <?php submit_button(__('Create License', 'slmplus'), 'primary', 'slm_save_license'); ?>
                         <?php endif; ?>
-
                         <script type="text/javascript">
                             document.addEventListener('DOMContentLoaded', function() {
                                 const form = document.querySelector('form'); // Adjust this selector to target your specific form
@@ -590,6 +582,100 @@ function slm_add_licenses_menu()
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 });
                             });
+                        </script>
+                        <script type="text/javascript">
+                        jQuery(document).ready(function($) {
+                            // Helper to calculate expiry date based on length and interval
+                            function calculateExpiryDate() {
+                                const dateCreated = new Date($('#date_created').val());
+                                const billingLength = parseInt($('#slm_billing_length').val()) || 0;
+                                const billingInterval = $('#slm_billing_interval').val();
+
+                                // Adjust expiry date based on interval
+                                let expiryDate = new Date(dateCreated);
+                                if (billingInterval === 'years') {
+                                    expiryDate.setFullYear(dateCreated.getFullYear() + billingLength);
+                                } else if (billingInterval === 'months') {
+                                    expiryDate.setMonth(dateCreated.getMonth() + billingLength);
+                                } else if (billingInterval === 'days') {
+                                    expiryDate.setDate(dateCreated.getDate() + billingLength);
+                                }
+
+                                // Format and set expiry date
+                                const formattedExpiryDate = expiryDate.toISOString().split('T')[0];
+                                $('#date_expiry').val(formattedExpiryDate);
+                            }
+
+                            // Calculate and set interval and length based on expiry date
+                            function calculateIntervalAndLengthFromExpiry() {
+                                const dateCreated = new Date($('#date_created').val());
+                                const dateExpiry = new Date($('#date_expiry').val());
+
+                                // Prevent expiry date from being before the creation date
+                                if (dateExpiry < dateCreated) {
+                                    alert('Expiration date cannot be before the creation date.');
+                                    $('#date_expiry').val($('#date_created').val()); // Reset to creation date
+                                    return;
+                                }
+
+                                const diffTime = dateExpiry - dateCreated;
+                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                const diffMonths = Math.ceil(diffDays / 30);
+                                const diffYears = Math.ceil(diffMonths / 12);
+
+                                // Set the appropriate interval and length
+                                if (diffYears >= 1) {
+                                    $('#slm_billing_interval').val('years');
+                                    $('#slm_billing_length').val(diffYears);
+                                } else if (diffMonths >= 1) {
+                                    $('#slm_billing_interval').val('months');
+                                    $('#slm_billing_length').val(diffMonths);
+                                } else {
+                                    $('#slm_billing_interval').val('days');
+                                    $('#slm_billing_length').val(diffDays);
+                                }
+                            }
+
+                            // Set today's date for date_created if new record and disable the field
+                            const isEditRecord = window.location.search.includes('edit_record') || window.location.search.includes('slm_save_license');
+                            if (!isEditRecord) {
+                                const today = new Date().toISOString().split('T')[0];
+                                $('#date_created').val(today).prop('disabled', true); // Set to today and disable field
+                            }
+
+                            // Recalculate expiry date when billing length or interval changes
+                            $('#slm_billing_length, #slm_billing_interval').on('change', calculateExpiryDate);
+
+                            // Update interval and length when date_expiry changes, with validation
+                            $('#date_expiry').on('change', calculateIntervalAndLengthFromExpiry);
+
+                            // Also calculate on page load for new records
+                            calculateExpiryDate();
+                        });
+                        </script>
+                        <script type="text/javascript">
+                        jQuery(document).ready(function($) {
+                            function adjustFieldsBasedOnType() {
+                                const licType = $('#lic_type').val();
+                                const isLifetime = licType === 'lifetime';
+
+                                // Set expiration date to 200 years in the future if lifetime is selected
+                                if (isLifetime) {
+                                    const expiryDate = new Date();
+                                    expiryDate.setFullYear(expiryDate.getFullYear() + 200);
+                                    $('#date_expiry').val(expiryDate.toISOString().split('T')[0]);
+                                }
+
+                                // Disable or enable fields based on the license type
+                                $('#date_expiry, #slm_billing_length, #slm_billing_interval, #date_renewed')
+                                    .prop('disabled', isLifetime)
+                                    .closest('tr').toggle(!isLifetime);
+                            }
+                            // Attach change event to license type
+                            $('#lic_type').on('change', adjustFieldsBasedOnType);
+                            // Initialize on page load
+                            adjustFieldsBasedOnType();
+                        });
                         </script>
                     </form>
                 <?php

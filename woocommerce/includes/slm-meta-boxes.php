@@ -289,7 +289,6 @@ function wc_slm_save_data($post_id) {
     $_license_until_version = isset($_POST['_license_until_version']) ? sanitize_text_field($_POST['_license_until_version']) : '';
     update_post_meta($post_id, '_license_until_version', $_license_until_version);
 }
-
 add_action('woocommerce_process_product_meta', 'wc_slm_save_data');
 
 function slm_license_admin_custom_js() {
@@ -354,5 +353,206 @@ function slm_license_admin_custom_js() {
     </script>
     <?php
 }
-
 add_action('admin_footer', 'slm_license_admin_custom_js');
+
+
+add_action('add_meta_boxes', 'add_slm_properties_meta_box');
+function add_slm_properties_meta_box() {
+    add_meta_box(
+        'slm_properties_meta_box',
+        __('SLM Properties', 'slmplus'),
+        'display_slm_properties_meta_box',
+        'shop_order',
+        'side',
+        'default'
+    );
+}
+
+function display_slm_properties_meta_box($post) {
+    $license_key = get_post_meta($post->ID, '_slm_lic_key', true);
+    $license_type = get_post_meta($post->ID, '_slm_lic_type', true);
+
+    $order = wc_get_order($post->ID);
+    $order_status = $order->get_status();
+
+    // Check if license can be created based on order status and license key existence
+    $can_create_license = empty($license_key) && in_array($order_status, ['completed', 'processing']);
+    
+    // Display license information if a key exists
+    if (!empty($license_key)) {
+        echo '<p><strong>' . __('License Key:', 'slmplus') . '</strong> ' . esc_html($license_key) . '</p>';
+        echo '<p><strong>' . __('License Type:', 'slmplus') . '</strong> ' . esc_html($license_type) . '</p>';
+        echo '<p><em>' . __('A license key is already assigned to this order.', 'slmplus') . '</em></p>';
+
+        $license_view_url = esc_url(admin_url('admin.php?page=slm_manage_license&edit_record=' . $license_key));
+        echo '<a href="' . $license_view_url . '" class="button button-secondary" target="_blank">' . __('View License', 'slmplus') . '</a>';
+    } else if ($can_create_license) {
+        // Show the license creation option if no license exists and order is eligible
+        echo '<label for="slm_lic_type">' . __('License Type:', 'slmplus') . '</label>';
+        echo '<select id="slm_lic_type" name="slm_lic_type" class="postbox">
+                <option value="subscription" ' . selected($license_type, 'subscription', false) . '>' . __('Subscription', 'slmplus') . '</option>
+                <option value="lifetime" ' . selected($license_type, 'lifetime', false) . '>' . __('Lifetime', 'slmplus') . '</option>
+              </select><br><br>';
+
+        echo '<button type="button" class="button button-primary" id="create_license_button">' . __('Create License', 'slmplus') . '</button>';
+    } else {
+        // Display informational message for new or ineligible orders
+        echo '<p><em>' . __('Order must be completed or processing to create a license.', 'slmplus') . '</em></p>';
+        echo '<button type="button" class="button button-primary" id="create_license_button" disabled>' . __('Create License', 'slmplus') . '</button>';
+    }
+    ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('#create_license_button').on('click', function() {
+                const licenseType = $('#slm_lic_type').val();
+                const orderId = <?php echo esc_js($post->ID); ?>;
+                const security = '<?php echo wp_create_nonce('slm_generate_license_nonce'); ?>';
+                
+                // Fetch user details from the server for validation
+                $.post(ajaxurl, {
+                    action: 'check_order_user_info',
+                    order_id: orderId,
+                    security: security
+                }, function(userInfoResponse) {
+                    if (userInfoResponse.success) {
+                        const { last_name, email } = userInfoResponse.data;
+                        let proceed = true;
+
+                        // Check for missing details
+                        if (!last_name || !email) {
+                            proceed = confirm('<?php echo esc_js(__('Warning: The order lacks user information like last name or email. Do you still wish to create the license?', 'slmplus')); ?>');
+                        }
+
+                        if (proceed) {
+                            if (confirm('<?php echo esc_js(__('Are you sure you want to create a license for this order?', 'slmplus')); ?>')) {
+                                $.post(ajaxurl, {
+                                    action: 'slm_generate_license_for_order',
+                                    order_id: orderId,
+                                    lic_type: licenseType,
+                                    security: security
+                                }, function(response) {
+                                    if (response.success) {
+                                        location.reload(); 
+                                    } else {
+                                        alert('<?php echo esc_js(__('License creation failed. Please check the logs.', 'slmplus')); ?>');
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        alert('<?php echo esc_js(__('Unable to verify order details. Please try again.', 'slmplus')); ?>');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <?php
+}
+
+add_action('wp_ajax_slm_generate_license_for_order', 'slm_generate_license_for_order_callback');
+function slm_generate_license_for_order_callback() {
+    check_ajax_referer('slm_generate_license_nonce', 'security');
+
+    global $wpdb;
+    $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : null;
+    $lic_type = isset($_POST['lic_type']) ? sanitize_text_field($_POST['lic_type']) : 'subscription';
+
+    if (!$order_id) {
+        wp_send_json_error(['message' => __('Invalid order ID', 'slmplus')]);
+    }
+
+    $order = wc_get_order($order_id);
+    if (!$order || !in_array($order->get_status(), ['completed', 'processing'])) {
+        wp_send_json_error(['message' => __('Order must be completed or processing to create a license', 'slmplus')]);
+    }
+
+    // Gather required order details
+    $first_name     = $order->get_billing_first_name();
+    $last_name      = $order->get_billing_last_name();
+    $email          = $order->get_billing_email();
+    $purchase_id    = $order->get_id();
+    $txn_id         = $order->get_transaction_id();
+    $company_name   = $order->get_billing_company();
+    $date_created   = $order->get_date_created()->date('Y-m-d');
+    $user_id        = $order->get_user_id();
+    $product_ref    = $order->get_items() ? $order->get_items()[0]->get_name() : ''; // Using the first item name for simplicity
+
+    $slm_billing_length    = SLM_API_Utility::get_slm_option('slm_billing_length');
+    $slm_billing_interval  = SLM_API_Utility::get_slm_option('slm_billing_interval');
+
+    $date_expiry = $lic_type === 'lifetime' ? date('Y-m-d', strtotime("+120 years", strtotime($date_created))) :
+        date('Y-m-d', strtotime("+$slm_billing_length $slm_billing_interval", strtotime($date_created)));
+
+    // License data array, using all fields from original
+    $license_data = [
+        'slm_action'            => 'slm_create_new',
+        'lic_status'            => 'pending',
+        'lic_type'              => $lic_type,
+        'first_name'            => $first_name,
+        'last_name'             => $last_name,
+        'email'                 => $email,
+        'purchase_id_'          => $purchase_id,
+        'txn_id'                => $txn_id,
+        'company_name'          => $company_name,
+        'max_allowed_domains'   => SLM_DEFAULT_MAX_DOMAINS,
+        'max_allowed_devices'   => SLM_DEFAULT_MAX_DEVICES,
+        'date_created'          => $date_created,
+        'date_expiry'           => $date_expiry,
+        'product_ref'           => $product_ref,
+        'current_ver'           => SLM_API_Utility::get_slm_option('license_current_version'),
+        'until'                 => SLM_API_Utility::get_slm_option('license_until_version'),
+        'subscr_id'             => $user_id,
+        'item_reference'        => $order_id,
+        'slm_billing_length'    => $slm_billing_length,
+        'slm_billing_interval'  => $slm_billing_interval,
+        'secret_key'            => KEY_API
+    ];
+
+    $response = wp_remote_post(SLM_API_URL, [
+        'method'    => 'POST',
+        'body'      => $license_data,
+        'timeout'   => 45,
+        'sslverify' => false,
+    ]);
+
+    if (is_wp_error($response)) {
+        wp_send_json_error(['message' => __('API request failed', 'slmplus')]);
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    $api_response = json_decode($body, true);
+
+    if ($api_response && isset($api_response['result']) && $api_response['result'] === 'success') {
+        $license_key = sanitize_text_field($api_response['key']);
+        update_post_meta($order_id, '_slm_lic_key', $license_key);
+        update_post_meta($order_id, '_slm_lic_type', $lic_type); // Save the license type
+
+        $order->add_order_note(
+            sprintf(__('License Key generated: %s', 'slmplus'), $license_key)
+        );
+
+        wp_send_json_success(['message' => __('License created successfully', 'slmplus')]);
+    } else {
+        wp_send_json_error(['message' => __('License creation failed', 'slmplus')]);
+    }
+}
+
+add_action('wp_ajax_check_order_user_info', 'check_order_user_info_callback');
+function check_order_user_info_callback() {
+    check_ajax_referer('slm_generate_license_nonce', 'security');
+
+    $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : null;
+    if (!$order_id) {
+        wp_send_json_error(['message' => __('Invalid order ID', 'slmplus')]);
+    }
+
+    $order = wc_get_order($order_id);
+    if ($order) {
+        $last_name = $order->get_billing_last_name();
+        $email = $order->get_billing_email();
+        wp_send_json_success(['last_name' => $last_name, 'email' => $email]);
+    } else {
+        wp_send_json_error(['message' => __('Order not found', 'slmplus')]);
+    }
+}
