@@ -37,12 +37,12 @@ jobs:
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
 
-      # Sign the Plugin Zip
+      # Sign the Plugin Zip with updated flag
       - name: Sign Plugin Zip
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --detach-sign -a slm-plus.zip
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a slm-plus.zip
 
       # Upload Release Asset (Zip File)
       - name: Upload Release Asset
