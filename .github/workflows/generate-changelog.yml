@@ -5,25 +5,23 @@ on:
     tags:
       - '*'      # Match any tag format (e.g., 1.0, 2.1, etc.)
       - 'v*'     # Match tags with a 'v' prefix (e.g., v1.0, v2.1, etc.)
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   generate-changelog:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Generate Changelog using janheinrichmerker/action-github-changelog-generator
       - name: Generate changelog
         uses: janheinrichmerker/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          output: CHANGELOG.md  # Optional, if you want the changelog saved to a file
+          output: CHANGELOG.md
 
-      # Commit and Push the Changelog (if saving to a file)
       - name: Commit and push changes
-        if: success()  # Only run if previous steps succeeded
+        if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
