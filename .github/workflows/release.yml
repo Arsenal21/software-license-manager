@@ -1,0 +1,67 @@
+name: Build, Sign, and Release Plugin
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Generate Changelog
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          changelog=$(git log ${latest_tag}..HEAD --pretty=format:"* %s: %b ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
+          echo "::set-output name=changelog::$changelog"
+
+      # Build Plugin Zip
+      - name: Build Plugin Zip
+        run: zip -r slm-plus.zip . -x '*.git*' '*.github*'
+
+      # Import GPG Key
+      - name: Import GPG Key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          
+      # Sign the Plugin Zip
+      - name: Sign Plugin Zip
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --passphrase-fd 0 --detach-sign -a slm-plus.zip
+
+      # Upload Release Asset (Zip File)
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./slm-plus.zip
+          asset_name: slm-plus.zip
+          asset_content_type: application/zip
+
+      # Upload Release Signature (Signature File)
+      - name: Upload Signature
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./slm-plus.zip.asc
+          asset_name: slm-plus.zip.asc
+          asset_content_type: application/pgp-signature
+
+      # Update Release with Changelog
+      - name: Update Release Description
+        uses: octokit/request-action@v2.x
+        with:
+          route: PATCH /repos/${{ github.repository }}/releases/${{ github.event.release.id }}
+          release_id: ${{ github.event.release.id }}
+          description: |
+            ## Changelog
+            ${{ steps.changelog.outputs.changelog }}
