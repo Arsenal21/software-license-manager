@@ -1,4 +1,4 @@
-name: Build, Sign, and Release Plugin
+name: Build Plugin
 
 on:
   release:
@@ -8,9 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checkout code
+      # Checkout code - updated to v3
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Generate Changelog
       - name: Generate Changelog
@@ -18,7 +18,7 @@ jobs:
         run: |
           latest_tag=$(git describe --tags --abbrev=0)
           changelog=$(git log ${latest_tag}..HEAD --pretty=format:"* %s: %b ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
-          echo "::set-output name=changelog::$changelog"
+          echo "changelog=$changelog" >> $GITHUB_ENV
 
       # Build Plugin Zip
       - name: Build Plugin Zip
@@ -30,7 +30,7 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          
+
       # Sign the Plugin Zip
       - name: Sign Plugin Zip
         env:
@@ -64,4 +64,4 @@ jobs:
           release_id: ${{ github.event.release.id }}
           description: |
             ## Changelog
-            ${{ steps.changelog.outputs.changelog }}
+            ${{ env.changelog }}
