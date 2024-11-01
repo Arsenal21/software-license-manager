@@ -18,6 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Install GitHub CLI
+      - name: Install GitHub CLI
+        run: sudo apt-get install -y gh
+
       # Generate Changelog
       - name: Generate Changelog
         id: changelog
@@ -44,14 +48,18 @@ jobs:
         run: |
           echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a slm-plus.zip
 
+      # Authenticate GitHub CLI
+      - name: Authenticate GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
+
       # Upload Release Asset (Zip File)
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./slm-plus.zip
-          asset_name: slm-plus.zip
-          asset_content_type: application/zip
+      - name: Upload Release Asset with `gh`
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" "./slm-plus.zip" --clobber
 
       # Upload Release Signature (Signature File)
       - name: Upload Signature
