@@ -198,7 +198,6 @@ function slm_license_view($encoded_license_id) {
     $back_url = wc_get_account_endpoint_url('my-licenses');
     echo '<a href="' . esc_url($back_url) . '" class="button">' . __('Back to My Licenses', 'slmplus') . '</a>';
 
-
     // Define the fields and labels for dynamic generation
     $slm_license_fields = [
         'license_key' => __('License Key', 'slmplus'),
@@ -223,18 +222,49 @@ function slm_license_view($encoded_license_id) {
 
     // Loop through each field and output its label and value dynamically
     foreach ($slm_license_fields as $field_key => $field_label) {
-        $field_value = isset($license->$field_key) ? esc_html($license->$field_key) : ''; // Retrieve and escape the field value
+        // Check if the field is set and get the value
+        $field_value = isset($license->$field_key) ? esc_html($license->$field_key) : ''; 
+
+        // Special handling for purchase_id_ to link to the order
+        if ($field_key === 'purchase_id_') {
+            if (!empty($field_value)) {
+                // Generate the link to the specific order in the My Account section
+                $order_link = wc_get_account_endpoint_url('view-order/' . $field_value);
+                $field_value = '<a href="' . esc_url($order_link) . '">' . esc_html($field_value) . '</a>';
+            } else {
+                $field_value = __('No Order Information Available', 'slmplus');
+            }
+        }
+
+        // Special handling for product_ref to link to the product page
+        if ($field_key === 'product_ref') {
+            if (!empty($field_value)) {
+                // Retrieve the product URL and name by product ID
+                $product_id = $field_value;
+                $product_url = get_permalink($product_id);
+                $product_name = get_the_title($product_id);
+
+                if ($product_url && $product_name) {
+                    // Format as "#ID - ProductName"
+                    $field_value = '<a href="' . esc_url($product_url) . '">#' . esc_html($product_id) . ' - ' . esc_html($product_name) . '</a>';
+                } else {
+                    $field_value = __('Product Not Found', 'slmplus');
+                }
+            } else {
+                $field_value = __('No Product Information Available', 'slmplus');
+            }
+        }
+
+        // Special handling for date fields with '0000-00-00' as value
+        if (($field_key === 'date_activated' || $field_key === 'date_renewed') && $field_value === '0000-00-00') {
+            $field_value = ($field_key === 'date_activated') ? __('Not activated yet', 'slmplus') : __('Not renewed yet', 'slmplus');
+        }
+
         echo '<tr><th>' . $field_label . '</th><td>' . $field_value . '</td></tr>';
     }
 
     echo '</tbody>';
-    echo '</table>';
-
-    
-
-
-
-
+    echo '</table>'; 
 
 
 
@@ -304,9 +334,9 @@ if (isset($_POST['delete_activation'])) {
 
     // Display a confirmation or error message
     if ($deleted) {
-        echo '<p>' . __('Activation successfully deleted. Reload Page.', 'slmplus') . '</p>';
+        echo '<p class="slm-notice">' . __('Activation successfully deleted. Reload Page.', 'slmplus') . '</p>';
     } else {
-        echo '<p>' . __('Failed to delete activation. Please try again.', 'slmplus') . '</p>';
+        echo '<p class="slm-notice">' . __('Failed to delete activation. Please try again.', 'slmplus') . '</p>';
     }
 }
 
