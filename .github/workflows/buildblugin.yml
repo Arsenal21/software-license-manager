@@ -48,27 +48,19 @@ jobs:
         run: |
           echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --detach-sign -a slm-plus.zip
 
-      # Authenticate GitHub CLI
+      # Authenticate GitHub CLI non-interactively
       - name: Authenticate GitHub CLI
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
-        run: echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
+        run: gh auth setup-git
 
-      # Upload Release Asset (Zip File)
-      - name: Upload Release Asset with `gh`
+      # Upload Release Asset and Signature with `gh`
+      - name: Upload Release Assets with `gh`
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
           gh release upload "${{ github.event.release.tag_name }}" "./slm-plus.zip" --clobber
-
-      # Upload Release Signature (Signature File)
-      - name: Upload Signature
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./slm-plus.zip.asc
-          asset_name: slm-plus.zip.asc
-          asset_content_type: application/pgp-signature
+          gh release upload "${{ github.event.release.tag_name }}" "./slm-plus.zip.asc" --clobber
 
       # Update Release with Changelog
       - name: Update Release Description
