@@ -18,12 +18,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Generate Changelog
-      - name: Generate Changelog
+      # Generate Changelog if CHANGELOG.md exists
+      - name: Check for CHANGELOG.md and Generate Changelog
         id: changelog
         run: |
-          latest_tag=$(git describe --tags --abbrev=0)
-          changelog=$(git log ${latest_tag}..HEAD --pretty=format:"- %s ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
+          if [ -f CHANGELOG.md ]; then
+            changelog=$(awk '/## Changelog/ {flag=1; next} /##/{flag=0} flag' CHANGELOG.md)
+          else
+            # Fallback to generating a changelog based on commit history
+            latest_tag=$(git describe --tags --abbrev=0)
+            changelog=$(git log ${latest_tag}..HEAD --pretty=format:"- %s ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
+          fi
           echo "changelog=$changelog" >> $GITHUB_ENV
           echo "$changelog"
 
@@ -43,4 +48,3 @@ jobs:
             ${{ env.changelog }}
           artifacts: "slm-plus.zip"
           allowUpdates: true
-          

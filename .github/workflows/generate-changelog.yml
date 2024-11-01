@@ -3,9 +3,8 @@ name: Generate Changelog
 on:
   push:
     tags:
-      - '*'      # Match any tag format (e.g., 1.0, 2.1, etc.)
-      - 'v*'     # Match tags with a 'v' prefix (e.g., v1.0, v2.1, etc.)
-  workflow_dispatch:  # Allows manual triggering of the workflow
+      - '*'      # Match any tag format, with or without 'v'
+  workflow_dispatch:  # Allow manual runs
 
 jobs:
   generate-changelog:
