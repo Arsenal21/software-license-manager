@@ -15,11 +15,7 @@
 
 ## [6.1.4](https://github.com/michelve/software-license-manager/tree/6.1.4) (2024-11-01)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.1...6.1.4)
-
-## [6.1.1](https://github.com/michelve/software-license-manager/tree/6.1.1) (2024-11-01)
-
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/5.6.2...6.1.1)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/5.6.2...6.1.4)
 
 **Implemented enhancements:**
 
@@ -379,15 +375,15 @@
 
 ## [4.7](https://github.com/michelve/software-license-manager/tree/4.7) (2019-03-07)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.6...4.7)
-
-## [4.6](https://github.com/michelve/software-license-manager/tree/4.6) (2018-12-31)
-
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.06...4.6)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.06...4.7)
 
 ## [4.06](https://github.com/michelve/software-license-manager/tree/4.06) (2018-12-31)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.5...4.06)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.6...4.06)
+
+## [4.6](https://github.com/michelve/software-license-manager/tree/4.6) (2018-12-31)
+
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.5...4.6)
 
 ## [4.5](https://github.com/michelve/software-license-manager/tree/4.5) (2018-12-04)
 
