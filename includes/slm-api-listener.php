@@ -174,6 +174,8 @@ class SLM_API_Listener{
             // Get the license details from the database
             $retLic = $wpdb->get_row($sql_prep1, OBJECT);
 
+            SLM_Helper_Class::write_log('User ID (subscr_id): ' . $sql_prep1);
+
             
             if (!$retLic) {
                 $args = ['result' => 'error', 'message' => 'Invalid license key, key was not found.', 'error_code' => SLM_Error_Codes::LICENSE_INVALID];

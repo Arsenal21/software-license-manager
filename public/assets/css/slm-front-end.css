@@ -1,71 +1,26 @@
-#slm_licenses_table ul.list-unstyled {
-    padding: 0;
-    margin: 0;
-}
-#slm_licenses_table .row-p {
-    padding: 25px;
-}
-.slm-status .slm-key-status .key-status {
+/* General Badge Styling */
+.slm-status-badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+    text-transform: capitalize;
     display: inline-block;
-    padding: 4px 10px;
-    background: #f2f2f2;
-    color: #ffffff;
-    border-radius: 24px;
-}
-.slm-status .slm-key-status .key-status.pending {
-background: #72777c;
-}
-.clear {
-    clear: both;
-    float: none;
-    width: 100%;
-}
-.slm-shadow {
-    background: #fff;
-    margin: 2%;
-    padding: 2%;
-    box-shadow: 0px 2px 13px #d4d4d4;
-    border-radius: 3px;
-}
-.slm-status .slm-key-status .key-status.blocked {
-background: #6649c9;
-}
-.slm-status .slm-key-status .key-status.active {
-background: #00a0d2;
-}
-.slm-status .slm-key-status .key-status.expired {
-background: #f0283e;
 }
 
-#slm_licenses_table td.hiddenRow {
-    padding: 0 16px;
-    margin: 0;
+/* Specific Styling for Each Status */
+.slm-status-badge.status-pending {
+    background-color: #ffc107; /* Amber */
 }
 
-#slm_licenses_table tbody tr:nth-child(even) {background: #fbfbfb}
-#slm_licenses_table tbody tr:nth-child(odd) {background: #FFF}
+.slm-status-badge.status-active {
+    background-color: #007bff; /* Blue */
+}
 
-.lic-group-details li span {
-    font-weight: bold;
+.slm-status-badge.status-blocked {
+    background-color: #dc3545; /* Red */
 }
-ul#myLics {
-    margin: 0;
-}
-#myLics a {
-    text-decoration: none;
-    font-weight: bold;
-}
-#MyLicDetails {
-    border: 1px solid #ddd;
-    padding: 16px;
-}
-.lic-group-details {
-    margin-left: 0;
-}
-.lic-copy-code pre {
- white-space: pre-wrap;       /* css-3 */
- white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
- white-space: -pre-wrap;      /* Opera 4-6 */
- white-space: -o-pre-wrap;    /* Opera 7 */
- word-wrap: break-word;       /* Internet Explorer 5.5+ */
+
+.slm-status-badge.status-expired {
+    background-color: #6c757d; /* Gray */
 }

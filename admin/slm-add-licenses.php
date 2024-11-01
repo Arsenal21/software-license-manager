@@ -118,9 +118,8 @@ function slm_add_licenses_menu()
             if (!isset($editing_record)) {
                 $editing_record = new stdClass();
             }
-            
-            $lic_key_prefix = isset($slm_options['lic_prefix']) ? $slm_options['lic_prefix'] : '';
-            $data['license_key'] = slm_get_license($lic_key_prefix);
+
+            $data['license_key'] = slm_get_license(KEY_API_PREFIX);
         }
     }
 

@@ -62,20 +62,6 @@ function slmplus_get_license($lic_key_prefix = '') {
     return strtoupper($lic_key_prefix . hyphenate(md5(uniqid(rand(4, 10), true) . date('Y-m-d H:i:s') . time())));
 }
 
-// WooCommerce integration
-if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocommerce/woocommerce.php')) {
-    require_once(SLM_WOO . 'includes/wc_licenses_class.php');
-    require_once(SLM_WOO . 'includes/slm-meta-boxes.php');
-
-    require_once SLM_WOO . 'includes/register-template.php';
-	require_once SLM_WOO . 'includes/purchase.php';
-    require_once SLM_WOO . 'includes/create-license-orders.php';
-
-    // Build WooCommerce tabs
-    SLM_Utility::slm_woo_build_tab();
-}
-
-
 // Action hooks
 add_action('init', 'slmplus_init_handler');
 add_action('plugins_loaded', 'slmplus_plugins_loaded_handler');
@@ -156,3 +142,15 @@ function wc_log($msg) {
     file_put_contents($log, $msg . '', FILE_APPEND);
 }
 
+// WooCommerce integration
+if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocommerce/woocommerce.php')) {
+    require_once(SLM_WOO . 'includes/wc_licenses_class.php');
+    require_once(SLM_WOO . 'includes/slm-meta-boxes.php');
+
+    require_once SLM_WOO . 'includes/register-template.php';
+	require_once SLM_WOO . 'includes/purchase.php';
+    require_once SLM_WOO . 'includes/create-license-orders.php';
+
+    // Build WooCommerce tabs
+    SLM_Utility::slm_woo_build_tab();
+}
