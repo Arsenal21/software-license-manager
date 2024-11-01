@@ -23,8 +23,9 @@ jobs:
         id: changelog
         run: |
           latest_tag=$(git describe --tags --abbrev=0)
-          changelog=$(git log ${latest_tag}..HEAD --pretty=format:"* %s: %b ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
+          changelog=$(git log ${latest_tag}..HEAD --pretty=format:"- %s ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
           echo "changelog=$changelog" >> $GITHUB_ENV
+          echo "$changelog"
 
       # Build Plugin Zip
       - name: Build Plugin Zip
@@ -36,9 +37,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.event.release.tag_name }}
-          release_name: ${{ github.event.release.tag_name }}
+          name: ${{ github.event.release.tag_name }}
           body: |
             ## Changelog
             ${{ env.changelog }}
           artifacts: "slm-plus.zip"
           allowUpdates: true
+          
