@@ -3,8 +3,8 @@ name: Generate Changelog
 on:
   push:
     tags:
-      - '*'      # Triggers for tags like 1.0, 2.1, etc.
-      - 'v*'     # Also triggers for tags like v1.0, v2.1, etc.
+      - '*'      # Match any tag format (e.g., 1.0, 2.1, etc.)
+      - 'v*'     # Match tags with a 'v' prefix (e.g., v1.0, v2.1, etc.)
 
 jobs:
   generate-changelog:
@@ -14,30 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Git user for commit
-      - name: Set up Git config
+      # Generate Changelog using janheinrichmerker/action-github-changelog-generator
+      - name: Generate changelog
+        uses: janheinrichmerker/action-github-changelog-generator@v2.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          output: CHANGELOG.md  # Optional, if you want the changelog saved to a file
+
+      # Commit and Push the Changelog (if saving to a file)
+      - name: Commit and push changes
+        if: success()  # Only run if previous steps succeeded
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      # Generate Changelog Content
-      - name: Generate Changelog
-        id: changelog
-        run: |
-          # Get the latest tag, ignoring any 'v' prefix if present
-          latest_tag=$(git describe --tags --abbrev=0 HEAD^ | sed 's/^v//')
-          
-          # Generate changelog for commits since the last tag
-          echo "## Changelog" > CHANGELOG.md
-          echo "### Changes since $latest_tag" >> CHANGELOG.md
-          git log ${latest_tag}..HEAD --pretty=format:"* %s: %b ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges >> CHANGELOG.md
-          
-          # Show the generated changelog
-          cat CHANGELOG.md
-
-      # Commit and Push the Changelog
-      - name: Commit and push changes
-        run: |
           git add CHANGELOG.md
           git commit -m "Update CHANGELOG.md for new release"
           git push
