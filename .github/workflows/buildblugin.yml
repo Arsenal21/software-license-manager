@@ -8,15 +8,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Set up Node.js (Node 20)
+      # Set up Node.js (Node 20) with updated action
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Checkout code
+      # Checkout code with updated action version
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Generate Changelog
       - name: Generate Changelog
