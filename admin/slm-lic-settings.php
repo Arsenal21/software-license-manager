@@ -54,8 +54,8 @@ function slm_general_settings()
             'slm_woo_affect_downloads'       => isset($_POST['slm_woo_affect_downloads']),
             'slm_stats'                      => isset($_POST['slm_stats']),
             'slm_adminbar'                   => isset($_POST['slm_adminbar']),
-            'slm_conflictmode'               => isset($_POST['slm_conflictmode']),
-            'slm_front_conflictmode'         => isset($_POST['slm_front_conflictmode']),
+            // 'slm_conflictmode'               => isset($_POST['slm_conflictmode']),
+            // 'slm_front_conflictmode'         => isset($_POST['slm_front_conflictmode']),
             'slm_wpestores'                  => isset($_POST['slm_wpestores']),
             'slm_dl_manager'                 => isset($_POST['slm_dl_manager']),
             'slm_multiple_items'             => isset($_POST['slm_multiple_items']),
@@ -88,7 +88,7 @@ function slm_general_settings()
             <div class="nav-tab-wrapper">
                 <?php $base_url = admin_url('admin.php?page=slm_settings'); ?>
                 <a href="<?php echo $base_url ?>" class="nav-tab <?php echo $tab === 'general_settings' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('General Settings', 'slmplus'); ?>
+                    <?php _e('General', 'slmplus'); ?>
                 </a>
 
                 <a href="<?php echo add_query_arg('tab', 'integrations', $base_url); ?>" class="nav-tab <?php echo $tab === 'integrations' ? 'nav-tab-active' : '' ?>">
@@ -96,7 +96,7 @@ function slm_general_settings()
                 </a>
 
                 <a href="<?php echo add_query_arg('tab', 'debug', $base_url); ?>" class="nav-tab <?php echo $tab === 'debug' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('Debugging settings', 'slmplus'); ?>
+                    <?php _e('Debugging', 'slmplus'); ?>
                 </a>
 
                 <a href="<?php echo add_query_arg('tab', 'emails', $base_url); ?>" class="nav-tab <?php echo $tab === 'emails' ? 'nav-tab-active' : '' ?>">
@@ -224,30 +224,16 @@ function slm_general_settings()
                                     </td>
                                 </tr>
 
-                                <tr>
-                                    <th scope="row"><?php _e('Bootstrap library', 'slmplus'); ?></th>
-                                    <td>
-                                        <input name="slm_conflictmode" type="checkbox" <?php if ($options['slm_conflictmode'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable Bootstrap javascript libray.', 'slmplus'); ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td>
-                                        <input name="slm_front_conflictmode" type="checkbox" <?php if ($options['slm_front_conflictmode'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable Bootstrap javascript libray in front-end (woocommerce pages, etc).', 'slmplus'); ?>
-                                    </td>
-                                </tr>
-
                             </table>
                         </div>
 
                         <div class="integrations hidepanel <?php echo ($tab == 'integrations') ? 'showpanel' : '' ?>">
                             <div class="inside">
+                                <h3><?php _e('WooCommerce Settings', 'slmplus'); ?> </h3>
                                 <table class="form-table">
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('Woocommerce Support', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php _e('WooCommerce', 'slmplus'); ?></th>
                                         <td>
                                             <input name="slm_woo" type="checkbox" <?php if ($options['slm_woo'] != '') echo ' checked="checked"'; ?> value="1" />
                                             <?php _e('Enable WooCommerce Support (A fully customizable, open source eCommerce platform built for WordPress.)', 'slmplus'); ?>
@@ -255,7 +241,7 @@ function slm_general_settings()
                                     </tr>
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('WooCommerce License Generator', 'slmplus'); ?></th>
+                                        <th scope="row"> </th>
                                         <td>
                                             <input name="slm_wc_lic_generator" type="checkbox" <?php if ($options['slm_wc_lic_generator'] != '') echo ' checked="checked"'; ?> value="1" />
                                             <?php _e('Enable WooCommerce Order License Generator', 'slmplus'); ?>
@@ -271,22 +257,25 @@ function slm_general_settings()
                                         <th scope="row"></th>
                                         <td>
                                             <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Disable woocommerce download page. Process downloads though license order info page.', 'slmplus'); ?>
+                                            <?php _e('Disable WooCommerce download page. Process downloads though license order info page.', 'slmplus'); ?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"></th>
                                         <td>
                                             <input name="slm_woo_affect_downloads" type="checkbox" <?php if ($options['slm_woo_affect_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Expire WooCommerce downloads. Downloads will expire together with corresponding license.', 'slmplus'); ?>
+                                            <?php _e('Enable WooCommerce downloads expiration. Downloads will expire together with corresponding license.', 'slmplus'); ?>
                                         </td>
                                     </tr>
+                                </table>
+
+                                <h3><?php _e('WP eStores', 'slmplus'); ?> </h3>
+                                <table class="form-table">
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('WP eStores Support', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php _e('WP eStores', 'slmplus'); ?></th>
                                         <td>
                                             <input name="slm_wpestores" type="checkbox" <?php if ($options['slm_wpestores'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('WordPress eStore Plugin – Complete Solution to Sell Digital Products from Your WordPress Blog Securely', 'slmplus'); ?>
-
+                                            <?php _e('Enable WordPress eStore Plugin Support.', 'slmplus'); ?>
                                         </td>
                                     </tr>
                                 </table>

@@ -82,9 +82,9 @@ $lk_tbl_sql = "CREATE TABLE IF NOT EXISTS " . $lic_key_table . " (
 
 dbDelta($lk_tbl_sql);
 
-// Handle backward compatibility for version 4.1.3 or earlier
-if (version_compare($used_db_version, '4.1.3', '<=')) {
-    // Alter the table if needed
+// Handle backward compatibility for version 6.1.5 or earlier
+if (version_compare($used_db_version, '5.1.1', '<=')) {
+    // Update $lic_key_table if necessary
     $lk_tbl_sql = "
     ALTER TABLE $lic_key_table
     ADD COLUMN IF NOT EXISTS item_reference varchar(255) NOT NULL,
@@ -92,6 +92,20 @@ if (version_compare($used_db_version, '4.1.3', '<=')) {
     ADD COLUMN IF NOT EXISTS slm_billing_interval ENUM('days', 'months', 'years', 'onetime') NOT NULL DEFAULT 'days';
     ";
     dbDelta($lk_tbl_sql);
+
+    // Remove column 'registered_devices' from $lic_domain_table if it exists
+    $domain_table_sql = "
+    ALTER TABLE $lic_domain_table
+    DROP COLUMN IF EXISTS registered_devices;
+    ";
+    $wpdb->query($domain_table_sql);
+
+    // Remove column 'registered_domain' from $lic_devices_table if it exists
+    $devices_table_sql = "
+    ALTER TABLE $lic_devices_table
+    DROP COLUMN IF EXISTS registered_domain;
+    ";
+    $wpdb->query($devices_table_sql);
 }
 
 // Create domains table if not exists
@@ -168,7 +182,7 @@ $new_options = array(
     'slm_backup_dir_hash' => '/slm-plus-' . wp_generate_password(8, false, false),
     'slm_dl_manager' => '',
     'allow_user_activation_removal' => '1',
-    'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. Renew today to keep using it on all of your devices and enjoy the valuable features. It is a smart investment.'
+    'expiration_reminder_text' => 'Your account has reverted to Basic with limited functionality. You can renew today to keep using it on all your devices and enjoy the valuable features. It is a smart investment.'
 );
 
 // Retrieve existing options to merge them with the new ones

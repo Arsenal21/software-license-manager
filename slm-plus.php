@@ -33,7 +33,7 @@ global $wpdb, $slm_debug_logger;
 
 // Define constants for plugin paths, URLs, and database tables
 define('SLM_VERSION',               '6.1.6');
-define('SLM_DB_VERSION',            '5.1.0');
+define('SLM_DB_VERSION',            '5.1.1');
 define('SLM_REWRITE_VERSION',       '3.0.6');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
 define('SLM_URL',                   plugins_url('', __FILE__));
