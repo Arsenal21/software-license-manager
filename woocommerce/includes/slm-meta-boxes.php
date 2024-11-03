@@ -193,14 +193,13 @@ function wc_slm_data_panel() {
 
             // License Renewal Period Length
             woocommerce_wp_text_input(array(
-                'id'            => '_license_renewal_period_lenght',
+                'id'            => '_license_renewal_period_length',
                 'label'         => __('Renewal Period Length', 'slmplus'),
-                'description'   => __('Amount of days, months, or years.', 'slmplus'),
-                'type'          => 'text', // Change 'number' to 'text'
-                'value'         => get_post_meta($product_id, '_license_renewal_period_lenght', true) ?: '1', // Fallback to '1' if empty
+                'description'   => __('XX Amount of days, months, or years.', 'slmplus'),
+                'type'          => 'text',
+                'value'         => get_post_meta($product_id, '_license_renewal_period_length', true) ?: SLM_Helper_Class::slm_get_option('slm_billing_length'),
             ));
-
-            
+                        
 
             // License Renewal Period Term Dropdown
             woocommerce_wp_select(array(
@@ -214,7 +213,7 @@ function wc_slm_data_panel() {
                     'years'     => __('Year(s)', 'slmplus'),
                     'onetime'   => __('One Time', 'slmplus'),
                 ),
-                'value'       => get_post_meta($product_id, '_license_renewal_period_term', true) ?: 'years', // Ensure default value is set to 'years' if empty
+                'value'       => get_post_meta($product_id, '_license_renewal_period_term', true) ?: SLM_Helper_Class::slm_get_option('slm_billing_interval'), // Ensure default value is set to 'years' if empty
             ));
 
             echo '<div class="clear"><hr></div>';
@@ -269,8 +268,8 @@ function wc_slm_save_data($post_id) {
 
     // Handle license renewal period
     
-    $_license_renewal_period_lenght = isset($_POST['_license_renewal_period_lenght']) ? sanitize_text_field($_POST['_license_renewal_period_lenght']) : '';
-    update_post_meta($post_id, '_license_renewal_period_lenght', $_license_renewal_period_lenght);
+    $_license_renewal_period_length = isset($_POST['_license_renewal_period_length']) ? sanitize_text_field($_POST['_license_renewal_period_length']) : '';
+    update_post_meta($post_id, '_license_renewal_period_length', $_license_renewal_period_length);
     
     // Handle license renewal period term
     if (isset($_POST['_license_renewal_period_term'])) {
@@ -302,29 +301,28 @@ function slm_license_admin_custom_js() {
     ?>
     <script type='text/javascript'>
         jQuery(document).ready(function($) {
-            // For Price tab
-            function toggleRenewalFields() {
-                var licType = $("#_license_type").val();
-                if (licType === 'lifetime') {
-                    $('._license_renewal_period_lenght_field').hide();
-                    <?php if ($affect_downloads): ?>
-                        $('#_download_limit, #_download_expiry').val('').prop('disabled', true);
-                    <?php endif; ?>
-                } else {
-                    $('._license_renewal_period_lenght_field').show();
-                    <?php if ($affect_downloads): ?>
-                        $('#_download_limit, #_download_expiry').prop('disabled', false);
-                    <?php endif; ?>
-                }
-            }
-
-            // Initial trigger to properly show/hide fields based on saved values
+            // Run toggleRenewalFields on page load
             toggleRenewalFields();
 
-            // Handle license type change
-            $('#_license_type').on('change', function() {
-                toggleRenewalFields();
-            });
+        // Attach event listener to #_license_type to re-trigger toggle on change
+        $("#_license_type").change(function() {
+            toggleRenewalFields();
+        });
+
+        function toggleRenewalFields() {
+            var licType = $("#_license_type").val();
+            if (licType === 'lifetime') {
+                $('._license_renewal_period_length_field').hide(); // Corrected typo here too
+                <?php if ($affect_downloads): ?>
+                    $('#_download_limit, #_download_expiry').val('').prop('disabled', true);
+                <?php endif; ?>
+            } else {
+                $('._license_renewal_period_length_field').show();
+                <?php if ($affect_downloads): ?>
+                    $('#_download_limit, #_download_expiry').prop('disabled', false);
+                <?php endif; ?>
+            }
+        }
 
             // Handle changes on download limit and expiry if downloads are affected
             <?php if ($affect_downloads): ?>
