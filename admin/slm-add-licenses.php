@@ -98,8 +98,8 @@ function slm_add_licenses_menu()
                 'manual_reset_count' => '',
                 'purchase_id_' => '',
                 'date_created' => date_i18n($slm_wp_date_format, strtotime('now')), // Use WP date format
-                'date_renewed' => '0000-00-00',
-                'date_activated' => '0000-00-00',
+                'date_renewed' => '',
+                'date_activated' => '',
                 'product_ref' => '',
                 'until' => '',
                 'current_ver' => '',
@@ -445,21 +445,29 @@ function slm_add_licenses_menu()
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th scope="row"><label for="slm_billing_length"><?php _e('Billing Length', 'slmplus'); ?></label></th>
-                                        <td><input name="slm_billing_length" type="text" id="slm_billing_length" value="<?php echo esc_attr($data['slm_billing_length']); ?>" class="regular-text" />
-                                        <p class="description" id="billing_lengh_description"><?php _e('This sets the renewal frequency for the license.<br>For example, a length of 2 with a term of years means<br> the license renews every two years.','slmplus'); ?></p></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">
-                                            <label for="slm_billing_interval"><?php _e('Expiration Term', 'slmplus'); ?></label>
-                                        </th>
+                                        <th scope="row"><label><?php _e('Renewal', 'slmplus'); ?></label></th>
                                         <td>
-                                            <select name="slm_billing_interval" id="slm_billing_interval" class="regular-text">
-                                                <option value="days" <?php selected($data['slm_billing_interval'], 'days'); ?>><?php _e('Day(s)', 'slmplus'); ?></option>
-                                                <option value="months" <?php selected($data['slm_billing_interval'], 'months'); ?>><?php _e('Month(s)', 'slmplus'); ?></option>
-                                                <option value="years" <?php selected($data['slm_billing_interval'], 'years'); ?>><?php _e('Year(s)', 'slmplus'); ?></option>
-                                            </select>
-                                            <p class="description" id="new-admin-email-description"><?php _e('Frequency period: in days, months, years','slmplus'); ?></p>
+                                            <div style="display: flex; gap: 10px; width: 350px;">
+                                                <div style="width: 50%;">
+                                                    <label for="slm_billing_length" style="font-weight: bold; display: block; margin-bottom: 5px;"><?php _e('Billing Length', 'slmplus'); ?></label>
+                                                    <input name="slm_billing_length" type="text" id="slm_billing_length" value="<?php echo esc_attr($data['slm_billing_length']); ?>" class="regular-text" style="width: 100%;" />
+                                                    <p class="description" id="billing_length_description" style="margin-top: 5px; font-size: 12px; line-height: 1.2;">
+                                                        <?php _e('Sets how often the license renews. E.g., a length of 2 with a term of years means the license renews every 2 years.','slmplus'); ?>
+                                                    </p>
+                                                </div>
+
+                                                <div style="width: 50%;">
+                                                    <label for="slm_billing_interval" style="font-weight: bold; display: block; margin-bottom: 5px;"><?php _e('Expiration Term', 'slmplus'); ?></label>
+                                                    <select name="slm_billing_interval" id="slm_billing_interval" class="regular-text" style="width: 100%;">
+                                                        <option value="days" <?php selected($data['slm_billing_interval'], 'days'); ?>><?php _e('Day(s)', 'slmplus'); ?></option>
+                                                        <option value="months" <?php selected($data['slm_billing_interval'], 'months'); ?>><?php _e('Month(s)', 'slmplus'); ?></option>
+                                                        <option value="years" <?php selected($data['slm_billing_interval'], 'years'); ?>><?php _e('Year(s)', 'slmplus'); ?></option>
+                                                    </select>
+                                                    <p class="description" id="expiration_term_description" style="margin-top: 5px; font-size: 12px; line-height: 1.2;">
+                                                        <?php _e('Choose the renewal period: days, months, or years.','slmplus'); ?>
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -468,14 +476,24 @@ function slm_add_licenses_menu()
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="date_renewed"><?php _e('Date Renewed', 'slmplus'); ?></label></th>
-                                        <td><input name="date_renewed" type="date" id="date_renewed" value="<?php echo esc_attr($data['date_renewed']); ?>" class="regular-text datepicker" />
-                                            <p class="description" id="new-admin-email-description"><?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?></p>
+                                        <td>
+                                            <input name="date_renewed" type="date" id="date_renewed" 
+                                                value="<?php echo ($data['date_renewed'] === '0000-00-00' || empty($data['date_renewed'])) ? '' : esc_attr($data['date_renewed']); ?>" 
+                                                class="regular-text datepicker" />
+                                            <p class="description" id="new-admin-email-description">
+                                                <?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?>
+                                            </p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="date_activated"><?php _e('Date Activated', 'slmplus'); ?></label></th>
-                                        <td><input name="date_activated" type="date" id="date_activated" value="<?php echo esc_attr($data['date_activated']); ?>" class="regular-text datepicker" />
-                                            <p class="description" id="new-admin-email-description"><?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?></p>
+                                        <td>
+                                            <input name="date_activated" type="date" id="date_activated" 
+                                                value="<?php echo ($data['date_activated'] === '0000-00-00' || empty($data['date_activated'])) ? '' : esc_attr($data['date_activated']); ?>" 
+                                                class="regular-text datepicker" />
+                                            <p class="description" id="new-admin-email-description">
+                                                <?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?>
+                                            </p>
                                         </td>
                                     </tr>
                                 </table>
@@ -555,8 +573,14 @@ function slm_add_licenses_menu()
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="reminder_sent_date"><?php _e('Reminder Sent Date', 'slmplus'); ?></label></th>
-                                        <td><input name="reminder_sent_date" type="date" id="reminder_sent_date" value="<?php echo esc_attr($data['reminder_sent_date']); ?>" class="regular-text datepicker" />
-                                            <p class="description" id="new-admin-email-description"><?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?></p>
+                                        <td>
+                                            <input name="reminder_sent_date" type="date" id="reminder_sent_date" 
+                                                value="<?php echo ($data['reminder_sent_date'] === '0000-00-00') ? '' : esc_attr($data['reminder_sent_date']); ?>" 
+                                                class="regular-text datepicker" 
+                                                placeholder="YYYY-MM-DD" />
+                                            <p class="description" id="new-admin-email-description">
+                                                <?php printf(__('Display Format: %s (input: YYYY-MM-DD)', 'slmplus'), $slm_wp_date_format); ?>
+                                            </p>
                                         </td>
                                     </tr>
                                     <tr>
