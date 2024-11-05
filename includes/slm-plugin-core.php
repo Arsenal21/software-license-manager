@@ -154,3 +154,45 @@ if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocom
     // Build WooCommerce tabs
     SLM_Utility::slm_woo_build_tab();
 }
+
+add_action('wp_ajax_slm_user_search', 'slm_user_search');
+function slm_user_search() {
+    $value = sanitize_text_field($_POST['value']);
+    
+    // Meta query to search for user data
+    $meta_query = [
+        'relation' => 'OR',
+        ['key' => 'first_name', 'value' => $value, 'compare' => 'LIKE'],
+        ['key' => 'last_name', 'value' => $value, 'compare' => 'LIKE'],
+        ['key' => 'billing_first_name', 'value' => $value, 'compare' => 'LIKE'],
+        ['key' => 'billing_last_name', 'value' => $value, 'compare' => 'LIKE'],
+    ];
+
+    // Arguments to find users
+    $args = [
+        'meta_query' => $meta_query,
+        'number'     => 10,
+    ];
+
+    $users = get_users($args);
+    $results = [];
+
+    foreach ($users as $user) {
+        // Fallback to billing info if WooCommerce is active
+        $first_name = get_user_meta($user->ID, 'first_name', true) ?: get_user_meta($user->ID, 'billing_first_name', true);
+        $last_name = get_user_meta($user->ID, 'last_name', true) ?: get_user_meta($user->ID, 'billing_last_name', true);
+        $company_name = get_user_meta($user->ID, 'company_name', true); // Retrieve company name if available
+        
+        $results[] = [
+            'ID'           => $user->ID,
+            'display_name' => $user->display_name ?: "{$first_name} {$last_name}",
+            'first_name'   => $first_name,
+            'last_name'    => $last_name,
+            'email'        => $user->user_email,
+            'company_name' => $company_name,
+            'subscr_id'    => $user->ID, // Pass user ID as the subscription ID
+        ];
+    }
+
+    wp_send_json_success($results);
+}

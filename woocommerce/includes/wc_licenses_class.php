@@ -69,20 +69,20 @@ add_filter('woocommerce_account_menu_items', 'slm_add_my_licenses_endpoint');
 // Step 3: Display content based on endpoint value
 add_action('woocommerce_account_my-licenses_endpoint', function($value) {
 
-    SLM_Helper_Class::write_log('slm_add_my_licenses_endpoint loaded');
+    //SLM_Helper_Class::write_log('slm_add_my_licenses_endpoint loaded');
 
     if ($value === 'view') {
         // Use $_GET instead of get_query_var to directly retrieve the URL parameter
         $license_id = isset($_GET['slm_lic']) ? $_GET['slm_lic'] : false;
-        SLM_Helper_Class::write_log('license_id var ' . $license_id);
+        //SLM_Helper_Class::write_log('license_id var ' . $license_id);
 
         if ($license_id) {
-            SLM_Helper_Class::write_log('license_id call2 ' . $license_id);
+            //SLM_Helper_Class::write_log('license_id call2 ' . $license_id);
             slm_license_view($license_id);
         }
         else {
             echo '<p>' . __('Invalid license or access denied.', 'slmplus') . '</p>';
-             SLM_Helper_Class::write_log('user id ' . get_current_user_id());
+             //SLM_Helper_Class::write_log('user id ' . get_current_user_id());
         }
     } else {
         // Display the licenses table if no specific value is passed
@@ -93,7 +93,7 @@ add_action('woocommerce_account_my-licenses_endpoint', function($value) {
 // Step 4: Display the main licenses table
 function slm_display_license_table() {
 
-    SLM_Helper_Class::write_log('slm_display_license_table loaded');
+    //SLM_Helper_Class::write_log('slm_display_license_table loaded');
 
     $user_id = get_current_user_id();
     $user_email = wp_get_current_user()->user_email;
@@ -141,8 +141,6 @@ function slm_display_license_table() {
             echo '</tr>';
         }
         
-        
-
         echo '</tbody>';
         echo '</table>';
     } else {
@@ -150,9 +148,7 @@ function slm_display_license_table() {
     }
 }
 
-
-SLM_Helper_Class::write_log('file loaded');
-
+//SLM_Helper_Class::write_log('file loaded');
 
 // Step 5: Display individual license details
 function slm_license_view($encoded_license_id) {
@@ -164,9 +160,9 @@ function slm_license_view($encoded_license_id) {
     $license_id = trim(base64_decode($encoded_license_id));
 
     // Log the decoded license key, user email, and user ID
-    SLM_Helper_Class::write_log('Decoded License Key: ' . $license_id);
-    SLM_Helper_Class::write_log('User Email: ' . $user_email);
-    SLM_Helper_Class::write_log('User ID (subscr_id): ' . $user_id);
+    //SLM_Helper_Class::write_log('Decoded License Key: ' . $license_id);
+    //SLM_Helper_Class::write_log('User Email: ' . $user_email);
+    //SLM_Helper_Class::write_log('User ID (subscr_id): ' . $user_id);
 
     // Construct the query based on whether user ID is available
     if ($user_id) {
@@ -182,7 +178,7 @@ function slm_license_view($encoded_license_id) {
     }
 
     // Log the SQL query for debugging
-    SLM_Helper_Class::write_log('SQL Query: ' . $query);
+    //SLM_Helper_Class::write_log('SQL Query: ' . $query);
 
     // Execute the query
     $license = $wpdb->get_row($query);
@@ -190,7 +186,7 @@ function slm_license_view($encoded_license_id) {
     // Check if license was found
     if (!$license) {
         echo '<p>' . __('Invalid license or access denied.', 'slmplus') . '</p>';
-        SLM_Helper_Class::write_log('error');
+        //SLM_Helper_Class::write_log('error');
         return;
     }
 
@@ -262,10 +258,8 @@ function slm_license_view($encoded_license_id) {
 
         echo '<tr><th>' . $field_label . '</th><td>' . $field_value . '</td></tr>';
     }
-
     echo '</tbody>';
     echo '</table>'; 
-
 
 
     global $wpdb;
@@ -316,37 +310,23 @@ function slm_license_view($encoded_license_id) {
         echo '</tbody>';
         echo '</table>';
     }
-    
-
-    
-
 
     // Handle the deletion request
-if (isset($_POST['delete_activation'])) {
-    $activation_id = intval($_POST['activation_id']);
-    $activation_type = sanitize_text_field($_POST['activation_type']);
+    if (isset($_POST['delete_activation'])) {
+        $activation_id = intval($_POST['activation_id']);
+        $activation_type = sanitize_text_field($_POST['activation_type']);
 
-    // Determine the table based on the activation type
-    $table = ($activation_type === 'domain') ? SLM_TBL_LIC_DOMAIN : SLM_TBL_LIC_DEVICES;
+        // Determine the table based on the activation type
+        $table = ($activation_type === 'domain') ? SLM_TBL_LIC_DOMAIN : SLM_TBL_LIC_DEVICES;
 
-    // Delete the activation record from the relevant table
-    $deleted = $wpdb->delete($table, ['id' => $activation_id], ['%d']);
+        // Delete the activation record from the relevant table
+        $deleted = $wpdb->delete($table, ['id' => $activation_id], ['%d']);
 
-    // Display a confirmation or error message
-    if ($deleted) {
-        echo '<p class="slm-notice">' . __('Activation successfully deleted. Reload Page.', 'slmplus') . '</p>';
-    } else {
-        echo '<p class="slm-notice">' . __('Failed to delete activation. Please try again.', 'slmplus') . '</p>';
+        // Display a confirmation or error message
+        if ($deleted) {
+            echo '<p class="slm-notice">' . __('Activation successfully deleted. Reload Page.', 'slmplus') . '</p>';
+        } else {
+            echo '<p class="slm-notice">' . __('Failed to delete activation. Please try again.', 'slmplus') . '</p>';
+        }
     }
-}
-
-
-
-
-
-
-
-
-
-
 }

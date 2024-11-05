@@ -30,6 +30,19 @@ SLM Plus is the ideal solution for developers, digital product vendors, and busi
 4. Click Install Now and then activate the plugin
 ```
 
+### Sample Files Overview
+- **CoreConfig.php**: Sets up global constants and utility methods for API requests and responses.
+- **LicenseAPI.php**: Provides core methods for each license management action, using `CoreConfig.php` for secure requests.
+- **Action Files**:
+  - `CreateLicense.php`: Handles license creation.
+  - `ActivateLicense.php`: Activates a license for a specific domain or device.
+  - `DeactivateLicense.php`: Manages deactivation of a license.
+  - `CheckLicense.php`: Checks the current status of a license.
+  - `GetLicenseInfo.php`: Retrieves detailed information about a license.
+
+Refer to each [wiki page](https://github.com/michelve/software-license-manager/wiki) for in-depth guides on using these files.
+
+
 ## Author
 
 👤 **Michel Velis and Tips and Tricks HQ**
@@ -92,6 +105,10 @@ This feature set offers complete license management for WordPress and WooCommerc
 ## 🕘 Changelog and history
 
 Changelog: [View changelog](https://github.com/michelve/software-license-manager/blob/master/CHANGELOG.md)
+
+## 📄 Documentation and Wiki
+
+For a detailed guide on each action, refer to the new wiki pages.
 
 ## 🎑 Screenshots
 

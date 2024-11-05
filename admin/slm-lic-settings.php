@@ -292,6 +292,29 @@ function slm_general_settings()
                                                 <?php echo __('If checked, debug output will be written to log files.', ' slmplus '); ?></p>
                                         </td>
                                     </tr>
+
+                                    <tr valign="top">
+                                        <th scope="row"> <?php echo __('SLM Plus Version', 'slmplus'); ?></th>
+                                        <td>
+                                            <p class="description"> <?php echo SLM_VERSION;?> </p>
+                                        </td>
+                                    </tr>
+
+                                    <tr valign="top">
+                                        <th scope="row"> <?php echo __('SLM Databse Version', 'slmplus'); ?></th>
+                                        <td>
+                                            <p class="description"> <?php echo SLM_DB_VERSION;?> </p>
+                                        </td>
+                                    </tr>
+
+                                    <tr valign="top">
+                                        <th scope="row"> <?php echo __('SLM Rewrite Version', 'slmplus'); ?></th>
+                                        <td>
+                                            <p class="description"> <?php echo SLM_REWRITE_VERSION;?> </p>
+                                        </td>
+                                    </tr>
+
+
                                 </table>
                             </div>
                         </div>

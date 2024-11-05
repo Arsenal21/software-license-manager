@@ -7,16 +7,4 @@ jQuery(document).ready(function($){
     }
 });
 
-jQuery(document).ready(function ($) {
-    if (jQuery("body").hasClass("plugins-php")) {
-        document.querySelector('[data-slug="software-license-manager"] a').addEventListener('click', function (event) {
-            event.preventDefault()
-            var urlRedirect = document.querySelector('[data-slug="software-license-manager"] a').getAttribute('href');
-            if (confirm('Are you sure you want to disable this plugin?')) {
-                window.location.href = urlRedirect;
-            } else {
-                console.log('Ohhh, you are so sweet!')
-            }
-        })
-    }
-});
+

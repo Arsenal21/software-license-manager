@@ -198,125 +198,186 @@ class SLM_Utility
         return false; // Return false if no data was found
     }
 
-    public static function check_for_expired_lic($lic_key = '')
-    {
+    public static function check_for_expired_lic($lic_key = '') {
         global $wpdb;
-
+    
+        // Set up email headers and subject line
         $headers = array('Content-Type: text/html; charset=UTF-8');
-        $response = '';
-        $sql_query = $wpdb->get_results(
-            "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() AND date_expiry != '00000000' ORDER BY date_expiry ASC;",
-            ARRAY_A
-        );
         $subject = get_bloginfo('name') . ' - Your license has expired';
         $expiration_reminder_text = SLM_Helper_Class::slm_get_option('expiration_reminder_text');
-
-        if (count($sql_query) > 0) {
-            foreach ($sql_query as $expired_licenses) {
-                // TODO move to template
-                include SLM_LIB . 'mails/expired.php';
-
-                $id = intval($expired_licenses['id']);
-                $license_key = sanitize_text_field($expired_licenses['license_key']);
-                $first_name = sanitize_text_field($expired_licenses['first_name']);
-                $last_name = sanitize_text_field($expired_licenses['last_name']);
-                $email = sanitize_email($expired_licenses['email']);
-                $date_expiry = sanitize_text_field($expired_licenses['date_expiry']);
-
-                if (SLM_Helper_Class::slm_get_option('enable_auto_key_expiration') == 1) {
-                    $data = array('lic_status' => 'expired');
-                    $where = array('id' => $id);
-                    $updated = $wpdb->update(SLM_TBL_LICENSE_KEYS, $data, $where);
-
-                    self::create_log($license_key, 'set to expired');
-                    self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
+        $expired_licenses_list = [];
+        $reinstated_licenses_list = [];
+    
+        // Query licenses marked as expired but with future expiration dates to correct their status
+        $incorrectly_expired_query = $wpdb->prepare(
+            "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE lic_status = %s AND date_expiry > NOW()",
+            'expired'
+        );
+        $incorrectly_expired_licenses = $wpdb->get_results($incorrectly_expired_query, ARRAY_A);
+    
+        // Reinstate incorrectly expired licenses
+        foreach ($incorrectly_expired_licenses as $license) {
+            $license_key = sanitize_text_field($license['license_key']);
+            $id = intval($license['id']);
+    
+            // Update license status to 'active'
+            $wpdb->update(
+                SLM_TBL_LICENSE_KEYS,
+                ['lic_status' => 'active'],
+                ['id' => $id]
+            );
+    
+            self::create_log($license_key, 'status corrected to active');
+            $reinstated_licenses_list[] = $license_key;
+        }
+    
+        // Log reinstated licenses
+        if (!empty($reinstated_licenses_list)) {
+            SLM_Helper_Class::write_log('Reinstated licenses set to active: ' . implode(', ', $reinstated_licenses_list));
+        }
+    
+        // Query expired licenses
+        $expired_query = $wpdb->prepare(
+            "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() AND date_expiry != %s ORDER BY date_expiry ASC;",
+            '00000000'
+        );
+        $expired_licenses = $wpdb->get_results($expired_query, ARRAY_A);
+    
+        // Check if any expired licenses were found
+        if (empty($expired_licenses)) {
+            SLM_Helper_Class::write_log('No expired licenses found');
+            return []; // Return an empty array if no licenses found
+        }
+    
+        // Process each expired license
+        foreach ($expired_licenses as $license) {
+            $id = intval($license['id']);
+            $license_key = sanitize_text_field($license['license_key']);
+            // $first_name = sanitize_text_field($license['first_name']);
+            // $last_name = sanitize_text_field($license['last_name']);
+            $email = sanitize_email($license['email']);
+            $date_expiry = sanitize_text_field($license['date_expiry']);
+    
+            // Include email template and generate the email body
+            ob_start();
+            include SLM_LIB . 'mails/expired.php';
+            $body = ob_get_clean();
+    
+            // Check if auto-expiration is enabled and update the license status
+            if (SLM_Helper_Class::slm_get_option('enable_auto_key_expiration') == 1) {
+                $update_data = ['lic_status' => 'expired'];
+                $where_clause = ['id' => $id];
+                $wpdb->update(SLM_TBL_LICENSE_KEYS, $update_data, $where_clause);
+    
+                // Log and send expiration notification
+                self::create_log($license_key, 'set to expired');
+                $email_result = self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
+                if ($email_result === '200') {
                     self::create_log($license_key, 'sent expiration email notification');
                 }
-
-                $response = 'Reminder message was sent to: ' . $license_key;
             }
-        } else {
-            SLM_Helper_Class::write_log('No expired licenses found');
-            $response = 'No expired licenses found';
+    
+            // Add license to the expired list
+            $expired_licenses_list[] = $license_key;
         }
-        return $response;
+    
+        // Log the total count of expired licenses
+        SLM_Helper_Class::write_log('Expired licenses found and processed: ' . implode(', ', $expired_licenses_list));
+    
+        return [
+            'expired_licenses' => $expired_licenses_list,
+            'reinstated_licenses' => $reinstated_licenses_list
+        ]; // Return both expired and reinstated licenses
     }
+    
 
+    // Define return codes for clarity
+    const EMAIL_SENT_FIRST_TIME = '200';
+    const EMAIL_ALREADY_SENT = '400';
+    const EMAIL_SENT_RECORD_NOT_FOUND = '300';
 
-    public static function slm_check_sent_emails($license_key, $email, $subject, $body, $headers)
-    {
+    public static function slm_check_sent_emails($license_key, $email, $subject, $body, $headers) {
         global $wpdb;
 
-        // Prepare the query to avoid SQL injection
+        // Check if an email has already been sent for this license key
         $query = $wpdb->prepare(
-            'SELECT * FROM ' . SLM_TBL_EMAILS . ' WHERE lic_key = %s',
+            'SELECT COUNT(*) FROM ' . SLM_TBL_EMAILS . ' WHERE lic_key = %s',
             $license_key
         );
-        $lic_log_results = $wpdb->get_results($query, ARRAY_A);
+        $email_already_sent = $wpdb->get_var($query) > 0;
 
-        if (!empty($lic_log_results)) {
-            foreach ($lic_log_results as $license) {
-                if ($license['lic_key'] !== $license_key) {
-                    // Send email if the license key does not match
-                    wp_mail($email, $subject, $body, $headers);
-                    self::create_email_log($license_key, $email, 'success', 'yes', current_time('mysql'));
-                    return '200'; // Reminder was never sent before, first time (record does not exist)
-                } else {
-                    // Reminder was sent before
-                    return '400';
-                }
-            }
-        } else {
-            // Array or results are empty (lic key was not found)
-            wp_mail($email, $subject, $body, $headers);
+        // If email already sent, return status code without resending
+        if ($email_already_sent) {
+            return self::EMAIL_ALREADY_SENT;
+        }
+
+        // Send the email if it hasn't been sent before
+        $mail_sent = wp_mail($email, $subject, $body, $headers);
+
+        // Log the email status
+        if ($mail_sent) {
             self::create_email_log($license_key, $email, 'success', 'yes', current_time('mysql'));
-            return '300';
+            return self::EMAIL_SENT_FIRST_TIME;
+        } else {
+            self::create_email_log($license_key, $email, 'failure', 'no', current_time('mysql'));
+            return self::EMAIL_SENT_RECORD_NOT_FOUND;
         }
     }
+    
 
-
-    public static function do_auto_key_expiry()
-    {
+    public static function do_auto_key_expiry() {
         global $wpdb;
         $current_date = current_time('Y-m-d');
         $slm_lic_table = SLM_TBL_LICENSE_KEYS;
-
-        // Load the non-expired keys
+    
+        // Query for active (non-expired) licenses
         $licenses = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE lic_status != %s", 'expired'),
             OBJECT
         );
-
+    
+        // Log and return if no licenses are found
         if (empty($licenses)) {
-            SLM_Debug_Logger::log_debug_st("do_auto_key_expiry() - no license keys found.");
+            SLM_Debug_Logger::log_debug_st("do_auto_key_expiry() - No active license keys found.");
             return false;
         }
-
+    
+        $today_dt = new DateTime($current_date);
+    
         foreach ($licenses as $license) {
-            $key = sanitize_text_field($license->license_key);
+            $license_key = sanitize_text_field($license->license_key);
             $expiry_date = sanitize_text_field($license->date_expiry);
-
-            if ($expiry_date === '0000-00-00' || $expiry_date === '00000000' || empty($expiry_date)) {
-                SLM_Debug_Logger::log_debug_st("This key (" . $key . ") doesn't have a valid expiration date set. The expiration of this key will not be checked.");
+    
+            // Skip if expiration date is invalid or empty
+            if (empty($expiry_date) || in_array($expiry_date, ['0000-00-00', '00000000'])) {
+                SLM_Debug_Logger::log_debug_st("License key ($license_key) has no valid expiration date set. Skipping expiry check.");
                 continue;
             }
-
-            $today_dt = new DateTime($current_date);
+    
+            // Check if the license has expired
             $expire_dt = new DateTime($expiry_date);
-
             if ($today_dt > $expire_dt) {
-                // This key has reached the expiry. So expire this key.
-                SLM_Debug_Logger::log_debug_st("This key (" . $key . ") has expired. Expiry date: " . $expiry_date . ". Setting license key status to expired.");
-                $data = array('lic_status' => 'expired');
-                $where = array('id' => intval($license->id));
+                // Update license status to 'expired'
+                $data = ['lic_status' => 'expired'];
+                $where = ['id' => intval($license->id)];
                 $updated = $wpdb->update($slm_lic_table, $data, $where);
-
-                do_action('slm_license_key_expired', $license->id);
-                self::check_for_expired_lic($key);
+    
+                // Log the expiry and trigger action if successfully updated
+                if ($updated) {
+                    SLM_Debug_Logger::log_debug_st("License key ($license_key) expired on $expiry_date. Status set to 'expired'.");
+                    do_action('slm_license_key_expired', $license->id);
+    
+                    // Optional: Send expiry reminder email
+                    self::check_for_expired_lic($license_key);
+                } else {
+                    SLM_Debug_Logger::log_debug_st("Failed to update status for expired license key ($license_key).");
+                }
             }
         }
+    
         return true;
     }
+    
 
 
     public static function get_user_info($by, $value)
@@ -330,43 +391,40 @@ class SLM_Utility
         return $user;
     }
 
-    public static function get_days_remaining($date1)
-    {
+    public static function get_days_remaining($date1) {
         // Validate and sanitize the date input
         $date1 = sanitize_text_field($date1);
-    
-        // Convert the future date to timestamp
-        $future = strtotime($date1);
-    
-        // Check if the date is valid
-        if (!$future) {
-            return 0; // Return 0 if the date is invalid
-        }
-    
-        // Get the current timestamp
-        $now = time();
-    
-        // Calculate the time difference in seconds
-        $timeleft = $future - $now;
-    
-        // Convert time difference to days
-        $daysleft = floor($timeleft / (60 * 60 * 24));
-    
-        // Ensure we don't return negative days if the date has passed
-        if ($daysleft < 0) {
-            $daysleft = 0;
-        }
     
         // Retrieve the date format setting from WordPress settings
         $date_format = get_option('date_format');
     
-        // Return the formatted date remaining with the number of days left
-        return sprintf(
-            __('%s days remaining until %s', 'slmplus'),
-            $daysleft,
-            date_i18n($date_format, $future)
-        );
+        try {
+            // Create DateTime objects for future and current dates
+            $future_date = new DateTime($date1);
+            $current_date = new DateTime();
+    
+            // Check if the future date is valid and in the future
+            if ($future_date < $current_date) {
+                return __('0 days remaining', 'slmplus');
+            }
+    
+            // Calculate the difference in days
+            $interval = $current_date->diff($future_date);
+            $days_remaining = (int) $interval->days;
+    
+            // Format and return the result
+            return sprintf(
+                __('%s days remaining until %s', 'slmplus'),
+                $days_remaining,
+                date_i18n($date_format, $future_date->getTimestamp())
+            );
+    
+        } catch (Exception $e) {
+            // Return 0 days remaining if date parsing fails
+            return __('0 days remaining', 'slmplus');
+        }
     }
+    
     
 
 
@@ -391,18 +449,27 @@ class SLM_Utility
     /*
     * Retrieves the email associated with a license key
     */
-    public static function slm_get_lic_email($license)
-    {
+    public static function slm_get_lic_email($license) {
         global $wpdb;
         $lic_key_table = SLM_TBL_LICENSE_KEYS;
-
+    
         // Sanitize the input
         $license = sanitize_text_field($license);
-
-        // Prepare the query
-        $email = $wpdb->get_var($wpdb->prepare("SELECT email FROM $lic_key_table WHERE license_key = %s", $license));
-        return $email;
+    
+        // Prepare and execute the query to fetch the email
+        $email = $wpdb->get_var(
+            $wpdb->prepare("SELECT email FROM $lic_key_table WHERE license_key = %s", $license)
+        );
+    
+        // Check if an email was found and is valid
+        if ($email && is_email($email)) {
+            return $email;
+        } else {
+            // Return a WP_Error if the email was not found or invalid
+            return new WP_Error('license_not_found', __('License key not found or invalid email.', 'slmplus'));
+        }
     }
+    
 
     /*
     * Sends an email with the specified parameters
@@ -680,45 +747,70 @@ class SLM_Utility
         return hash('sha256', $key);
     }
 
-    static function create_log($license_key, $action)
-    {
+    public static function create_log($license_key, $action) {
         global $wpdb;
-        $slm_log_table  = SLM_TBL_LIC_LOG;
-        $origin = '';
-
-        if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-            $origin = $_SERVER['HTTP_ORIGIN'];
-        } else if (array_key_exists('HTTP_REFERER', $_SERVER)) {
-            $origin = $_SERVER['HTTP_REFERER'];
+        $slm_log_table = SLM_TBL_LIC_LOG;
+    
+        // Sanitize inputs
+        $license_key = sanitize_text_field($license_key);
+        $action = sanitize_text_field($action);
+    
+        // Determine the request origin
+        if (!empty($_SERVER['HTTP_ORIGIN'])) {
+            $origin = sanitize_text_field($_SERVER['HTTP_ORIGIN']);
+        } elseif (!empty($_SERVER['HTTP_REFERER'])) {
+            $origin = sanitize_text_field($_SERVER['HTTP_REFERER']);
         } else {
-            $origin = $_SERVER['REMOTE_ADDR'];
+            $origin = sanitize_text_field($_SERVER['REMOTE_ADDR']);
         }
-
+    
+        // Prepare log data
         $log_data = array(
-            'license_key'   => $license_key,
-            'slm_action'    => $action,
-            'time'          => wp_date("Y/m/d"),
-            'source'        => $origin
+            'license_key' => $license_key,
+            'slm_action'  => $action,
+            'time'        => current_time('mysql'), // Standardized date-time format
+            'source'      => $origin,
         );
-
-        $wpdb->insert($slm_log_table, $log_data);
+    
+        // Insert log data into the database
+        $inserted = $wpdb->insert($slm_log_table, $log_data);
+    
+        // Check for insertion errors
+        if ($inserted === false) {
+            error_log("Failed to insert log for license key: $license_key, action: $action. Error: " . $wpdb->last_error);
+        }
     }
+    
 
-    static function create_email_log($lic_key, $sent_to, $status, $sent, $date_sent)
-    {
+    public static function create_email_log($lic_key, $sent_to, $status, $sent, $date_sent = null) {
         global $wpdb;
-        $slm_email_table  = SLM_TBL_EMAILS;
+        $slm_email_table = SLM_TBL_EMAILS;
 
+        // Sanitize inputs
+        $lic_key = sanitize_text_field($lic_key);
+        $sent_to = sanitize_email($sent_to);
+        $status = sanitize_text_field($status);
+        $sent = sanitize_text_field($sent);
+        $date_sent = $date_sent ? sanitize_text_field($date_sent) : current_time('mysql');
+
+        // Prepare log data
         $log_data = array(
-            'lic_key'       => $lic_key,
-            'sent_to'       => $sent_to,
-            'status'        => $status,
-            'sent'          => $sent,
-            'date_sent'     => $date_sent
+            'lic_key'   => $lic_key,
+            'sent_to'   => $sent_to,
+            'status'    => $status,
+            'sent'      => $sent,
+            'date_sent' => $date_sent,
         );
 
-        $wpdb->insert($slm_email_table, $log_data);
-        SLM_Helper_Class::write_log('email log created for ' . $lic_key);
+        // Insert log data into the database
+        $inserted = $wpdb->insert($slm_email_table, $log_data);
+
+        // Check for insertion success and log accordingly
+        if ($inserted !== false) {
+            SLM_Helper_Class::write_log("Email log created for license key: $lic_key");
+        } else {
+            error_log("Failed to create email log for license key: $lic_key. Error: " . $wpdb->last_error);
+        }
     }
 
     static function slm_wp_dashboards_stats($amount)
