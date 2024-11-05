@@ -2,7 +2,7 @@
 
 ## [Unreleased](https://github.com/michelve/software-license-manager/tree/HEAD)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.4...HEAD)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.6...HEAD)
 
 **Merged pull requests:**
 
@@ -12,6 +12,10 @@
 - Correct error on activate that trys to load a non-existent option. [\#90](https://github.com/michelve/software-license-manager/pull/90) ([Narimm](https://github.com/Narimm))
 - Bump minimist from 1.2.5 to 1.2.6 [\#85](https://github.com/michelve/software-license-manager/pull/85) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump node-fetch from 2.6.1 to 2.6.7 [\#80](https://github.com/michelve/software-license-manager/pull/80) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+## [6.1.6](https://github.com/michelve/software-license-manager/tree/6.1.6) (2024-11-03)
+
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.4...6.1.6)
 
 ## [6.1.4](https://github.com/michelve/software-license-manager/tree/6.1.4) (2024-11-01)
 
@@ -375,15 +379,15 @@
 
 ## [4.7](https://github.com/michelve/software-license-manager/tree/4.7) (2019-03-07)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.06...4.7)
-
-## [4.06](https://github.com/michelve/software-license-manager/tree/4.06) (2018-12-31)
-
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.6...4.06)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.6...4.7)
 
 ## [4.6](https://github.com/michelve/software-license-manager/tree/4.6) (2018-12-31)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.5...4.6)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.06...4.6)
+
+## [4.06](https://github.com/michelve/software-license-manager/tree/4.06) (2018-12-31)
+
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/4.5...4.06)
 
 ## [4.5](https://github.com/michelve/software-license-manager/tree/4.5) (2018-12-04)
 
