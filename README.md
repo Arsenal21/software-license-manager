@@ -1,12 +1,10 @@
-> :warning: **Back on maintenance**: I have released a new version in the dev branch—beta version 6.1.0, featuring a complete rewrite.
-
 # Welcome to SLM Plus 👋
 
-![Version](https://img.shields.io/badge/version-5.6.1-blue.svg?cacheSeconds=2592000)
+![Version](https://img.shields.io/badge/version-6.1.7-blue.svg?cacheSeconds=2592000)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://documenter.getpostman.com/view/307939/6tjU1FL?version=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/michelve/software-license-manager/blob/master/LICENSE.md)
 
-🔐 SLM Plus - Enhanced Software License Manager for WordPress
+🔐 SLM Plus - Enhanced SLM Plus for WordPress
 
 SLM Plus is a robust and customizable license management plugin for WordPress, built to integrate seamlessly with WooCommerce and WP eStore. Designed to provide comprehensive license generation, validation, and tracking capabilities, SLM Plus simplifies software licensing workflows, ensuring secure, efficient distribution and control of your digital products.
 
@@ -112,23 +110,33 @@ For a detailed guide on each action, refer to the new wiki pages.
 
 ## 🎑 Screenshots
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/dashboard.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/1.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview-filters.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/2.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/overview.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/3.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/screen%20options.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/4.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers-results.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/5.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/subscribers.png?raw=true"  width="800"/>
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/6.png?raw=true"  width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/add-key.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/7.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/export.png?raw=true" width="800" alt="Software License Manager" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/8.png?raw=true" width="800" alt="SLM Plus" />
 
-<img src="https://raw.githubusercontent.com/michelve/software-license-manager/1bf014b84300ba58e7ce614c25f9976c7fab6cb1/public/assets/images/previews/my-account-lics-opened.png" alt="Software License Manager" width="800" />
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/9.png?raw=true" width="800" alt="SLM Plus" />
+
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/10.png?raw=true" width="800" alt="SLM Plus" />
+
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/11.png?raw=true" width="800" alt="SLM Plus" />
+
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/12.png?raw=true" width="800" alt="SLM Plus" />
+
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/13.png?raw=true" width="800" alt="SLM Plus" />
+
+<img src="https://raw.githubusercontent.com/michelve/software-license-manager/master/public/assets/images/previews/14.png?raw=true" width="800" alt="SLM Plus" />
 
 ## 📝 License
 
