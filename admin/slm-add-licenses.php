@@ -390,33 +390,36 @@ function slm_add_licenses_menu()
                                     <tr>
                                         <th scope="row"><label for="first_name"><?php _e('First Name', 'slmplus'); ?> <span style="color: red;">*</span></label></th>
                                         <td>
-                                            <input name="first_name" type="text" id="first_name" class="regular-text user-search-input" required autocomplete="off" />
+                                            <input name="first_name" type="text" id="first_name" value="<?php echo isset($data['first_name']) ? esc_attr($data['first_name']) : ''; ?>" class="regular-text user-search-input" required autocomplete="off" />
                                             <div class="user-search-suggestions wp-core-ui" data-field="first_name"></div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="last_name"><?php _e('Last Name', 'slmplus'); ?> <span style="color: red;">*</span></label></th>
                                         <td>
-                                            <input name="last_name" type="text" id="last_name" class="regular-text user-search-input" required autocomplete="off" />
+                                            <input name="last_name" type="text" id="last_name" value="<?php echo isset($data['last_name']) ? esc_attr($data['last_name']) : ''; ?>" class="regular-text user-search-input" required autocomplete="off" />
                                             <div class="user-search-suggestions wp-core-ui" data-field="last_name"></div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="email"><?php _e('Email', 'slmplus'); ?> <span style="color: red;">*</span></label></th>
                                         <td>
-                                            <input name="email" type="email" id="email" class="regular-text user-search-input" required autocomplete="off" />
+                                            <input name="email" type="email" id="email" value="<?php echo isset($data['email']) ? esc_attr($data['email']) : ''; ?>" class="regular-text user-search-input" required autocomplete="off" />
                                             <div class="user-search-suggestions wp-core-ui" data-field="email"></div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"><label for="company_name"><?php _e('Company Name', 'slmplus'); ?></label></th>
-                                        <td><input name="company_name" type="text" id="company_name" class="regular-text" /></td>
+                                        <td>
+                                            <input name="company_name" type="text" id="company_name" value="<?php echo isset($data['company_name']) ? esc_attr($data['company_name']) : ''; ?>" class="regular-text" />
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                         <!-- Hidden field to store the selected user ID -->
-                        <input type="hidden" name="user_id" id="user_id" value="" />
+                        <input type="hidden" name="user_id" id="user_id" value="<?php echo isset($data['user_id']) ? esc_attr($data['user_id']) : ''; ?>" />
+
 
 
                         <h2 class="hndle"><?php esc_html_e('License Information', 'slmplus'); ?></h2>
