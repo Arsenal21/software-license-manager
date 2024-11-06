@@ -5,7 +5,7 @@
             <div class="info"> <span class="badge"> <?php echo SLM_Utility::get_total_licenses(); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Total licenses', 'softwarelicensemanager');?></span>
+            <span><?php _e('Total licenses', 'slmplus');?></span>
         </div>
     </li>
 
@@ -15,7 +15,7 @@
             <div class="info"> <span class="badge"> <?php echo SLM_Utility::getstats_licenses('date_created', 7); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Licenses this week', 'softwarelicensemanager');?></span>
+            <span><?php _e('Licenses this week', 'slmplus');?></span>
         </div>
     </li>
 
@@ -25,7 +25,7 @@
             <div class="info"> <span class="badge"> <?php echo SLM_Utility::getstats_licenses('date_created', 31); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Licenses this month', 'softwarelicensemanager');?></span>
+            <span><?php _e('Licenses this month', 'slmplus');?></span>
         </div>
     </li>
 
@@ -35,7 +35,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_licenses('active'); ?> </span></div>
         </div>
         <div class="description">
-            <span><?php _e('Active licenses', 'softwarelicensemanager');?></span>
+            <span><?php _e('Active licenses', 'slmplus');?></span>
         </div>
     </li>
 
@@ -45,7 +45,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_licenses('pending '); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Pending licenses', 'softwarelicensemanager');?></span>
+            <span><?php _e('Pending licenses', 'slmplus');?></span>
         </div>
     </li>
 
@@ -55,7 +55,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_licenses('blocked '); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Blocked licenses', 'softwarelicensemanager');?></span>
+            <span><?php _e('Blocked licenses', 'slmplus');?></span>
         </div>
     </li>
 
@@ -65,7 +65,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_logrequest(); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Logs saved', 'softwarelicensemanager');?></span>
+            <span><?php _e('Logs saved', 'slmplus');?></span>
         </div>
     </li>
 
@@ -75,7 +75,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_emailsent(); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Reminders sent', 'softwarelicensemanager');?></span>
+            <span><?php _e('Reminders sent', 'slmplus');?></span>
         </div>
     </li>
 
@@ -85,7 +85,7 @@
             <div class="info"> <span class="badge"><?php echo SLM_Utility::count_licenses('expired'); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Expired licenses', 'softwarelicensemanager');?></span>
+            <span><?php _e('Expired licenses', 'slmplus');?></span>
         </div>
     </li>
 
@@ -95,7 +95,7 @@
             <div class="info"> <span class="badge"> <?php echo SLM_Utility::get_lic_expiringsoon(); ?></span></div>
         </div>
         <div class="description">
-            <span><?php _e('Licenses about to expire', 'softwarelicensemanager');?></span>
+            <span><?php _e('Licenses about to expire', 'slmplus');?></span>
         </div>
     </li>
 </ul>

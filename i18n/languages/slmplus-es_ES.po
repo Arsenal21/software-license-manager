@@ -1,0 +1,1511 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SLM Plus\n"
+"POT-Creation-Date: 2024-10-28 22:01-0400\n"
+"PO-Revision-Date: 2024-10-28 22:20-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: slm-plus.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: plugin-update-checker\\vendor\n"
+
+#: admin/includes/cronjobs/slm-tasks.php:10
+msgid "Every day"
+msgstr "Todos los días"
+
+#: admin/includes/partials/stats.php:8
+#, fuzzy
+msgid "Total licenses"
+msgstr "Total de licencias"
+
+#: admin/includes/partials/stats.php:18
+#, fuzzy
+msgid "Licenses this week"
+msgstr "Licencias esta semana"
+
+#: admin/includes/partials/stats.php:28
+#, fuzzy
+msgid "Licenses this month"
+msgstr "Licencias este mes"
+
+#: admin/includes/partials/stats.php:38
+#, fuzzy
+msgid "Active licenses"
+msgstr "Licencias activas"
+
+#: admin/includes/partials/stats.php:48
+#, fuzzy
+msgid "Pending licenses"
+msgstr "Licencias pendientes"
+
+#: admin/includes/partials/stats.php:58
+#, fuzzy
+msgid "Blocked licenses"
+msgstr "Licencias bloqueadas"
+
+#: admin/includes/partials/stats.php:68
+#, fuzzy
+msgid "Logs saved"
+msgstr "Registros guardados"
+
+#: admin/includes/partials/stats.php:78
+#, fuzzy
+msgid "Reminders sent"
+msgstr "Recordatorios enviados"
+
+#: admin/includes/partials/stats.php:88
+#, fuzzy
+msgid "Expired licenses"
+msgstr "Licencias caducadas"
+
+#: admin/includes/partials/stats.php:98
+#, fuzzy
+msgid "Licenses about to expire"
+msgstr "Licencias a punto de caducar"
+
+#: admin/includes/wpestores/slm-wpestores.php:73
+#, fuzzy
+msgid "Item Name: "
+msgstr "Nombre del artículo: "
+
+#: admin/includes/wpestores/slm-wpestores.php:73
+#, fuzzy
+msgid "License Key: "
+msgstr "Clave de licencia: "
+
+#: admin/slm-add-licenses.php:18
+#, fuzzy
+msgid "Security check failed"
+msgstr "Error en la comprobación de seguridad"
+
+#: admin/slm-add-licenses.php:64
+#, fuzzy
+msgid "Required fields are missing."
+msgstr "Faltan los campos obligatorios."
+
+#: admin/slm-add-licenses.php:69
+#, fuzzy
+msgid "License updated successfully."
+msgstr "Licencia actualizada con éxito."
+
+#: admin/slm-add-licenses.php:72
+#, fuzzy
+msgid "License created successfully."
+msgstr "Licencia creada con éxito."
+
+#: admin/slm-add-licenses.php:127
+#, fuzzy
+msgid "License Management"
+msgstr "Gestión de licencias"
+
+#: admin/slm-add-licenses.php:138 woocommerce/includes/slm-meta-boxes.php:120
+#, fuzzy
+msgid "License Info"
+msgstr "Información de la licencia"
+
+#: admin/slm-add-licenses.php:143 woocommerce/includes/purchase.php:689
+#: woocommerce/includes/purchase.php:748 woocommerce/includes/purchase.php:825
+#: woocommerce/includes/wc_licenses_class.php:166
+msgid "License Key"
+msgstr "许可 Key"
+
+#: admin/slm-add-licenses.php:147
+#, fuzzy
+msgid "Max Allowed Domains"
+msgstr "Dominio máximo permitido"
+
+#: admin/slm-add-licenses.php:151
+#, fuzzy
+msgid "Max Allowed Devices"
+msgstr "Máximo de dispositivos permitidos"
+
+#: admin/slm-add-licenses.php:155 woocommerce/includes/purchase.php:693
+#, fuzzy
+msgid "License Status"
+msgstr "Estado de la licencia"
+
+#: admin/slm-add-licenses.php:173
+msgid "Date Created"
+msgstr "Fecha de creación"
+
+#: admin/slm-add-licenses.php:175 admin/slm-add-licenses.php:190
+#: admin/slm-add-licenses.php:200 admin/slm-add-licenses.php:206
+#: admin/slm-add-licenses.php:288
+#, fuzzy, php-format
+msgid "Display Format: %s (input: YYYY-MM-DD)"
+msgstr "Formato de visualización: %s (entrada: AAAA-MM-DD)"
+
+#: admin/slm-add-licenses.php:179 woocommerce/includes/purchase.php:691
+#: woocommerce/includes/slm-meta-boxes.php:184
+#, fuzzy
+msgid "License Type"
+msgstr "Tipo de licencia"
+
+#: admin/slm-add-licenses.php:182 woocommerce/includes/slm-meta-boxes.php:189
+msgid "Subscription"
+msgstr "Suscripción"
+
+#: admin/slm-add-licenses.php:183 woocommerce/includes/slm-meta-boxes.php:190
+#: woocommerce/includes/wc_licenses_class.php:180
+#, fuzzy
+msgid "Lifetime"
+msgstr "Vida"
+
+#: admin/slm-add-licenses.php:188
+#, fuzzy
+msgid "Date Expiry"
+msgstr "Fecha de caducidad"
+
+#: admin/slm-add-licenses.php:194
+#, fuzzy
+msgid "Subscription ID"
+msgstr "ID de suscripción"
+
+#: admin/slm-add-licenses.php:198
+#, fuzzy
+msgid "Date Renewed"
+msgstr "Fecha de renovación"
+
+#: admin/slm-add-licenses.php:204
+#, fuzzy
+msgid "Date Activated"
+msgstr "Fecha de activación"
+
+#: admin/slm-add-licenses.php:212
+#, fuzzy
+msgid "Subscriber Info"
+msgstr "Información del suscriptor"
+
+#: admin/slm-add-licenses.php:217 admin/slm-subscribers.php:86
+msgid "First Name"
+msgstr "Nombre"
+
+#: admin/slm-add-licenses.php:221 admin/slm-subscribers.php:87
+msgid "Last Name"
+msgstr "Apellido"
+
+#: admin/slm-add-licenses.php:225 admin/slm-list-licenses-class.php:89
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: admin/slm-add-licenses.php:229
+msgid "Company Name"
+msgstr "Nombre de la empresa"
+
+#: admin/slm-add-licenses.php:235
+#, fuzzy
+msgid "Transaction"
+msgstr "Transacción"
+
+#: admin/slm-add-licenses.php:239 woocommerce/includes/slm-meta-boxes.php:174
+#, fuzzy
+msgid "Item Reference"
+msgstr "Referencia del artículo"
+
+#: admin/slm-add-licenses.php:244
+msgid "Transaction ID"
+msgstr "Id de transacción"
+
+#: admin/slm-add-licenses.php:249
+#, fuzzy
+msgid "Purchase ID"
+msgstr "ID de compra"
+
+#: admin/slm-add-licenses.php:254
+#, fuzzy
+msgid "Product Reference"
+msgstr "Referencia del producto"
+
+#: admin/slm-add-licenses.php:260
+msgid "Other"
+msgstr "Otro"
+
+#: admin/slm-add-licenses.php:264
+msgid "Until"
+msgstr "Hasta"
+
+#: admin/slm-add-licenses.php:268 woocommerce/includes/slm-meta-boxes.php:225
+#, fuzzy
+msgid "Current Version"
+msgstr "Versión actual"
+
+#: admin/slm-add-licenses.php:274
+#, fuzzy
+msgid "Billing Length"
+msgstr "Duración de la facturación"
+
+#: admin/slm-add-licenses.php:278
+#, fuzzy
+msgid "Billing Interval"
+msgstr "Intervalo de facturación"
+
+#: admin/slm-add-licenses.php:282
+#, fuzzy
+msgid "Reminder Sent"
+msgstr "Recordatorio enviado"
+
+#: admin/slm-add-licenses.php:286
+#, fuzzy
+msgid "Reminder Sent Date"
+msgstr "Fecha de envío del recordatorio"
+
+#: admin/slm-add-licenses.php:292
+#, fuzzy
+msgid "Manual Reset Count"
+msgstr "Recuento de restablecimiento manual"
+
+#: admin/slm-add-licenses.php:296
+#, fuzzy
+msgid "Save License"
+msgstr "Guardar licencia"
+
+#: admin/slm-admin-functions.php:14
+#, fuzzy
+msgid "Admin Tools"
+msgstr "Herramientas de administración"
+
+#: admin/slm-admin-functions.php:30
+#, fuzzy
+msgid "Success message returned from the remote host."
+msgstr "Mensaje de éxito devuelto por el host remoto."
+
+#: admin/slm-admin-functions.php:33
+#, fuzzy
+msgid "Request sent to the specified URL!"
+msgstr "¡Solicitud enviada a la URL especificada!"
+
+#: admin/slm-admin-functions.php:45
+#, fuzzy
+msgid "Log was cleared successfully!"
+msgstr "¡El registro se borró con éxito!"
+
+#: admin/slm-admin-functions.php:51
+#, fuzzy
+msgid "Send Deactivation Message for a License"
+msgstr "Enviar mensaje de desactivación de una licencia"
+
+#: admin/slm-admin-functions.php:56
+#, fuzzy
+msgid "Send Request"
+msgstr "Enviar solicitud"
+
+#: admin/slm-admin-functions.php:63
+#, fuzzy
+msgid "Clean Activity Log"
+msgstr "Limpiar registro de actividad"
+
+#: admin/slm-admin-functions.php:65
+#, fuzzy
+msgid "This will clear/reset license keys activities"
+msgstr "Esto borrará/restablecerá las actividades de las claves de licencia"
+
+#: admin/slm-admin-functions.php:68
+#, fuzzy
+msgid "Clear Log"
+msgstr "Borrar registro"
+
+#: admin/slm-admin-functions.php:75
+#, fuzzy
+msgid "Backup Database"
+msgstr "Base de datos de copia de seguridad"
+
+#: admin/slm-admin-functions.php:77
+#, fuzzy
+msgid ""
+"This will create a backup of the database tables related to this plugin and "
+"save it to the uploads directory."
+msgstr ""
+"Esto creará una copia de seguridad de las tablas de la base de datos "
+"relacionadas con este complemento y la guardará en el directorio de cargas."
+
+#: admin/slm-admin-functions.php:80
+#, fuzzy
+msgid "Create Backup"
+msgstr "Crear copia de seguridad"
+
+#: admin/slm-admin-functions.php:90
+#, fuzzy
+msgid "Last backup created on: "
+msgstr "Última copia de seguridad creada el: "
+
+#: admin/slm-admin-functions.php:90
+#, fuzzy
+msgid "Download Backup"
+msgstr "Descargar copia de seguridad"
+
+#: admin/slm-admin-functions.php:172
+#, fuzzy
+msgid "Backup created successfully! Download from: "
+msgstr "¡Copia de seguridad creada con éxito! Descargar desde: "
+
+#: admin/slm-admin-functions.php:174
+#, fuzzy
+msgid "Error: Failed to create the backup file."
+msgstr "Error: No se pudo crear el archivo de copia de seguridad."
+
+#: admin/slm-dashboard-widgets.php:30 admin/slm-dashboard-widgets.php:33
+#: admin/slm-list-licenses-class.php:479
+#, fuzzy
+msgid "SLM"
+msgstr "SLM"
+
+#: admin/slm-dashboard-widgets.php:42
+msgid "Overview"
+msgstr "Visión general"
+
+#: admin/slm-dashboard-widgets.php:52
+#, fuzzy
+msgid "Add new license"
+msgstr "Agregar nueva licencia"
+
+#: admin/slm-dashboard-widgets.php:62 admin/slm-list-licenses-class.php:485
+#: includes/slm-plugin-core.php:39
+msgid "Settings"
+msgstr "Configuración"
+
+#: admin/slm-integration-help-page.php:11
+#, fuzzy
+msgid "License Manager Integration Help"
+msgstr "Ayuda de integración de License Manager"
+
+#: admin/slm-integration-help-page.php:34
+#, fuzzy
+msgid "API Settings"
+msgstr "Configuración de la API"
+
+#: admin/slm-integration-help-page.php:42
+#, fuzzy
+msgid "The License API Query POST URL For Your Installation"
+msgstr "La URL POST de la consulta de la API de licencia para su instalación"
+
+#: admin/slm-integration-help-page.php:45
+#, fuzzy
+msgid "The License Activation or Deactivation API Secret Key"
+msgstr "La clave secreta de la API de activación o desactivación de licencias"
+
+#: admin/slm-integration-help-page.php:48
+#, fuzzy
+msgid "The License Creation API Secret Key"
+msgstr "La clave secreta de la API de creación de licencias"
+
+#: admin/slm-integration-help-page.php:54
+#, fuzzy
+msgid "Documentation and guides:"
+msgstr "Documentación y guías:"
+
+#: admin/slm-integration-help-page.php:55
+#, fuzzy
+msgid "Check out Postman demos"
+msgstr "Echa un vistazo a las demostraciones de Postman"
+
+#: admin/slm-integration-help-page.php:60
+#, fuzzy
+msgid "Error Codes and Descriptions"
+msgstr "Códigos de error y descripciones"
+
+#: admin/slm-integration-help-page.php:65
+#, fuzzy
+msgid "Constant"
+msgstr "Constante"
+
+#: admin/slm-integration-help-page.php:66
+#, fuzzy
+msgid "Error Code"
+msgstr "Código de error"
+
+#: admin/slm-integration-help-page.php:67
+msgid "Description"
+msgstr "Descripción"
+
+#: admin/slm-integration-help-page.php:73
+#, fuzzy
+msgid "The license creation failed due to an unknown error."
+msgstr "La creación de la licencia falló debido a un error desconocido."
+
+#: admin/slm-integration-help-page.php:77
+#, fuzzy
+msgid "The license key provided during creation is invalid."
+msgstr "La clave de licencia proporcionada durante la creación no es válida."
+
+#: admin/slm-integration-help-page.php:81
+#, fuzzy
+msgid "The domain associated with this license is already inactive."
+msgstr "El dominio asociado a esta licencia ya está inactivo."
+
+#: admin/slm-integration-help-page.php:85
+#, fuzzy
+msgid "The domain information is missing in the request."
+msgstr "Falta la información del dominio en la solicitud."
+
+#: admin/slm-integration-help-page.php:89
+#, fuzzy
+msgid "The license key has been canceled."
+msgstr "La clave de licencia ha sido cancelada."
+
+#: admin/slm-integration-help-page.php:93
+#, fuzzy
+msgid "Failed to cancel the license key."
+msgstr "No se pudo cancelar la clave de licencia."
+
+#: admin/slm-integration-help-page.php:97
+#, fuzzy
+msgid "Successfully deactivated the license key for the specified domain."
+msgstr ""
+"Se ha desactivado correctamente la clave de licencia para el dominio "
+"especificado."
+
+#: admin/slm-integration-help-page.php:101
+#, fuzzy
+msgid "The license key was successfully deactivated."
+msgstr "La clave de licencia se ha desactivado correctamente."
+
+#: admin/slm-integration-help-page.php:105
+#, fuzzy
+msgid "Failed to delete the license key."
+msgstr "No se pudo eliminar la clave de licencia."
+
+#: admin/slm-integration-help-page.php:109
+#, fuzzy
+msgid "The license key was successfully deleted."
+msgstr "La clave de licencia se ha eliminado correctamente."
+
+#: admin/slm-integration-help-page.php:113
+#, fuzzy
+msgid "The license key has been deleted."
+msgstr "Se ha eliminado la clave de licencia."
+
+#: admin/slm-integration-help-page.php:117
+#, fuzzy
+msgid "Failed to update the license key details."
+msgstr "No se pudieron actualizar los detalles de la clave de licencia."
+
+#: admin/slm-integration-help-page.php:121
+#, fuzzy
+msgid "The license key was successfully updated."
+msgstr "La clave de licencia se actualizó correctamente."
+
+#: admin/slm-integration-help-page.php:125
+#, fuzzy
+msgid "The license key was successfully activated."
+msgstr "La clave de licencia se ha activado correctamente."
+
+#: admin/slm-integration-help-page.php:129
+#, fuzzy
+msgid "The license key has been blocked from further use."
+msgstr "Se ha bloqueado el uso posterior de la clave de licencia."
+
+#: admin/slm-integration-help-page.php:133
+#, fuzzy
+msgid "The license key was successfully created."
+msgstr "La clave de licencia se ha creado correctamente."
+
+#: admin/slm-integration-help-page.php:137
+#, fuzzy
+msgid "The license key already exists in the system."
+msgstr "La clave de licencia ya existe en el sistema."
+
+#: admin/slm-integration-help-page.php:141
+#, fuzzy
+msgid "The license key has expired."
+msgstr "La clave de licencia ha caducado."
+
+#: admin/slm-integration-help-page.php:145
+#, fuzzy
+msgid "The license key is already in use on another domain or device."
+msgstr "La clave de licencia ya está en uso en otro dominio o dispositivo."
+
+#: admin/slm-integration-help-page.php:149
+#, fuzzy
+msgid "The license key is invalid."
+msgstr "La clave de licencia no es válida."
+
+#: admin/slm-integration-help-page.php:153
+#, fuzzy
+msgid "Failed to delete the license key because it was not found."
+msgstr "No se pudo eliminar la clave de licencia porque no se encontró."
+
+#: admin/slm-integration-help-page.php:157
+#, fuzzy
+msgid "Failed to update the license key because it was not found."
+msgstr "No se pudo actualizar la clave de licencia porque no se encontró."
+
+#: admin/slm-integration-help-page.php:161
+#, fuzzy
+msgid "The license key has reached its maximum allowable devices."
+msgstr ""
+"La clave de licencia ha alcanzado el máximo de dispositivos permitidos."
+
+#: admin/slm-integration-help-page.php:165
+#, fuzzy
+msgid "The license key has reached its maximum allowable domains."
+msgstr "La clave de licencia ha alcanzado sus dominios máximos permitidos."
+
+#: admin/slm-integration-help-page.php:169
+#, fuzzy
+msgid "The key verification failed due to an invalid key."
+msgstr "Error en la verificación de la clave debido a una clave no válida."
+
+#: admin/slm-lic-settings.php:22
+#, fuzzy
+msgid "Debug log files have been reset!"
+msgstr "¡Se han restablecido los archivos de registro de depuración!"
+
+#: admin/slm-lic-settings.php:53
+#, fuzzy
+msgid "Options updated!"
+msgstr "¡Opciones actualizadas!"
+
+#: admin/slm-lic-settings.php:63
+#, fuzzy
+msgid "Settings - SLM Plus"
+msgstr "Ajustes - SLM Plus"
+
+#: admin/slm-lic-settings.php:69
+msgid "General Settings"
+msgstr "Ajustes generales"
+
+#: admin/slm-lic-settings.php:73
+#, fuzzy
+msgid "Integrations"
+msgstr "Integraciones"
+
+#: admin/slm-lic-settings.php:77
+#, fuzzy
+msgid "Debugging settings"
+msgstr "Configuración de depuración"
+
+#: admin/slm-lic-settings.php:81
+msgid "Emails"
+msgstr "Correos electrónicos"
+
+#: admin/slm-lic-settings.php:107
+#, fuzzy
+msgid "Secret Key for License Creation"
+msgstr "Clave secreta para la creación de licencias"
+
+#: admin/slm-lic-settings.php:110
+#, fuzzy
+msgid ""
+"This secret key will be used to authenticate any license creation request. "
+"You can change it with something random."
+msgstr ""
+"Esta clave secreta se utilizará para autenticar cualquier solicitud de "
+"creación de licencia. Puedes cambiarlo con algo aleatorio."
+
+#: admin/slm-lic-settings.php:114
+#, fuzzy
+msgid "Secret Key for License Verification Requests"
+msgstr "Clave secreta para solicitudes de verificación de licencias"
+
+#: admin/slm-lic-settings.php:116
+#, fuzzy
+msgid ""
+"This secret key will be used to authenticate any license verification "
+"request from customer's site. Important! Do not change this value once your "
+"customers start to use your product(s)!"
+msgstr ""
+"Esta clave secreta se utilizará para autenticar cualquier solicitud de "
+"verificación de licencia desde el sitio del cliente. ¡Importante! ¡No "
+"cambies este valor una vez que tus clientes comiencen a usar tu(s) "
+"producto(s)!"
+
+#: admin/slm-lic-settings.php:120
+#, fuzzy
+msgid "License Key Prefix"
+msgstr "Prefijo de clave de licencia"
+
+#: admin/slm-lic-settings.php:122
+#, fuzzy
+msgid ""
+"You can optionaly specify a prefix for the license keys. This prefix will be "
+"added to the uniquely generated license keys."
+msgstr ""
+"Opcionalmente, puede especificar un prefijo para las claves de licencia. "
+"Este prefijo se agregará a las claves de licencia generadas de forma única."
+
+#: admin/slm-lic-settings.php:126
+#, fuzzy
+msgid "Maximum Allowed Domains"
+msgstr "Dominios máximos permitidos"
+
+#: admin/slm-lic-settings.php:128
+#, fuzzy
+msgid ""
+"Maximum number of domains/installs which each license is valid for (default "
+"value)."
+msgstr ""
+"Número máximo de dominios/instalaciones para los que es válida cada licencia "
+"(valor predeterminado)."
+
+#: admin/slm-lic-settings.php:132
+#, fuzzy
+msgid "Maximum Allowed Devices"
+msgstr "Dispositivo máximo permitido"
+
+#: admin/slm-lic-settings.php:134
+#, fuzzy
+msgid ""
+"Maximum number of devices which each license is valid for (default value)."
+msgstr ""
+"Número máximo de dispositivos para los que es válida cada licencia (valor "
+"predeterminado)."
+
+#: admin/slm-lic-settings.php:138
+#, fuzzy
+msgid "Auto Expire License Keys"
+msgstr "Caducidad automática de las claves de licencia"
+
+#: admin/slm-lic-settings.php:140
+#, fuzzy
+msgid "Enable auto expiration "
+msgstr "Habilitar la caducidad automática "
+
+#: admin/slm-lic-settings.php:141
+#, fuzzy
+msgid ""
+" When enabled, it will automatically set the status of a license key to "
+"\"Expired\" when the expiry date value  of the key is reached. It doesn't "
+"remotely deactivate a key. It simply changes the status of the key in your "
+"database to expired."
+msgstr ""
+" Cuando está habilitado, establecerá automáticamente el estado de una clave "
+"de licencia en \"Caducado\" cuando se alcance el valor de la fecha de "
+"caducidad de la clave. No desactiva una tecla de forma remota. Simplemente "
+"cambia el estado de la clave en su base de datos a caducada."
+
+#: admin/slm-lic-settings.php:145
+#, fuzzy
+msgid "General settings"
+msgstr "Ajustes generales"
+
+#: admin/slm-lic-settings.php:148
+#, fuzzy
+msgid "Enable stats in licenses overview page."
+msgstr ""
+"Habilite las estadísticas en la página de información general de licencias."
+
+#: admin/slm-lic-settings.php:156
+#, fuzzy
+msgid "Enable admin bar shortcut link"
+msgstr "Habilitar el enlace de acceso directo de la barra de administración"
+
+#: admin/slm-lic-settings.php:161
+#, fuzzy
+msgid "Multiple items validation"
+msgstr "Validación de varios elementos"
+
+#: admin/slm-lic-settings.php:164
+#, fuzzy
+msgid "Enable verification of Item reference."
+msgstr "Habilite la verificación de la referencia del artículo."
+
+#: admin/slm-lic-settings.php:165
+#, fuzzy
+msgid ""
+"When enabled, there will be another field in Licenced product - Item "
+"reference. This field should correspond to the API parameter item_reference "
+"of your software."
+msgstr ""
+"Cuando esté habilitado, habrá otro campo en Producto con licencia - "
+"Referencia del artículo. Este campo debe corresponder al item_reference de "
+"parámetros de API de su software."
+
+#: admin/slm-lic-settings.php:170
+#, fuzzy
+msgid "User permissions"
+msgstr "Permisos de usuario"
+
+#: admin/slm-lic-settings.php:173
+#, fuzzy
+msgid "Allow users to remove domains/devices in My account."
+msgstr "Permitir que los usuarios eliminen dominios/dispositivos en Mi cuenta."
+
+#: admin/slm-lic-settings.php:174
+#, fuzzy
+msgid ""
+"When enabled, users will be able to remove registered domains or devices in "
+"their account."
+msgstr ""
+"Cuando esté habilitado, los usuarios podrán eliminar dominios o dispositivos "
+"registrados en su cuenta."
+
+#: admin/slm-lic-settings.php:179
+#, fuzzy
+msgid "Bootstrap library"
+msgstr "Biblioteca de Bootstrap"
+
+#: admin/slm-lic-settings.php:182
+#, fuzzy
+msgid "Enable Bootstrap javascript libray."
+msgstr "Habilite la biblioteca javascript de Bootstrap."
+
+#: admin/slm-lic-settings.php:189
+#, fuzzy
+msgid ""
+"Enable Bootstrap javascript libray in front-end (woocommerce pages, etc)."
+msgstr ""
+"Habilite la biblioteca javascript de Bootstrap en el front-end (páginas de "
+"woocommerce, etc.)."
+
+#: admin/slm-lic-settings.php:202
+#, fuzzy
+msgid "Woocommerce Support"
+msgstr "Soporte de Woocommerce"
+
+#: admin/slm-lic-settings.php:205
+#, fuzzy
+msgid ""
+"A fully customizable, open source eCommerce platform built for WordPress."
+msgstr ""
+"Una plataforma de comercio electrónico de código abierto totalmente "
+"personalizable creada para WordPress."
+
+#: admin/slm-lic-settings.php:212
+#, fuzzy
+msgid ""
+"Disable woocommerce download page. Process downloads though license order "
+"info page."
+msgstr ""
+"Desactiva la página de descarga de woocommerce. Procese las descargas a "
+"través de la página de información del pedido de licencia."
+
+#: admin/slm-lic-settings.php:219
+#, fuzzy
+msgid ""
+"Expire WooCommerce downloads. Downloads will expire together with "
+"corresponding license."
+msgstr ""
+"Caducar las descargas de WooCommerce. Las descargas caducarán junto con la "
+"licencia correspondiente."
+
+#: admin/slm-lic-settings.php:223
+#, fuzzy
+msgid "Download Manager Support"
+msgstr "Soporte técnico de Download Manager"
+
+#: admin/slm-lic-settings.php:226
+#, fuzzy
+msgid ""
+"Download Manager Plugin – Adds a simple download manager to your WordPress "
+"blog."
+msgstr ""
+"Plugin de administrador de descargas: agrega un administrador de descargas "
+"simple a su blog de WordPress."
+
+#: admin/slm-lic-settings.php:230
+#, fuzzy
+msgid "WP eStores Support"
+msgstr "Soporte de WP eStores"
+
+#: admin/slm-lic-settings.php:233
+#, fuzzy
+msgid ""
+"WordPress eStore Plugin – Complete Solution to Sell Digital Products from "
+"Your WordPress Blog Securely"
+msgstr ""
+"Plugin de WordPress eStore: solución completa para vender productos "
+"digitales desde su blog de WordPress de forma segura"
+
+#: admin/slm-lic-settings.php:245
+#, fuzzy
+msgid "Enable Debug Logging"
+msgstr "Habilitar el registro de depuración"
+
+#: admin/slm-lic-settings.php:248
+#, fuzzy
+msgid "If checked, debug output will be written to log files."
+msgstr ""
+"Si se selecciona, la salida de depuración se escribirá en los archivos de "
+"registro."
+
+#: admin/slm-lic-settings.php:259
+#, fuzzy
+msgid "Expiration reminder"
+msgstr "Recordatorio de caducidad"
+
+#: admin/slm-lic-settings.php:269
+#, fuzzy
+msgid "Update Options"
+msgstr "Opciones de actualización"
+
+#: admin/slm-list-licenses-class.php:27
+#, fuzzy
+msgid "No licenses avaliable."
+msgstr "No hay licencias disponibles."
+
+#: admin/slm-list-licenses-class.php:43
+msgid "All"
+msgstr "Todo"
+
+#: admin/slm-list-licenses-class.php:50
+msgid "active"
+msgstr "activos"
+
+#: admin/slm-list-licenses-class.php:57
+msgid "pending"
+msgstr "Pendiente"
+
+#: admin/slm-list-licenses-class.php:64
+msgid "expired"
+msgstr "caducado"
+
+#: admin/slm-list-licenses-class.php:71
+#, fuzzy
+msgid "blocked"
+msgstr "bloqueado"
+
+#: admin/slm-list-licenses-class.php:84 admin/slm-subscribers.php:85
+#: admin/slm-subscribers.php:187 includes/slm-utility.php:789
+msgid "ID"
+msgstr "ID"
+
+#: admin/slm-list-licenses-class.php:85 admin/slm-subscribers.php:189
+#: woocommerce/includes/wc_licenses_class.php:136
+#: woocommerce/includes/wc_licenses_class.php:149
+msgid "Status"
+msgstr "Estado"
+
+#: admin/slm-list-licenses-class.php:86
+msgid "Key"
+msgstr "Clave"
+
+#: admin/slm-list-licenses-class.php:87
+#, fuzzy
+msgid "Item reference"
+msgstr "Referencia del artículo"
+
+#: admin/slm-list-licenses-class.php:88
+#: woocommerce/includes/wc_licenses_class.php:241
+#, fuzzy
+msgid "License type"
+msgstr "Tipo de licencia"
+
+#: admin/slm-list-licenses-class.php:90
+#, fuzzy
+msgid "Domains"
+msgstr "Dominios"
+
+#: admin/slm-list-licenses-class.php:91
+#, fuzzy
+msgid "Devices"
+msgstr "Dispositivos"
+
+#: admin/slm-list-licenses-class.php:92
+#, fuzzy
+msgid "Order #"
+msgstr "Orden #"
+
+#: admin/slm-list-licenses-class.php:93
+msgid "Created on"
+msgstr "Creado en"
+
+#: admin/slm-list-licenses-class.php:94
+#, fuzzy
+msgid "Renewed on"
+msgstr "Renovado el"
+
+#: admin/slm-list-licenses-class.php:95
+#, fuzzy
+msgid "Activated on"
+msgstr "Activado el"
+
+#: admin/slm-list-licenses-class.php:96
+#: woocommerce/includes/wc_licenses_class.php:238
+msgid "Expiration"
+msgstr "Vencimiento"
+
+#: admin/slm-list-licenses-class.php:97
+#, fuzzy
+msgid "Until Ver."
+msgstr "Hasta la Ver."
+
+#: admin/slm-list-licenses-class.php:98
+#, fuzzy
+msgid "Current Ver."
+msgstr "La versión actual."
+
+#: admin/slm-list-licenses-class.php:120
+#, fuzzy
+msgid " Lifetime "
+msgstr " Vida "
+
+#: admin/slm-list-licenses-class.php:213 admin/slm-list-licenses-class.php:231
+#: admin/slm-list-licenses-class.php:249 admin/slm-list-licenses-class.php:267
+#: admin/slm-list-licenses-class.php:285
+#, fuzzy
+msgid "Error - Please select some records using the checkboxes"
+msgstr ""
+"Error: seleccione algunos registros usando las casillas de verificación"
+
+#: admin/slm-list-licenses-class.php:480
+#, fuzzy
+msgid "Manage Licenses"
+msgstr "Administrar licencias"
+
+#: admin/slm-list-licenses-class.php:482
+#, fuzzy
+msgid "Create license"
+msgstr "Crear licencia"
+
+#: admin/slm-list-licenses-class.php:483
+#, fuzzy
+msgid "Subscribers"
+msgstr "Suscriptores"
+
+#: admin/slm-list-licenses-class.php:484
+msgid "Tools"
+msgstr "Herramientas"
+
+#: admin/slm-list-licenses-class.php:486
+msgid "Help"
+msgstr "Ayuda"
+
+#: admin/slm-list-licenses-class.php:488
+msgid "About"
+msgstr "Acerca"
+
+#: admin/slm-manage-licenses.php:15
+#, fuzzy
+msgid "You do not have permission to manage this license."
+msgstr "No tiene permiso para administrar esta licencia."
+
+#: admin/slm-manage-licenses.php:36
+#, fuzzy
+msgid "Overview - Manage licenses"
+msgstr "Información general - Administrar licencias"
+
+#: admin/slm-manage-licenses.php:38
+msgid "Add New"
+msgstr "Agregar nuevo"
+
+#: admin/slm-manage-licenses.php:62 admin/slm-subscribers.php:217
+msgid "Search"
+msgstr "Buscar"
+
+#: admin/slm-subscribers.php:88
+msgid "Email Address"
+msgstr "Correo electronico"
+
+#: admin/slm-subscribers.php:176
+#, fuzzy
+msgid "Overview - Manage Subscribers"
+msgstr "Descripción general - Administrar suscriptores"
+
+#: admin/slm-subscribers.php:178
+msgid "View all"
+msgstr "Ver todo"
+
+#: admin/slm-subscribers.php:188 woocommerce/includes/wc_licenses_class.php:138
+#, fuzzy
+msgid "License key"
+msgstr "Clave de licencia"
+
+#: admin/slm-subscribers.php:206
+#, fuzzy
+msgid "Overview - All Subscribers"
+msgstr "Resumen - Todos los suscriptores"
+
+#: admin/slm_about_menu.php:15
+#, fuzzy
+msgid "SLM Logo"
+msgstr "Logotipo de SLM"
+
+#: admin/slm_about_menu.php:15
+#, fuzzy
+msgid "SLM - About"
+msgstr "SLM - Acerca de"
+
+#: admin/slm_about_menu.php:26
+#, fuzzy
+msgid "Credits and authors"
+msgstr "Créditos y autores"
+
+#: admin/slm_about_menu.php:28
+#, fuzzy
+msgid ""
+"Software license management solution for your web applications (WordPress "
+"plugins, Themes, Applications, PHP based membership script, etc.). Supports "
+"WooCommerce."
+msgstr ""
+"Solución de gestión de licencias de software para sus aplicaciones web "
+"(plugins de WordPress, Temas, Aplicaciones, scripts de membresía basados en "
+"PHP, etc.). Compatible con WooCommerce."
+
+#: admin/slm_about_menu.php:33
+#, fuzzy
+msgid "Information"
+msgstr "Información"
+
+#: admin/slm_about_menu.php:34
+msgid "Details"
+msgstr "Detalles"
+
+#: admin/slm_about_menu.php:39
+#, fuzzy
+msgid "Authors"
+msgstr "Autores"
+
+#: admin/slm_about_menu.php:42
+msgid "and"
+msgstr "y"
+
+#: admin/slm_about_menu.php:47
+#, fuzzy
+msgid "Help and Support"
+msgstr "Ayuda y soporte"
+
+#: admin/slm_about_menu.php:50
+#, fuzzy
+msgid "Submit a request"
+msgstr "Enviar una solicitud"
+
+#: admin/slm_about_menu.php:55
+#, fuzzy
+msgid "API Demos"
+msgstr "Demostraciones de API"
+
+#: admin/slm_about_menu.php:58
+#, fuzzy
+msgid "Postman Demos"
+msgstr "Demostraciones de cartero"
+
+#: includes/class-slm-installer.php:41
+msgid "Pending"
+msgstr "Pendientes"
+
+#: includes/class-slm-installer.php:42
+msgid "Active"
+msgstr "Activos"
+
+#: includes/class-slm-installer.php:43
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#: includes/class-slm-installer.php:44
+#: woocommerce/includes/wc_licenses_class.php:175
+msgid "Expired"
+msgstr "Vencido"
+
+#: includes/slm-plugin-core.php:40
+msgid "GitHub"
+msgstr "GitHub"
+
+#: includes/slm-utility.php:365
+#, fuzzy, php-format
+msgid "%s days remaining until %s"
+msgstr "%s días que faltan para %s"
+
+#: includes/slm-utility.php:777
+#, fuzzy
+msgid " view"
+msgstr " vista"
+
+#: includes/slm-utility.php:789
+msgid "Request"
+msgstr "Solicitud"
+
+#: includes/slm-utility.php:797
+#, fuzzy
+msgid "Source:"
+msgstr "Fuente:"
+
+#: includes/slm-utility.php:798
+msgid "Time:"
+msgstr "Hora:"
+
+#: includes/slm-utility.php:844
+#, fuzzy
+msgid "Not registered yet"
+msgstr "Aún no se ha registrado"
+
+#: includes/slm-utility.php:862 includes/slm-utility.php:874
+#: woocommerce/includes/wc_licenses_class.php:235
+#, fuzzy
+msgid "License information"
+msgstr "Información de la licencia"
+
+#: includes/slm-utility.php:875
+#, fuzzy
+msgid "License type: "
+msgstr "Tipo de licencia: "
+
+#: includes/slm-utility.php:876
+#, fuzzy
+msgid "Domains allowed: "
+msgstr "Dominios permitidos: "
+
+#: includes/slm-utility.php:877
+#, fuzzy
+msgid "Devices allowed: "
+msgstr "Dispositivos permitidos: "
+
+#: includes/slm-utility.php:878
+#, fuzzy
+msgid "Renews every "
+msgstr "Renueva cada "
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:54
+#, fuzzy
+msgid "View details"
+msgstr "Ver detalles"
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:77
+#, fuzzy, php-format
+msgid "More information about %s"
+msgstr "Más información sobre %s"
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:128
+#, fuzzy
+msgid "Check for updates"
+msgstr "Buscar actualizaciones"
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:213
+#, fuzzy, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr "El plugin %s está actualizado."
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:215
+#, fuzzy, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr "Está disponible una nueva versión del plugin %s."
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:217
+#, fuzzy, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr "No se pudo determinar si hay actualizaciones disponibles para %s."
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:223
+#, fuzzy, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr "Estado desconocido del comprobador de actualizaciones \"%s\""
+
+#: plugin-update-checker/Puc/v4p9/Vcs/PluginUpdateChecker.php:98
+#, fuzzy
+msgid "There is no changelog available."
+msgstr "No hay registro de cambios disponible."
+
+#: woocommerce/includes/purchase.php:94
+#, fuzzy
+msgid "License no longer exists"
+msgstr "La licencia ya no existe"
+
+#: woocommerce/includes/purchase.php:99
+#: woocommerce/includes/wc_licenses_class.php:209
+msgid "License Key:"
+msgstr "Clave de licencia:"
+
+#: woocommerce/includes/purchase.php:197
+#, fuzzy
+msgid "License could not be created: Invalid sites allowed number."
+msgstr "No se pudo crear la licencia: número de sitios permitidos no válidos."
+
+#: woocommerce/includes/purchase.php:343
+#, fuzzy
+msgid "License Key(s) generated:"
+msgstr "Clave(s) de licencia generada(s):"
+
+#: woocommerce/includes/purchase.php:372
+#, fuzzy
+msgid "License Key(s) could not be created."
+msgstr "No se han podido crear las claves de licencia."
+
+#: woocommerce/includes/purchase.php:626
+#, fuzzy, php-format
+msgid "Order confirmation email sent to: <a href='mailto:%s'>%s</a>"
+msgstr ""
+"Correo electrónico de confirmación del pedido enviado a: <a href='mailto:"
+"%s'>%s</a>"
+
+#: woocommerce/includes/purchase.php:690
+#, fuzzy
+msgid "License Expiration"
+msgstr "Caducidad de la licencia"
+
+#: woocommerce/includes/purchase.php:692
+#, fuzzy
+msgid "License Item Reference"
+msgstr "Referencia de elementos de licencia"
+
+#: woocommerce/includes/purchase.php:694
+#, fuzzy
+msgid "License Current Version"
+msgstr "Licencia Versión actual"
+
+#: woocommerce/includes/purchase.php:695
+#, fuzzy
+msgid "Supported Until Version"
+msgstr "Compatible hasta la versión"
+
+#: woocommerce/includes/purchase.php:744
+#, fuzzy
+msgid "License Details"
+msgstr "Detalles de la licencia"
+
+#: woocommerce/includes/purchase.php:749
+msgid "Type"
+msgstr "Tipo"
+
+#: woocommerce/includes/purchase.php:759
+#, fuzzy
+msgid "View My Licenses"
+msgstr "Ver mis licencias"
+
+#: woocommerce/includes/purchase.php:817
+msgid "License Keys"
+msgstr "Claves de Licencia"
+
+#: woocommerce/includes/purchase.php:822
+#: woocommerce/includes/wc_licenses_class.php:137
+#: woocommerce/includes/wc_licenses_class.php:155
+msgid "Product"
+msgstr "Producto"
+
+#: woocommerce/includes/slm-meta-boxes.php:51
+#, fuzzy
+msgid "License product"
+msgstr "Producto de licencia"
+
+#: woocommerce/includes/slm-meta-boxes.php:68
+msgid "License Manager"
+msgstr "Administrador de Licencias"
+
+#: woocommerce/includes/slm-meta-boxes.php:70
+#, fuzzy
+msgid "Enables the license creation API."
+msgstr "Habilita la API de creación de licencias."
+
+#: woocommerce/includes/slm-meta-boxes.php:146
+#, fuzzy
+msgid "Domain Licenses"
+msgstr "Licencias de dominio"
+
+#: woocommerce/includes/slm-meta-boxes.php:152
+#, fuzzy
+msgid "Enter the allowed number of domains this license can have (websites)."
+msgstr ""
+"Introduzca el número permitido de dominios que puede tener esta licencia "
+"(sitios web)."
+
+#: woocommerce/includes/slm-meta-boxes.php:161
+#, fuzzy
+msgid "Devices Licenses"
+msgstr "Licencias de dispositivos"
+
+#: woocommerce/includes/slm-meta-boxes.php:167
+#, fuzzy
+msgid ""
+"Enter the allowed number of devices this license can have (computers, "
+"mobile, etc)."
+msgstr ""
+"Introduzca el número permitido de dispositivos que puede tener esta licencia "
+"(ordenadores, móviles, etc.)."
+
+#: woocommerce/includes/slm-meta-boxes.php:175
+#, fuzzy
+msgid "Software's item reference"
+msgstr "Referencia del artículo del software"
+
+#: woocommerce/includes/slm-meta-boxes.php:177
+#, fuzzy
+msgid ""
+"Enter the item reference of your application, theme, or plug-in. The license "
+"will be then bound to this exact software."
+msgstr ""
+"Introduzca la referencia del elemento de la aplicación, el tema o el "
+"complemento. A continuación, la licencia se vinculará a este software exacto."
+
+#: woocommerce/includes/slm-meta-boxes.php:186
+#, fuzzy
+msgid "Type of license: subscription base or lifetime"
+msgstr "Tipo de licencia: base de suscripción o de por vida"
+
+#: woocommerce/includes/slm-meta-boxes.php:188
+#, fuzzy
+msgid "Select one"
+msgstr "Seleccione uno"
+
+#: woocommerce/includes/slm-meta-boxes.php:197
+#, fuzzy
+msgid "Renewal Period Length"
+msgstr "Duración del período de renovación"
+
+#: woocommerce/includes/slm-meta-boxes.php:198
+#, fuzzy
+msgid "Amount of days, months, or years."
+msgstr "Cantidad de días, meses o años."
+
+#: woocommerce/includes/slm-meta-boxes.php:208
+#, fuzzy
+msgid "Expiration Term"
+msgstr "Plazo de caducidad"
+
+#: woocommerce/includes/slm-meta-boxes.php:210
+#, fuzzy
+msgid "Choose between days, months, or years"
+msgstr "Elige entre días, meses o años"
+
+#: woocommerce/includes/slm-meta-boxes.php:212
+#, fuzzy
+msgid "Day(s)"
+msgstr "Día(s)"
+
+#: woocommerce/includes/slm-meta-boxes.php:213
+#, fuzzy
+msgid "Month(s)"
+msgstr "Mes(es)"
+
+#: woocommerce/includes/slm-meta-boxes.php:214
+#, fuzzy
+msgid "Year(s)"
+msgstr "Año(s)"
+
+#: woocommerce/includes/slm-meta-boxes.php:215
+#, fuzzy
+msgid "One Time"
+msgstr "Una vez"
+
+#: woocommerce/includes/slm-meta-boxes.php:228
+#, fuzzy
+msgid "Enter the current version of your application, theme, or plug-in"
+msgstr "Introduce la versión actual de tu aplicación, tema o plug-in"
+
+#: woocommerce/includes/slm-meta-boxes.php:234
+#, fuzzy
+msgid "Until Version"
+msgstr "Hasta la versión"
+
+#: woocommerce/includes/slm-meta-boxes.php:237
+#, fuzzy
+msgid "Enter the version until support expires."
+msgstr "Introduzca la versión hasta que caduque el soporte."
+
+#: woocommerce/includes/wc_licenses_class.php:83
+#: woocommerce/includes/wc_licenses_class.php:95
+#, fuzzy
+msgid "My Licenses"
+msgstr "Mis Licencias"
+
+#: woocommerce/includes/wc_licenses_class.php:122
+#, fuzzy
+msgid "Browse products"
+msgstr "Ver productos"
+
+#: woocommerce/includes/wc_licenses_class.php:124
+#, fuzzy
+msgid "No licenses available yet."
+msgstr "Todavía no hay licencias disponibles."
+
+#: woocommerce/includes/wc_licenses_class.php:135
+#: woocommerce/includes/wc_licenses_class.php:147
+msgid "Order"
+msgstr "Pedido"
+
+#: woocommerce/includes/wc_licenses_class.php:139
+#: woocommerce/includes/wc_licenses_class.php:168
+#, fuzzy
+msgid "Renews on"
+msgstr "Se renueva el"
+
+#: woocommerce/includes/wc_licenses_class.php:140
+msgid "Info"
+msgstr "Información"
+
+#: woocommerce/includes/wc_licenses_class.php:184
+msgid "view"
+msgstr "ver"
+
+#: woocommerce/includes/wc_licenses_class.php:218
+#, fuzzy
+msgid "License Information"
+msgstr "Información de la licencia"
+
+#: woocommerce/includes/wc_licenses_class.php:222
+#, fuzzy
+msgid "Activations"
+msgstr "Activaciones"
+
+#: woocommerce/includes/wc_licenses_class.php:226
+#, fuzzy
+msgid "Copy License"
+msgstr "Licencia de copia"
+
+#: woocommerce/includes/wc_licenses_class.php:239
+#, fuzzy
+msgid "Allowed devices"
+msgstr "Dispositivos permitidos"
+
+#: woocommerce/includes/wc_licenses_class.php:240
+#, fuzzy
+msgid "Allowed Domains"
+msgstr "Dominios permitidos"
+
+#: woocommerce/includes/wc_licenses_class.php:242
+#, fuzzy
+msgid "Date renewed"
+msgstr "Fecha de renovación"
+
+#: woocommerce/includes/wc_licenses_class.php:243
+#, fuzzy
+msgid "Activation Date"
+msgstr "Fecha de activación"
+
+#: woocommerce/includes/wc_licenses_class.php:315
+#, fuzzy
+msgid "License key was deactivated!"
+msgstr "¡La clave de licencia fue desactivada!"
+
+#: woocommerce/includes/wc_licenses_class.php:317
+#, fuzzy
+msgid "License key was not deactivated!"
+msgstr "¡La clave de licencia no se ha desactivado!"
+
+#. Plugin Name of the plugin/theme
+#, fuzzy
+msgid "SLM Plus"
+msgstr "SLM Plus"
+
+#. Plugin URI of the plugin/theme
+#, fuzzy
+msgid "https://github.com/michelve/software-license-manager/"
+msgstr "https://github.com/michelve/software-license-manager/"
+
+#. Description of the plugin/theme
+#, fuzzy
+msgid ""
+"A comprehensive software license management solution for web applications "
+"including WordPress plugins, themes, and PHP-based software. Seamlessly "
+"integrates with WooCommerce to offer license key generation, management, and "
+"validation. Ideal for developers managing software licenses across multiple "
+"platforms with built-in multilingual support and performance optimization."
+msgstr ""
+"Una solución integral de gestión de licencias de software para aplicaciones "
+"web, incluidos complementos de WordPress, temas y software basado en PHP. Se "
+"integra a la perfección con WooCommerce para ofrecer generación, gestión y "
+"validación de claves de licencia. Ideal para desarrolladores que administran "
+"licencias de software en múltiples plataformas con soporte multilingüe "
+"integrado y optimización del rendimiento."
+
+#. Author of the plugin/theme
+#, fuzzy
+msgid "Michel Velis"
+msgstr "Michel Velis"
+
+#. Author URI of the plugin/theme
+#, fuzzy
+msgid "https://github.com/michelve/"
+msgstr "https://github.com/michelve/"

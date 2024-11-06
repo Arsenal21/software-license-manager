@@ -1,0 +1,1228 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: SLM Plus\n"
+"POT-Creation-Date: 2024-10-28 22:01-0400\n"
+"PO-Revision-Date: 2024-10-28 22:01-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: slm-plus.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: plugin-update-checker\\vendor\n"
+
+#: admin/includes/cronjobs/slm-tasks.php:10
+msgid "Every day"
+msgstr ""
+
+#: admin/includes/partials/stats.php:8
+msgid "Total licenses"
+msgstr ""
+
+#: admin/includes/partials/stats.php:18
+msgid "Licenses this week"
+msgstr ""
+
+#: admin/includes/partials/stats.php:28
+msgid "Licenses this month"
+msgstr ""
+
+#: admin/includes/partials/stats.php:38
+msgid "Active licenses"
+msgstr ""
+
+#: admin/includes/partials/stats.php:48
+msgid "Pending licenses"
+msgstr ""
+
+#: admin/includes/partials/stats.php:58
+msgid "Blocked licenses"
+msgstr ""
+
+#: admin/includes/partials/stats.php:68
+msgid "Logs saved"
+msgstr ""
+
+#: admin/includes/partials/stats.php:78
+msgid "Reminders sent"
+msgstr ""
+
+#: admin/includes/partials/stats.php:88
+msgid "Expired licenses"
+msgstr ""
+
+#: admin/includes/partials/stats.php:98
+msgid "Licenses about to expire"
+msgstr ""
+
+#: admin/includes/wpestores/slm-wpestores.php:73
+msgid "Item Name: "
+msgstr ""
+
+#: admin/includes/wpestores/slm-wpestores.php:73
+msgid "License Key: "
+msgstr ""
+
+#: admin/slm-add-licenses.php:18
+msgid "Security check failed"
+msgstr ""
+
+#: admin/slm-add-licenses.php:64
+msgid "Required fields are missing."
+msgstr ""
+
+#: admin/slm-add-licenses.php:69
+msgid "License updated successfully."
+msgstr ""
+
+#: admin/slm-add-licenses.php:72
+msgid "License created successfully."
+msgstr ""
+
+#: admin/slm-add-licenses.php:127
+msgid "License Management"
+msgstr ""
+
+#: admin/slm-add-licenses.php:138 woocommerce/includes/slm-meta-boxes.php:120
+msgid "License Info"
+msgstr ""
+
+#: admin/slm-add-licenses.php:143 woocommerce/includes/purchase.php:689
+#: woocommerce/includes/purchase.php:748 woocommerce/includes/purchase.php:825
+#: woocommerce/includes/wc_licenses_class.php:166
+msgid "License Key"
+msgstr ""
+
+#: admin/slm-add-licenses.php:147
+msgid "Max Allowed Domains"
+msgstr ""
+
+#: admin/slm-add-licenses.php:151
+msgid "Max Allowed Devices"
+msgstr ""
+
+#: admin/slm-add-licenses.php:155 woocommerce/includes/purchase.php:693
+msgid "License Status"
+msgstr ""
+
+#: admin/slm-add-licenses.php:173
+msgid "Date Created"
+msgstr ""
+
+#: admin/slm-add-licenses.php:175 admin/slm-add-licenses.php:190
+#: admin/slm-add-licenses.php:200 admin/slm-add-licenses.php:206
+#: admin/slm-add-licenses.php:288
+#, php-format
+msgid "Display Format: %s (input: YYYY-MM-DD)"
+msgstr ""
+
+#: admin/slm-add-licenses.php:179 woocommerce/includes/purchase.php:691
+#: woocommerce/includes/slm-meta-boxes.php:184
+msgid "License Type"
+msgstr ""
+
+#: admin/slm-add-licenses.php:182 woocommerce/includes/slm-meta-boxes.php:189
+msgid "Subscription"
+msgstr ""
+
+#: admin/slm-add-licenses.php:183 woocommerce/includes/slm-meta-boxes.php:190
+#: woocommerce/includes/wc_licenses_class.php:180
+msgid "Lifetime"
+msgstr ""
+
+#: admin/slm-add-licenses.php:188
+msgid "Date Expiry"
+msgstr ""
+
+#: admin/slm-add-licenses.php:194
+msgid "Subscriber ID"
+msgstr ""
+
+#: admin/slm-add-licenses.php:198
+msgid "Date Renewed"
+msgstr ""
+
+#: admin/slm-add-licenses.php:204
+msgid "Date Activated"
+msgstr ""
+
+#: admin/slm-add-licenses.php:212
+msgid "Subscriber Info"
+msgstr ""
+
+#: admin/slm-add-licenses.php:217 admin/slm-subscribers.php:86
+msgid "First Name"
+msgstr ""
+
+#: admin/slm-add-licenses.php:221 admin/slm-subscribers.php:87
+msgid "Last Name"
+msgstr ""
+
+#: admin/slm-add-licenses.php:225 admin/slm-list-licenses-class.php:89
+msgid "Email"
+msgstr ""
+
+#: admin/slm-add-licenses.php:229
+msgid "Company Name"
+msgstr ""
+
+#: admin/slm-add-licenses.php:235
+msgid "Transaction"
+msgstr ""
+
+#: admin/slm-add-licenses.php:239 woocommerce/includes/slm-meta-boxes.php:174
+msgid "Item Reference"
+msgstr ""
+
+#: admin/slm-add-licenses.php:244
+msgid "Transaction ID"
+msgstr ""
+
+#: admin/slm-add-licenses.php:249
+msgid "Purchase ID"
+msgstr ""
+
+#: admin/slm-add-licenses.php:254
+msgid "Product Reference"
+msgstr ""
+
+#: admin/slm-add-licenses.php:260
+msgid "Other"
+msgstr ""
+
+#: admin/slm-add-licenses.php:264
+msgid "Until"
+msgstr ""
+
+#: admin/slm-add-licenses.php:268 woocommerce/includes/slm-meta-boxes.php:225
+msgid "Current Version"
+msgstr ""
+
+#: admin/slm-add-licenses.php:274
+msgid "Billing Length"
+msgstr ""
+
+#: admin/slm-add-licenses.php:278
+msgid "Billing Interval"
+msgstr ""
+
+#: admin/slm-add-licenses.php:282
+msgid "Reminder Sent"
+msgstr ""
+
+#: admin/slm-add-licenses.php:286
+msgid "Reminder Sent Date"
+msgstr ""
+
+#: admin/slm-add-licenses.php:292
+msgid "Manual Reset Count"
+msgstr ""
+
+#: admin/slm-add-licenses.php:296
+msgid "Save License"
+msgstr ""
+
+#: admin/slm-admin-functions.php:14
+msgid "Admin Tools"
+msgstr ""
+
+#: admin/slm-admin-functions.php:30
+msgid "Success message returned from the remote host."
+msgstr ""
+
+#: admin/slm-admin-functions.php:33
+msgid "Request sent to the specified URL!"
+msgstr ""
+
+#: admin/slm-admin-functions.php:45
+msgid "Log was cleared successfully!"
+msgstr ""
+
+#: admin/slm-admin-functions.php:51
+msgid "Send Deactivation Message for a License"
+msgstr ""
+
+#: admin/slm-admin-functions.php:56
+msgid "Send Request"
+msgstr ""
+
+#: admin/slm-admin-functions.php:63
+msgid "Clean Activity Log"
+msgstr ""
+
+#: admin/slm-admin-functions.php:65
+msgid "This will clear/reset license keys activities"
+msgstr ""
+
+#: admin/slm-admin-functions.php:68
+msgid "Clear Log"
+msgstr ""
+
+#: admin/slm-admin-functions.php:75
+msgid "Backup Database"
+msgstr ""
+
+#: admin/slm-admin-functions.php:77
+msgid ""
+"This will create a backup of the database tables related to this plugin and "
+"save it to the uploads directory."
+msgstr ""
+
+#: admin/slm-admin-functions.php:80
+msgid "Create Backup"
+msgstr ""
+
+#: admin/slm-admin-functions.php:90
+msgid "Last backup created on: "
+msgstr ""
+
+#: admin/slm-admin-functions.php:90
+msgid "Download Backup"
+msgstr ""
+
+#: admin/slm-admin-functions.php:172
+msgid "Backup created successfully! Download from: "
+msgstr ""
+
+#: admin/slm-admin-functions.php:174
+msgid "Error: Failed to create the backup file."
+msgstr ""
+
+#: admin/slm-dashboard-widgets.php:30 admin/slm-dashboard-widgets.php:33
+#: admin/slm-list-licenses-class.php:479
+msgid "SLM"
+msgstr ""
+
+#: admin/slm-dashboard-widgets.php:42
+msgid "Overview"
+msgstr ""
+
+#: admin/slm-dashboard-widgets.php:52
+msgid "Add new license"
+msgstr ""
+
+#: admin/slm-dashboard-widgets.php:62 admin/slm-list-licenses-class.php:485
+#: includes/slm-plugin-core.php:39
+msgid "Settings"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:11
+msgid "License Manager Integration Help"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:34
+msgid "API Settings"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:42
+msgid "The License API Query POST URL For Your Installation"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:45
+msgid "The License Activation or Deactivation API Secret Key"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:48
+msgid "The License Creation API Secret Key"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:54
+msgid "Documentation and guides:"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:55
+msgid "Check out Postman demos"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:60
+msgid "Error Codes and Descriptions"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:65
+msgid "Constant"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:66
+msgid "Error Code"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:67
+msgid "Description"
+msgstr ""
+
+#: admin/slm-integration-help-page.php:73
+msgid "The license creation failed due to an unknown error."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:77
+msgid "The license key provided during creation is invalid."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:81
+msgid "The domain associated with this license is already inactive."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:85
+msgid "The domain information is missing in the request."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:89
+msgid "The license key has been canceled."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:93
+msgid "Failed to cancel the license key."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:97
+msgid "Successfully deactivated the license key for the specified domain."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:101
+msgid "The license key was successfully deactivated."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:105
+msgid "Failed to delete the license key."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:109
+msgid "The license key was successfully deleted."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:113
+msgid "The license key has been deleted."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:117
+msgid "Failed to update the license key details."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:121
+msgid "The license key was successfully updated."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:125
+msgid "The license key was successfully activated."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:129
+msgid "The license key has been blocked from further use."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:133
+msgid "The license key was successfully created."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:137
+msgid "The license key already exists in the system."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:141
+msgid "The license key has expired."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:145
+msgid "The license key is already in use on another domain or device."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:149
+msgid "The license key is invalid."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:153
+msgid "Failed to delete the license key because it was not found."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:157
+msgid "Failed to update the license key because it was not found."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:161
+msgid "The license key has reached its maximum allowable devices."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:165
+msgid "The license key has reached its maximum allowable domains."
+msgstr ""
+
+#: admin/slm-integration-help-page.php:169
+msgid "The key verification failed due to an invalid key."
+msgstr ""
+
+#: admin/slm-lic-settings.php:22
+msgid "Debug log files have been reset!"
+msgstr ""
+
+#: admin/slm-lic-settings.php:53
+msgid "Options updated!"
+msgstr ""
+
+#: admin/slm-lic-settings.php:63
+msgid "Settings - SLM Plus"
+msgstr ""
+
+#: admin/slm-lic-settings.php:69
+msgid "General Settings"
+msgstr ""
+
+#: admin/slm-lic-settings.php:73
+msgid "Integrations"
+msgstr ""
+
+#: admin/slm-lic-settings.php:77
+msgid "Debugging settings"
+msgstr ""
+
+#: admin/slm-lic-settings.php:81
+msgid "Emails"
+msgstr ""
+
+#: admin/slm-lic-settings.php:107
+msgid "Secret Key for License Creation"
+msgstr ""
+
+#: admin/slm-lic-settings.php:110
+msgid ""
+"This secret key will be used to authenticate any license creation request. "
+"You can change it with something random."
+msgstr ""
+
+#: admin/slm-lic-settings.php:114
+msgid "Secret Key for License Verification Requests"
+msgstr ""
+
+#: admin/slm-lic-settings.php:116
+msgid ""
+"This secret key will be used to authenticate any license verification "
+"request from customer's site. Important! Do not change this value once your "
+"customers start to use your product(s)!"
+msgstr ""
+
+#: admin/slm-lic-settings.php:120
+msgid "License Key Prefix"
+msgstr ""
+
+#: admin/slm-lic-settings.php:122
+msgid ""
+"You can optionaly specify a prefix for the license keys. This prefix will be "
+"added to the uniquely generated license keys."
+msgstr ""
+
+#: admin/slm-lic-settings.php:126
+msgid "Maximum Allowed Domains"
+msgstr ""
+
+#: admin/slm-lic-settings.php:128
+msgid ""
+"Maximum number of domains/installs which each license is valid for (default "
+"value)."
+msgstr ""
+
+#: admin/slm-lic-settings.php:132
+msgid "Maximum Allowed Devices"
+msgstr ""
+
+#: admin/slm-lic-settings.php:134
+msgid ""
+"Maximum number of devices which each license is valid for (default value)."
+msgstr ""
+
+#: admin/slm-lic-settings.php:138
+msgid "Auto Expire License Keys"
+msgstr ""
+
+#: admin/slm-lic-settings.php:140
+msgid "Enable auto expiration "
+msgstr ""
+
+#: admin/slm-lic-settings.php:141
+msgid ""
+" When enabled, it will automatically set the status of a license key to "
+"\"Expired\" when the expiry date value  of the key is reached. It doesn't "
+"remotely deactivate a key. It simply changes the status of the key in your "
+"database to expired."
+msgstr ""
+
+#: admin/slm-lic-settings.php:145
+msgid "General settings"
+msgstr ""
+
+#: admin/slm-lic-settings.php:148
+msgid "Enable stats in licenses overview page."
+msgstr ""
+
+#: admin/slm-lic-settings.php:156
+msgid "Enable admin bar shortcut link"
+msgstr ""
+
+#: admin/slm-lic-settings.php:161
+msgid "Multiple items validation"
+msgstr ""
+
+#: admin/slm-lic-settings.php:164
+msgid "Enable verification of Item reference."
+msgstr ""
+
+#: admin/slm-lic-settings.php:165
+msgid ""
+"When enabled, there will be another field in Licenced product - Item "
+"reference. This field should correspond to the API parameter item_reference "
+"of your software."
+msgstr ""
+
+#: admin/slm-lic-settings.php:170
+msgid "User permissions"
+msgstr ""
+
+#: admin/slm-lic-settings.php:173
+msgid "Allow users to remove domains/devices in My account."
+msgstr ""
+
+#: admin/slm-lic-settings.php:174
+msgid ""
+"When enabled, users will be able to remove registered domains or devices in "
+"their account."
+msgstr ""
+
+#: admin/slm-lic-settings.php:179
+msgid "Bootstrap library"
+msgstr ""
+
+#: admin/slm-lic-settings.php:182
+msgid "Enable Bootstrap javascript libray."
+msgstr ""
+
+#: admin/slm-lic-settings.php:189
+msgid ""
+"Enable Bootstrap javascript libray in front-end (woocommerce pages, etc)."
+msgstr ""
+
+#: admin/slm-lic-settings.php:202
+msgid "Woocommerce Support"
+msgstr ""
+
+#: admin/slm-lic-settings.php:205
+msgid ""
+"A fully customizable, open source eCommerce platform built for WordPress."
+msgstr ""
+
+#: admin/slm-lic-settings.php:212
+msgid ""
+"Disable woocommerce download page. Process downloads though license order "
+"info page."
+msgstr ""
+
+#: admin/slm-lic-settings.php:219
+msgid ""
+"Expire WooCommerce downloads. Downloads will expire together with "
+"corresponding license."
+msgstr ""
+
+#: admin/slm-lic-settings.php:223
+msgid "Download Manager Support"
+msgstr ""
+
+#: admin/slm-lic-settings.php:226
+msgid ""
+"Download Manager Plugin – Adds a simple download manager to your WordPress "
+"blog."
+msgstr ""
+
+#: admin/slm-lic-settings.php:230
+msgid "WP eStores Support"
+msgstr ""
+
+#: admin/slm-lic-settings.php:233
+msgid ""
+"WordPress eStore Plugin – Complete Solution to Sell Digital Products from "
+"Your WordPress Blog Securely"
+msgstr ""
+
+#: admin/slm-lic-settings.php:245
+msgid "Enable Debug Logging"
+msgstr ""
+
+#: admin/slm-lic-settings.php:248
+msgid "If checked, debug output will be written to log files."
+msgstr ""
+
+#: admin/slm-lic-settings.php:259
+msgid "Expiration reminder"
+msgstr ""
+
+#: admin/slm-lic-settings.php:269
+msgid "Update Options"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:27
+msgid "No licenses avaliable."
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:43
+msgid "All"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:50
+msgid "active"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:57
+msgid "pending"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:64
+msgid "expired"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:71
+msgid "blocked"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:84 admin/slm-subscribers.php:85
+#: admin/slm-subscribers.php:187 includes/slm-utility.php:789
+msgid "ID"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:85 admin/slm-subscribers.php:189
+#: woocommerce/includes/wc_licenses_class.php:136
+#: woocommerce/includes/wc_licenses_class.php:149
+msgid "Status"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:86
+msgid "Key"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:87
+msgid "Item reference"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:88
+#: woocommerce/includes/wc_licenses_class.php:241
+msgid "License type"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:90
+msgid "Domains"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:91
+msgid "Devices"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:92
+msgid "Order #"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:93
+msgid "Created on"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:94
+msgid "Renewed on"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:95
+msgid "Activated on"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:96
+#: woocommerce/includes/wc_licenses_class.php:238
+msgid "Expiration"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:97
+msgid "Until Ver."
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:98
+msgid "Current Ver."
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:120
+msgid " Lifetime "
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:213 admin/slm-list-licenses-class.php:231
+#: admin/slm-list-licenses-class.php:249 admin/slm-list-licenses-class.php:267
+#: admin/slm-list-licenses-class.php:285
+msgid "Error - Please select some records using the checkboxes"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:480
+msgid "Manage Licenses"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:482
+msgid "Create license"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:483
+msgid "Subscribers"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:484
+msgid "Tools"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:486
+msgid "Help"
+msgstr ""
+
+#: admin/slm-list-licenses-class.php:488
+msgid "About"
+msgstr ""
+
+#: admin/slm-manage-licenses.php:15
+msgid "You do not have permission to manage this license."
+msgstr ""
+
+#: admin/slm-manage-licenses.php:36
+msgid "Overview - Manage licenses"
+msgstr ""
+
+#: admin/slm-manage-licenses.php:38
+msgid "Add New"
+msgstr ""
+
+#: admin/slm-manage-licenses.php:62 admin/slm-subscribers.php:217
+msgid "Search"
+msgstr ""
+
+#: admin/slm-subscribers.php:88
+msgid "Email Address"
+msgstr ""
+
+#: admin/slm-subscribers.php:176
+msgid "Overview - Manage Subscribers"
+msgstr ""
+
+#: admin/slm-subscribers.php:178
+msgid "View all"
+msgstr ""
+
+#: admin/slm-subscribers.php:188 woocommerce/includes/wc_licenses_class.php:138
+msgid "License key"
+msgstr ""
+
+#: admin/slm-subscribers.php:206
+msgid "Overview - All Subscribers"
+msgstr ""
+
+#: admin/slm_about_menu.php:15
+msgid "SLM Logo"
+msgstr ""
+
+#: admin/slm_about_menu.php:15
+msgid "SLM - About"
+msgstr ""
+
+#: admin/slm_about_menu.php:26
+msgid "Credits and authors"
+msgstr ""
+
+#: admin/slm_about_menu.php:28
+msgid ""
+"Software license management solution for your web applications (WordPress "
+"plugins, Themes, Applications, PHP based membership script, etc.). Supports "
+"WooCommerce."
+msgstr ""
+
+#: admin/slm_about_menu.php:33
+msgid "Information"
+msgstr ""
+
+#: admin/slm_about_menu.php:34
+msgid "Details"
+msgstr ""
+
+#: admin/slm_about_menu.php:39
+msgid "Authors"
+msgstr ""
+
+#: admin/slm_about_menu.php:42
+msgid "and"
+msgstr ""
+
+#: admin/slm_about_menu.php:47
+msgid "Help and Support"
+msgstr ""
+
+#: admin/slm_about_menu.php:50
+msgid "Submit a request"
+msgstr ""
+
+#: admin/slm_about_menu.php:55
+msgid "API Demos"
+msgstr ""
+
+#: admin/slm_about_menu.php:58
+msgid "Postman Demos"
+msgstr ""
+
+#: includes/class-slm-installer.php:41
+msgid "Pending"
+msgstr ""
+
+#: includes/class-slm-installer.php:42
+msgid "Active"
+msgstr ""
+
+#: includes/class-slm-installer.php:43
+msgid "Blocked"
+msgstr ""
+
+#: includes/class-slm-installer.php:44
+#: woocommerce/includes/wc_licenses_class.php:175
+msgid "Expired"
+msgstr ""
+
+#: includes/slm-plugin-core.php:40
+msgid "GitHub"
+msgstr ""
+
+#: includes/slm-utility.php:365
+#, php-format
+msgid "%s days remaining until %s"
+msgstr ""
+
+#: includes/slm-utility.php:777
+msgid " view"
+msgstr ""
+
+#: includes/slm-utility.php:789
+msgid "Request"
+msgstr ""
+
+#: includes/slm-utility.php:797
+msgid "Source:"
+msgstr ""
+
+#: includes/slm-utility.php:798
+msgid "Time:"
+msgstr ""
+
+#: includes/slm-utility.php:844
+msgid "Not registered yet"
+msgstr ""
+
+#: includes/slm-utility.php:862 includes/slm-utility.php:874
+#: woocommerce/includes/wc_licenses_class.php:235
+msgid "License information"
+msgstr ""
+
+#: includes/slm-utility.php:875
+msgid "License type: "
+msgstr ""
+
+#: includes/slm-utility.php:876
+msgid "Domains allowed: "
+msgstr ""
+
+#: includes/slm-utility.php:877
+msgid "Devices allowed: "
+msgstr ""
+
+#: includes/slm-utility.php:878
+msgid "Renews every "
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:54
+msgid "View details"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:77
+#, php-format
+msgid "More information about %s"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:128
+msgid "Check for updates"
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:213
+#, php-format
+msgctxt "the plugin title"
+msgid "The %s plugin is up to date."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:215
+#, php-format
+msgctxt "the plugin title"
+msgid "A new version of the %s plugin is available."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:217
+#, php-format
+msgctxt "the plugin title"
+msgid "Could not determine if updates are available for %s."
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Plugin/Ui.php:223
+#, php-format
+msgid "Unknown update checker status \"%s\""
+msgstr ""
+
+#: plugin-update-checker/Puc/v4p9/Vcs/PluginUpdateChecker.php:98
+msgid "There is no changelog available."
+msgstr ""
+
+#: woocommerce/includes/purchase.php:94
+msgid "License no longer exists"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:99
+#: woocommerce/includes/wc_licenses_class.php:209
+msgid "License Key:"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:197
+msgid "License could not be created: Invalid sites allowed number."
+msgstr ""
+
+#: woocommerce/includes/purchase.php:343
+msgid "License Key(s) generated:"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:372
+msgid "License Key(s) could not be created."
+msgstr ""
+
+#: woocommerce/includes/purchase.php:626
+#, php-format
+msgid "Order confirmation email sent to: <a href='mailto:%s'>%s</a>"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:690
+msgid "License Expiration"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:692
+msgid "License Item Reference"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:694
+msgid "License Current Version"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:695
+msgid "Supported Until Version"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:744
+msgid "License Details"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:749
+msgid "Type"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:759
+msgid "View My Licenses"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:817
+msgid "License Keys"
+msgstr ""
+
+#: woocommerce/includes/purchase.php:822
+#: woocommerce/includes/wc_licenses_class.php:137
+#: woocommerce/includes/wc_licenses_class.php:155
+msgid "Product"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:51
+msgid "License product"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:68
+msgid "License Manager"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:70
+msgid "Enables the license creation API."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:146
+msgid "Domain Licenses"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:152
+msgid "Enter the allowed number of domains this license can have (websites)."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:161
+msgid "Devices Licenses"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:167
+msgid ""
+"Enter the allowed number of devices this license can have (computers, "
+"mobile, etc)."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:175
+msgid "Software's item reference"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:177
+msgid ""
+"Enter the item reference of your application, theme, or plug-in. The license "
+"will be then bound to this exact software."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:186
+msgid "Type of license: subscription base or lifetime"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:188
+msgid "Select one"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:197
+msgid "Renewal Period Length"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:198
+msgid "Amount of days, months, or years."
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:208
+msgid "Expiration Term"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:210
+msgid "Choose between days, months, or years"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:212
+msgid "Day(s)"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:213
+msgid "Month(s)"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:214
+msgid "Year(s)"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:215
+msgid "One Time"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:228
+msgid "Enter the current version of your application, theme, or plug-in"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:234
+msgid "Until Version"
+msgstr ""
+
+#: woocommerce/includes/slm-meta-boxes.php:237
+msgid "Enter the version until support expires."
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:83
+#: woocommerce/includes/wc_licenses_class.php:95
+msgid "My Licenses"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:122
+msgid "Browse products"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:124
+msgid "No licenses available yet."
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:135
+#: woocommerce/includes/wc_licenses_class.php:147
+msgid "Order"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:139
+#: woocommerce/includes/wc_licenses_class.php:168
+msgid "Renews on"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:140
+msgid "Info"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:184
+msgid "view"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:218
+msgid "License Information"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:222
+msgid "Activations"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:226
+msgid "Copy License"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:239
+msgid "Allowed devices"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:240
+msgid "Allowed Domains"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:242
+msgid "Date renewed"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:243
+msgid "Activation Date"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:315
+msgid "License key was deactivated!"
+msgstr ""
+
+#: woocommerce/includes/wc_licenses_class.php:317
+msgid "License key was not deactivated!"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "SLM Plus"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/michelve/software-license-manager/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"A comprehensive software license management solution for web applications "
+"including WordPress plugins, themes, and PHP-based software. Seamlessly "
+"integrates with WooCommerce to offer license key generation, management, and "
+"validation. Ideal for developers managing software licenses across multiple "
+"platforms with built-in multilingual support and performance optimization."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Michel Velis"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://github.com/michelve/"
+msgstr ""

@@ -1,8 +1,8 @@
 <?php
 /**
- * Runs on Uninstall of Software License Manager
+ * Runs on Uninstall of SLM Plus
  *
- * @package   Software License Manager
+ * @package   SLM Plus
  * @author    Michel Velis
  * @license   GPL-2.0+
  * @link      http://epikly.com

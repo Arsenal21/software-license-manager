@@ -1,6 +1,6 @@
 {
   "name": "@michelve/software-license-manager",
-  "version": "5.6.1",
+  "version": "6.1.0",
   "description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
   "scripts": {
     "changelog": "auto-changelog -p && git add CHANGELOG.md",
@@ -44,8 +44,7 @@
   },
   "homepage": "https://github.com/michelve/software-license-manager#readme",
   "devDependencies": {
-    "auto-changelog": "^1.14.1"
+    "auto-changelog": "^2.5.0"
   },
-  "main": "software-license-manager.php",
-  "dependencies": {}
+  "main": "slm-plus.php"
 }

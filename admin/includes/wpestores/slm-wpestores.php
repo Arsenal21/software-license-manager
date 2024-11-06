@@ -128,8 +128,8 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
     $fields = array_filter($fields); //Remove any null values.
 
 
-    $tbl_name = SLM_TBL_LICENSE_KEYS;
-    $result = $wpdb->insert($tbl_name, $fields);
+    $slm_lic_table = SLM_TBL_LICENSE_KEYS;
+    $result = $wpdb->insert($slm_lic_table, $fields);
     if (!$result) {
         $slm_debug_logger->log_debug('Notice! initial database table insert failed on license key table (User Email: ' . $fields['email'] . '). Trying again by converting charset', true);
         //Convert the default PayPal IPN charset to UTF-8 format
@@ -140,7 +140,7 @@ function slm_estore_create_license($retrieved_product, $payment_data, $cart_item
         $company_name = mb_convert_encoding($fields['company_name'], "UTF-8", "windows-1252");
         $fields['company_name'] = esc_sql($company_name);
 
-        $result = $wpdb->insert($tbl_name, $fields);
+        $result = $wpdb->insert($slm_lic_table, $fields);
         if (!$result) {
             $slm_debug_logger->log_debug('Error! Failed to update license key table. DB insert query failed.', false);
         }
@@ -188,7 +188,7 @@ function slm_estore_product_configuration_html($product_config_html, $prod_id)
         }
     }
 
-    $product_config_html .= '<div class="msg_head">Software License Manager Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
+    $product_config_html .= '<div class="msg_head">SLM Plus Plugin (Click to Expand)</div><div class="msg_body"><table class="form-table">';
 
     $product_config_html .= '<tr valign="top"><th scope="row">Maximum Allowed Domains</th><td>';
     $product_config_html .= '<input name="slm_max_allowed_domains" type="text" id="slm_max_allowed_domains" value="' . $slm_max_allowed_domains . '" size="10" />';

@@ -552,3 +552,37 @@ display: block !important
 .stats .description{
     padding: 10px 15px 0px 15px;
 }
+/* Suggestions box styling */
+.user-search-suggestions {
+    display: none; /* Start hidden */
+    position: absolute;
+    border: 1px solid #ddd;
+    background: #fff;
+    z-index: 1000;
+    max-width: 300px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+
+/* Individual suggestion item */
+.user-search-suggestions .suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+/* Hover effect for suggestion items */
+.user-search-suggestions .suggestion-item:hover {
+    background-color: #007cba; /* WP blue */
+    color: #fff;
+}
+
+/* Style for no results found */
+.user-search-suggestions .no-results {
+    padding: 8px 12px;
+    color: #a0a5aa;
+    font-style: italic;
+}
