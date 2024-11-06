@@ -4,14 +4,13 @@
 
 [Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.6...HEAD)
 
-**Merged pull requests:**
+**Implemented enhancements:**
 
-- There are 6 TD tags and not 5 Update wc\_licenses\_class.php [\#98](https://github.com/michelve/software-license-manager/pull/98) ([ricardo777](https://github.com/ricardo777))
-- Remove unnecessary metadata [\#95](https://github.com/michelve/software-license-manager/pull/95) ([fabolivark](https://github.com/fabolivark))
-- Small fixes to license info view [\#94](https://github.com/michelve/software-license-manager/pull/94) ([MechComp](https://github.com/MechComp))
-- Correct error on activate that trys to load a non-existent option. [\#90](https://github.com/michelve/software-license-manager/pull/90) ([Narimm](https://github.com/Narimm))
-- Bump minimist from 1.2.5 to 1.2.6 [\#85](https://github.com/michelve/software-license-manager/pull/85) ([dependabot[bot]](https://github.com/apps/dependabot))
-- Bump node-fetch from 2.6.1 to 2.6.7 [\#80](https://github.com/michelve/software-license-manager/pull/80) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Dev 6.1.7 Release [\#102](https://github.com/michelve/software-license-manager/pull/102) ([michelve](https://github.com/michelve))
+
+**Fixed bugs:**
+
+- Issue with add to cart button [\#99](https://github.com/michelve/software-license-manager/issues/99)
 
 ## [6.1.6](https://github.com/michelve/software-license-manager/tree/6.1.6) (2024-11-03)
 
@@ -34,6 +33,15 @@
 **Closed issues:**
 
 - \[Question\] Smart way to integrate license product type with WC subscriptions? [\#86](https://github.com/michelve/software-license-manager/issues/86)
+
+**Merged pull requests:**
+
+- There are 6 TD tags and not 5 Update wc\_licenses\_class.php [\#98](https://github.com/michelve/software-license-manager/pull/98) ([ricardo777](https://github.com/ricardo777))
+- Remove unnecessary metadata [\#95](https://github.com/michelve/software-license-manager/pull/95) ([fabolivark](https://github.com/fabolivark))
+- Small fixes to license info view [\#94](https://github.com/michelve/software-license-manager/pull/94) ([MechComp](https://github.com/MechComp))
+- Correct error on activate that trys to load a non-existent option. [\#90](https://github.com/michelve/software-license-manager/pull/90) ([Narimm](https://github.com/Narimm))
+- Bump minimist from 1.2.5 to 1.2.6 [\#85](https://github.com/michelve/software-license-manager/pull/85) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump node-fetch from 2.6.1 to 2.6.7 [\#80](https://github.com/michelve/software-license-manager/pull/80) ([dependabot[bot]](https://github.com/apps/dependabot))
 
 ## [5.6.2](https://github.com/michelve/software-license-manager/tree/5.6.2) (2022-06-23)
 
