@@ -105,17 +105,17 @@ function slm_display_nice_item_meta($item_id, $item, $product) {
 
 function wc_slm_on_complete_purchase($order_id) {
     // Write to the log that the function is being called, useful for debugging.
-   // SLM_Helper_Class::write_log('Loading wc_slm_on_complete_purchase for Order ID: ' . intval($order_id));
+   SLM_Helper_Class::write_log('Loading wc_slm_on_complete_purchase for Order ID: ' . intval($order_id));
 
     // Check if the essential constants are defined before proceeding.
     if (defined('SLM_SITE_HOME_URL') && defined('WOO_SLM_API_SECRET') && SLM_SITE_HOME_URL !== '' && WOO_SLM_API_SECRET !== '') {
         // Sanitize the order ID and create license keys.
-       // SLM_Helper_Class::write_log('startign to create lic for order: ' . intval($order_id));
+       SLM_Helper_Class::write_log('startign to create lic for order: ' . intval($order_id));
 
         wc_slm_create_license_keys(absint($order_id));
     }
     else {
-       // SLM_Helper_Class::write_log('Error, not constants for Order ID: ' . intval($order_id));
+       SLM_Helper_Class::write_log('Error, not constants for Order ID: ' . intval($order_id));
 
     }
 }
@@ -123,24 +123,24 @@ function wc_slm_on_complete_purchase($order_id) {
 function wc_slm_create_license_keys($order_id)
 {
     // Write initial log for debugging purposes
-   // SLM_Helper_Class::write_log('inside wc_slm_create_license_keys for Order ID: ' . intval($order_id));
+   SLM_Helper_Class::write_log('inside wc_slm_create_license_keys for Order ID: ' . intval($order_id));
 
     // Get the order and relevant user details
     $order = wc_get_order($order_id);
     if (!$order) {
-       // SLM_Helper_Class::write_log('Order ID ' . $order_id . ' not found.');
+       SLM_Helper_Class::write_log('Order ID ' . $order_id . ' not found.');
         return; // Stop if the order does not exist
     }
 
     $purchase_id_ = $order->get_id();
-   // SLM_Helper_Class::write_log('Purchase ID: ' . $purchase_id_);
+   SLM_Helper_Class::write_log('Purchase ID: ' . $purchase_id_);
 
     global $user_id;
     $user_id = $order->get_user_id();
-   // SLM_Helper_Class::write_log('User ID: ' . $user_id);
+   SLM_Helper_Class::write_log('User ID: ' . $user_id);
 
     if (!$user_id) {
-       // SLM_Helper_Class::write_log('User ID not found for Order ID: ' . $order_id);
+       SLM_Helper_Class::write_log('User ID not found for Order ID: ' . $order_id);
         return; // Stop if user ID cannot be found
     }
 
@@ -183,15 +183,15 @@ function wc_slm_create_license_keys($order_id)
                 }
 
                 // Log renewal details
-               // SLM_Helper_Class::write_log('Renewal Period: ' . $renewal_period);
-               // SLM_Helper_Class::write_log('Expiration Date: ' . $expiration);
-               // SLM_Helper_Class::write_log('Renewal Term: ' . $renewal_term);
+               SLM_Helper_Class::write_log('Renewal Period: ' . $renewal_period);
+               SLM_Helper_Class::write_log('Expiration Date: ' . $expiration);
+               SLM_Helper_Class::write_log('Renewal Term: ' . $renewal_term);
 
                 // Get allowed sites/devices and verify them
                 $sites_allowed = wc_slm_get_sites_allowed($product_id);
                 if (!$sites_allowed) {
                     wc_insert_payment_note($purchase_id_, __('License could not be created: Invalid sites allowed number.', 'slmplus'));
-                   // SLM_Helper_Class::write_log('License could not be created: Invalid sites allowed number');
+                   SLM_Helper_Class::write_log('License could not be created: Invalid sites allowed number');
                     break;
                 }
 
@@ -232,7 +232,7 @@ function wc_slm_create_license_keys($order_id)
                 // Send the request to create a license key
                 $url = esc_url_raw(SLM_SITE_HOME_URL) . '?' . http_build_query($api_params);
 
-               // SLM_Helper_Class::write_log('URL: ' . $url);
+               SLM_Helper_Class::write_log('URL: ' . $url);
 
                 $response = wp_safe_remote_get($url, array('timeout' => 20, 'sslverify' => false));
                 $license_key = wc_slm_get_license_key($response);
@@ -538,7 +538,7 @@ function wc_slm_get_licenses_qty($product_id)
  */
 function wc_slm_get_licensing_renewal_period($product_id)
 {
-    $_license_renewal_period_lenght = absint(get_post_meta($product_id, '_license_renewal_period_lenght', true));
+    $_license_renewal_period_lenght = absint(get_post_meta($product_id, '_license_renewal_period_length', true));
     return !empty($_license_renewal_period_lenght) ? $_license_renewal_period_lenght : 0;
 }
 
