@@ -3,10 +3,8 @@ name: Generate Changelog
 on:
   push:
     tags:
-      - '*'  # Match any tag format, with or without 'v'
+      - '*'      # Match any tag format, with or without 'v'
   workflow_dispatch:  # Allow manual runs
-  repository_dispatch:  # Allow trigger from other workflows
-    types: [generate-changelog]
 
 jobs:
   generate-changelog:
