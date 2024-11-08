@@ -1,0 +1,46 @@
+name: Build and Release Plugin
+
+on:
+  release:
+    types: [created, published]
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Java for Ant
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      # Install Ant
+      - name: Install Ant
+        run: sudo apt-get install ant -y
+
+      # Run Ant build
+      - name: Run Ant Build
+        run: ant -f build.xml
+
+      # Upload the build artifact as the release asset
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: slm-plus.zip
+          asset_name: slm-plus.zip
+          asset_content_type: application/zip
+
+      # Update CHANGELOG.md with the latest release information
+      - name: Update Changelog
+        uses: stefanzweifel/changelog-updater-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ github.event.release.tag_name }}
+          changelog: CHANGELOG.md

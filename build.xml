@@ -1,0 +1,31 @@
+<project name="SLM-Plus-Build" default="package-plugin" basedir=".">
+    <property name="plugin.dir" value="software-license-manager" />
+    <property name="build.dir" value="build" />
+    <property name="output.zip" value="slm-plus.zip" />
+
+    <!-- Clean the build directory -->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <!-- Create the build directory -->
+    <target name="init">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <!-- Copy files excluding specified directories and files -->
+    <target name="copy-files" depends="init">
+        <copy todir="${build.dir}/${plugin.dir}">
+            <fileset dir="." excludes=".gitignore,CHANGELOG.md,SECURITY.md,_config.yml,composer.json,package.json,package-lock.json,**/.github/**,**/.vscode/**,**/samples/**" />
+        </copy>
+        <!-- Copy updater checker -->
+        <copy todir="${build.dir}/${plugin.dir}/plugin-update-checker">
+            <fileset dir="plugin-update-checker" />
+        </copy>
+    </target>
+
+    <!-- Create the ZIP package -->
+    <target name="package-plugin" depends="clean,copy-files">
+        <zip destfile="${output.zip}" basedir="${build.dir}" />
+    </target>
+</project>
