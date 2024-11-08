@@ -24,9 +24,29 @@ jobs:
       - name: Install Ant
         run: sudo apt-get install ant -y
 
+      # Install curl and unzip for downloading and extracting plugin-update-checker
+      - name: Install curl and unzip
+        run: sudo apt-get install curl unzip -y
+
       # Run Ant build
       - name: Run Ant Build
         run: ant -f build.xml
+
+      # Generate changelog content
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0)
+          changelog=$(git log ${latest_tag}..HEAD --pretty=format:"- %s ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
+          echo "changelog=$changelog" >> $GITHUB_ENV
+          echo "$changelog"
+
+      # Check if changelog is empty and set a fallback message
+      - name: Check Changelog Content
+        run: |
+          if [ -z "${{ env.changelog }}" ]; then
+            echo "changelog=No additional changes or commits found." >> $GITHUB_ENV
+          fi
 
       # Upload the build artifact as the release asset
       - name: Upload Release Asset
@@ -37,10 +57,14 @@ jobs:
           asset_name: slm-plus.zip
           asset_content_type: application/zip
 
-      # Update CHANGELOG.md with the latest release information
-      - name: Update Changelog
-        uses: stefanzweifel/changelog-updater-action@v1
+      # Update the release description with the changelog
+      - name: Update Release with Changelog
+        uses: softprops/action-gh-release@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          version: ${{ github.event.release.tag_name }}
-          changelog: CHANGELOG.md
+          files: slm-plus.zip
+          tag_name: ${{ github.event.release.tag_name }}
+          body: |
+            ## Changelog
+            ${{ env.changelog }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

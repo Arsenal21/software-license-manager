@@ -1,31 +1,54 @@
-<project name="SLM-Plus-Build" default="package-plugin" basedir=".">
-    <property name="plugin.dir" value="software-license-manager" />
-    <property name="build.dir" value="build" />
-    <property name="output.zip" value="slm-plus.zip" />
+<project name="slm-plus-build" default="package" basedir=".">
+    <!-- Set properties -->
+    <property name="output.dir" location="build" />
+    <property name="zip.file" location="slm-plus.zip" />
 
-    <!-- Clean the build directory -->
+    <!-- Clean build directory -->
     <target name="clean">
-        <delete dir="${build.dir}" />
+        <delete dir="${output.dir}" />
+        <delete file="${zip.file}" />
     </target>
 
-    <!-- Create the build directory -->
-    <target name="init">
-        <mkdir dir="${build.dir}" />
+    <!-- Create build directory -->
+    <target name="prepare" depends="clean">
+        <mkdir dir="${output.dir}" />
+        <mkdir dir="${output.dir}/plugin-update-checker" />
     </target>
 
-    <!-- Copy files excluding specified directories and files -->
-    <target name="copy-files" depends="init">
-        <copy todir="${build.dir}/${plugin.dir}">
-            <fileset dir="." excludes=".gitignore,CHANGELOG.md,SECURITY.md,_config.yml,composer.json,package.json,package-lock.json,**/.github/**,**/.vscode/**,**/samples/**" />
+    <!-- Copy necessary files and directories -->
+    <target name="copy-files" depends="prepare">
+        <copy todir="${output.dir}">
+            <fileset dir="." excludes="
+                .gitignore,
+                .changelog.md,
+                security.md,
+                _config.yml,
+                composer.json,
+                build.xml,
+                package.json,
+                package-lock.json,
+                .github/**,
+                .vscode/**,
+                samples/**"
+            />
         </copy>
-        <!-- Copy updater checker -->
-        <copy todir="${build.dir}/${plugin.dir}/plugin-update-checker">
-            <fileset dir="plugin-update-checker" />
-        </copy>
     </target>
 
-    <!-- Create the ZIP package -->
-    <target name="package-plugin" depends="clean,copy-files">
-        <zip destfile="${output.zip}" basedir="${build.dir}" />
+    <!-- Download plugin-update-checker -->
+    <target name="fetch-plugin-checker" depends="prepare">
+        <exec executable="curl" failonerror="true">
+            <arg value="-L" />
+            <arg value="https://github.com/YahnisElsts/plugin-update-checker/archive/refs/heads/master.zip" />
+            <arg value="-o" />
+            <arg value="plugin-update-checker.zip" />
+        </exec>
+        <unzip src="plugin-update-checker.zip" dest="${output.dir}/plugin-update-checker" />
+        <delete file="plugin-update-checker.zip" />
+    </target>
+
+    <!-- Zip the build folder -->
+    <target name="package" depends="copy-files, fetch-plugin-checker">
+        <zip destfile="${zip.file}" basedir="${output.dir}" />
+        <echo message="Build completed. Output: ${zip.file}" />
     </target>
 </project>
