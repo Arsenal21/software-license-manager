@@ -82,13 +82,3 @@ define('WOO_SLM_API_SECRET',    SLM_API_Utility::get_slm_option('lic_creation_se
 define('KEY_API',               SLM_API_Utility::get_slm_option('lic_creation_secret'));
 define('VERIFY_KEY_API',        SLM_API_Utility::get_slm_option('lic_verification_secret'));
 define('KEY_API_PREFIX',        SLM_API_Utility::get_slm_option('lic_prefix'));
-
-// Auto-updater integration for GitHub updates
-if (file_exists('plugin-update-checker/plugin-update-checker.php')) {
-    require 'plugin-update-checker/plugin-update-checker.php';
-    $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-        'https://github.com/michelve/software-license-manager',
-        __FILE__,
-        'software-license-manager'
-    );
-}

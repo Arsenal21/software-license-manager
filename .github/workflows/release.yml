@@ -24,10 +24,6 @@ jobs:
       - name: Install Ant
         run: sudo apt-get install ant -y
 
-      # Install curl and unzip for downloading and extracting plugin-update-checker
-      - name: Install curl and unzip
-        run: sudo apt-get install curl unzip -y
-
       # Run Ant build
       - name: Run Ant Build
         run: ant -f build.xml
@@ -57,7 +53,7 @@ jobs:
           asset_name: slm-plus.zip
           asset_content_type: application/zip
 
-      # Update the release description with the changelog
+      # Update the release with the changelog
       - name: Update Release with Changelog
         uses: softprops/action-gh-release@v1
         with:

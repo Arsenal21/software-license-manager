@@ -12,7 +12,6 @@
     <!-- Create build directory -->
     <target name="prepare" depends="clean">
         <mkdir dir="${output.dir}" />
-        <mkdir dir="${output.dir}/plugin-update-checker" />
     </target>
 
     <!-- Copy necessary files and directories -->
@@ -32,18 +31,6 @@
                 samples/**"
             />
         </copy>
-    </target>
-
-    <!-- Download plugin-update-checker -->
-    <target name="fetch-plugin-checker" depends="prepare">
-        <exec executable="curl" failonerror="true">
-            <arg value="-L" />
-            <arg value="https://github.com/YahnisElsts/plugin-update-checker/archive/refs/heads/master.zip" />
-            <arg value="-o" />
-            <arg value="plugin-update-checker.zip" />
-        </exec>
-        <unzip src="plugin-update-checker.zip" dest="${output.dir}/plugin-update-checker" />
-        <delete file="plugin-update-checker.zip" />
     </target>
 
     <!-- Zip the build folder -->
