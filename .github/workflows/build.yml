@@ -1,0 +1,53 @@
+name: Build Plugin
+
+on:
+  push:
+    tags:
+      - '*'  # Runs on any tag push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js (if needed)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Create a build directory and copy necessary files
+      - name: Prepare build directory
+        run: |
+          mkdir build
+          rsync -av --progress . build/slm-plus --exclude-from=<(echo "
+            .gitignore
+            .changelog.md
+            security.md
+            _config.yml
+            composer.json
+            build.xml
+            package.json
+            package-lock.json
+            .github
+            .vscode
+            samples
+          ")
+
+      # Step 4: Create the ZIP file
+      - name: Create ZIP archive
+        run: |
+          cd build
+          zip -r ../slm-plus.zip slm-plus
+        shell: bash
+
+      # Step 5: Upload the ZIP file as an artifact (optional)
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: slm-plus
+          path: slm-plus.zip
