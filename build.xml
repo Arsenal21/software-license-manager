@@ -28,12 +28,12 @@
                 package-lock.json,
                 .github/**,
                 .vscode/**,
-                samples/**"
-            />
+                samples/**
+            " />
         </copy>
     </target>
 
-    <!-- Package files into ZIP -->
+    <!-- Package files into a ZIP -->
     <target name="package" depends="copy-files">
         <zip destfile="${zip.file}" basedir="${output.dir}" />
     </target>
