@@ -1,0 +1,19 @@
+name-template: 'Release v${{ nextReleaseVersion }}'
+tag-template: 'v${{ nextReleaseVersion }}'
+categories:
+  - title: '🚀 New Features'
+    labels:
+      - feature
+  - title: '🐛 Bug Fixes'
+    labels:
+      - bug
+  - title: '🛠 Improvements'
+    labels:
+      - enhancement
+  - title: '📚 Documentation'
+    labels:
+      - documentation
+change-template: '- [#${{ number }}] ${{ title }} ([${{ author }}](https://github.com/${{ author }}))'
+template: |
+  ## Changes
+  $CHANGES

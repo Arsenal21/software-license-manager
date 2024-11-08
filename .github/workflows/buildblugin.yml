@@ -8,35 +8,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Set up Node.js (Node 20) with updated action
+      # Set up Node.js (Node 20)
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Checkout code with updated action version
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Generate Changelog if CHANGELOG.md exists
-      - name: Check for CHANGELOG.md and Generate Changelog
-        id: changelog
+      # Trigger Generate Changelog Workflow
+      - name: Trigger Generate Changelog Workflow
         run: |
-          if [ -f CHANGELOG.md ]; then
-            changelog=$(awk '/## Changelog/ {flag=1; next} /##/{flag=0} flag' CHANGELOG.md)
-          else
-            # Fallback to generating a changelog based on commit history
-            latest_tag=$(git describe --tags --abbrev=0)
-            changelog=$(git log ${latest_tag}..HEAD --pretty=format:"- %s ([View Commit](https://github.com/${{ github.repository }}/commit/%H))" --no-merges)
-          fi
-          echo "changelog=$changelog" >> $GITHUB_ENV
-          echo "$changelog"
+          curl -X POST \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/dispatches \
+          -d '{"event_type": "generate-changelog"}'
+
+      # Wait for changelog generation
+      - name: Wait for Changelog Generation
+        run: |
+          echo "Waiting for the Generate Changelog workflow to complete..."
+          sleep 30  # Replace this with a loop or more advanced logic if needed
 
       # Build Plugin Zip
       - name: Build Plugin Zip
         run: zip -r slm-plus.zip . -x '*.git*' '*.github*'
 
-      # Upload Release Asset and Update Description
+      # Upload Release with Changelog
       - name: Upload Release with Changelog
         uses: ncipollo/release-action@v1
         with:
@@ -45,6 +46,6 @@ jobs:
           name: ${{ github.event.release.tag_name }}
           body: |
             ## Changelog
-            ${{ env.changelog }}
+            $(cat CHANGELOG.md)  # Append the contents of the CHANGELOG.md
           artifacts: "slm-plus.zip"
           allowUpdates: true
