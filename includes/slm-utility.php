@@ -38,6 +38,19 @@ class SLM_Helper_Class
             }
         }
     }
+    public static function get_license_logs($license_key) {
+        global $wpdb;
+        $table_name = SLM_TBL_LIC_LOG;
+
+        // Use a prepared statement for security
+        $query = $wpdb->prepare(
+            "SELECT * FROM $table_name WHERE license_key = %s ORDER BY time DESC",
+            $license_key
+        );
+
+        // Fetch results as an associative array
+        return $wpdb->get_results($query, ARRAY_A);
+    }
 
     /**
      * PHP Logger

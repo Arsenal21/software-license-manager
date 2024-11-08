@@ -1,21 +1,24 @@
 {
   "name": "@michelve/software-license-manager",
-  "version": "6.1.0",
-  "description": "Software license management solution for your web applications (WordPress plugins, Themes, Applications, PHP based membership script etc.). Supports WooCommerce.",
+  "version": "6.1.7",
+  "description": "Comprehensive software license management solution for WordPress and PHP-based applications, supporting WooCommerce integration.",
   "scripts": {
-    "changelog": "auto-changelog -p && git add CHANGELOG.md",
-    "postpublish": "npm publish --ignore-scripts --@michelve:registry='https://registry.npmjs.org'"
+    "changelog": "auto-changelog --output CHANGELOG.md --template keepachangelog --unreleased --commit-limit false && git add CHANGELOG.md",
+    "postpublish": "npm publish --ignore-scripts --@michelve:registry='https://registry.npmjs.org'",
+    "prepublishOnly": "npm run changelog && git commit -m 'Update changelog for release v$npm_package_version' CHANGELOG.md && git push"
   },
   "auto-changelog": {
     "output": "CHANGELOG.md",
     "template": "keepachangelog",
-    "issueUrl": "https://github.com/michelve/software-license-manager/issues/{id}",
     "unreleased": true,
     "commitLimit": false,
-    "includeBranch": [
+    "includeBranches": [
       "release-v2",
-      "release-v3"
-    ]
+      "release-v3",
+      "main",
+      "develop"
+    ],
+    "ignoreCommitPattern": "^Merge|^Bump"
   },
   "repository": {
     "type": "git",
@@ -28,16 +31,19 @@
     "software",
     "license manager",
     "software license",
-    "license",
-    "manager",
     "wordpress",
-    "license",
-    "manager",
-    "slm",
     "woocommerce",
-    "license key generator"
+    "license key generator",
+    "slm",
+    "php"
   ],
-  "author": "Michel Velis and Tips and Tricks HQ",
+  "author": "Michel Velis",
+  "contributors": [
+    {
+      "name": "Tips and Tricks HQ",
+      "email": "support@tipsandtrickshq.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/michelve/software-license-manager/issues"

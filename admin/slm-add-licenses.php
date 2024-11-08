@@ -137,10 +137,61 @@ function slm_add_licenses_menu()
                     <?php _e('Activations', 'slmplus'); ?>
                 </a>
             <?php endif; ?>
+            <?php if (isset($_GET['edit_record'])): ?>
+                <a href="?page=slm_manage_license&slm_tab=activity<?php echo isset($_GET['edit_record']) ? '&edit_record=' . esc_attr($_GET['edit_record']) : ''; ?>" class="nav-tab <?php if ($slm_lic_tab === 'activity'): ?>nav-tab-active<?php endif; ?>">
+                    <?php _e('Activity', 'slmplus'); ?>
+                </a>
+            <?php endif; ?>
         </nav>
 
         <div class="slm tab-content">
             <?php switch ($slm_lic_tab): 
+
+                case 'activity': ?>
+
+                    <?php
+                    // Retrieve the license key for the current record
+                    $license_key = esc_attr($data['license_key']);
+
+                    // Fetch the log data using a utility function to handle the database query
+                    $log_entries = SLM_Helper_Class::get_license_logs($license_key);
+
+                        // Display the log table if there are any log entries
+                        if ($log_entries) {
+                            ?>
+                            <div class="wrap">
+                                <h2><?php _e('Activity Log', 'slmplus'); ?></h2>
+                                <table class="widefat striped">
+                                    <thead>
+                                        <tr>
+                                            <th><?php _e('ID', 'slmplus'); ?></th>
+                                            <th><?php _e('Action', 'slmplus'); ?></th>
+                                            <th><?php _e('Time', 'slmplus'); ?></th>
+                                            <th><?php _e('Source', 'slmplus'); ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($log_entries as $entry): ?>
+                                            <tr>
+                                                <td><?php echo esc_html($entry['id']); ?></td>
+                                                <td><?php echo esc_html($entry['slm_action']); ?></td>
+                                                <td><?php echo esc_html($entry['time']); ?></td>
+                                                <td><?php echo esc_html($entry['source']); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <?php
+                        }
+                        else {
+                            // Show a message if there are no log entries
+                            echo '<p>' . __('No activity log found for this license.', 'slmplus') . '</p>';
+                        }                    
+                    ?>
+               
+            <?php
+                break;
                 case 'activation': ?>
 
                     <?php
