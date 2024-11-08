@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/michelve/software-license-manager/tree/HEAD)
+## [6.1.7](https://github.com/michelve/software-license-manager/tree/6.1.7) (2024-11-06)
 
-[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.6...HEAD)
+[Full Changelog](https://github.com/michelve/software-license-manager/compare/6.1.6...6.1.7)
 
 **Implemented enhancements:**
 
