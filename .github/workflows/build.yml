@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - '*'  # Runs on any tag push
+  release:
+    types:
+      - published  # Runs when a release is published
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   build:
