@@ -1,4 +1,4 @@
-name: Build Plugin
+name: Build and Upload Release Asset
 
 on:
   push:
@@ -49,9 +49,11 @@ jobs:
           zip -r ../slm-plus.zip slm-plus
         shell: bash
 
-      # Step 5: Upload the ZIP file as an artifact (optional)
-      - name: Upload ZIP as artifact
-        uses: actions/upload-artifact@v3
+      # Step 5: Upload the ZIP as a release asset
+      - name: Upload ZIP to Release
+        uses: actions/upload-release-asset@v1
         with:
-          name: slm-plus
-          path: slm-plus.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: slm-plus.zip
+          asset_name: slm-plus.zip
+          asset_content_type: application/zip
