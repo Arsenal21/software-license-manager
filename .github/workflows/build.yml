@@ -9,6 +9,11 @@ on:
       - published  # Runs when a release is published
   workflow_dispatch:  # Allows manual triggering
 
+permissions:
+  contents: write  # Required to upload assets
+  actions: write   # Required for actions to work correctly
+  id-token: write  # For authentication if needed
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,8 +54,18 @@ jobs:
           zip -r ../slm-plus.zip slm-plus
         shell: bash
 
-      # Step 5: Upload the ZIP as a release asset
+      # Step 5: Create a Release (if push event)
+      - name: Create a Release (if push)
+        if: github.event_name == 'push'
+        run: |
+          TAG_NAME=$(echo $GITHUB_REF | sed 's/refs\/tags\///')
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -d '{"tag_name": "'$TAG_NAME'", "name": "'$TAG_NAME'"}' \
+              https://api.github.com/repos/${{ github.repository }}/releases
+
+      # Step 6: Upload ZIP to Release (only if release is published)
       - name: Upload ZIP to Release
+        if: github.event_name == 'release' && github.event.action == 'published'
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
