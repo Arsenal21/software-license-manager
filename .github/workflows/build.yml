@@ -6,13 +6,13 @@ on:
       - '*'  # Runs on any tag push
   release:
     types:
-      - published  # Runs when a release is published
+      - published  # Runs when a release is published manually or via API
   workflow_dispatch:  # Allows manual triggering
 
 permissions:
   contents: write  # Required to upload assets
   actions: write   # Required for actions to work correctly
-  id-token: write  # Required for authentication if necessary
+  id-token: write  # If required for authentication
 
 jobs:
   build:
@@ -66,7 +66,7 @@ jobs:
       # Step 6: Upload ZIP to Release (only if release is published)
       - name: Upload ZIP to Release
         if: github.event_name == 'release' && github.event.action == 'published'
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v2
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: slm-plus.zip
