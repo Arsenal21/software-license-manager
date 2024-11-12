@@ -6,13 +6,13 @@ on:
       - '*'  # Runs on any tag push
   release:
     types:
-      - published  # Runs when a release is published manually or via API
+      - published  # Runs when a release is published
   workflow_dispatch:  # Allows manual triggering
 
 permissions:
   contents: write  # Required to upload assets
   actions: write   # Required for actions to work correctly
-  id-token: write  # If required for authentication
+  id-token: write  # Required for authentication if necessary
 
 jobs:
   build:
@@ -72,3 +72,5 @@ jobs:
           asset_path: slm-plus.zip
           asset_name: slm-plus.zip
           asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure token is passed correctly
