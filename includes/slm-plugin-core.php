@@ -8,7 +8,7 @@
  * @link      http://epikly.com
  */
 
- 
+
 //Includes - utilities and cron jobs
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 require_once(SLM_LIB . 'slm-utility.php');
@@ -27,7 +27,8 @@ if (is_admin()) {
 }
 
 if (!function_exists('hyphenate')) {
-    function hyphenate($str) {
+    function hyphenate($str)
+    {
         return implode("-", str_split($str, 5));
     }
 }
@@ -35,31 +36,78 @@ if (!function_exists('hyphenate')) {
 
 // WP eStores integration
 if (SLM_Helper_Class::slm_get_option('slm_wpestores') == 1) {
-    require_once(SLM_ADMIN . 'includes/wpestores/slm-wpestores.php');
+    // require_once(SLM_ADMIN . 'includes/wpestores/slm-wpestores.php');
 }
 
 // Activation and deactivation hooks
-function activate_slm_plus() {
+function activate_slm_plus()
+{
     require_once SLM_LIB . 'class-slm-activator.php';
     $slm_activator->activate();
 }
 
-function deactivate_slm_plus() {
+function deactivate_slm_plus()
+{
     require_once SLM_LIB . 'class-slm-deactivator.php';
     $slm_deactivator->deactivate();
-}
-
-function slm_get_license($lic_key_prefix = '')
-{
-    return strtoupper($lic_key_prefix  . hyphenate(md5(uniqid(rand(4, 10), true) . date('Y-m-d H:i:s') . time())));
 }
 
 register_activation_hook(__FILE__, 'activate_slm_plus');
 register_deactivation_hook(__FILE__, 'deactivate_slm_plus');
 
-// License key generator function
-function slmplus_get_license($lic_key_prefix = '') {
-    return strtoupper($lic_key_prefix . hyphenate(md5(uniqid(rand(4, 10), true) . date('Y-m-d H:i:s') . time())));
+// Improved and Shortened License Key Generator Function
+function slm_get_license($lic_key_prefix = '')
+{
+    global $wpdb;
+    $max_retries = 5; // Set the maximum number of retries
+    $retry_count = 0;
+    $license_key = '';
+
+    // Use the constant to define the license table
+    $license_table = SLM_TBL_LICENSE_KEYS;
+
+    // Generate a unique license key
+    while ($retry_count < $max_retries) {
+        // Generate a strong, random base using random_int() and uniqid
+        $random_base = uniqid(random_int(1000, 9999), true);
+
+        // Combine random base with the current GMT date and time and the Unix timestamp for additional uniqueness
+        $combined_string = $random_base . gmdate('Y-m-d H:i:s') . time();
+
+        // Create a sha256 hash of the combined string
+        $hashed_string = substr(hash('sha256', $combined_string), 0, 32); // Take first 32 characters of the sha256 hash
+
+        // Ensure the prefix is added correctly
+        $license_key = strtoupper($hashed_string);
+
+        // Add dashes every 4 characters
+        $license_key_with_dashes = implode('-', str_split($license_key, 4));
+
+        // Add the prefix to the formatted key
+        $license_key_with_prefix = $lic_key_prefix . $license_key_with_dashes;
+
+        // Check if the generated license key already exists in the database
+        $existing_license = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $license_table WHERE license_key = %s", $license_key_with_prefix));
+
+        // If the license doesn't exist, break out of the loop and return the key
+        if ($existing_license == 0) {
+            return $license_key_with_prefix;
+        }
+
+        // If the license already exists, increment the retry count and try again
+        $retry_count++;
+    }
+
+    // If we exceed the retry limit, return false or handle the error as needed
+    error_log('Failed to generate a unique license key after ' . $max_retries . ' attempts.');
+    return false;
+}
+
+
+// Example hyphenate function (assuming hyphenates every 4 characters)
+function hyphenate($string)
+{
+    return implode('-', str_split($string, 4)); // This splits the string into chunks of 4 characters and adds hyphens
 }
 
 // Action hooks
@@ -75,13 +123,15 @@ add_action('plugins_loaded', array('SLM_Tabbed_Plugin', 'get_object'));
 $slm_debug_logger = new SLM_Debug_Logger();
 
 // Init-time tasks
-function slmplus_init_handler() {
+function slmplus_init_handler()
+{
     $init_task = new SLM_Init_Time_Tasks();
     $api_listener = new SLM_API_Listener();
 }
 
 // Plugins loaded tasks
-function slmplus_plugins_loaded_handler() {
+function slmplus_plugins_loaded_handler()
+{
     if (is_admin() && get_option('slm_db_version') != SLM_DB_VERSION) {
         require_once(SLM_LIB . 'class-slm-installer.php');
         // TODO - Implement DB update logic here
@@ -89,10 +139,12 @@ function slmplus_plugins_loaded_handler() {
 }
 
 // Singleton pattern for the plugin
-class SLM_Tabbed_Plugin {
+class SLM_Tabbed_Plugin
+{
     private static $classobj = NULL;
 
-    public static function get_object() {
+    public static function get_object()
+    {
         if (self::$classobj === NULL) {
             self::$classobj = new self();
         }
@@ -103,7 +155,8 @@ class SLM_Tabbed_Plugin {
 }
 
 // AJAX handlers
-function slmplus_del_registered_domain() {
+function slmplus_del_registered_domain()
+{
     global $wpdb;
     $id = strip_tags($_GET['id']);
     $ret = $wpdb->query($wpdb->prepare("DELETE FROM " . SLM_TBL_LIC_DOMAIN . " WHERE id = %d", $id));
@@ -111,7 +164,8 @@ function slmplus_del_registered_domain() {
     exit;
 }
 
-function slmplus_del_registered_devices() {
+function slmplus_del_registered_devices()
+{
     global $wpdb;
     $id = strip_tags($_GET['id']);
     $ret = $wpdb->query($wpdb->prepare("DELETE FROM " . SLM_TBL_LIC_DEVICES . " WHERE id = %d", $id));
@@ -119,7 +173,8 @@ function slmplus_del_registered_devices() {
     exit;
 }
 
-function slmplus_remove_activation() {
+function slmplus_remove_activation()
+{
     global $wpdb;
     $id = strip_tags($_GET['id']);
     $activation_type = strip_tags($_GET['activation_type']);
@@ -131,13 +186,15 @@ function slmplus_remove_activation() {
 }
 
 // Debugging functions
-function wc_print_pretty($args) {
+function wc_print_pretty($args)
+{
     echo '<pre>';
     print_r($args);
     echo '</pre>';
 }
 
-function wc_log($msg) {
+function wc_log($msg)
+{
     $log = ABSPATH . DIRECTORY_SEPARATOR . 'slm_log.txt';
     file_put_contents($log, $msg . '', FILE_APPEND);
 }
@@ -148,7 +205,7 @@ if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocom
     require_once(SLM_WOO . 'includes/slm-meta-boxes.php');
 
     require_once SLM_WOO . 'includes/register-template.php';
-	require_once SLM_WOO . 'includes/purchase.php';
+    require_once SLM_WOO . 'includes/purchase.php';
     require_once SLM_WOO . 'includes/create-license-orders.php';
 
     // Build WooCommerce tabs
@@ -156,40 +213,43 @@ if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocom
 }
 
 add_action('wp_ajax_slm_user_search', 'slm_user_search');
-function slm_user_search() {
+function slm_user_search()
+{
+    global $wpdb;
+
     $value = sanitize_text_field($_POST['value']);
-    
-    // Meta query to search for user data
-    $meta_query = [
-        'relation' => 'OR',
-        ['key' => 'first_name', 'value' => $value, 'compare' => 'LIKE'],
-        ['key' => 'last_name', 'value' => $value, 'compare' => 'LIKE'],
-        ['key' => 'billing_first_name', 'value' => $value, 'compare' => 'LIKE'],
-        ['key' => 'billing_last_name', 'value' => $value, 'compare' => 'LIKE'],
-    ];
 
-    // Arguments to find users
-    $args = [
-        'meta_query' => $meta_query,
-        'number'     => 10,
-    ];
+    // Direct SQL Query to improve performance
+    $query = $wpdb->prepare(
+        "
+        SELECT u.ID, u.display_name, u.user_email, 
+            IFNULL(um_first_name.meta_value, um_billing_first_name.meta_value) AS first_name,
+            IFNULL(um_last_name.meta_value, um_billing_last_name.meta_value) AS last_name
+        FROM {$wpdb->users} u
+        LEFT JOIN {$wpdb->prefix}usermeta um_first_name ON um_first_name.user_id = u.ID AND um_first_name.meta_key = 'first_name'
+        LEFT JOIN {$wpdb->prefix}usermeta um_last_name ON um_last_name.user_id = u.ID AND um_last_name.meta_key = 'last_name'
+        LEFT JOIN {$wpdb->prefix}usermeta um_billing_first_name ON um_billing_first_name.user_id = u.ID AND um_billing_first_name.meta_key = 'billing_first_name'
+        LEFT JOIN {$wpdb->prefix}usermeta um_billing_last_name ON um_billing_last_name.user_id = u.ID AND um_billing_last_name.meta_key = 'billing_last_name'
+        WHERE (um_first_name.meta_value LIKE %s OR um_last_name.meta_value LIKE %s OR um_billing_first_name.meta_value LIKE %s OR um_billing_last_name.meta_value LIKE %s)
+        LIMIT 10
+        ",
+        '%' . $wpdb->esc_like($value) . '%',
+        '%' . $wpdb->esc_like($value) . '%',
+        '%' . $wpdb->esc_like($value) . '%',
+        '%' . $wpdb->esc_like($value) . '%'
+    );
 
-    $users = get_users($args);
+    $users = $wpdb->get_results($query);
     $results = [];
 
     foreach ($users as $user) {
-        // Fallback to billing info if WooCommerce is active
-        $first_name = get_user_meta($user->ID, 'first_name', true) ?: get_user_meta($user->ID, 'billing_first_name', true);
-        $last_name = get_user_meta($user->ID, 'last_name', true) ?: get_user_meta($user->ID, 'billing_last_name', true);
-        $company_name = get_user_meta($user->ID, 'company_name', true); // Retrieve company name if available
-        
         $results[] = [
             'ID'           => $user->ID,
-            'display_name' => $user->display_name ?: "{$first_name} {$last_name}",
-            'first_name'   => $first_name,
-            'last_name'    => $last_name,
+            'display_name' => $user->display_name ?: "{$user->first_name} {$user->last_name}",
+            'first_name'   => $user->first_name,
+            'last_name'    => $user->last_name,
             'email'        => $user->user_email,
-            'company_name' => $company_name,
+            'company_name' => get_user_meta($user->ID, 'company_name', true),
             'subscr_id'    => $user->ID, // Pass user ID as the subscription ID
         ];
     }

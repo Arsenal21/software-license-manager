@@ -69,7 +69,7 @@ function slm_general_settings()
     
         // Update the options in the database
         update_option('slm_plugin_options', $options);
-        echo '<div id="message" class="updated fade"> <p>' . __('Options updated!', 'slmplus') . '</p> </div>';
+        echo '<div id="message" class="updated fade"> <p>' . esc_html__('Options updated!', 'slm-plus') . '</p> </div>';
     }
 
     $secret_key = !empty($options['lic_creation_secret']) ? $options['lic_creation_secret'] : SLM_Utility::create_secret_keys();
@@ -82,26 +82,27 @@ function slm_general_settings()
             <div id="post-body" class="metabox-holder columns-2">
 
             
-            <h1><?php _e('SLM Plus - Settings', 'slmplus'); ?> </h1>
+            <h1><?php esc_html_e('SLM Plus - Settings', 'slm-plus'); ?> </h1>
 
             <div id="icon-options-general" class="icon32"></div>
             <div class="nav-tab-wrapper">
                 <?php $base_url = admin_url('admin.php?page=slm_settings'); ?>
-                <a href="<?php echo $base_url ?>" class="nav-tab <?php echo $tab === 'general_settings' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('General', 'slmplus'); ?>
+                <a href="<?php echo esc_url($base_url); ?>" class="nav-tab <?php echo esc_attr($tab === 'general_settings' ? 'nav-tab-active' : ''); ?>">
+                    <?php esc_html_e('General', 'slm-plus'); ?>
                 </a>
 
-                <a href="<?php echo add_query_arg('tab', 'integrations', $base_url); ?>" class="nav-tab <?php echo $tab === 'integrations' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('Integrations', 'slmplus'); ?>
+                <a href="<?php echo esc_url(add_query_arg('tab', 'integrations', $base_url)); ?>" class="nav-tab <?php echo esc_attr($tab === 'integrations' ? 'nav-tab-active' : ''); ?>">
+                    <?php esc_html_e('Integrations', 'slm-plus'); ?>
                 </a>
 
-                <a href="<?php echo add_query_arg('tab', 'debug', $base_url); ?>" class="nav-tab <?php echo $tab === 'debug' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('Debugging', 'slmplus'); ?>
+                <a href="<?php echo esc_url(add_query_arg('tab', 'debug', $base_url)); ?>" class="nav-tab <?php echo esc_attr($tab === 'debug' ? 'nav-tab-active' : ''); ?>">
+                    <?php esc_html_e('Debugging', 'slm-plus'); ?>
                 </a>
 
-                <a href="<?php echo add_query_arg('tab', 'emails', $base_url); ?>" class="nav-tab <?php echo $tab === 'emails' ? 'nav-tab-active' : '' ?>">
-                    <?php _e('Emails', 'slmplus'); ?>
+                <a href="<?php echo esc_url(add_query_arg('tab', 'emails', $base_url)); ?>" class="nav-tab <?php echo esc_attr($tab === 'emails' ? 'nav-tab-active' : ''); ?>">
+                    <?php esc_html_e('Emails', 'slm-plus'); ?>
                 </a>
+
             </div>
 
             <style> .hidepanel { display: none; } .showpanel { display: block !important } #wpbody-content { padding-bottom: 8px; ; } </style>
@@ -112,49 +113,48 @@ function slm_general_settings()
                         <div class="general_settings hidepanel <?php echo ($tab == 'general_settings') ? 'showpanel' : '' ?>">
                             <table class="form-table">
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Secret Key for License Creation', 'slmplus'); ?></th>
-                                    <td><textarea name="lic_creation_secret" rows="2" cols="50" readonly><?php echo $secret_key; ?>
-                                    </textarea>
-                                        <p class=" description"><?php _e('This secret key will be used to authenticate any license creation request. You can change it with something random.', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('Secret Key for License Creation', 'slm-plus'); ?></th>
+                                    <td><textarea name="lic_creation_secret" rows="2" cols="50" readonly><?php echo esc_textarea($secret_key); ?></textarea>
+                                        <p class=" description"><?php esc_html_e('This secret key will be used to authenticate any license creation request. You can change it with something random.', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Secret Key for License Verification Requests', 'slmplus'); ?></th>
-                                    <td><textarea name="lic_verification_secret" rows="2" cols="50" readonly><?php echo $secret_verification_key; ?></textarea>
-                                        <p class="description"><?php _e('This secret key will be used to authenticate any license verification request from customer\'s site. Important! Do not change this value once your customers start to use your product(s)!', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('Secret Key for License Verification Requests', 'slm-plus'); ?></th>
+                                    <td><textarea name="lic_verification_secret" rows="2" cols="50" readonly><?php echo esc_textarea($secret_verification_key); ?></textarea>                                    </textarea>
+                                        <p class="description"><?php esc_html_e('This secret key will be used to authenticate any license verification request from customer\'s site. Important! Do not change this value once your customers start to use your product(s)!', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('License Key Prefix', 'slmplus'); ?></th>
-                                    <td><input type="text" name="lic_prefix" value="<?php echo $options['lic_prefix']; ?>" size="6" />
-                                        <p class="description"><?php _e('You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('License Key Prefix', 'slm-plus'); ?></th>
+                                    <td><input type="text" name="lic_prefix" value="<?php echo esc_attr($options['lic_prefix']); ?>" size="6" />
+                                        <p class="description"><?php esc_html_e('You can optionaly specify a prefix for the license keys. This prefix will be added to the uniquely generated license keys.', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Maximum Allowed Devices', 'slmplus'); ?></th>
-                                    <td><input type="text" name="default_max_devices" value="<?php echo $options['default_max_devices']; ?>" size="6" />
-                                        <p class="description"><?php _e('Maximum number of devices which each license is valid for (default value).', 'slmplus'); ?></p>
-                                    </td>
-                                </tr>
-
-                                <tr valign="top">
-                                    <th scope="row"><?php _e('Maximum Allowed Domains', 'slmplus'); ?></th>
-                                    <td><input type="text" name="default_max_domains" value="<?php echo $options['default_max_domains']; ?>" size="6" />
-                                        <p class="description"><?php _e('Maximum number of domains which each license is valid for (default value).', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('Maximum Allowed Devices', 'slm-plus'); ?></th>
+                                    <td><input type="text" name="default_max_devices" value="<?php echo esc_attr($options['default_max_devices']); ?>" size="6" />
+                                        <p class="description"><?php esc_html_e('Maximum number of devices which each license is valid for (default value).', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Support Until Ver.', 'slmplus'); ?></th>
-                                    <td><input type="text" name="license_until_version" value="<?php echo $options['license_until_version']; ?>" size="6" />
-                                        <p class="description"><?php _e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting).', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('Maximum Allowed Domains', 'slm-plus'); ?></th>
+                                    <td><input type="text" name="default_max_domains" value="<?php echo esc_attr($options['default_max_domains']); ?>" size="6" />
+                                        <p class="description"><?php esc_html_e('Maximum number of domains which each license is valid for (default value).', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Current Version', 'slmplus'); ?></th>
-                                    <td><input type="text" name="license_current_version" value="<?php echo $options['license_current_version']; ?>" size="6" />
-                                        <p class="description"><?php _e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slmplus'); ?></p>
+                                    <th scope="row"><?php esc_html_e('Support Until Ver.', 'slm-plus'); ?></th>
+                                    <td><input type="text" name="license_until_version" value="<?php echo esc_attr($options['license_until_version']); ?>" size="6" />
+                                        <p class="description"><?php esc_html_e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting).', 'slm-plus'); ?></p>
+                                    </td>
+                                </tr>
+
+                                <tr valign="top">
+                                    <th scope="row"><?php esc_html_e('Current Version', 'slm-plus'); ?></th>
+                                    <td><input type="text" name="license_current_version" value="<?php echo esc_attr($options['license_current_version']); ?>" size="6" />
+                                        <p class="description"><?php esc_html_e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
@@ -164,37 +164,37 @@ function slm_general_settings()
                                 ?>
 
                                 <tr>
-                                    <th scope="row"><label for="slm_billing_length"><?php _e('Billing Length', 'slmplus'); ?></label></th>
+                                    <th scope="row"><label for="slm_billing_length"><?php esc_html_e('Billing Length', 'slm-plus'); ?></label></th>
                                     <td><input name="slm_billing_length" type="text" id="slm_billing_length" value="<?php echo esc_attr($slm_billing_length); ?>" class="regular-text" />
-                                    <p class="description"><?php _e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slmplus'); ?></p></td>
+                                    <p class="description"><?php esc_html_e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slm-plus'); ?></p></td>
                                 </tr>
 
                                 <tr valign="top">
-                                    <th scope="row"><label for="slm_billing_interval"><?php _e('Expiration Term', 'slmplus'); ?></label></th>
+                                    <th scope="row"><label for="slm_billing_interval"><?php esc_html_e('Expiration Term', 'slm-plus'); ?></label></th>
                                     <td>
                                         <select name="slm_billing_interval" id="slm_billing_interval" class="regular-text">
-                                            <option value="days" <?php selected($slm_billing_interval, 'days'); ?>><?php _e('Day(s)', 'slmplus'); ?></option>
-                                            <option value="months" <?php selected($slm_billing_interval, 'months'); ?>><?php _e('Month(s)', 'slmplus'); ?></option>
-                                            <option value="years" <?php selected($slm_billing_interval, 'years'); ?>><?php _e('Year(s)', 'slmplus'); ?></option>
+                                            <option value="days" <?php selected($slm_billing_interval, 'days'); ?>><?php esc_html_e('Day(s)', 'slm-plus'); ?></option>
+                                            <option value="months" <?php selected($slm_billing_interval, 'months'); ?>><?php esc_html_e('Month(s)', 'slm-plus'); ?></option>
+                                            <option value="years" <?php selected($slm_billing_interval, 'years'); ?>><?php esc_html_e('Year(s)', 'slm-plus'); ?></option>
                                         </select>
-                                        <p class="description"><?php _e('Frequency period: in days, months, or years', 'softwarelicensemanager'); ?></p>
-                                        <p class="description"><?php _e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slmplus'); ?></p>
+                                        <p class="description"><?php esc_html_e('Frequency period: in days, months, or years', 'slm-plus'); ?></p>
+                                        <p class="description"><?php esc_html_e('This is used to enable bulk license generation for WooCommerce orders placed before the plugin was active or for orders that do not already contain licenses (default setting:).', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
 
                                 <tr valign="top">
-                                    <th scope="row"><?php _e('Auto Expire License Keys', 'slmplus'); ?></th>
+                                    <th scope="row"><?php esc_html_e('Auto Expire License Keys', 'slm-plus'); ?></th>
                                     <td><input name="enable_auto_key_expiration" type="checkbox" <?php if (isset($options['enable_auto_key_expiration']) && $options['enable_auto_key_expiration'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable auto expiration ', 'slmplus '); ?>
-                                        <p class="description"><?php _e(' When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value  of the key is reached. It doesn\'t remotely deactivate a key. It simply changes the status of the key in your database to expired.', 'slmplus'); ?></p>
+                                        <?php esc_html_e('Enable auto expiration ', 'slm-plus'); ?>
+                                        <p class="description"><?php esc_html_e(' When enabled, it will automatically set the status of a license key to "Expired" when the expiry date value  of the key is reached. It doesn\'t remotely deactivate a key. It simply changes the status of the key in your database to expired.', 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row"><?php _e('General settings', 'slmplus'); ?></th>
+                                    <th scope="row"><?php esc_html_e('General settings', 'slm-plus'); ?></th>
                                     <td>
                                         <input name="slm_stats" type="checkbox" <?php if ($options['slm_stats'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable stats in licenses overview page.', 'slmplus'); ?>
+                                        <?php esc_html_e('Enable stats in licenses overview page.', 'slm-plus'); ?>
                                     </td>
                                 </tr>
 
@@ -202,25 +202,25 @@ function slm_general_settings()
                                     <th scope="row"></th>
                                     <td>
                                         <input name="slm_adminbar" type="checkbox" <?php if ($options['slm_adminbar'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable admin bar shortcut link', 'slmplus'); ?>
+                                        <?php esc_html_e('Enable admin bar shortcut link', 'slm-plus'); ?>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <th scope="row"><?php _e('Multiple items validation', 'slmplus'); ?></th>
+                                    <th scope="row"><?php esc_html_e('Multiple items validation', 'slm-plus'); ?></th>
                                     <td>
                                         <input name="slm_multiple_items" type="checkbox" <?php if ($options['slm_multiple_items'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Enable verification of Item reference.', 'slmplus'); ?>
-                                        <p class="description"><?php _e("When enabled, there will be another field in Licenced product - Item reference. This field should correspond to the API parameter item_reference of your software.", 'slmplus'); ?></p>
+                                        <?php esc_html_e('Enable verification of Item reference.', 'slm-plus'); ?>
+                                        <p class="description"><?php esc_html_e("When enabled, there will be another field in Licenced product - Item reference. This field should correspond to the API parameter item_reference of your software.", 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <th scope="row"><?php _e('User permissions', 'slmplus'); ?></th>
+                                    <th scope="row"><?php esc_html_e('User permissions', 'slm-plus'); ?></th>
                                     <td>
                                         <input name="allow_user_activation_removal" type="checkbox" <?php if ($options['allow_user_activation_removal'] != '') echo ' checked="checked"'; ?> value="1" />
-                                        <?php _e('Allow users to remove domains/devices in My account.', 'slmplus'); ?>
-                                        <p class="description"><?php _e("When enabled, users will be able to remove registered domains or devices in their account.", 'slmplus'); ?></p>
+                                        <?php esc_html_e('Allow users to remove domains/devices in My account.', 'slm-plus'); ?>
+                                        <p class="description"><?php esc_html_e("When enabled, users will be able to remove registered domains or devices in their account.", 'slm-plus'); ?></p>
                                     </td>
                                 </tr>
 
@@ -229,14 +229,14 @@ function slm_general_settings()
 
                         <div class="integrations hidepanel <?php echo ($tab == 'integrations') ? 'showpanel' : '' ?>">
                             <div class="inside">
-                                <h3><?php _e('WooCommerce Settings', 'slmplus'); ?> </h3>
+                                <h3><?php esc_html_e('WooCommerce Settings', 'slm-plus'); ?> </h3>
                                 <table class="form-table">
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('WooCommerce', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php esc_html_e('WooCommerce', 'slm-plus'); ?></th>
                                         <td>
                                             <input name="slm_woo" type="checkbox" <?php if ($options['slm_woo'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Enable WooCommerce Support (A fully customizable, open source eCommerce platform built for WordPress.)', 'slmplus'); ?>
+                                            <?php esc_html_e('Enable WooCommerce Support (A fully customizable, open source eCommerce platform built for WordPress.)', 'slm-plus'); ?>
                                         </td>
                                     </tr>
 
@@ -244,11 +244,11 @@ function slm_general_settings()
                                         <th scope="row"> </th>
                                         <td>
                                             <input name="slm_wc_lic_generator" type="checkbox" <?php if ($options['slm_wc_lic_generator'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Enable WooCommerce Order License Generator', 'slmplus'); ?>
+                                            <?php esc_html_e('Enable WooCommerce Order License Generator', 'slm-plus'); ?>
                                             <p class="notice notice-warning" style="padding: 10px; margin-top: 5px;">
-                                                <?php _e('This tool generates bulk licenses for WooCommerce orders placed before the plugin was activated or for orders that lack existing licenses.', 'slmplus'); ?>
-                                                <strong><?php _e('Warning:', 'slmplus'); ?></strong>
-                                                <?php _e('This action cannot be undone. Please back up your database before proceeding.', 'slmplus'); ?>
+                                                <?php esc_html_e('This tool generates bulk licenses for WooCommerce orders placed before the plugin was activated or for orders that lack existing licenses.', 'slm-plus'); ?>
+                                                <strong><?php esc_html_e('Warning:', 'slm-plus'); ?></strong>
+                                                <?php esc_html_e('This action cannot be undone. Please back up your database before proceeding.', 'slm-plus'); ?>
                                             </p>
                                         </td>
                                     </tr>
@@ -257,28 +257,28 @@ function slm_general_settings()
                                         <th scope="row"></th>
                                         <td>
                                             <input name="slm_woo_downloads" type="checkbox" <?php if ($options['slm_woo_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Disable WooCommerce download page. Process downloads though license order info page.', 'slmplus'); ?>
+                                            <?php esc_html_e('Disable WooCommerce download page. Process downloads though license order info page.', 'slm-plus'); ?>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row"></th>
                                         <td>
                                             <input name="slm_woo_affect_downloads" type="checkbox" <?php if ($options['slm_woo_affect_downloads'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Enable WooCommerce downloads expiration. Downloads will expire together with corresponding license.', 'slmplus'); ?>
+                                            <?php esc_html_e('Enable WooCommerce downloads expiration. Downloads will expire together with corresponding license.', 'slm-plus'); ?>
                                         </td>
                                     </tr>
                                 </table>
 
-                                <h3><?php _e('WP eStores', 'slmplus'); ?> </h3>
+                                <!-- <h3><?php // esc_html_e('WP eStores', 'slm-plus'); ?> </h3>
                                 <table class="form-table">
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('WP eStores', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php //_e('WP eStores', 'slm-plus'); ?></th>
                                         <td>
-                                            <input name="slm_wpestores" type="checkbox" <?php if ($options['slm_wpestores'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php _e('Enable WordPress eStore Plugin Support.', 'slmplus'); ?>
+                                            <input name="slm_wpestores" type="checkbox" <?php //if ($options['slm_wpestores'] != '') echo ' checked="checked"'; ?> value="1" />
+                                            <?php //_e('Enable WordPress eStore Plugin Support.', 'slm-plus'); ?>
                                         </td>
                                     </tr>
-                                </table>
+                                </table> -->
                             </div>
                         </div>
 
@@ -286,31 +286,31 @@ function slm_general_settings()
                             <div class=" inside">
                                 <table class="form-table">
                                     <tr valign="top">
-                                        <th scope="row"> <?php echo __('Enable Debug Logging', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php echo esc_html__('Enable Debug Logging', 'slm-plus'); ?></th>
                                         <td>
                                             <p class="description"><input name="enable_debug" type="checkbox" <?php if ($options['enable_debug'] != '') echo ' checked="checked"'; ?> value="1" />
-                                                <?php echo __('If checked, debug output will be written to log files.', ' slmplus '); ?></p>
+                                                <?php echo esc_html__('If checked, debug output will be written to log files.', 'slm-plus'); ?></p>
                                         </td>
                                     </tr>
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php echo __('SLM Plus Version', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php echo esc_html__('SLM Plus Version', 'slm-plus'); ?></th>
                                         <td>
-                                            <p class="description"> <?php echo SLM_VERSION;?> </p>
+                                            <p class="description"><?php echo esc_html(SLM_VERSION); ?></p>
                                         </td>
                                     </tr>
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php echo __('SLM Databse Version', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php echo esc_html__('SLM Databse Version', 'slm-plus'); ?></th>
                                         <td>
-                                            <p class="description"> <?php echo SLM_DB_VERSION;?> </p>
+                                            <p class="description"> <?php  echo esc_html(SLM_DB_VERSION);?> </p>
                                         </td>
                                     </tr>
 
                                     <tr valign="top">
-                                        <th scope="row"> <?php echo __('SLM Rewrite Version', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php echo esc_html__('SLM Rewrite Version', 'slm-plus'); ?></th>
                                         <td>
-                                            <p class="description"> <?php echo SLM_REWRITE_VERSION;?> </p>
+                                            <p class="description"> <?php  echo esc_html(SLM_REWRITE_VERSION);?> </p>
                                         </td>
                                     </tr>
 
@@ -323,7 +323,7 @@ function slm_general_settings()
                             <div class=" inside">
                                 <table class="form-table">
                                     <tr valign="top">
-                                        <th scope="row"> <?php _e('Expiration reminder', 'slmplus'); ?></th>
+                                        <th scope="row"> <?php esc_html_e('Expiration reminder', 'slm-plus'); ?></th>
                                         <td>
                                             <textarea name="expiration_reminder_text" id="expiration_reminder_text" cols="80" rows="20"> <?php echo esc_html($options['expiration_reminder_text']); ?> </textarea>
                                         </td>
@@ -333,7 +333,7 @@ function slm_general_settings()
                         </div>
 
                         <div class="submit">
-                            <input type="submit" class="button-primary" name="slm_save_settings" value=" <?php _e('Update Options', 'slmplus'); ?>" />
+                            <input type="submit" class="button-primary" name="slm_save_settings" value=" <?php esc_html_e('Update Options', 'slm-plus'); ?>" />
                         </div>
                     </form>
                 </div>

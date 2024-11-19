@@ -38,10 +38,10 @@ dbDelta($status_table_sql);
 $status_count = $wpdb->get_var("SELECT COUNT(*) FROM $lic_status_table");
 if ($status_count == 0) {
     $default_statuses = array(
-        array('status_key' => 'pending', 'status_label' => __('Pending', 'slmplus')),
-        array('status_key' => 'active', 'status_label' => __('Active', 'slmplus')),
-        array('status_key' => 'blocked', 'status_label' => __('Blocked', 'slmplus')),
-        array('status_key' => 'expired', 'status_label' => __('Expired', 'slmplus'))
+        array('status_key' => 'pending', 'status_label' => __('Pending', 'slm-plus')),
+        array('status_key' => 'active', 'status_label' => __('Active', 'slm-plus')),
+        array('status_key' => 'blocked', 'status_label' => __('Blocked', 'slm-plus')),
+        array('status_key' => 'expired', 'status_label' => __('Expired', 'slm-plus'))
     );
 
     foreach ($default_statuses as $status) {

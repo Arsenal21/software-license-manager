@@ -6,7 +6,7 @@ function slm_add_daily_cron_schedule($schedules) {
     // Define a daily interval (24 hours = 86400 seconds)
     $schedules['slm_daily'] = array(
         'interval' => 86400,
-        'display'  => __('Every 24 Hours', 'slmplus'),
+        'display'  => __('Every 24 Hours', 'slm-plus'),
     );
     return $schedules;
 }
@@ -86,8 +86,8 @@ add_action('admin_menu', 'slm_add_manual_license_check_page');
 function slm_add_manual_license_check_page() {
     add_submenu_page(
         'tools.php', // Parent slug, 'Tools' menu
-        __('Run License Check', 'slmplus'), // Page title
-        __('Run License Check', 'slmplus'), // Menu title
+        __('Run License Check', 'slm-plus'), // Page title
+        __('Run License Check', 'slm-plus'), // Menu title
         'manage_options', // Capability required
         'slm-manual-license-check', // Menu slug
         'slm_manual_license_check_page' // Callback function
@@ -110,23 +110,23 @@ function slm_manual_license_check_page() {
         $expired_licenses = slm_run_license_check();
         
         if (!empty($expired_licenses)) {
-            echo '<div class="updated"><p>' . __('License check completed. The following licenses have expired:', 'slmplus') . '</p></div>';
+            echo '<div class="updated"><p>' . esc_html__('License check completed. The following licenses have expired:', 'slm-plus') . '</p></div>';
         } else {
-            echo '<div class="updated"><p>' . __('License check completed. No expired licenses found.', 'slmplus') . '</p></div>';
+            echo '<div class="updated"><p>' . esc_html__('License check completed. No expired licenses found.', 'slm-plus') . '</p></div>';
         }
     }
 
     // Display the button in the admin area
     echo '<div class="wrap">';
-    echo '<h2>' . __('Run License Check Manually', 'slmplus') . '</h2>';
+    echo '<h2>' . esc_html__('Run License Check Manually', 'slm-plus') . '</h2>';
     echo '<form method="post">';
     wp_nonce_field('slm_manual_check_action', 'slm_manual_check_nonce');
-    echo '<input type="submit" name="slm_manual_check" class="button-primary" value="' . __('Run License Check', 'slmplus') . '">';
+    echo '<input type="submit" name="slm_manual_check" class="button-primary" value="' . esc_attr__('Run License Check', 'slm-plus') . '">';
     echo '</form>';
 
     // Output expired licenses if available
     if (!empty($expired_licenses)) {
-        echo '<h3>' . __('Expired Licenses:', 'slmplus') . '</h3>';
+        echo '<h3>' . esc_html__('Expired Licenses:', 'slm-plus') . '</h3>';
         echo '<ul>';
         foreach ($expired_licenses as $license) {
             echo '<li>' . esc_html($license) . '</li>';

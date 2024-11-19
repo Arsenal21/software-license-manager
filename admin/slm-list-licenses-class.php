@@ -24,7 +24,7 @@ class SLM_List_Licenses extends WP_List_Table
 
     public function no_items()
     {
-        _e('No licenses avaliable.', 'slmplus');
+        esc_html_e('No licenses avaliable.', 'slm-plus');
     }
 
     function get_views()
@@ -40,35 +40,35 @@ class SLM_List_Licenses extends WP_List_Table
                 $link_html,
                 esc_url(remove_query_arg('view', $base)),
                 $current === 'all' || $current == '' ? ' class="current"' : '',
-                esc_html__('All', 'slmplus'),
+                esc_html__('All', 'slm-plus'),
                 SLM_Utility::get_total_licenses()
             ),
             'active'   => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'active', $base . '&s=active')),
                 $current === 'active' ? ' class="current"' : '',
-                esc_html__('active', 'slmplus'),
+                esc_html__('active', 'slm-plus'),
                 SLM_Utility::count_licenses('active')
             ),
             'pending' => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'pending', $base . '&s=pending')),
                 $current === 'pending' ? ' class="current"' : '',
-                esc_html__('pending', 'slmplus'),
+                esc_html__('pending', 'slm-plus'),
                 SLM_Utility::count_licenses('pending')
             ),
             'expired'  => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'expired', $base . '&s=expired')),
                 $current === 'expired' ? ' class="current"' : '',
-                esc_html__('expired', 'slmplus'),
+                esc_html__('expired', 'slm-plus'),
                 SLM_Utility::count_licenses('expired')
             ),
             'blocked'  => sprintf(
                 $link_html,
                 esc_url(add_query_arg('view', 'blocked', $base . '&s=blocked')),
                 $current === 'blocked' ? ' class="current"' : '',
-                esc_html__('blocked', 'slmplus'),
+                esc_html__('blocked', 'slm-plus'),
                 SLM_Utility::count_licenses('blocked')
             )
         );
@@ -81,21 +81,21 @@ class SLM_List_Licenses extends WP_List_Table
     {
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
-            'id'                    => __('ID', 'slmplus'),
-            'lic_status'            => __('Status', 'slmplus'),
-            'license_key'           => __('Key', 'slmplus'),
-            'item_reference'        => __('Item reference', 'slmplus'),
-            'lic_type'              => __('License type', 'slmplus'),
-            'email'                 => __('Email', 'slmplus'),
-            'max_allowed_domains'   => __('Domains', 'slmplus'),
-            'max_allowed_devices'   => __('Devices', 'slmplus'),
-            'purchase_id_'          => __('Order #', 'slmplus'),
-            'date_created'          => __('Created on', 'slmplus'),
-            'date_renewed'          => __('Renewed on', 'slmplus'),
-            'date_activated'        => __('Activated on', 'slmplus'),
-            'date_expiry'           => __('Expiration', 'slmplus'),
-            'until'                 => __('Until Ver.', 'slmplus'),
-            'current_ver'           => __('Current Ver.', 'slmplus')
+            'id'                    => __('ID', 'slm-plus'),
+            'lic_status'            => __('Status', 'slm-plus'),
+            'license_key'           => __('Key', 'slm-plus'),
+            'item_reference'        => __('Item reference', 'slm-plus'),
+            'lic_type'              => __('License type', 'slm-plus'),
+            'email'                 => __('Email', 'slm-plus'),
+            'max_allowed_domains'   => __('Domains', 'slm-plus'),
+            'max_allowed_devices'   => __('Devices', 'slm-plus'),
+            'purchase_id_'          => __('Order #', 'slm-plus'),
+            'date_created'          => __('Created on', 'slm-plus'),
+            'date_renewed'          => __('Renewed on', 'slm-plus'),
+            'date_activated'        => __('Activated on', 'slm-plus'),
+            'date_expiry'           => __('Expiration', 'slm-plus'),
+            'until'                 => __('Until Ver.', 'slm-plus'),
+            'current_ver'           => __('Current Ver.', 'slm-plus')
         );
         return $columns;
     }
@@ -117,19 +117,17 @@ class SLM_List_Licenses extends WP_List_Table
                 $date_today = time();
 
                 if ($expiration == '0000-00-00') {
-                    return '<span class="tag license-date-valid">'. __(' Lifetime ','slmplus'). '</span>' . '<span class="days-left"> </span>';
+                    return '<span class="tag license-date-valid">' . __(' Lifetime ', 'slm-plus') . '</span>' . '<span class="days-left"> </span>';
                 }
 
 
                 if ($expiration != '0000-00-00') {
                     if (strtotime($expiration) < time()) {
                         return '<span class="slm-lic-expired-date"> ' . $expiration . '  </span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($expiration) . ' day(s) due</span>';
-                    }
-                    else {
+                    } else {
                         return '<span class="tag license-date-valid">' . $item[$column_name] . '</span>' . '<span class="days-left"> ' . SLM_Utility::get_days_remaining($expiration) . ' day(s) left</span>';
                     }
-                }
-                else {
+                } else {
                     //return $item[$column_name];
                     return '<span class="tag license-date-null">not set<span>';
                 }
@@ -204,94 +202,94 @@ class SLM_List_Licenses extends WP_List_Table
         );
         return $actions;
     }
-    
+
     function process_bulk_action()
     {
         if ('delete' === $this->current_action()) {
             //Process delete bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slmplus') . '</p>';
-                echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm-plus') . '</p>';
+                echo '<div id="message" class="error fade">' . esc_html($error_msg) . '</div>';
                 return;
             } else {
                 $nvp_key            = $this->_args['singular'];
                 $records_to_delete  = $_GET[$nvp_key];
-    
+
                 foreach ($records_to_delete as $row) {
                     SLM_Utility::delete_license_key_by_row_id($row);
                 }
-    
+
                 echo '<div id="message" class="updated fade"><p>Selected records deleted successfully!</p></div>';
             }
         }
-        
+
         if ('blocked' === $this->current_action()) {
             //Process blocked bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slmplus') . '</p>';
-                echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm-plus') . '</p>';
+                echo '<div id="message" class="error fade">' . esc_html($error_msg) . '</div>';
                 return;
             } else {
                 $nvp_key            = $this->_args['singular'];
                 $licenses_to_block  = $_GET[$nvp_key];
-    
+
                 foreach ($licenses_to_block as $row) {
                     SLM_Utility::block_license_key_by_row_id($row);
                 }
-    
-                echo '<div id="message" class="updated fade"><p> ' . $row . ' Selected records blocked successfully!</p></div>';
+
+                echo '<div id="message" class="updated fade"><p>' . esc_html($row) . ' ' . esc_html__('Selected records blocked successfully!', 'slm-plus') . '</p></div>';
             }
         }
-    
+
         if ('expired' === $this->current_action()) {
             //Process expired bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slmplus') . '</p>';
-                echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm-plus') . '</p>';
+                echo '<div id="message" class="error fade">' . esc_html($error_msg) . '</div>';
                 return;
             } else {
                 $nvp_key            = $this->_args['singular'];
                 $licenses_to_expire  = $_GET[$nvp_key];
-    
+
                 foreach ($licenses_to_expire as $row) {
                     SLM_Utility::expire_license_key_by_row_id($row);
                 }
-    
-                echo '<div id="message" class="updated fade"><p> ' . $row . ' Selected records expired successfully!</p></div>';
+
+                echo '<div id="message" class="updated fade"><p>' . esc_html($row) . ' ' . esc_html__('Selected records expired successfully!', 'slm-plus') . '</p></div>';
             }
         }
-    
+
         if ('active' === $this->current_action()) {
             //Process activate bulk actions
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slmplus') . '</p>';
-                echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm-plus') . '</p>';
+                echo '<div id="message" class="error fade">' . esc_html($error_msg) . '</div>';
                 return;
             } else {
                 $nvp_key                = $this->_args['singular'];
                 $liceses_to_activate    = $_GET[$nvp_key];
-    
+
                 foreach ($liceses_to_activate as $row) {
                     SLM_Utility::active_license_key_by_row_id($row);
                 }
-    
-                echo '<div id="message" class="updated fade"><p> ' . $row . ' Selected records activated successfully!</p></div>';
+
+                echo '<div id="message" class="updated fade"><p>' . esc_html($row) . ' ' . esc_html__('Selected records activated successfully!', 'slm-plus') . '</p></div>';
             }
         }
-    
+
         // Export license data
         if ('export' === $this->current_action()) {
             if (!isset($_REQUEST['item'])) {
-                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slmplus') . '</p>';
-                echo '<div id="message" class="error fade">' . $error_msg . '</div>';
+                $error_msg = '<p>' . __('Error - Please select some records using the checkboxes', 'slm-plus') . '</p>';
+                echo '<div id="message" class="error fade">' . esc_html($error_msg) . '</div>';
                 return;
             } else {
                 $nvp_key = $this->_args['singular'];
                 $licenses_to_export = $_GET[$nvp_key];
-    
+
                 // Call the export function
                 $file_urls = self::export_license_data($licenses_to_export);
-    
+
                 // Display success message with download links for each license
                 echo '<div id="message" class="updated fade">';
                 echo '<p>Export successful! Download the CSV files:</p>';
@@ -302,58 +300,73 @@ class SLM_List_Licenses extends WP_List_Table
             }
         }
     }
-    
-// Export function
-public static function export_license_data($license_ids)
-{
-    global $wpdb;
 
-    // Fetch the custom directory path from options (saved with hash)
-    $slm_options = get_option('slm_plugin_options');
-    $custom_dir_hash = isset($slm_options['slm_backup_dir_hash']) ? $slm_options['slm_backup_dir_hash'] : '';
+    public static function export_license_data($license_ids)
+    {
+        global $wpdb;
 
-    // Prepare file URLs array
-    $file_urls = [];
+        // Fetch the custom directory path from options (saved with hash)
+        $slm_options = get_option('slm_plugin_options');
+        $custom_dir_hash = isset($slm_options['slm_backup_dir_hash']) ? $slm_options['slm_backup_dir_hash'] : '';
 
-    // Get the WordPress upload directory
-    $upload_dir = wp_upload_dir();
-    $custom_dir = $upload_dir['basedir'] . $custom_dir_hash;
+        // Prepare file URLs array
+        $file_urls = [];
 
-    // Ensure the directory exists
-    if (!file_exists($custom_dir)) {
-        mkdir($custom_dir, 0755, true); // Create the directory if it doesn't exist
-    }
+        // Get the WordPress upload directory
+        $upload_dir = wp_upload_dir();
+        $custom_dir = $upload_dir['basedir'] . '/' . $custom_dir_hash;
 
-    // Fetch license data for each selected ID
-    foreach ($license_ids as $license_id) {
-        $data = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE id = %d", $license_id), ARRAY_A);
-        if ($data) {
-            $license_key = $data['license_key'];
-
-            // Prepare file name as "license_key.csv"
-            $file_name = sanitize_file_name($license_key) . '.csv';
-            $file_path = $custom_dir . '/' . $file_name;
-
-            // Open file handle
-            $output = fopen($file_path, 'w');
-
-            // Write CSV headers
-            fputcsv($output, array_keys($data));
-
-            // Write license data to CSV file
-            fputcsv($output, $data);
-
-            // Close the file handle
-            fclose($output);
-
-            // Store the file URL for download
-            $file_urls[] = $upload_dir['baseurl'] . $custom_dir_hash . '/' . $file_name;
+        // Initialize WP_Filesystem for safe file handling
+        if (empty($GLOBALS['wp_filesystem'])) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            WP_Filesystem();
         }
+
+        // Ensure the directory exists using WP_Filesystem methods
+        if (!is_dir($custom_dir)) {
+            $created = $GLOBALS['wp_filesystem']->mkdir($custom_dir, 0755); // Create the directory if it doesn't exist
+            if (!$created) {
+                return new WP_Error('directory_creation_failed', 'Unable to create the directory.');
+            }
+        }
+
+        // Fetch license data for each selected ID
+        foreach ($license_ids as $license_id) {
+            $data = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE id = %d",
+                $license_id
+            ), ARRAY_A);
+
+            if ($data) {
+                $license_key = $data['license_key'];
+
+                // Prepare file name as "license_key.csv"
+                $file_name = sanitize_file_name($license_key) . '.csv';
+                $file_path = $custom_dir . '/' . $file_name;
+
+                // Open file handle using WP_Filesystem methods
+                $file_handle = $GLOBALS['wp_filesystem']->open($file_path, 'w');
+
+                if (!$file_handle) {
+                    return new WP_Error('file_creation_failed', 'Unable to open the file for writing.');
+                }
+
+                // Write CSV headers and license data to the file
+                fputcsv($file_handle, array_keys($data));
+                fputcsv($file_handle, $data);
+
+                // Close the file handle
+                $GLOBALS['wp_filesystem']->close($file_handle);
+
+                // Store the file URL for download
+                $file_urls[] = $upload_dir['baseurl'] . '/' . $custom_dir_hash . '/' . $file_name;
+            }
+        }
+
+        // Return the array of file URLs
+        return $file_urls;
     }
 
-    // Return the array of file URLs
-    return $file_urls;
-}
 
 
     /*
@@ -365,7 +378,7 @@ public static function export_license_data($license_ids)
         $success_msg    = '<div id="message" class="updated"><p><strong>';
         $success_msg    .= 'The selected entry was deleted successfully!';
         $success_msg    .= '</strong></p></div>';
-        echo $success_msg;
+        echo esc_html($success_msg);
     }
 
     function block_license_key($key_row_id)
@@ -374,7 +387,7 @@ public static function export_license_data($license_ids)
         $success_msg    = '<div id="message" class="updated"><p><strong>';
         $success_msg    .= 'The selected entry was blocked successfully!';
         $success_msg    .= '</strong></p></div>';
-        echo $success_msg;
+        echo esc_html($success_msg);
     }
 
     private function sort_data($a, $b)
@@ -382,26 +395,34 @@ public static function export_license_data($license_ids)
         // Set defaults
         $orderby = 'id';
         $order = 'desc';
-        // If orderby is set, use this as the sort column
+
+        // Sanitize and unslash input for 'orderby' and 'order'
         if (!empty($_GET['orderby'])) {
-            $orderby = $_GET['orderby'];
+            $orderby = wp_unslash($_GET['orderby']); // wp_unslash before sanitization
+            $orderby = sanitize_key($orderby); // sanitize for key-based data
         }
-        // If order is set use this as the order
+
         if (!empty($_GET['order'])) {
-            $order = $_GET['order'];
+            $order = wp_unslash($_GET['order']); // wp_unslash before sanitization
+            $order = in_array(strtolower($order), ['asc', 'desc']) ? strtolower($order) : 'desc'; // Ensure 'asc' or 'desc' only
         }
-        if ($orderby == 'id'){
-          if ($a[$orderby]==$b[$orderby]){
-            $result = 0;
-          }else{
-            $result = ($a[$orderby]<$b[$orderby])?-1:1;
-          }
-        }else{
-          $result = strcmp($a[$orderby], $b[$orderby]);
+
+        // Sorting logic
+        if ($orderby == 'id') {
+            if ($a[$orderby] == $b[$orderby]) {
+                $result = 0;
+            } else {
+                $result = ($a[$orderby] < $b[$orderby]) ? -1 : 1;
+            }
+        } else {
+            $result = strcmp($a[$orderby], $b[$orderby]);
         }
+
+        // Return based on the order (asc or desc)
         if ($order === 'asc') {
             return $result;
         }
+
         return -$result;
     }
 
@@ -416,26 +437,51 @@ public static function export_license_data($license_ids)
         if (empty($per_page) || $per_page < 1) {
             $per_page = $screen->get_option('per_page', 'default');
         }
-        $columns        = $this->get_columns();
-        // $hidden         = array();
-        $hidden         = get_hidden_columns( $screen );
-        $sortable       = $this->get_sortable_columns();
+
+        $columns = $this->get_columns();
+        $hidden = get_hidden_columns($screen);
+        $sortable = $this->get_sortable_columns();
         $this->_column_headers = array($columns, $hidden, $sortable);
+
         $this->process_bulk_action();
-        $license_table = SLM_TBL_LICENSE_KEYS;
-        $search = (isset($_REQUEST['s'])) ? $_REQUEST['s'] : false;
-        $search_term = trim(strip_tags($search));
-        $do_search = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `license_key` LIKE '%%%s%%' OR `email` LIKE '%%%s%%' OR `lic_status` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%'", $search_term, $search_term, $search_term, $search_term, $search_term);
+
+        // Ensure the license table constant is used safely
+        $license_table = esc_sql(SLM_TBL_LICENSE_KEYS); // Sanitize the table name
+
+        // Search handling with esc_like for wildcard search
+        $search = isset($_REQUEST['s']) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : ''; // Use wp_unslash to handle slashes
+        $search_term = wp_strip_all_tags($search); // Using wp_strip_all_tags instead of strip_tags
+        $search_term_esc = addcslashes($search_term, '_%'); // Escapes underscore and percent characters
+
+        // Prepared query with placeholders and escaped search term
+        $do_search = $wpdb->prepare(
+            "SELECT * FROM $license_table 
+             WHERE license_key LIKE %s OR email LIKE %s OR lic_status LIKE %s OR first_name LIKE %s OR last_name LIKE %s",
+            '%' . $search_term_esc . '%',  // Apply wildcard to the escaped search term
+            '%' . $search_term_esc . '%',
+            '%' . $search_term_esc . '%',
+            '%' . $search_term_esc . '%',
+            '%' . $search_term_esc . '%'
+        );
+
+        // Execute the query and get the results
         $data = $wpdb->get_results($do_search, ARRAY_A);
+
+        // Sort data
         usort($data, array(&$this, 'sort_data'));
-        $current_page   = $this->get_pagenum();
-        $total_items    = count($data);
-        $data           = array_slice($data, (($current_page - 1) * $per_page), $per_page);
-        $this->items    = $data;
+
+        // Pagination
+        $current_page = $this->get_pagenum();
+        $total_items = count($data);
+        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+
+        $this->items = $data;
+
+        // Set pagination arguments
         $this->set_pagination_args(array(
-            'total_items' => $total_items,                  //WE have to calculate the total number of items
-            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
-            'total_pages' => ceil($total_items / $per_page)   //WE have to calculate the total number of pages
+            'total_items' => $total_items,
+            'per_page'    => $per_page,
+            'total_pages' => ceil($total_items / $per_page)
         ));
     }
 }
@@ -463,21 +509,22 @@ class SLM_Plugin
     public function slm_add_admin_menu()
     {
         $icon_svg = SLM_ASSETS_URL . 'images/slm_logo_small.svg';
-        add_menu_page(__( 'SLM Plus', 'slmplus'), __( 'SLM Plus', 'slmplus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
-        $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, __('Manage Licenses', 'slmplus'), __('Manage Licenses', 'slmplus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Create license', 'slmplus'), __( 'Create license', 'slmplus') , SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Subscribers', 'slmplus'), __( 'Subscribers', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Tools', 'slmplus'), __( 'Tools', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Settings', 'slmplus'), __( 'Settings', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'Help', 'slmplus'), __( 'Help', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
-        add_submenu_page(SLM_MAIN_MENU_SLUG, __( 'About', 'slmplus'),__( 'About', 'slmplus'), SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
+        add_menu_page(__('SLM Plus', 'slm-plus'), __('SLM Plus', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu", $icon_svg);
+        $hook = add_submenu_page(SLM_MAIN_MENU_SLUG, __('Manage Licenses', 'slm-plus'), __('Manage Licenses', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, SLM_MAIN_MENU_SLUG, "slm_manage_licenses_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('Create license', 'slm-plus'), __('Create license', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_manage_license', "slm_add_licenses_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('Subscribers', 'slm-plus'), __('Subscribers', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_subscribers', "slm_subscribers_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('Tools', 'slm-plus'), __('Tools', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_admin_tools', "slm_admin_tools_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('Settings', 'slm-plus'), __('Settings', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_settings', "slm_settings_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('Help', 'slm-plus'), __('Help', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_help', "slm_integration_help_menu");
+        add_submenu_page(SLM_MAIN_MENU_SLUG, __('About', 'slm-plus'), __('About', 'slm-plus'), SLM_MANAGEMENT_PERMISSION, 'slm_about', "slm_about_menu");
         add_action("load-" . $hook, [$this, 'screen_option']);
     }
 
     /**
      * Screen options
      */
-    public function screen_option(){
+    public function screen_option()
+    {
         $option = 'per_page';
         $args   = [
             'label'   => 'Pagination',

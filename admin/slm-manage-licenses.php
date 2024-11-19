@@ -12,7 +12,7 @@ function get_user_info()
     if (!current_user_can('manage_licenses')) {
         $response = array(
             'success' => false,
-            'message' => _e('You do not have permission to manage this license.', 'slmplus'),
+            'message' => esc_html__('You do not have permission to manage this license.', 'slm-plus'),
         );
         echo json_encode($response);
         die();
@@ -33,9 +33,9 @@ function slm_manage_licenses_menu()
     <div class="stats">
     </div>
     <div class="wrap">
-        <h1><?php _e('SLM Plus - Manage Licenses', 'slmplus'); ?></h1>
+        <h1><?php esc_html_e('SLM Plus - Manage Licenses', 'slm-plus'); ?></h1>
         <br>
-        <a href="<?php echo admin_url('admin.php?page=slm_manage_license') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('Add New', 'slmplus'); ?></a>
+        <a href="<?php echo esc_url(admin_url('admin.php?page=slm_manage_license')); ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php esc_html_e('Add New', 'slm-plus'); ?></a>
 
         <hr class="wp-header-end">
 
@@ -56,10 +56,10 @@ function slm_manage_licenses_menu()
                     </div>
                     <div class="meta-box-sortables ui-sortable">
                         <form id="licenses-filter" method="get">
-                            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+                            <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
                             <?php
                             $license_list->prepare_items();
-                            $license_list->search_box(__('Search'), 'search-box-id');
+                            $license_list->search_box(__('Search', 'slm-plus'), 'search-box-id');
                             $license_list->views();
                             $license_list->display(); ?>
                         </form>

@@ -56,7 +56,7 @@ function slm_add_my_licenses_endpoint($items) {
         unset($items['customer-logout']); // Remove "Log out" temporarily
 
         // Add "My Licenses" to the array
-        $items['my-licenses'] = __('My Licenses', 'slmplus');
+        $items['my-licenses'] = __('My Licenses', 'slm-plus');
 
         // Re-add "Log out" to the end
         $items['customer-logout'] = $logout;
@@ -81,7 +81,7 @@ add_action('woocommerce_account_my-licenses_endpoint', function($value) {
             slm_license_view($license_id);
         }
         else {
-            echo '<p>' . __('Invalid license or access denied.', 'slmplus') . '</p>';
+            echo '<p>' . esc_html__('Invalid license or access denied.', 'slm-plus') . '</p>';
              //SLM_Helper_Class::write_log('user id ' . get_current_user_id());
         }
     } else {
@@ -97,55 +97,69 @@ function slm_display_license_table() {
 
     $user_id = get_current_user_id();
     $user_email = wp_get_current_user()->user_email;
-
+    
     global $wpdb;
-
-    $licenses = $wpdb->get_results($wpdb->prepare(
-        "SELECT DISTINCT license_key, purchase_id_, lic_status FROM " . SLM_TBL_LICENSE_KEYS . " 
-        WHERE email = %s OR subscr_id = %d",
+    
+    // Sanitize user inputs
+    $user_email = sanitize_email($user_email);
+    $user_id = intval($user_id);
+    
+    // Directly using the constant table name as it's not possible to prepare table names
+    $table_name = SLM_TBL_LICENSE_KEYS;  // Ensure that SLM_TBL_LICENSE_KEYS is defined as a constant
+    
+    // Use prepare for query construction with placeholders for dynamic values
+    $query = $wpdb->prepare(
+        "SELECT DISTINCT license_key, purchase_id_, lic_status
+         FROM $table_name
+         WHERE email = %s OR subscr_id = %d",
         $user_email, $user_id
-    ));
+    );
+    
+    // Execute the query safely
+    $licenses = $wpdb->get_results($query);    
+    
 
     if ($licenses) {
         echo '<table class="shop_table shop_table_responsive my_account_orders">';
         echo '<thead><tr>';
-        echo '<th>' . __('Order ID', 'slmplus') . '</th>';
-        echo '<th>' . __('License Key', 'slmplus') . '</th>';
-        echo '<th>' . __('Status', 'slmplus') . '</th>';
-        echo '<th>' . __('Action', 'slmplus') . '</th>';
+        echo '<th>' . esc_html__('Order ID', 'slm-plus') . '</th>';
+        echo '<th>' . esc_html__('License Key', 'slm-plus') . '</th>';
+        echo '<th>' . esc_html__('Status', 'slm-plus') . '</th>';
+        echo '<th>' . esc_html__('Action', 'slm-plus') . '</th>';
         echo '</tr></thead>';
         echo '<tbody>';
-
+    
         foreach ($licenses as $license) {
             $order_id = $license->purchase_id_;
             $license_key = $license->license_key;
             $status = $license->lic_status;
-            $encoded_license = base64_encode($license_key);  
+            $encoded_license = base64_encode($license_key);
             $action_link = esc_url(add_query_arg(['my-licenses' => 'view', 'slm_lic' => $encoded_license], site_url('/my-account/my-licenses')));
-        
+    
             echo '<tr>';
-        
+    
             // Display Order ID or Custom Message
             if (!empty($order_id)) {
                 echo '<td>' . esc_html($order_id) . '</td>';
             } else {
-                echo '<td>' . __('Manual', 'slmplus') . '</td>';
+                echo '<td>' . esc_html__('Manual', 'slm-plus') . '</td>';
             }
-        
+    
             echo '<td>' . esc_html($license_key) . '</td>';
-        
+    
             // Display the status with custom badge classes
             echo '<td><span class="slm-status-badge status-' . esc_attr(strtolower($status)) . '">' . esc_html($status) . '</span></td>';
-        
-            echo '<td><a href="' . esc_url($action_link) . '">' . __('View', 'slmplus') . '</a></td>';
+    
+            echo '<td><a href="' . esc_url($action_link) . '">' . esc_html__('View', 'slm-plus') . '</a></td>';
             echo '</tr>';
         }
-        
+    
         echo '</tbody>';
         echo '</table>';
     } else {
-        echo '<p>No licenses found.</p>';
+        echo '<p>' . esc_html__('No licenses found.', 'slm-plus') . '</p>';
     }
+    
 }
 
 //SLM_Helper_Class::write_log('file loaded');
@@ -185,36 +199,36 @@ function slm_license_view($encoded_license_id) {
 
     // Check if license was found
     if (!$license) {
-        echo '<p>' . __('Invalid license or access denied.', 'slmplus') . '</p>';
+        echo '<p>' . esc_html__('Invalid license or access denied.', 'slm-plus') . '</p>';
         //SLM_Helper_Class::write_log('error');
         return;
     }
 
     // Back Button with dynamic URL generation
     $back_url = wc_get_account_endpoint_url('my-licenses');
-    echo '<a href="' . esc_url($back_url) . '" class="button">' . __('Back to My Licenses', 'slmplus') . '</a>';
+    echo '<a href="' . esc_url($back_url) . '" class="button">' . esc_html__('Back to My Licenses', 'slm-plus') . '</a>';
 
     // Define the fields and labels for dynamic generation
     $slm_license_fields = [
-        'license_key' => __('License Key', 'slmplus'),
-        'lic_status' => __('Status', 'slmplus'),
-        'lic_type' => __('License Type', 'slmplus'),
-        'purchase_id_' => __('Order ID', 'slmplus'),
-        'date_created' => __('Date Created', 'slmplus'),
-        'date_activated' => __('Date Activated', 'slmplus'),
-        'date_renewed' => __('Date Renewed', 'slmplus'),
-        'date_expiry' => __('Date Expiry', 'slmplus'),
-        'product_ref' => __('Product Reference', 'slmplus'),
-        'subscr_id' => __('Subscription ID', 'slmplus'),
-        'max_allowed_domains' => __('Max Allowed Domains', 'slmplus'),
-        'max_allowed_devices' => __('Max Allowed Devices', 'slmplus'),
-        'company_name' => __('Company Name', 'slmplus'),
+        'license_key' => __('License Key', 'slm-plus'),
+        'lic_status' => __('Status', 'slm-plus'),
+        'lic_type' => __('License Type', 'slm-plus'),
+        'purchase_id_' => __('Order ID', 'slm-plus'),
+        'date_created' => __('Date Created', 'slm-plus'),
+        'date_activated' => __('Date Activated', 'slm-plus'),
+        'date_renewed' => __('Date Renewed', 'slm-plus'),
+        'date_expiry' => __('Date Expiry', 'slm-plus'),
+        'product_ref' => __('Product Reference', 'slm-plus'),
+        'subscr_id' => __('Subscription ID', 'slm-plus'),
+        'max_allowed_domains' => __('Max Allowed Domains', 'slm-plus'),
+        'max_allowed_devices' => __('Max Allowed Devices', 'slm-plus'),
+        'company_name' => __('Company Name', 'slm-plus'),
     ];
 
     // Display license details header
-    echo '<h3 class="slm_view_lic">' . __('License Details', 'slmplus') . '</h3>';
+    echo '<h3 class="slm_view_lic">' . esc_html__('License Details', 'slm-plus') . '</h3>';
     echo '<table class="shop_table shop_table_responsive my_account_orders">';
-    echo '<tbody>';
+    echo '<tbody>';    
 
     // Loop through each field and output its label and value dynamically
     foreach ($slm_license_fields as $field_key => $field_label) {
@@ -228,7 +242,7 @@ function slm_license_view($encoded_license_id) {
                 $order_link = wc_get_account_endpoint_url('view-order/' . $field_value);
                 $field_value = '<a href="' . esc_url($order_link) . '">' . esc_html($field_value) . '</a>';
             } else {
-                $field_value = __('No Order Information Available', 'slmplus');
+                $field_value = __('No Order Information Available', 'slm-plus');
             }
         }
 
@@ -244,19 +258,19 @@ function slm_license_view($encoded_license_id) {
                     // Format as "#ID - ProductName"
                     $field_value = '<a href="' . esc_url($product_url) . '">#' . esc_html($product_id) . ' - ' . esc_html($product_name) . '</a>';
                 } else {
-                    $field_value = __('Product Not Found', 'slmplus');
+                    $field_value = __('Product Not Found', 'slm-plus');
                 }
             } else {
-                $field_value = __('No Product Information Available', 'slmplus');
+                $field_value = __('No Product Information Available', 'slm-plus');
             }
         }
 
         // Special handling for date fields with '0000-00-00' as value
         if (($field_key === 'date_activated' || $field_key === 'date_renewed') && $field_value === '0000-00-00') {
-            $field_value = ($field_key === 'date_activated') ? __('Not activated yet', 'slmplus') : __('Not renewed yet', 'slmplus');
+            $field_value = ($field_key === 'date_activated') ? __('Not activated yet', 'slm-plus') : __('Not renewed yet', 'slm-plus');
         }
 
-        echo '<tr><th>' . $field_label . '</th><td>' . $field_value . '</td></tr>';
+        echo '<tr><th>' . esc_html($field_label) . '</th><td>' . esc_html($field_value) . '</td></tr>';
     }
     echo '</tbody>';
     echo '</table>'; 
@@ -282,17 +296,17 @@ function slm_license_view($encoded_license_id) {
     $activations = array_merge($domains, $devices);
     
     // Display the "Activations" section header
-    echo '<h2>' . __('Activations', 'slmplus') . '</h2>';
+    echo '<h2>' . esc_html__('Activations', 'slm-plus') . '</h2>';
     
     // Check if there are any activations
     if (empty($activations)) {
-        echo '<p>' . __('No activations found.', 'slmplus') . '</p>';
+        echo '<p>' . esc_html__('No activations found.', 'slm-plus') . '</p>';
     } else {
         // Display the table header if activations exist
         echo '<table class="shop_table shop_table_responsive my_account_orders">';
-        echo '<thead><tr><th>' . __('ID', 'slmplus') . '</th><th>' . __('Type', 'slmplus') . '</th><th>' . __('Origin', 'slmplus') . '</th><th>' . __('Action', 'slmplus') . '</th></tr></thead>';
+        echo '<thead><tr><th>' . esc_html__('ID', 'slm-plus') . '</th><th>' . esc_html__('Type', 'slm-plus') . '</th><th>' . esc_html__('Origin', 'slm-plus') . '</th><th>' . esc_html__('Action', 'slm-plus') . '</th></tr></thead>';
         echo '<tbody>';
-    
+
         // Loop through each activation and display in the table
         foreach ($activations as $activation) {
             echo '<tr>';
@@ -302,13 +316,14 @@ function slm_license_view($encoded_license_id) {
             echo '<td><form method="post" action="">';
             echo '<input type="hidden" name="activation_id" value="' . esc_attr($activation->id) . '">';
             echo '<input type="hidden" name="activation_type" value="' . esc_attr($activation->type) . '">';
-            echo '<button type="submit" name="delete_activation" class="button">' . __('Delete', 'slmplus') . '</button>';
+            echo '<button type="submit" name="delete_activation" class="button">' . esc_html__('Delete', 'slm-plus') . '</button>';
             echo '</form></td>';
             echo '</tr>';
         }
-    
+
         echo '</tbody>';
         echo '</table>';
+
     }
 
     // Handle the deletion request
@@ -324,9 +339,10 @@ function slm_license_view($encoded_license_id) {
 
         // Display a confirmation or error message
         if ($deleted) {
-            echo '<p class="slm-notice">' . __('Activation successfully deleted. Reload Page.', 'slmplus') . '</p>';
+            echo '<p class="slm-notice">' . esc_html__('Activation successfully deleted. Reload Page.', 'slm-plus') . '</p>';
         } else {
-            echo '<p class="slm-notice">' . __('Failed to delete activation. Please try again.', 'slmplus') . '</p>';
+            echo '<p class="slm-notice">' . esc_html__('Failed to delete activation. Please try again.', 'slm-plus') . '</p>';
         }
+
     }
 }

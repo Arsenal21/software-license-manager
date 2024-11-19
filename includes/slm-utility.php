@@ -38,7 +38,8 @@ class SLM_Helper_Class
             }
         }
     }
-    public static function get_license_logs($license_key) {
+    public static function get_license_logs($license_key)
+    {
         global $wpdb;
         $table_name = SLM_TBL_LIC_LOG;
 
@@ -63,7 +64,7 @@ class SLM_Helper_Class
             $output = implode(',', $output);
 
         // print the result into the JavaScript console
-        echo "<script>console.log( 'PHP LOG: " . $output . "' );</script>";
+        echo "<script>console.log('PHP LOG: " . esc_js($output) . "');</script>";
     }
 }
 
@@ -99,7 +100,8 @@ class SLM_API_Utility
      * Validate date format to ensure it's in 'YYYY-MM-DD' format.
      * Returns the sanitized date or an empty string if invalid.
      */
-    public static function slm_validate_date($date) {
+    public static function slm_validate_date($date)
+    {
         $date = sanitize_text_field($date);
         $timestamp = strtotime($date);
         if ($timestamp && date('Y-m-d', $timestamp) === $date) {
@@ -110,39 +112,65 @@ class SLM_API_Utility
 
     public static function verify_secret_key()
     {
+        // Get the stored secret key from plugin options
         $slm_options = get_option('slm_plugin_options');
         $right_secret_key = $slm_options['lic_verification_secret'] ?? '';
+
+        // Sanitize and retrieve the received secret key
         $received_secret_key = sanitize_text_field($_REQUEST['secret_key'] ?? '');
 
+        // Case-sensitive comparison for the secret keys
         if ($received_secret_key !== $right_secret_key) {
+            // Prepare the error response with case-sensitivity note
             $args = array(
                 'result' => 'error',
-                'message' => 'Verification API secret key is invalid',
+                'message' => 'Verification API secret key is invalid. Note: The key comparison is case-sensitive.',
                 'error_code' => SLM_Error_Codes::VERIFY_KEY_INVALID
             );
+            // Output the API response with the error
             self::output_api_response($args);
         }
     }
+
     public static function get_slm_option($option)
     {
-        $slm_options_func =  get_option('slm_plugin_options', []);
-        $option = $slm_options_func[$option];
-        return sanitize_text_field($option);
+        // Retrieve the option value from the database
+        $slm_options_func = get_option('slm_plugin_options', []);
+
+        // Check if the option exists; if not, return an empty string
+        if (!isset($slm_options_func[$option])) {
+            return '';
+        }
+
+        // Get the option value and unslash it (removes slashes from the option value)
+        $option_value = wp_unslash($slm_options_func[$option]);
+
+        // Sanitize the option value (text field sanitization)
+        $sanitized_option = sanitize_text_field($option_value);
+
+        // Return the sanitized and unslashed option value
+        return $sanitized_option;
     }
 
 
     public static function verify_secret_key_for_creation()
     {
+        // Get the stored secret key from plugin options
         $slm_options = get_option('slm_plugin_options');
         $right_secret_key = $slm_options['lic_creation_secret'] ?? '';
+
+        // Sanitize and retrieve the received secret key
         $received_secret_key = sanitize_text_field($_REQUEST['secret_key'] ?? '');
 
+        // Case-sensitive comparison for the secret keys
         if ($received_secret_key !== $right_secret_key) {
+            // Prepare the error response with case-sensitivity note
             $args = array(
                 'result' => 'error',
-                'message' => 'License Creation API secret key is invalid',
+                'message' => 'Invalid License Creation API Secret Key provided. Note: The key comparison is case-sensitive.',
                 'error_code' => SLM_Error_Codes::CREATE_KEY_INVALID
             );
+            // Output the API response with the error
             self::output_api_response($args);
         }
     }
@@ -160,6 +188,88 @@ class SLM_API_Utility
 
 class SLM_Utility
 {
+    /**
+     * Saves a backup of the plugin's database tables in a secure folder.
+     */
+    public static function slm_save_backup_to_uploads()
+    {
+        global $wpdb;
+
+        // Get the upload directory
+        $upload_dir = wp_upload_dir();
+        $unique_hash = slm_get_unique_hash(); // Generate or retrieve the unique hash
+        $slm_backup_dir = $upload_dir['basedir'] . $unique_hash;
+
+        // Create the slm-plus folder with hash if it doesn't exist
+        if (!file_exists($slm_backup_dir)) {
+            wp_mkdir_p($slm_backup_dir);
+        }
+
+        // Set backup file name and path
+        $backup_file = $slm_backup_dir . '/slm_plugin_backup_' . gmdate('Y-m-d H:i:s') . '.sql';
+
+        // Get plugin tables
+        $backup_tables = [
+            SLM_TBL_LICENSE_KEYS,
+            SLM_TBL_LIC_DOMAIN,
+            SLM_TBL_LIC_DEVICES,
+            SLM_TBL_LIC_LOG,
+            SLM_TBL_EMAILS,
+            SLM_TBL_LICENSE_STATUS
+        ];
+
+        $sql = "";
+        foreach ($backup_tables as $table) {
+            // Get table structure
+            $create_table_query = $wpdb->get_results("SHOW CREATE TABLE $table", ARRAY_N);
+            $sql .= "\n\n" . $create_table_query[0][1] . ";\n\n";
+
+            // Get table data
+            $rows = $wpdb->get_results("SELECT * FROM $table", ARRAY_A);
+            foreach ($rows as $row) {
+                $values = array_map('esc_sql', array_values($row)); // Use esc_sql to escape the values
+                $values = "'" . implode("','", $values) . "'";
+                $sql .= "INSERT INTO $table VALUES ($values);\n";
+            }
+        }
+
+        // Include the WordPress Filesystem API
+        if (! function_exists('request_filesystem_credentials')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        // Ensure the filesystem is ready
+        if (! WP_Filesystem()) {
+            request_filesystem_credentials(admin_url());
+        }
+
+        global $wp_filesystem;
+
+        // Define the backup file path
+        $backup_path = $upload_dir['basedir'] . '/' . $unique_hash . '/' . basename($backup_file);
+
+        // Create the backup directory if it doesn't exist
+        if (! is_dir(dirname($backup_path))) {
+            $wp_filesystem->mkdir(dirname($backup_path));
+        }
+
+        // Save the SQL to the backup file using the WP Filesystem
+        if ($wp_filesystem->put_contents($backup_path, $sql)) {
+            $backup_url = $upload_dir['baseurl'] . '/' . $unique_hash . '/' . basename($backup_file);
+
+            // Save backup info in plugin options
+            $backup_info = [
+                'url' => $backup_url,
+                'date' => gmdate('Y-m-d H:i:s'),
+            ];
+            slm_update_option('slm_last_backup_info', $backup_info);
+
+            echo '<div class="notice notice-success"><p>' . esc_html__('Backup created successfully! Download from: ', 'slm-plus') . '<a href="' . esc_url($backup_url) . '">' . esc_html(basename($backup_file)) . '</a></p></div>';
+        } else {
+            echo '<div class="notice notice-error"><p>' . esc_html__('Error: Failed to create the backup file.', 'slm-plus') . '</p></div>';
+        }
+    }
+
     // Function to export a single license as a JSON file
     public static function export_license_to_json($license_id_or_key)
     {
@@ -211,57 +321,58 @@ class SLM_Utility
         return false; // Return false if no data was found
     }
 
-    public static function check_for_expired_lic($lic_key = '') {
+    public static function check_for_expired_lic($lic_key = '')
+    {
         global $wpdb;
-    
+
         // Set up email headers and subject line
         $headers = array('Content-Type: text/html; charset=UTF-8');
         $subject = get_bloginfo('name') . ' - Your license has expired';
         $expiration_reminder_text = SLM_Helper_Class::slm_get_option('expiration_reminder_text');
         $expired_licenses_list = [];
         $reinstated_licenses_list = [];
-    
+
         // Query licenses marked as expired but with future expiration dates to correct their status
         $incorrectly_expired_query = $wpdb->prepare(
             "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE lic_status = %s AND date_expiry > NOW()",
             'expired'
         );
         $incorrectly_expired_licenses = $wpdb->get_results($incorrectly_expired_query, ARRAY_A);
-    
+
         // Reinstate incorrectly expired licenses
         foreach ($incorrectly_expired_licenses as $license) {
             $license_key = sanitize_text_field($license['license_key']);
             $id = intval($license['id']);
-    
+
             // Update license status to 'active'
             $wpdb->update(
                 SLM_TBL_LICENSE_KEYS,
                 ['lic_status' => 'active'],
                 ['id' => $id]
             );
-    
+
             self::create_log($license_key, 'status corrected to active');
             $reinstated_licenses_list[] = $license_key;
         }
-    
+
         // Log reinstated licenses
         if (!empty($reinstated_licenses_list)) {
             SLM_Helper_Class::write_log('Reinstated licenses set to active: ' . implode(', ', $reinstated_licenses_list));
         }
-    
+
         // Query expired licenses
         $expired_query = $wpdb->prepare(
             "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE date_expiry < NOW() AND date_expiry != %s ORDER BY date_expiry ASC;",
             '00000000'
         );
         $expired_licenses = $wpdb->get_results($expired_query, ARRAY_A);
-    
+
         // Check if any expired licenses were found
         if (empty($expired_licenses)) {
             SLM_Helper_Class::write_log('No expired licenses found');
             return []; // Return an empty array if no licenses found
         }
-    
+
         // Process each expired license
         foreach ($expired_licenses as $license) {
             $id = intval($license['id']);
@@ -270,18 +381,18 @@ class SLM_Utility
             // $last_name = sanitize_text_field($license['last_name']);
             $email = sanitize_email($license['email']);
             $date_expiry = sanitize_text_field($license['date_expiry']);
-    
+
             // Include email template and generate the email body
             ob_start();
             include SLM_LIB . 'mails/expired.php';
             $body = ob_get_clean();
-    
+
             // Check if auto-expiration is enabled and update the license status
             if (SLM_Helper_Class::slm_get_option('enable_auto_key_expiration') == 1) {
                 $update_data = ['lic_status' => 'expired'];
                 $where_clause = ['id' => $id];
                 $wpdb->update(SLM_TBL_LICENSE_KEYS, $update_data, $where_clause);
-    
+
                 // Log and send expiration notification
                 self::create_log($license_key, 'set to expired');
                 $email_result = self::slm_check_sent_emails($license_key, $email, $subject, $body, $headers);
@@ -289,27 +400,28 @@ class SLM_Utility
                     self::create_log($license_key, 'sent expiration email notification');
                 }
             }
-    
+
             // Add license to the expired list
             $expired_licenses_list[] = $license_key;
         }
-    
+
         // Log the total count of expired licenses
         SLM_Helper_Class::write_log('Expired licenses found and processed: ' . implode(', ', $expired_licenses_list));
-    
+
         return [
             'expired_licenses' => $expired_licenses_list,
             'reinstated_licenses' => $reinstated_licenses_list
         ]; // Return both expired and reinstated licenses
     }
-    
+
 
     // Define return codes for clarity
     const EMAIL_SENT_FIRST_TIME = '200';
     const EMAIL_ALREADY_SENT = '400';
     const EMAIL_SENT_RECORD_NOT_FOUND = '300';
 
-    public static function slm_check_sent_emails($license_key, $email, $subject, $body, $headers) {
+    public static function slm_check_sent_emails($license_key, $email, $subject, $body, $headers)
+    {
         global $wpdb;
 
         // Check if an email has already been sent for this license key
@@ -336,37 +448,38 @@ class SLM_Utility
             return self::EMAIL_SENT_RECORD_NOT_FOUND;
         }
     }
-    
 
-    public static function do_auto_key_expiry() {
+
+    public static function do_auto_key_expiry()
+    {
         global $wpdb;
         $current_date = current_time('Y-m-d');
         $slm_lic_table = SLM_TBL_LICENSE_KEYS;
-    
+
         // Query for active (non-expired) licenses
         $licenses = $wpdb->get_results(
             $wpdb->prepare("SELECT * FROM $slm_lic_table WHERE lic_status != %s", 'expired'),
             OBJECT
         );
-    
+
         // Log and return if no licenses are found
         if (empty($licenses)) {
             SLM_Debug_Logger::log_debug_st("do_auto_key_expiry() - No active license keys found.");
             return false;
         }
-    
+
         $today_dt = new DateTime($current_date);
-    
+
         foreach ($licenses as $license) {
             $license_key = sanitize_text_field($license->license_key);
             $expiry_date = sanitize_text_field($license->date_expiry);
-    
+
             // Skip if expiration date is invalid or empty
             if (empty($expiry_date) || in_array($expiry_date, ['0000-00-00', '00000000'])) {
                 SLM_Debug_Logger::log_debug_st("License key ($license_key) has no valid expiration date set. Skipping expiry check.");
                 continue;
             }
-    
+
             // Check if the license has expired
             $expire_dt = new DateTime($expiry_date);
             if ($today_dt > $expire_dt) {
@@ -374,12 +487,12 @@ class SLM_Utility
                 $data = ['lic_status' => 'expired'];
                 $where = ['id' => intval($license->id)];
                 $updated = $wpdb->update($slm_lic_table, $data, $where);
-    
+
                 // Log the expiry and trigger action if successfully updated
                 if ($updated) {
                     SLM_Debug_Logger::log_debug_st("License key ($license_key) expired on $expiry_date. Status set to 'expired'.");
                     do_action('slm_license_key_expired', $license->id);
-    
+
                     // Optional: Send expiry reminder email
                     self::check_for_expired_lic($license_key);
                 } else {
@@ -387,10 +500,10 @@ class SLM_Utility
                 }
             }
         }
-    
+
         return true;
     }
-    
+
 
 
     public static function get_user_info($by, $value)
@@ -404,46 +517,42 @@ class SLM_Utility
         return $user;
     }
 
-    public static function get_days_remaining($date1) {
+    public static function get_days_remaining($date1)
+    {
         // Validate and sanitize the date input
         $date1 = sanitize_text_field($date1);
-    
+
         // Retrieve the date format setting from WordPress settings
         $date_format = get_option('date_format');
-    
+
         try {
             // Create DateTime objects for future and current dates
             $future_date = new DateTime($date1);
             $current_date = new DateTime();
-    
+
             // Check if the future date is valid and in the future
             if ($future_date < $current_date) {
-                return __('0 days remaining', 'slmplus');
+                return __('0 days remaining', 'slm-plus');
             }
-    
+
             // Calculate the difference in days
             $interval = $current_date->diff($future_date);
             $days_remaining = (int) $interval->days;
-    
+
             // Format and return the result
             return sprintf(
-                __('%s days remaining until %s', 'slmplus'),
+                // Translators: %1$s is the number of days remaining, %2$s is the formatted future date
+                __('%1$s days remaining until %2$s', 'slm-plus'),
                 $days_remaining,
                 date_i18n($date_format, $future_date->getTimestamp())
             );
-    
         } catch (Exception $e) {
             // Return 0 days remaining if date parsing fails
-            return __('0 days remaining', 'slmplus');
+            return __('0 days remaining', 'slm-plus');
         }
     }
-    
-    
 
 
-    /*
- * Deletes a license key from the licenses table
- */
     public static function delete_license_key_by_row_id($key_row_id)
     {
         global $wpdb;
@@ -452,37 +561,133 @@ class SLM_Utility
         // Sanitize the input
         $key_row_id = intval($key_row_id);
 
-        // First delete the registered domains entry of this key (if any).
-        SLM_Utility::delete_registered_domains_of_key($key_row_id);
+        // Retrieve the license key associated with this row id
+        $license_key = $wpdb->get_var($wpdb->prepare("SELECT license_key FROM $license_table WHERE id = %d", $key_row_id));
 
-        // Now, delete the key from the licenses table.
+        // Debug: Log the retrieved license key
+        SLM_Helper_Class::write_log("License key retrieved: " . $license_key);
+
+        // First, delete the registered domains entry of this key (if any)
+        SLM_Utility::delete_registered_domains_of_key($key_row_id);
+        SLM_Helper_Class::write_log("Registered domains for key $license_key deleted.");
+
+        // Now, delete the key from the licenses table
         $wpdb->delete($license_table, array('id' => $key_row_id));
+        SLM_Helper_Class::write_log("License with row ID $key_row_id deleted from the license table.");
+
+        if ($license_key) {
+
+            // Query to get WooCommerce orders using a custom WP_Query with meta_query
+            $args = array(
+                'post_type'      => 'shop_order',
+                'posts_per_page' => -1,
+                'meta_query'     => array(
+                    'relation' => 'OR',
+                    array(
+                        'key'     => 'License Key',   // License Key meta field
+                        'value'   => $license_key,
+                        'compare' => '='
+                    ),
+                    array(
+                        'key'     => '_slm_lic_key',  // Fallback License Key meta field
+                        'value'   => $license_key,
+                        'compare' => '='
+                    )
+                )
+            );
+
+            $order_query = new WP_Query($args);
+
+            if ($order_query->have_posts()) {
+                while ($order_query->have_posts()) {
+                    $order_query->the_post();
+                    $order_id = get_the_ID();
+
+                    // Get order object
+                    $order = wc_get_order($order_id);
+
+                    // Debugging: Log the order ID
+                    SLM_Helper_Class::write_log("Processing order ID: " . $order_id);
+
+                    // Meta keys to be removed
+                    $meta_keys = [
+                        'License Key',
+                        'License Type',
+                        'Current Version',
+                        'Until Version',
+                        'Max Devices',
+                        'Max Domains'
+                    ];
+
+                    // Remove order-level metadata
+                    foreach ($meta_keys as $meta_key) {
+                        $meta_value = $order->get_meta($meta_key, true); // Retrieve the metadata value
+                        if ($meta_value) {
+                            SLM_Helper_Class::write_log("Found meta key $meta_key with value: $meta_value. Deleting...");
+                            $order->delete_meta_data($meta_key); // Remove meta data from the order
+                        }
+                    }
+
+                    // Add a note to the order
+                    $note_content = sprintf(__('License key %s was deleted on %s', 'slm-plus'), $license_key, date_i18n('F j, Y'));
+                    $order->add_order_note($note_content);
+
+                    // Process and reset license-related metadata from order items
+                    foreach ($order->get_items() as $item_id => $item) {
+                        // Remove item-level metadata for the specified keys
+                        foreach ($meta_keys as $meta_key) {
+                            $meta_value = $item->get_meta($meta_key, true); // Retrieve the metadata value
+                            if ($meta_value) {
+                                SLM_Helper_Class::write_log("Found meta key $meta_key in order item $item_id with value: $meta_value. Deleting...");
+                                $item->delete_meta_data($meta_key); // Remove meta data from the order item
+                            }
+                        }
+
+                        // Save the updated order item
+                        $item->save();
+                    }
+
+                    // Save the updated order
+                    $order->save();
+                }
+
+                wp_reset_postdata(); // Reset the post data after custom query
+            } else {
+                // Debugging: Log if no orders were found
+                SLM_Helper_Class::write_log("No orders found for the license key: " . $license_key);
+            }
+        }
     }
+
+
+
+
 
     /*
     * Retrieves the email associated with a license key
     */
-    public static function slm_get_lic_email($license) {
+    public static function slm_get_lic_email($license)
+    {
         global $wpdb;
         $lic_key_table = SLM_TBL_LICENSE_KEYS;
-    
+
         // Sanitize the input
         $license = sanitize_text_field($license);
-    
+
         // Prepare and execute the query to fetch the email
         $email = $wpdb->get_var(
             $wpdb->prepare("SELECT email FROM $lic_key_table WHERE license_key = %s", $license)
         );
-    
+
         // Check if an email was found and is valid
         if ($email && is_email($email)) {
             return $email;
         } else {
             // Return a WP_Error if the email was not found or invalid
-            return new WP_Error('license_not_found', __('License key not found or invalid email.', 'slmplus'));
+            return new WP_Error('license_not_found', __('License key not found or invalid email.', 'slm-plus'));
         }
     }
-    
+
 
     /*
     * Sends an email with the specified parameters
@@ -568,7 +773,6 @@ class SLM_Utility
                 font-family: "Open Sans", Helvetica, Arial, Sans-serif;
             }
         </style>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css" />
         <title>' . esc_html(get_bloginfo('name')) . '</title>
     </head>
     <body style="word-wrap: break-word; -webkit-nbsp-mode: space; line-break: after-white-space; background-color: ' . esc_attr($color) . '">
@@ -738,36 +942,70 @@ class SLM_Utility
     }
 
     /*
-     * Deletes any registered domains info from the domain table for the given key's row id.
-     */
+ * Deletes any registered domains and related entries for the given license key's row id.
+ */
     static function delete_registered_domains_of_key($key_row_id)
     {
         global $slm_debug_logger;
         global $wpdb;
+
+        // Table constants
         $reg_domain_table = SLM_TBL_LIC_DOMAIN;
-        $sql_prep = $wpdb->prepare("SELECT * FROM $reg_domain_table WHERE lic_key_id = %s", $key_row_id);
-        $reg_domains = $wpdb->get_results($sql_prep, OBJECT);
-        foreach ($reg_domains as $domain) {
-            $row_to_delete = $domain->id;
-            $wpdb->delete($reg_domain_table, array('id' => $row_to_delete));
-            $slm_debug_logger->log_debug("Registered domain with row id (" . $row_to_delete . ") deleted.");
+        $device_table = SLM_TBL_LIC_DEVICES;
+        $log_table = SLM_TBL_LIC_LOG;
+        $email_table = SLM_TBL_EMAILS;
+
+        // Retrieve the license key associated with this row id
+        $license_key = $wpdb->get_var($wpdb->prepare("SELECT license_key FROM " . SLM_TBL_LICENSE_KEYS . " WHERE id = %d", $key_row_id));
+
+        if ($license_key) {
+            // Step 1: Delete from registered domains table
+            $reg_domains = $wpdb->get_results($wpdb->prepare("SELECT id FROM $reg_domain_table WHERE lic_key_id = %d", $key_row_id));
+            foreach ($reg_domains as $domain) {
+                $wpdb->delete($reg_domain_table, array('id' => $domain->id));
+                $slm_debug_logger->log_debug("Registered domain with row id (" . $domain->id . ") deleted.");
+            }
+
+            // Step 2: Delete from devices table
+            $deleted_devices = $wpdb->delete($device_table, array('lic_key' => $license_key), array('%s'));
+            $slm_debug_logger->log_debug("$deleted_devices entries deleted from devices table for license key ($license_key).");
+
+            // Step 3: Delete from log table
+            $deleted_logs = $wpdb->delete($log_table, array('license_key' => $license_key), array('%s'));
+            $slm_debug_logger->log_debug("$deleted_logs entries deleted from log table for license key ($license_key).");
+
+            // Step 4: Delete from emails table
+            $deleted_emails = $wpdb->delete($email_table, array('lic_key' => $license_key), array('%s'));
+            $slm_debug_logger->log_debug("$deleted_emails entries deleted from emails table for license key ($license_key).");
+        } else {
+            $slm_debug_logger->log_debug("No license key found for row id ($key_row_id). Deletion aborted.");
         }
     }
 
+
     static function create_secret_keys()
     {
-        $key = strtoupper(implode('-', str_split(substr(strtolower(md5(microtime() . rand(1000, 9999))), 0, 32), 8)));
-        return hash('sha256', $key);
+        // Generate secure random bytes (32 bytes = 256 bits)
+        $random_bytes = openssl_random_pseudo_bytes(32); // 32 bytes (256 bits)
+
+        // Convert the random bytes into a hexadecimal string (64 chars)
+        $random_string = bin2hex($random_bytes);
+
+        // Make the entire string uppercase
+        $key = strtoupper($random_string);
+
+        return $key;
     }
 
-    public static function create_log($license_key, $action) {
+    public static function create_log($license_key, $action)
+    {
         global $wpdb;
         $slm_log_table = SLM_TBL_LIC_LOG;
-    
+
         // Sanitize inputs
         $license_key = sanitize_text_field($license_key);
         $action = sanitize_text_field($action);
-    
+
         // Determine the request origin
         if (!empty($_SERVER['HTTP_ORIGIN'])) {
             $origin = sanitize_text_field($_SERVER['HTTP_ORIGIN']);
@@ -776,7 +1014,7 @@ class SLM_Utility
         } else {
             $origin = sanitize_text_field($_SERVER['REMOTE_ADDR']);
         }
-    
+
         // Prepare log data
         $log_data = array(
             'license_key' => $license_key,
@@ -784,18 +1022,19 @@ class SLM_Utility
             'time'        => current_time('mysql'), // Standardized date-time format
             'source'      => $origin,
         );
-    
+
         // Insert log data into the database
         $inserted = $wpdb->insert($slm_log_table, $log_data);
-    
+
         // Check for insertion errors
         if ($inserted === false) {
             error_log("Failed to insert log for license key: $license_key, action: $action. Error: " . $wpdb->last_error);
         }
     }
-    
 
-    public static function create_email_log($lic_key, $sent_to, $status, $sent, $date_sent = null) {
+
+    public static function create_email_log($lic_key, $sent_to, $status, $sent, $date_sent = null)
+    {
         global $wpdb;
         $slm_email_table = SLM_TBL_EMAILS;
 
@@ -835,10 +1074,11 @@ class SLM_Utility
 
         foreach ($result as $license) {
             echo '<tr>
-                    <td>
-                    <strong> ' . $license->first_name . ' ' . $license->last_name . ' </strong><br>
-                    <a href="' . admin_url('admin.php?page=slm_manage_license&edit_record=' . $license->id . '') . '">' . $license->license_key . ' </td>
-                </tr>';
+                <td>
+                <strong>' . esc_html($license->first_name) . ' ' . esc_html($license->last_name) . '</strong><br>
+                <a href="' . esc_url(admin_url('admin.php?page=slm_manage_license&edit_record=' . $license->id)) . '">' . esc_html($license->license_key) . '</a>
+                </td>
+            </tr>';
         }
     }
 
@@ -870,17 +1110,24 @@ class SLM_Utility
 
         if (isset($email) && isset($manage_subscriber) && current_user_can('edit_pages')) {
 
-            echo '<h2>Listing all licenses related to ' . $email . '</h2>';
+            echo '<h2>Listing all licenses related to ' . esc_html($email) . '</h2>';
 
-            $result_array = $wpdb->get_results("SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE email LIKE '%" . $email . "%'  ORDER BY `email` DESC LIMIT 0,1000", ARRAY_A);
+            $result_array = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM " . SLM_TBL_LICENSE_KEYS . " WHERE email LIKE %s ORDER BY `email` DESC LIMIT 0,1000",
+                    '%' . $wpdb->esc_like($email) . '%'
+                ),
+                ARRAY_A
+            );
+
 
             foreach ($result_array as $slm_user) {
                 echo '  <tr>
-                            <td scope="row">' . $slm_user["id"] . '</td>
-                            <td scope="row">' . $slm_user["license_key"] . '</td>
-                            <td scope="row">' . $slm_user["lic_status"] . '</td>
-                            <td scope="row"><a href="' . admin_url('admin.php?page=slm_manage_license&edit_record=' . $slm_user["id"] . '') . '">'. __(' view', 'slmplus'). ' </a></td>
-                        </tr>';
+                    <td scope="row">' . esc_html($slm_user["id"]) . '</td>
+                    <td scope="row">' . esc_html($slm_user["license_key"]) . '</td>
+                    <td scope="row">' . esc_html($slm_user["lic_status"]) . '</td>
+                    <td scope="row"><a href="' . esc_url(admin_url('admin.php?page=slm_manage_license&edit_record=' . $slm_user["id"])) . '">' . esc_html__('View', 'slm-plus') . ' </a></td>
+                </tr>';
             }
         }
     }
@@ -891,17 +1138,25 @@ class SLM_Utility
         $slm_log_table  = SLM_TBL_LIC_LOG;
 
         echo '
-        <div class="table-responsive"> <table class="table table-striped table-hover table-sm"> <thead> <tr> <th scope="col">'. __('ID', 'slmplus'). '</th> <th scope="col">'. __('Request', 'slmplus'). '</th> </tr> </thead> <tbody>
+       <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">' . esc_html__('ID', 'slm-plus') . '</th>
+                        <th scope="col">' . esc_html__('Request', 'slm-plus') . '</th>
+                    </tr>
+                </thead>
+                <tbody>
         ';
         $activity = $wpdb->get_results("SELECT * FROM " . $slm_log_table . " WHERE license_key='" .  $license_key . "';");
         foreach ($activity as $log) {
             echo '
-                <tr>' .
-                '<th scope="row">' . $log->id . '</th>' .
-                '<td> <span class="badge badge-primary">' . $log->slm_action  . '</span>' .
-                '<p class="text-muted"> <b>'. __('Source:', 'slmplus'). ' </b> ' . $log->source .
-                '</p><p class="text-muted"> <b>'. __('Time:', 'slmplus'). ' </b> ' . $log->time . '</td>
-                </tr>';
+            <tr>' .
+                '<th scope="row">' . esc_html($log->id) . '</th>' .
+                '<td> <span class="badge badge-primary">' . esc_html($log->slm_action) . '</span>' .
+                '<p class="text-muted"> <b>' . esc_html__('Source:', 'slm-plus') . ' </b> ' . esc_html($log->source) .
+                '</p><p class="text-muted"> <b>' . esc_html__('Time:', 'slm-plus') . ' </b> ' . esc_html($log->time) . '</td>
+            </tr>';
         }
         echo '
                 </tbody>
@@ -913,7 +1168,7 @@ class SLM_Utility
     {
 ?>
         <div class="table">
-            <h5> <?php echo $item_name; ?> </h5>
+            <h5> <?php echo esc_html($item_name); ?> </h5>
             <?php
             global $wpdb;
             $sql_prep = $wpdb->prepare("SELECT * FROM $tablename WHERE lic_key = %s", $license_key);
@@ -921,22 +1176,22 @@ class SLM_Utility
 
             if (count($activations) > 0) : ?>
                 <div id="slm_ajax_msg"></div>
-                <div class="<?php echo $item_name; ?>_info">
+                <div class="<?php echo esc_attr($item_name); ?>_info">
                     <table cellpadding="0" cellspacing="0" class="table">
                         <?php
                         $count = 0;
                         foreach ($activations as $activation) : ?>
-                            <div class="input-group mb-3 lic-entry-<?php echo $activation->id; ?>">
+                            <div class="input-group mb-3 lic-entry-<?php echo esc_attr($activation->id); ?>">
                                 <?php
                                 if ($item_name == 'Devices') {
-                                    echo '<input type="text" class="form-control" placeholder="' . $activation->registered_devices . '" aria-label="' . $activation->registered_devices . '" aria-describedby="' . $activation->registered_devices . '" value="' . $activation->registered_devices . '"  readonly>';
+                                    echo '<input type="text" class="form-control" placeholder="' . esc_attr($activation->registered_devices) . '" aria-label="' . esc_attr($activation->registered_devices) . '" aria-describedby="' . esc_attr($activation->registered_devices) . '" value="' . esc_attr($activation->registered_devices) . '" readonly>';
                                 } else {
-                                    echo '<input type="text" class="form-control" placeholder="' . $activation->registered_domain . '" aria-label="' . $activation->registered_domain . '" aria-describedby="' . $activation->registered_domain . '" value="' . $activation->registered_domain . '" readonly>';
+                                    echo '<input type="text" class="form-control" placeholder="' . esc_attr($activation->registered_domain) . '" aria-label="' . esc_attr($activation->registered_domain) . '" aria-describedby="' . esc_attr($activation->registered_domain) . '" value="' . esc_attr($activation->registered_domain) . '" readonly>';
                                 }
                                 ?>
                                 <?php if ($allow_removal == true) : ?>
                                     <div class="input-group-append">
-                                        <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo $activation->lic_key; ?>'" id="<?php echo $activation->id; ?>" data-activation_type="<?php echo $activation_type;?>" data-id="<?php echo $activation->id; ?>"> Remove</button>
+                                        <button class="btn btn-danger deactivate_lic_key" type="button" data-lic_key="<?php echo esc_attr($activation->lic_key); ?>" id="<?php echo esc_attr($activation->id); ?>" data-activation_type="<?php echo esc_attr($activation_type); ?>" data-id="<?php echo esc_attr($activation->id); ?>"> Remove</button>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -946,7 +1201,7 @@ class SLM_Utility
                     </table>
                 </div>
             <?php else : ?>
-                <?php echo '<div class="alert alert-danger" role="alert">'.__('Not registered yet', 'slmplus').'</div>'; ?>
+                <?php echo '<div class="alert alert-danger" role="alert">' . esc_html__('Not registered yet', 'slm-plus') . '</div>'; ?>
             <?php endif; ?>
         </div>
 <?php
@@ -964,7 +1219,7 @@ class SLM_Utility
 
             if ($product->is_type('slm_license')) {
                 $tabs['shipping'] = array(
-                    'title'     => __('License information', 'slmplus'),
+                    'title'     => __('License information', 'slm-plus'),
                     'priority'  => 50,
                     'callback'  => 'slm_woo_tab_lic_info'
                 );
@@ -976,11 +1231,11 @@ class SLM_Utility
         {
             global $product;
             // The new tab content
-            echo '<h2>'.__('License information', 'slmplus') .'</h2>';
-            echo __('License type: ', 'slmplus')  . get_post_meta($product->get_id(), '_license_type', true) . '<br>';
-            echo __('Domains allowed: ', 'slmplus') . get_post_meta($product->get_id(), '_domain_licenses', true) . '<br>';
-            echo __('Devices allowed: ', 'slmplus') . get_post_meta($product->get_id(), '_devices_licenses', true) . '<br>';
-            echo __('Renews every ', 'slmplus') . get_post_meta($product->get_id(), '_license_renewal_period_lenght', true) . ' ' . get_post_meta($product->get_id(), '_license_renewal_period_term', true) . '<br>';
+            echo '<h2>' . esc_html__('License information', 'slm-plus') . '</h2>';
+            echo esc_html__('License type: ', 'slm-plus') . esc_html(get_post_meta($product->get_id(), '_license_type', true)) . '<br>';
+            echo esc_html__('Domains allowed: ', 'slm-plus') . esc_html(get_post_meta($product->get_id(), '_domain_licenses', true)) . '<br>';
+            echo esc_html__('Devices allowed: ', 'slm-plus') . esc_html(get_post_meta($product->get_id(), '_devices_licenses', true)) . '<br>';
+            echo esc_html__('Renews every ', 'slm-plus') . esc_html(get_post_meta($product->get_id(), '_license_renewal_period_lenght', true)) . ' ' . esc_html(get_post_meta($product->get_id(), '_license_renewal_period_term', true)) . '<br>';
         }
     }
 }

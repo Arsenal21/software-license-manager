@@ -82,10 +82,10 @@ class Subscribers_List_Table extends WP_List_Table
     {
         $columns = array(
             'cb'                    => '<input type="checkbox" />', //Render a checkbox
-            'id'                    => __('ID', 'slmplus'),
-            'first_name'           => __('First Name', 'slmplus'),
-            'last_name'            => __('Last Name', 'slmplus'),
-            'email'                 => __('Email Address', 'slmplus')
+            'id'                    => __('ID', 'slm-plus'),
+            'first_name'           => __('First Name', 'slm-plus'),
+            'last_name'            => __('Last Name', 'slm-plus'),
+            'email'                 => __('Email Address', 'slm-plus')
         );
         return $columns;
     }
@@ -116,14 +116,14 @@ class Subscribers_List_Table extends WP_List_Table
         if (!empty($_GET['order'])) {
             $order = $_GET['order'];
         }
-        if ($orderby == 'id'){ 
-          if ($a[$orderby]==$b[$orderby]){
-            $result = 0;
-          }else{
-            $result = ($a[$orderby]<$b[$orderby])?-1:1;          
-          }
-        }else{
-          $result = strcmp($a[$orderby], $b[$orderby]);
+        if ($orderby == 'id') {
+            if ($a[$orderby] == $b[$orderby]) {
+                $result = 0;
+            } else {
+                $result = ($a[$orderby] < $b[$orderby]) ? -1 : 1;
+            }
+        } else {
+            $result = strcmp($a[$orderby], $b[$orderby]);
         }
         if ($order === 'asc') {
             return $result;
@@ -133,11 +133,10 @@ class Subscribers_List_Table extends WP_List_Table
 
     function prepare_items()
     {
-
-        $per_page       = 24;
-        $columns        = $this->get_columns();
-        $hidden         = array();
-        $sortable       = $this->get_sortable_columns();
+        $per_page = 24;
+        $columns = $this->get_columns();
+        $hidden = array();
+        $sortable = $this->get_sortable_columns();
 
         $this->_column_headers = array($columns, $hidden, $sortable);
         $this->process_bulk_action();
@@ -145,24 +144,41 @@ class Subscribers_List_Table extends WP_List_Table
         global $wpdb;
         $license_table = SLM_TBL_LICENSE_KEYS;
 
-        $search = (isset($_REQUEST['s'])) ? $_REQUEST['s'] : false;
-        $search_term = trim(strip_tags($search));
+        // Sanitize the search term and strip all tags
+        $search = isset($_REQUEST['s']) ? sanitize_text_field(wp_unslash($_REQUEST['s'])) : false;
+        $search_term = trim(wp_strip_all_tags($search)); // Using wp_strip_all_tags for better sanitization
 
-        $do_search = $wpdb->prepare("SELECT * FROM " . $license_table . " WHERE `email` LIKE '%%%s%%' OR `first_name` LIKE '%%%s%%' OR `last_name` LIKE '%%%s%%' GROUP BY email", $search_term, $search_term, $search_term);
+        // Escape the search term for SQL and add wildcards manually
+        $escaped_search_term = '%' . $wpdb->esc_like($search_term) . '%'; // esc_like handles escaping the term
 
+        // Prepare the query with placeholders to prevent SQL injection
+        $do_search = $wpdb->prepare(
+            "SELECT * FROM {$license_table} 
+            WHERE `email` LIKE %s 
+            OR `first_name` LIKE %s 
+            OR `last_name` LIKE %s 
+            GROUP BY `email`",
+            $escaped_search_term, // Use the escaped search term with wildcards
+            $escaped_search_term,
+            $escaped_search_term
+        );
+
+        // Execute the query safely
         $data = $wpdb->get_results($do_search, ARRAY_A);
 
         usort($data, array(&$this, 'sort_data'));
 
-        $current_page   = $this->get_pagenum();
-        $total_items    = count($data);
-        $data           = array_slice($data, (($current_page - 1) * $per_page), $per_page);
-        $this->items    = $data;
+        // Pagination logic
+        $current_page = $this->get_pagenum();
+        $total_items = count($data);
+        $data = array_slice($data, (($current_page - 1) * $per_page), $per_page);
+        $this->items = $data;
 
+        // Set pagination arguments
         $this->set_pagination_args(array(
-            'total_items' => $total_items,                  //WE have to calculate the total number of items
-            'per_page'    => $per_page,                     //WE have to determine how many items to show on a page
-            'total_pages' => ceil($total_items / $per_page)   //WE have to calculate the total number of pages
+            'total_items' => $total_items,
+            'per_page' => $per_page,
+            'total_pages' => ceil($total_items / $per_page)
         ));
     }
 }
@@ -170,12 +186,13 @@ class Subscribers_List_Table extends WP_List_Table
 function slm_subscribers_menu()
 {
     $subscribers_list = new Subscribers_List_Table();
-    if (isset($_REQUEST['slm_subscriber_edit']) && $_REQUEST['slm_subscriber_edit'] == 'true') : ?>
+    $slm_subscriber_edit = isset($_REQUEST['slm_subscriber_edit']) ? sanitize_text_field($_REQUEST['slm_subscriber_edit']) : '';
+    if ($slm_subscriber_edit === 'true') : ?>
 
         <div class="wrap">
-            <h1><?php _e('Overview - Manage Subscribers', 'slmplus'); ?></h1>
+            <h1><?php esc_html_e('Overview - Manage Subscribers', 'slm-plus'); ?></h1>
             <br>
-            <a href="<?php echo admin_url('admin.php?page=slm_subscribers') ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php _e('View all', 'slmplus'); ?></a>
+            <a href="<?php echo esc_url(admin_url('admin.php?page=slm_subscribers')); ?>" class="page-title-action aria-button-if-js" role="button" aria-expanded="false"><?php esc_html_e('View all', 'slm-plus'); ?></a>
             <hr class="wp-header-end">
 
             <div id="poststuff">
@@ -184,12 +201,11 @@ function slm_subscribers_menu()
                         <div class="manage-user">
                             <table class="wp-list-table widefat fixed striped items">
                                 <tr>
-                                    <th scope="col" style="width: 32px"><?php _e('ID', 'slmplus'); ?></th>
-                                    <th scope="col"><?php _e('License key', 'slmplus'); ?></th>
-                                    <th scope="col"><?php _e('Status', 'slmplus'); ?></th>
+                                    <th scope="col" style="width: 32px"><?php esc_html__('ID', 'slm-plus'); ?></th>
+                                    <th scope="col"><?php esc_html__('License key', 'slm-plus'); ?></th>
+                                    <th scope="col"><?php esc_html__('Status', 'slm-plus'); ?></th>
                                     <th scope="col"> </th>
                                 </tr>
-
                                 <?php
                                 SLM_Utility::get_subscriber_licenses();
                                 ?>
@@ -203,7 +219,7 @@ function slm_subscribers_menu()
     <?php else : ?>
 
         <div class="wrap">
-            <h1><?php _e('Overview - All Subscribers', 'slmplus'); ?></h1>
+            <h1><?php esc_html_e('Overview - All Subscribers', 'slm-plus'); ?></h1>
             <br>
             <hr class="wp-header-end">
             <div id="poststuff">
@@ -211,10 +227,10 @@ function slm_subscribers_menu()
                     <div id="post-body-content">
                         <div class="meta-box-sortables ui-sortable">
                             <form id="licenses-filter" method="get">
-                                <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+                                <input type="hidden" name="page" value="<?php echo esc_attr($_REQUEST['page']); ?>" />
                                 <?php
                                 $subscribers_list->prepare_items();
-                                $subscribers_list->search_box(__('Search', 'slmplus'), 'search-box-id');
+                                $subscribers_list->search_box(__('Search', 'slm-plus'), 'search-box-id');
                                 $subscribers_list->views();
                                 $subscribers_list->display(); ?>
                             </form>

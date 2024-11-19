@@ -32,30 +32,8 @@ if ($affect_downloads) {
 // Add additional license management after order completion
 add_action('woocommerce_order_status_completed', 'wc_slm_on_complete_purchase', 10);
 
-// Hide license key metadata from order item meta table in the backend
-add_filter('woocommerce_hidden_order_itemmeta', 'slm_hide_order_meta', 10, 1);
-
 // Display license key information more nicely in the order item meta table
 add_action('woocommerce_after_order_itemmeta', 'slm_display_nice_item_meta', 10, 3);
-
-// Uncomment the following if you want to display a message on the thank-you page
-// add_action('woocommerce_thankyou', 'slm_show_msg', 80);
-
-
-
-/**
- * Disable display of some metadata.
- *
- * @param array $hide_meta List of meta data to hide.
- * @return array Modified list of meta data to hide.
- * @since 4.5.5
- */
-function slm_hide_order_meta($hide_meta) {
-    // Adding metadata to hide from the order item meta table
-    $hide_meta[] = '_slm_lic_key';
-    $hide_meta[] = '_slm_lic_type';
-    return $hide_meta;
-}
 
 /**
  * Display order meta data in Order items table in a user-friendly way.
@@ -66,10 +44,11 @@ function slm_hide_order_meta($hide_meta) {
  *
  * @since 4.5.5
  */
-function slm_display_nice_item_meta($item_id, $item, $product) {
+function slm_display_nice_item_meta($item_id, $item, $product)
+{
     // Fetch the metadata associated with the license key
     if ($meta_data = wc_get_order_item_meta($item_id, '_slm_lic_key', false)) {
-        ?>
+?>
         <div class="view">
             <table cellspacing="0" class="display_meta">
                 <?php
@@ -87,60 +66,59 @@ function slm_display_nice_item_meta($item_id, $item, $product) {
                         $cur_link = sprintf(
                             '%s - %s',
                             esc_html($lic_key),
-                            esc_html__('License no longer exists', 'slmplus')
+                            esc_html__('License no longer exists', 'slm-plus')
                         );
                     }
-                    ?>
+                ?>
                     <tr>
-                        <th><?php echo esc_html__('License Key:', 'slmplus'); ?></th>
-                        <td><?php echo $cur_link; ?></td>
+                        <th><?php echo esc_html__('License Key:', 'slm-plus'); ?></th>
+                        <td><?php echo esc_url($cur_link); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </table>
         </div>
-        <?php
+    <?php
     }
 }
 
 
-function wc_slm_on_complete_purchase($order_id) {
+function wc_slm_on_complete_purchase($order_id)
+{
     // Write to the log that the function is being called, useful for debugging.
-   SLM_Helper_Class::write_log('Loading wc_slm_on_complete_purchase for Order ID: ' . intval($order_id));
+    //SLM_Helper_Class::write_log('Loading wc_slm_on_complete_purchase for Order ID: ' . intval($order_id));
 
     // Check if the essential constants are defined before proceeding.
     if (defined('SLM_SITE_HOME_URL') && defined('WOO_SLM_API_SECRET') && SLM_SITE_HOME_URL !== '' && WOO_SLM_API_SECRET !== '') {
         // Sanitize the order ID and create license keys.
-       SLM_Helper_Class::write_log('startign to create lic for order: ' . intval($order_id));
+        //SLM_Helper_Class::write_log('startign to create lic for order: ' . intval($order_id));
 
         wc_slm_create_license_keys(absint($order_id));
-    }
-    else {
-       SLM_Helper_Class::write_log('Error, not constants for Order ID: ' . intval($order_id));
-
+    } else {
+        //SLM_Helper_Class::write_log('Error, not constants for Order ID: ' . intval($order_id));
     }
 }
 
 function wc_slm_create_license_keys($order_id)
 {
     // Write initial log for debugging purposes
-   SLM_Helper_Class::write_log('inside wc_slm_create_license_keys for Order ID: ' . intval($order_id));
+    //SLM_Helper_Class::write_log('inside wc_slm_create_license_keys for Order ID: ' . intval($order_id));
 
     // Get the order and relevant user details
     $order = wc_get_order($order_id);
     if (!$order) {
-       SLM_Helper_Class::write_log('Order ID ' . $order_id . ' not found.');
+        //SLM_Helper_Class::write_log('Order ID ' . $order_id . ' not found.');
         return; // Stop if the order does not exist
     }
 
     $purchase_id_ = $order->get_id();
-   SLM_Helper_Class::write_log('Purchase ID: ' . $purchase_id_);
+    //SLM_Helper_Class::write_log('Purchase ID: ' . $purchase_id_);
 
     global $user_id;
     $user_id = $order->get_user_id();
-   SLM_Helper_Class::write_log('User ID: ' . $user_id);
+    //SLM_Helper_Class::write_log('User ID: ' . $user_id);
 
     if (!$user_id) {
-       SLM_Helper_Class::write_log('User ID not found for Order ID: ' . $order_id);
+        //SLM_Helper_Class::write_log('User ID not found for Order ID: ' . $order_id);
         return; // Stop if user ID cannot be found
     }
 
@@ -183,17 +161,10 @@ function wc_slm_create_license_keys($order_id)
                 }
 
                 // Log renewal details
-               SLM_Helper_Class::write_log('Renewal Period: ' . $renewal_period);
-               SLM_Helper_Class::write_log('Expiration Date: ' . $expiration);
-               SLM_Helper_Class::write_log('Renewal Term: ' . $renewal_term);
+                //SLM_Helper_Class::write_log('Renewal Period: ' . $renewal_period);
+                //SLM_Helper_Class::write_log('Expiration Date: ' . $expiration);
+                //SLM_Helper_Class::write_log('Renewal Term: ' . $renewal_term);
 
-                // Get allowed sites/devices and verify them
-                $sites_allowed = wc_slm_get_sites_allowed($product_id);
-                if (!$sites_allowed) {
-                    wc_insert_payment_note($purchase_id_, __('License could not be created: Invalid sites allowed number.', 'slmplus'));
-                   SLM_Helper_Class::write_log('License could not be created: Invalid sites allowed number');
-                    break;
-                }
 
                 // Collect product details
                 $item_data = $values->get_data();
@@ -204,6 +175,7 @@ function wc_slm_create_license_keys($order_id)
                 $license_type = get_post_meta($product_id, '_license_type', true);
                 $lic_item_ref = get_post_meta($product_id, '_license_item_reference', true);
                 $transaction_id = wc_get_payment_transaction_id($order_id);
+                $sites_allowed = wc_slm_get_sites_allowed($product_id);
 
                 // Prepare API parameters for license creation
                 $api_params = array(
@@ -232,7 +204,7 @@ function wc_slm_create_license_keys($order_id)
                 // Send the request to create a license key
                 $url = esc_url_raw(SLM_SITE_HOME_URL) . '?' . http_build_query($api_params);
 
-               SLM_Helper_Class::write_log('URL: ' . $url);
+                //SLM_Helper_Class::write_log('URL: ' . $url);
 
                 $response = wp_safe_remote_get($url, array('timeout' => 20, 'sslverify' => false));
                 $license_key = wc_slm_get_license_key($response);
@@ -251,28 +223,35 @@ function wc_slm_create_license_keys($order_id)
                         'version' => $_license_current_version,
                         'until' => $_license_until_version
                     );
+
                     $item_id = $values->get_id();
-                    // Store license details for the product in the order item meta
-                    wc_add_order_item_meta($item_id, '_slm_lic_key', sanitize_text_field($license_key));
-                    wc_add_order_item_meta($item_id, '_slm_lic_type', sanitize_text_field($license_type));
-                    wc_add_order_item_meta($item_id, 'Current Version: ', sanitize_text_field($_license_current_version));
-                    wc_add_order_item_meta($item_id, 'Until Version:', sanitize_text_field($_license_until_version));
-                    wc_add_order_item_meta($item_id, 'Max Devices', sanitize_text_field($amount_of_licenses_devices));
-                    wc_add_order_item_meta($item_id, 'Max Domains', sanitize_text_field($sites_allowed));
+
+                    // Update order meta with license details
+                    $order = wc_get_order($order_id);
+                    if ($order) {
+                        $order->update_meta_data('License Key', sanitize_text_field($license_key));
+                        $order->update_meta_data('License Type', sanitize_text_field($license_type)); // Save the license type
+                        $order->save(); // Save changes to the order
+                    }
+
+                    // Update order item meta with license details
+                    $order_item = new WC_Order_Item_Product($item_id);
+                    if ($order_item) {
+                        $order_item->update_meta_data('License Key', sanitize_text_field($license_key));
+                        $order_item->update_meta_data('License Type', sanitize_text_field($license_type));
+                        $order_item->update_meta_data('Current Ver.', sanitize_text_field($_license_current_version));
+                        $order_item->update_meta_data('Until Ver.', sanitize_text_field($_license_until_version));
+                        $order_item->update_meta_data('Max Devices', sanitize_text_field($amount_of_licenses_devices));
+                        $order_item->update_meta_data('Max Domains', sanitize_text_field($sites_allowed));
+                        $order_item->save(); // Save changes to the order item
+                    }
                 }
             }
         }
     }
-
-    // If licenses were successfully generated, add a payment note
-    if (count($licenses) > 0) {
-        wc_slm_payment_note($order_id, $licenses);
-       //slm_add_lic_key_meta_update($order_id, $licenses);
-    }
 }
 
-
-function wc_slm_get_license_key($response) 
+function wc_slm_get_license_key($response)
 {
     // Check for error in the response
     if (is_wp_error($response)) {
@@ -291,7 +270,7 @@ function wc_slm_get_license_key($response)
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         // Handle JSON decoding error appropriately, e.g., log the error
-        error_log('Failed to decode JSON response: ' . json_last_error_msg());
+        //SLM_Helper_Class::write_log('Failed to decode JSON response: ' . json_last_error_msg());
         return false;
     }
 
@@ -300,7 +279,7 @@ function wc_slm_get_license_key($response)
 
     if ($cleaned_data === false) {
         // If the cleaning fails, return false
-        error_log('Failed to clean the JSON response body.');
+        //SLM_Helper_Class::write_log('Failed to clean the JSON response body.');
         return false;
     }
 
@@ -315,8 +294,7 @@ function wc_slm_get_license_key($response)
     return $license_data->key;
 }
 
-
-function wc_slm_get_license_id($license) 
+function wc_slm_get_license_id($license)
 {
     global $wpdb;
 
@@ -333,53 +311,6 @@ function wc_slm_get_license_id($license)
     // Return the license ID if found, otherwise return false
     return $license_id ? intval($license_id) : false;
 }
-
-function wc_slm_payment_note($order_id, $licenses)
-{
-    // Get the order object
-    $order = wc_get_order($order_id);
-
-    // Check if the order is valid and licenses are provided
-    if ($order && !empty($licenses) && is_array($licenses)) {
-        $message = __('License Key(s) generated:', 'slmplus');
-
-        foreach ($licenses as $license) {
-            // Check if required license information is available
-            if (!isset($license['key']) || !isset($license['item'])) {
-                continue; // Skip if data is incomplete
-            }
-
-            $license_key = sanitize_text_field($license['key']);
-            $item_name = sanitize_text_field($license['item']);
-
-            // Fetch the license ID securely
-            $license_id = wc_slm_get_license_id($license_key);
-
-            // Construct the link to the license edit page
-            $license_link = esc_url(
-                add_query_arg(
-                    array(
-                        'page' => 'slm_manage_license',
-                        'edit_record' => $license_id,
-                    ),
-                    admin_url('admin.php')
-                )
-            );
-
-            // Add to the message
-            $message .= '<br />' . esc_html($item_name) . ': <a href="' . $license_link . '">' . esc_html($license_key) . '</a>';
-        }
-    } else {
-        $message = __('License Key(s) could not be created.', 'slmplus');
-    }
-
-    // Add the message as an order note using the correct method
-    if ($order) {
-        $order->add_order_note( wp_kses_post($message) );
-    }
-}
-
-
 
 function wc_slm_access_expiration($order_id, $lic_expiry = '')
 {
@@ -432,7 +363,7 @@ function wc_slm_access_expiration($order_id, $lic_expiry = '')
     }
 
     // Optionally, log the query for debugging (commented out by default)
-    //SLM_Helper_Class::write_log('log:' . $query);
+    ////SLM_Helper_Class::write_log('log:' . $query);
 }
 
 
@@ -464,20 +395,6 @@ function get_licence_by_key($licence_key)
     return $record ? $record : false;
 }
 
-/**
- * Assign Licenses to Order
- * 
- * @param int $order_id WooCommerce Order ID to assign licenses to.
- * @param array $licenses An array of licenses to be assigned.
- * @return void
- */
-function wc_slm_assign_licenses($order_id, $licenses)
-{
-    // Check if licenses are available and valid
-    if (!empty($licenses) && is_array($licenses)) {
-        add_post_meta($order_id, '_wc_slm_payment_licenses', $licenses);
-    }
-}
 
 /**
  * Get Allowed Number of Sites for a Product
@@ -494,17 +411,6 @@ function wc_slm_get_sites_allowed($product_id)
     return !empty($wc_slm_sites_allowed) ? $wc_slm_sites_allowed : false;
 }
 
-/**
- * Get License Type
- * 
- * @param int $product_id Product ID.
- * @return string|false License type or false if not found.
- */
-function wc_slm_get_lic_type($product_id)
-{
-    $_license_type = get_post_meta($product_id, '_license_type', true);
-    return !empty($_license_type) ? sanitize_text_field($_license_type) : false;
-}
 
 /**
  * Get Number of Allowed Devices
@@ -518,17 +424,6 @@ function wc_slm_get_devices_allowed($product_id)
     return !empty($_devices_licenses) ? $_devices_licenses : false;
 }
 
-/**
- * Get Quantity of Licenses
- * 
- * @param int $product_id Product ID.
- * @return int|false Quantity of licenses or false if not set.
- */
-function wc_slm_get_licenses_qty($product_id)
-{
-    $amount_of_licenses = absint(get_post_meta($product_id, '_amount_of_licenses', true));
-    return !empty($amount_of_licenses) ? $amount_of_licenses : false;
-}
 
 /**
  * Get Licensing Renewal Period
@@ -552,35 +447,6 @@ function wc_slm_get_licensing_renewal_period_term($product_id)
 {
     $term = get_post_meta($product_id, '_license_renewal_period_term', true);
     return !empty($term) ? sanitize_text_field($term) : '';
-}
-
-/**
- * Check if Licensing is Enabled
- * 
- * @param int $download_id Downloadable product ID.
- * @return bool True if licensing is enabled, false otherwise.
- */
-function wc_slm_is_licensing_enabled($download_id)
-{
-    $licensing_enabled = absint(get_post_meta($download_id, '_wc_slm_licensing_enabled', true));
-    return $licensing_enabled === 1;
-}
-
-/**
- * Insert a Payment Note to Order
- * 
- * @param int $order_id WooCommerce Order ID.
- * @param string $msg Note to be added to the order.
- * @return void
- */
-function wc_insert_payment_note($order_id, $msg)
-{
-    if (!empty($order_id) && !empty($msg)) {
-        $order = wc_get_order($order_id);
-        if ($order) {
-            $order->add_order_note(esc_html($msg));
-        }
-    }
 }
 
 /**
@@ -624,7 +490,8 @@ function slm_order_completed($order_id)
     // Create the note text
     if (!empty($order_billing_email)) {
         $note = sprintf(
-            __("Order confirmation email sent to: <a href='mailto:%s'>%s</a>", 'slmplus'),
+            // Translators: %1$s is the mailto link, %2$s is the plain email address
+            __("Order confirmation email sent to: <a href='mailto:%1\$s'>%2\$s</a>", 'slm-plus'),
             esc_attr($order_billing_email),
             esc_html($order_billing_email)
         );
@@ -653,8 +520,8 @@ function slm_order_details($order)
         // Check if product is of type 'slm_license'
         if ($product->is_type('slm_license')) {
             // Retrieve license keys and types from the order item meta
-            $lic_keys = wc_get_order_item_meta($item_details->get_id(), '_slm_lic_key', false);
-            $lic_types = wc_get_order_item_meta($item_details->get_id(), '_slm_lic_type', false);
+            $lic_keys = wc_get_order_item_meta($item_details->get_id(), 'License Key', false);
+            $lic_types = wc_get_order_item_meta($item_details->get_id(), 'License Type', false);
 
             if ($lic_keys && $lic_types) {
                 $licenses_data = array_map(function ($keys, $types) {
@@ -672,12 +539,12 @@ function slm_order_details($order)
     // Display license details if available
     if (!empty($licences)) {
         echo '
-            <h2 class="woocommerce-order-details__title">' . esc_html__('License Details', 'slmplus') . '</h2>
+            <h2 class="woocommerce-order-details__title">' . esc_html__('License Details', 'slm-plus') . '</h2>
             <table class="woocommerce-table woocommerce-table--order-details shop_table order_details">
                 <thead>
                     <tr>
-                        <th class="woocommerce-table__product-name product-name">' . esc_html__('License Key', 'slmplus') . '</th>
-                        <th class="woocommerce-table__product-table product-total">' . esc_html__('Type', 'slmplus') . '</th>
+                        <th class="woocommerce-table__product-name product-name">' . esc_html__('License Key', 'slm-plus') . '</th>
+                        <th class="woocommerce-table__product-table product-total">' . esc_html__('Type', 'slm-plus') . '</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -687,7 +554,7 @@ function slm_order_details($order)
                     <tr class="woocommerce-table__line-item order_item">
                         <td class="woocommerce-table__product-name product-name">
                             ' . esc_html($lic_row['lic_key']) . ' - 
-                            <a href="' . esc_url(get_permalink(wc_get_page_id('myaccount'))) . 'my-licenses">' . esc_html__('View My Licenses', 'slmplus') . '</a>
+                            <a href="' . esc_url(get_permalink(wc_get_page_id('myaccount'))) . 'my-licenses">' . esc_html__('View My Licenses', 'slm-plus') . '</a>
                         </td>
                         <td class="woocommerce-table__product-total product-total">
                             ' . esc_html($lic_row['lic_type']) . '
@@ -744,16 +611,16 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
 
     // If there are licenses, add them to the email
     if (!empty($licenses)) {
-        ?>
-        <h2><?php echo esc_html__('License Keys', 'slmplus'); ?></h2>
-        <table class="td" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
+    ?>
+        <h2><?php echo esc_html__('License Keys', 'slm-plus'); ?></h2>
+        <table class="td cart_slm slm_licenses_table" cellspacing="0" cellpadding="6" border="1" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
             <thead>
                 <tr>
                     <th class="td" colspan="2" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
-                        <?php echo esc_html__('Product', 'slmplus'); ?>
+                        <?php echo esc_html__('Product', 'slm-plus'); ?>
                     </th>
                     <th class="td" scope="col" style="color: #636363; border: 1px solid #e5e5e5; vertical-align: middle; padding: 12px; text-align: left;">
-                        <?php echo esc_html__('License Key', 'slmplus'); ?>
+                        <?php echo esc_html__('License Key', 'slm-plus'); ?>
                     </th>
                 </tr>
             </thead>
@@ -771,6 +638,6 @@ function slm_add_license_to_order_confirmation($order, $sent_to_admin, $plain_te
             </tbody>
         </table>
         <br><br>
-        <?php
+<?php
     }
 }

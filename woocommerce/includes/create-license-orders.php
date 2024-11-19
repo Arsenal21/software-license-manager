@@ -13,7 +13,8 @@ $slm_options = get_option('slm_plugin_options'); // Retrieve plugin options
 
 add_action('wp_ajax_slm_generate_licenses', 'slm_generate_licenses_callback');
 
-function slm_generate_licenses_callback() {
+function slm_generate_licenses_callback()
+{
     check_ajax_referer('slm_generate_licenses_nonce', 'security');
 
     global $wpdb;
@@ -30,16 +31,16 @@ function slm_generate_licenses_callback() {
         ? sanitize_text_field($_POST['subscription_type'])
         : 'subscription';
 
-    SLM_Helper_Class::write_log("Starting license generation with Product ID: {$default_product_id} and License Type: {$slm_lic_type}.");
+    //SLM_Helper_Class::write_log("Starting license generation with Product ID: {$default_product_id} and License Type: {$slm_lic_type}.");
 
     // Check if Product ID is missing; if so, log an error, add an error response, and exit.
     if (empty($default_product_id)) {
-        SLM_Helper_Class::write_log('Error: Product ID is missing in the request.');
+        //SLM_Helper_Class::write_log('Error: Product ID is missing in the request.');
 
         // Track failure and skip reason for the response
         $failure_count++;
         $skipped_orders[] = 0;
-        $skipped_reasons[0] = __('Product ID is missing in the request.', 'slmplus');
+        $skipped_reasons[0] = __('Product ID is missing in the request.', 'slm-plus');
 
         // Return early with a JSON error response for AJAX display
         $response_data['html'] .= '<li><strong>Error:</strong> Product ID is missing in the request. Please provide a valid product ID.</li>';
@@ -50,12 +51,12 @@ function slm_generate_licenses_callback() {
     // Check if the Product ID corresponds to an existing WooCommerce product
     $product = wc_get_product($default_product_id);
     if (!$product) {
-        SLM_Helper_Class::write_log("Error: Product with ID $default_product_id does not exist in WooCommerce.");
+        //SLM_Helper_Class::write_log("Error: Product with ID $default_product_id does not exist in WooCommerce.");
 
         // Track failure and skip reason for the response
         $failure_count++;
         $skipped_orders[] = 0;
-        $skipped_reasons[0] = __('The provided Product ID does not correspond to a valid WooCommerce product. Please check the ID and try again.', 'slmplus');
+        $skipped_reasons[0] = __('The provided Product ID does not correspond to a valid WooCommerce product. Please check the ID and try again.', 'slm-plus');
 
         // Return early with a JSON error response for AJAX display
         $response_data['html'] .= '<li><strong>Error:</strong> The provided Product ID does not correspond to a valid WooCommerce product. Please check the ID and try again.</li>';
@@ -119,7 +120,7 @@ function slm_generate_licenses_callback() {
             }
         }
 
-        SLM_Helper_Class::write_log("Interval: {$slm_billing_interval} - Length: {$slm_billing_length}");
+        //SLM_Helper_Class::write_log("Interval: {$slm_billing_interval} - Length: {$slm_billing_length}");
 
         $order_items = $order->get_items();
 
@@ -128,7 +129,7 @@ function slm_generate_licenses_callback() {
 
             $product = wc_get_product($default_product_id);
             if (!$product) {
-                SLM_Helper_Class::write_log("Error: Product with ID {$default_product_id} does not exist.");
+                //SLM_Helper_Class::write_log("Error: Product with ID {$default_product_id} does not exist.");
                 continue;
             }
 
@@ -184,12 +185,13 @@ function slm_generate_licenses_callback() {
                     $license_key = sanitize_text_field($api_response['key']);
                     $success_count++;
 
-                    $item->add_meta_data('_slm_lic_key', $license_key, true);
-                    $item->add_meta_data('_slm_lic_type', $slm_lic_type, true);
-                    $order->add_order_note(
-                        sprintf(__('License Key generated: %s', 'slmplus'), $license_key)
-                    );
+                    $item->add_meta_data('License Key', $license_key, true);
+                    $item->add_meta_data('License Type', $slm_lic_type, true);
 
+                    $order->add_order_note(
+                        // Translators: %s is the generated license key
+                        sprintf(__('License Key generated: %s', 'slm-plus'), $license_key)
+                    );
                     $generated_licenses[] = [
                         'license_key' => $license_key,
                         'order_id' => $order_id,
@@ -233,10 +235,12 @@ function slm_generate_licenses_callback() {
                         $success_count++;
                         $generated_licenses[] = ['license_key' => $license_key, 'order_id' => $order_id];
 
-                        $item->add_meta_data('_slm_lic_key', $license_key, true);
-                        $item->add_meta_data('_slm_lic_type', $slm_lic_type, true);
+                        $item->add_meta_data('License Key', $license_key, true);
+                        $item->add_meta_data('License Type', $slm_lic_type, true);
+
                         $order->add_order_note(
-                            sprintf(__('License Key generated: %s', 'slmplus'), $license_key)
+                            // Translators: %s is the generated license key
+                            sprintf(__('License Key generated: %s', 'slm-plus'), $license_key)
                         );
                     } else {
                         $failure_count++;
@@ -251,17 +255,16 @@ function slm_generate_licenses_callback() {
     }
 
     if (!empty($skipped_orders)) {
-        foreach ($skipped_orders as $order_id) {
-            SLM_Helper_Class::write_log("Skipping Order ID {$order_id}: {$skipped_reasons[$order_id]}.");
-        }
-    }
-
-    if (!empty($skipped_orders)) {
-        $response_data['html'] .= '<li><strong>' . sprintf(__('%d orders were skipped:', 'slmplus'), count($skipped_orders)) . '</strong><ul>';
+        $response_data['html'] .= '<li><strong>' . sprintf(
+            // Translators: %1$d is the number of orders skipped
+            __('%1$d orders were skipped:', 'slm-plus'),
+            count($skipped_orders)
+        ) . '</strong><ul>';
         foreach ($skipped_orders as $order_id) {
             if ($order_id !== 0) {
                 $order_link = admin_url('post.php?post=' . $order_id . '&action=edit');
-                $response_data['html'] .= '<li>' . sprintf(__('Order ID %d was skipped due to: %s. <a href="%s" target="_blank">View Order</a>', 'slmplus'), $order_id, esc_html($skipped_reasons[$order_id]), esc_url($order_link)) . '</li>';
+                // Translators: %1$d is the order ID, %2$s is the reason why the order was skipped, %3$s is the order view link
+                $response_data['html'] .= '<li>' . sprintf(__('Order ID %1$d was skipped due to: %2$s. <a href="%3$s" target="_blank">View Order</a>', 'slm-plus'), $order_id, esc_html($skipped_reasons[$order_id]), esc_url($order_link)) . '</li>';
             } else {
                 $response_data['html'] .= '<li>' . esc_html($skipped_reasons[0]) . '</li>';
             }
@@ -270,16 +273,25 @@ function slm_generate_licenses_callback() {
     }
 
     if ($success_count > 0) {
-        $response_data['html'] .= '<li><strong>' . sprintf(__('%d licenses generated successfully:', 'slmplus'), $success_count) . '</strong><ul>';
+        $response_data['html'] .= '<li><strong>' . sprintf(
+            // Translators: %1$d is the number of successfully generated licenses
+            __('%1$d licenses generated successfully:', 'slm-plus'),
+            $success_count
+        ) . '</strong><ul>';
         foreach ($generated_licenses as $license_data) {
             $order_link = admin_url('post.php?post=' . $license_data['order_id'] . '&action=edit');
-            $response_data['html'] .= '<li>' . sprintf(__('License Key: %s for Order ID %d - <a href="%s" target="_blank">View Order</a>', 'slmplus'), esc_html($license_data['license_key']), $license_data['order_id'], esc_url($order_link)) . '</li>';
+            // Translators: %1$s is the license key, %2$d is the order ID, %3$s is the order view link
+            $response_data['html'] .= '<li>' . sprintf(__('License Key: %1$s for Order ID %2$d - <a href="%3$s" target="_blank">View Order</a>', 'slm-plus'), esc_html($license_data['license_key']), $license_data['order_id'], esc_url($order_link)) . '</li>';
         }
         $response_data['html'] .= '</ul></li>';
     }
 
     if ($failure_count > 0) {
-        $response_data['html'] .= '<li><strong>' . sprintf(__('%d licenses failed to generate.', 'slmplus'), $failure_count) . '</strong></li>';
+        $response_data['html'] .= '<li><strong>' . sprintf(
+            // Translators: %1$d is the number of licenses that failed to generate
+            __('%1$d licenses failed to generate.', 'slm-plus'),
+            $failure_count
+        ) . '</strong></li>';
     }
 
     wp_send_json_success($response_data);

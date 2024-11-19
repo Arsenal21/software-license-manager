@@ -1,0 +1,361 @@
+[11/14/2024 3:53 PM] - -------- Log File Reset --------
+[11/14/2024 4:25 PM] - SUCCESS : Registered domain with row id (34) deleted.
+[11/14/2024 4:54 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 4:54 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 4:55 PM] - SUCCESS : No license key found for row id (79). Deletion aborted.
+[11/14/2024 4:56 PM] - SUCCESS : API Response - Result: success Message: License key activated.
+[11/14/2024 4:56 PM] - SUCCESS : API Response - Result: success Message: License key activated for device.
+[11/14/2024 4:57 PM] - SUCCESS : Registered domain with row id (35) deleted.
+[11/14/2024 4:57 PM] - SUCCESS : 1 entries deleted from devices table for license key (SLM-EE57-76EF-2405-522E-90F4-FD95-1244-67C9).
+[11/14/2024 4:57 PM] - SUCCESS : 3 entries deleted from log table for license key (SLM-EE57-76EF-2405-522E-90F4-FD95-1244-67C9).
+[11/14/2024 4:57 PM] - SUCCESS :  entries deleted from emails table for license key (SLM-EE57-76EF-2405-522E-90F4-FD95-1244-67C9).
+[11/14/2024 4:58 PM] - SUCCESS : No license key found for row id (80). Deletion aborted.
+[11/14/2024 8:36 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 8:36 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 8:36 PM] - SUCCESS : API Response - Result: success Message: License key activated for device.
+[11/14/2024 8:36 PM] - SUCCESS : API Response - Result: success Message: License key activated.
+[11/14/2024 8:37 PM] - SUCCESS : Registered domain with row id (36) deleted.
+[11/14/2024 8:37 PM] - SUCCESS : 1 entries deleted from devices table for license key (SLM-5778-E08F-C6C1-A077-28AE-64C3-EC83-AF8B).
+[11/14/2024 8:37 PM] - SUCCESS : 3 entries deleted from log table for license key (SLM-5778-E08F-C6C1-A077-28AE-64C3-EC83-AF8B).
+[11/14/2024 8:37 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-5778-E08F-C6C1-A077-28AE-64C3-EC83-AF8B).
+[11/14/2024 8:43 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 8:43 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 8:43 PM] - SUCCESS : No license key found for row id (81). Deletion aborted.
+[11/14/2024 8:43 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-517E-526A-1BE3-B441-45C9-210E-6510-1216).
+[11/14/2024 8:43 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-517E-526A-1BE3-B441-45C9-210E-6510-1216).
+[11/14/2024 8:43 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-517E-526A-1BE3-B441-45C9-210E-6510-1216).
+[11/14/2024 8:47 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 8:47 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 8:47 PM] - SUCCESS : No license key found for row id (82). Deletion aborted.
+[11/14/2024 8:48 PM] - SUCCESS : No license key found for row id (82). Deletion aborted.
+[11/14/2024 8:48 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-B92A-33AD-70DD-1A9C-380D-9DEE-9A1A-FECE).
+[11/14/2024 8:48 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-B92A-33AD-70DD-1A9C-380D-9DEE-9A1A-FECE).
+[11/14/2024 8:48 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-B92A-33AD-70DD-1A9C-380D-9DEE-9A1A-FECE).
+[11/14/2024 8:48 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 8:48 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 8:49 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-EC44-E7FB-4A4F-B3AC-5043-DE79-5152-5C00).
+[11/14/2024 8:49 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-EC44-E7FB-4A4F-B3AC-5043-DE79-5152-5C00).
+[11/14/2024 8:49 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-EC44-E7FB-4A4F-B3AC-5043-DE79-5152-5C00).
+[11/14/2024 8:52 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 8:52 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 8:57 PM] - SUCCESS : No license key found for row id (84). Deletion aborted.
+[11/14/2024 8:57 PM] - SUCCESS : No license key found for row id (84). Deletion aborted.
+[11/14/2024 8:57 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-BA9D-1485-9B26-FC09-A65D-7982-AF9A-85A0).
+[11/14/2024 8:57 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-BA9D-1485-9B26-FC09-A65D-7982-AF9A-85A0).
+[11/14/2024 8:57 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-BA9D-1485-9B26-FC09-A65D-7982-AF9A-85A0).
+[11/14/2024 9:00 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:00 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:00 PM] - SUCCESS : No license key found for row id (85). Deletion aborted.
+[11/14/2024 9:00 PM] - SUCCESS : No license key found for row id (85). Deletion aborted.
+[11/14/2024 9:00 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6605-9268-E33C-AD4A-9DB2-997C-BB20-7D7C).
+[11/14/2024 9:00 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6605-9268-E33C-AD4A-9DB2-997C-BB20-7D7C).
+[11/14/2024 9:00 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6605-9268-E33C-AD4A-9DB2-997C-BB20-7D7C).
+[11/14/2024 9:07 PM] - SUCCESS : No license key found for row id (86). Deletion aborted.
+[11/14/2024 9:08 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:08 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:09 PM] - SUCCESS : No license key found for row id (86). Deletion aborted.
+[11/14/2024 9:09 PM] - SUCCESS : No license key found for row id (86). Deletion aborted.
+[11/14/2024 9:13 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:13 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:15 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:15 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:16 PM] - SUCCESS : No license key found for row id (86). Deletion aborted.
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-BFD7-241E-790D-BF31-312D-96B0-EBDD-E19C).
+[11/14/2024 9:16 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-BFD7-241E-790D-BF31-312D-96B0-EBDD-E19C).
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-BFD7-241E-790D-BF31-312D-96B0-EBDD-E19C).
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-8771-12E4-AB7C-1521-037F-3A91-D537-0F64).
+[11/14/2024 9:16 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-8771-12E4-AB7C-1521-037F-3A91-D537-0F64).
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-8771-12E4-AB7C-1521-037F-3A91-D537-0F64).
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-84C6-93BE-3840-E581-12FC-AB2F-8ACC-1A0C).
+[11/14/2024 9:16 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-84C6-93BE-3840-E581-12FC-AB2F-8ACC-1A0C).
+[11/14/2024 9:16 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-84C6-93BE-3840-E581-12FC-AB2F-8ACC-1A0C).
+[11/14/2024 9:16 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:16 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:17 PM] - SUCCESS : No license key found for row id (87). Deletion aborted.
+[11/14/2024 9:19 PM] - SUCCESS : No license key found for row id (87). Deletion aborted.
+[11/14/2024 9:21 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-4554-A7F9-4A30-9A6C-A9FB-2702-1384-0988).
+[11/14/2024 9:21 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-4554-A7F9-4A30-9A6C-A9FB-2702-1384-0988).
+[11/14/2024 9:21 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-4554-A7F9-4A30-9A6C-A9FB-2702-1384-0988).
+[11/14/2024 9:22 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:22 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:30 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-CADC-9C52-0BDC-7429-F7A6-C58D-5AC7-1A2C).
+[11/14/2024 9:30 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-CADC-9C52-0BDC-7429-F7A6-C58D-5AC7-1A2C).
+[11/14/2024 9:30 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-CADC-9C52-0BDC-7429-F7A6-C58D-5AC7-1A2C).
+[11/14/2024 9:31 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:31 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/14/2024 9:32 PM] - SUCCESS : No license key found for row id (91). Deletion aborted.
+[11/14/2024 9:32 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-3BB9-9D7F-4F1F-DE50-FF7A-46E4-B81E-3FF0).
+[11/14/2024 9:32 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-3BB9-9D7F-4F1F-DE50-FF7A-46E4-B81E-3FF0).
+[11/14/2024 9:32 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-3BB9-9D7F-4F1F-DE50-FF7A-46E4-B81E-3FF0).
+[11/14/2024 9:37 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/14/2024 9:37 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:10 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-D44E-1DE7-3F8E-29C2-67C2-69CD-CD8E-EEFA).
+[11/15/2024 9:10 PM] - SUCCESS : 0 entries deleted from log table for license key (SLM-D44E-1DE7-3F8E-29C2-67C2-69CD-CD8E-EEFA).
+[11/15/2024 9:10 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-D44E-1DE7-3F8E-29C2-67C2-69CD-CD8E-EEFA).
+[11/15/2024 9:10 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-1155-CB30-585F-C72C-3F02-7BF0-9B9D-F705).
+[11/15/2024 9:10 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-1155-CB30-585F-C72C-3F02-7BF0-9B9D-F705).
+[11/15/2024 9:10 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-1155-CB30-585F-C72C-3F02-7BF0-9B9D-F705).
+[11/15/2024 9:24 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:24 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:24 PM] - SUCCESS : No license key found for row id (93). Deletion aborted.
+[11/15/2024 9:24 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-4401-2724-A27F-3E82-4654-0E83-738D-1641).
+[11/15/2024 9:24 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-4401-2724-A27F-3E82-4654-0E83-738D-1641).
+[11/15/2024 9:24 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-4401-2724-A27F-3E82-4654-0E83-738D-1641).
+[11/15/2024 9:25 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:25 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:25 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-4504-4439-ECED-1884-8425-CE8B-5500-E2CD).
+[11/15/2024 9:25 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-4504-4439-ECED-1884-8425-CE8B-5500-E2CD).
+[11/15/2024 9:25 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-4504-4439-ECED-1884-8425-CE8B-5500-E2CD).
+[11/15/2024 9:27 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:27 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:27 PM] - SUCCESS : No license key found for row id (96). Deletion aborted.
+[11/15/2024 9:27 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-309E-344F-2809-F0B8-5687-1C23-92D5-CAC1).
+[11/15/2024 9:27 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-309E-344F-2809-F0B8-5687-1C23-92D5-CAC1).
+[11/15/2024 9:27 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-309E-344F-2809-F0B8-5687-1C23-92D5-CAC1).
+[11/15/2024 9:28 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:28 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:28 PM] - SUCCESS : No license key found for row id (97). Deletion aborted.
+[11/15/2024 9:28 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-D8C9-95A1-49DE-FDB7-0FD0-E1C1-7418-9044).
+[11/15/2024 9:28 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-D8C9-95A1-49DE-FDB7-0FD0-E1C1-7418-9044).
+[11/15/2024 9:28 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-D8C9-95A1-49DE-FDB7-0FD0-E1C1-7418-9044).
+[11/15/2024 9:29 PM] - SUCCESS : No license key found for row id (98). Deletion aborted.
+[11/15/2024 9:29 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:29 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:30 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:30 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:32 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:32 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:32 PM] - SUCCESS : No license key found for row id (98). Deletion aborted.
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-7105-479C-85D4-56A7-3A08-AD0A-2723-3C36).
+[11/15/2024 9:32 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-7105-479C-85D4-56A7-3A08-AD0A-2723-3C36).
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-7105-479C-85D4-56A7-3A08-AD0A-2723-3C36).
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-C7A8-30C6-2A87-D6C0-7D5A-EC8A-9562-02CF).
+[11/15/2024 9:32 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-C7A8-30C6-2A87-D6C0-7D5A-EC8A-9562-02CF).
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-C7A8-30C6-2A87-D6C0-7D5A-EC8A-9562-02CF).
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6988-E35E-574D-5263-B449-E53E-3D9C-BCBC).
+[11/15/2024 9:32 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6988-E35E-574D-5263-B449-E53E-3D9C-BCBC).
+[11/15/2024 9:32 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6988-E35E-574D-5263-B449-E53E-3D9C-BCBC).
+[11/15/2024 9:33 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/15/2024 9:33 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/15/2024 9:33 PM] - SUCCESS : No license key found for row id (99). Deletion aborted.
+[11/15/2024 9:33 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-E724-EC26-610E-EB10-D4B4-6BA1-FB1B-886D).
+[11/15/2024 9:33 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-E724-EC26-610E-EB10-D4B4-6BA1-FB1B-886D).
+[11/15/2024 9:33 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-E724-EC26-610E-EB10-D4B4-6BA1-FB1B-886D).
+[11/16/2024 12:42 PM] - SUCCESS : No license key found for row id (102). Deletion aborted.
+[11/16/2024 12:42 PM] - SUCCESS : No license key found for row id (102). Deletion aborted.
+[11/16/2024 12:43 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:43 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:43 PM] - SUCCESS : No license key found for row id (102). Deletion aborted.
+[11/16/2024 12:43 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-85A2-0795-DFC0-9E8E-414A-72C5-D8FC-5805).
+[11/16/2024 12:43 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-85A2-0795-DFC0-9E8E-414A-72C5-D8FC-5805).
+[11/16/2024 12:43 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-85A2-0795-DFC0-9E8E-414A-72C5-D8FC-5805).
+[11/16/2024 12:44 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:44 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:44 PM] - SUCCESS : No license key found for row id (103). Deletion aborted.
+[11/16/2024 12:44 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-E592-0B4C-C5CC-0444-565B-AE5B-9ECC-09E0).
+[11/16/2024 12:44 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-E592-0B4C-C5CC-0444-565B-AE5B-9ECC-09E0).
+[11/16/2024 12:44 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-E592-0B4C-C5CC-0444-565B-AE5B-9ECC-09E0).
+[11/16/2024 12:45 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:45 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:45 PM] - SUCCESS : No license key found for row id (104). Deletion aborted.
+[11/16/2024 12:45 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-7B4A-7FD5-05C4-69C4-8994-256D-DBE9-EDBA).
+[11/16/2024 12:45 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-7B4A-7FD5-05C4-69C4-8994-256D-DBE9-EDBA).
+[11/16/2024 12:45 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-7B4A-7FD5-05C4-69C4-8994-256D-DBE9-EDBA).
+[11/16/2024 12:46 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:46 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:46 PM] - SUCCESS : No license key found for row id (105). Deletion aborted.
+[11/16/2024 12:46 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-04CF-8A76-721C-CFF9-A998-D0C3-1B7C-2F5B).
+[11/16/2024 12:46 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-04CF-8A76-721C-CFF9-A998-D0C3-1B7C-2F5B).
+[11/16/2024 12:46 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-04CF-8A76-721C-CFF9-A998-D0C3-1B7C-2F5B).
+[11/16/2024 12:47 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:47 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:47 PM] - SUCCESS : No license key found for row id (106). Deletion aborted.
+[11/16/2024 12:47 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-E699-C8A8-761E-8E1A-860D-FB63-A4E9-1871).
+[11/16/2024 12:47 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-E699-C8A8-761E-8E1A-860D-FB63-A4E9-1871).
+[11/16/2024 12:47 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-E699-C8A8-761E-8E1A-860D-FB63-A4E9-1871).
+[11/16/2024 12:48 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:48 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:48 PM] - SUCCESS : No license key found for row id (107). Deletion aborted.
+[11/16/2024 12:48 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-9990-C635-DD8D-C077-092B-8B2F-2C80-19C0).
+[11/16/2024 12:48 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-9990-C635-DD8D-C077-092B-8B2F-2C80-19C0).
+[11/16/2024 12:48 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-9990-C635-DD8D-C077-092B-8B2F-2C80-19C0).
+[11/16/2024 12:51 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:51 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:51 PM] - SUCCESS : No license key found for row id (108). Deletion aborted.
+[11/16/2024 12:51 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-3AC5-D1F8-C29A-D502-F744-D6A2-2978-9F27).
+[11/16/2024 12:51 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-3AC5-D1F8-C29A-D502-F744-D6A2-2978-9F27).
+[11/16/2024 12:51 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-3AC5-D1F8-C29A-D502-F744-D6A2-2978-9F27).
+[11/16/2024 12:56 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:56 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:56 PM] - SUCCESS : No license key found for row id (109). Deletion aborted.
+[11/16/2024 12:56 PM] - SUCCESS : No license key found for row id (109). Deletion aborted.
+[11/16/2024 12:56 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-2440-E86B-D53C-EA9C-05F1-DC1F-8AB0-99DD).
+[11/16/2024 12:56 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-2440-E86B-D53C-EA9C-05F1-DC1F-8AB0-99DD).
+[11/16/2024 12:56 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-2440-E86B-D53C-EA9C-05F1-DC1F-8AB0-99DD).
+[11/16/2024 12:57 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:57 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:57 PM] - SUCCESS : No license key found for row id (110). Deletion aborted.
+[11/16/2024 12:57 PM] - SUCCESS : No license key found for row id (110). Deletion aborted.
+[11/16/2024 12:57 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6530-1BB5-9EFB-499B-0E2F-5E30-1D91-CA84).
+[11/16/2024 12:57 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6530-1BB5-9EFB-499B-0E2F-5E30-1D91-CA84).
+[11/16/2024 12:57 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6530-1BB5-9EFB-499B-0E2F-5E30-1D91-CA84).
+[11/16/2024 12:59 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 12:59 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 12:59 PM] - SUCCESS : No license key found for row id (111). Deletion aborted.
+[11/16/2024 12:59 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-7E96-7D67-6081-002F-970F-3B4D-E0D4-D241).
+[11/16/2024 12:59 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-7E96-7D67-6081-002F-970F-3B4D-E0D4-D241).
+[11/16/2024 12:59 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-7E96-7D67-6081-002F-970F-3B4D-E0D4-D241).
+[11/16/2024 1:00 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 1:00 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 1:00 PM] - SUCCESS : No license key found for row id (112). Deletion aborted.
+[11/16/2024 1:00 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-A3A7-9E51-FE88-B3CF-2D32-03F9-754A-0C52).
+[11/16/2024 1:00 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-A3A7-9E51-FE88-B3CF-2D32-03F9-754A-0C52).
+[11/16/2024 1:00 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-A3A7-9E51-FE88-B3CF-2D32-03F9-754A-0C52).
+[11/16/2024 1:12 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 1:12 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 1:23 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 1:23 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 1:23 PM] - SUCCESS : No license key found for row id (113). Deletion aborted.
+[11/16/2024 1:23 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-0334-18CC-D8D3-4934-0BE8-3CDE-5027-8650).
+[11/16/2024 1:23 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-0334-18CC-D8D3-4934-0BE8-3CDE-5027-8650).
+[11/16/2024 1:23 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-0334-18CC-D8D3-4934-0BE8-3CDE-5027-8650).
+[11/16/2024 1:23 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-5677-AF06-907B-08A5-B32E-9913-AFFB-F4F8).
+[11/16/2024 1:23 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-5677-AF06-907B-08A5-B32E-9913-AFFB-F4F8).
+[11/16/2024 1:23 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-5677-AF06-907B-08A5-B32E-9913-AFFB-F4F8).
+[11/16/2024 1:23 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 1:23 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 1:25 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 1:25 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 1:25 PM] - SUCCESS : No license key found for row id (114). Deletion aborted.
+[11/16/2024 1:25 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-CB2B-6D87-E702-594A-809F-6CC9-50D7-31A5).
+[11/16/2024 1:25 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-CB2B-6D87-E702-594A-809F-6CC9-50D7-31A5).
+[11/16/2024 1:25 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-CB2B-6D87-E702-594A-809F-6CC9-50D7-31A5).
+[11/16/2024 1:25 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-3D21-3109-BC19-98F3-9EE8-8891-E33F-0F2A).
+[11/16/2024 1:25 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-3D21-3109-BC19-98F3-9EE8-8891-E33F-0F2A).
+[11/16/2024 1:25 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-3D21-3109-BC19-98F3-9EE8-8891-E33F-0F2A).
+[11/16/2024 2:37 PM] - SUCCESS : No license key found for row id (117). Deletion aborted.
+[11/16/2024 2:37 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:37 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 2:38 PM] - SUCCESS : No license key found for row id (117). Deletion aborted.
+[11/16/2024 2:38 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-4AA8-C044-3F7D-A2D7-0C96-B028-3C0B-8DC6).
+[11/16/2024 2:38 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-4AA8-C044-3F7D-A2D7-0C96-B028-3C0B-8DC6).
+[11/16/2024 2:38 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-4AA8-C044-3F7D-A2D7-0C96-B028-3C0B-8DC6).
+[11/16/2024 2:52 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:52 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 2:52 PM] - SUCCESS : No license key found for row id (118). Deletion aborted.
+[11/16/2024 2:52 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-2F2D-0A50-589A-2218-FA9D-57CF-CDF1-AFDB).
+[11/16/2024 2:52 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-2F2D-0A50-589A-2218-FA9D-57CF-CDF1-AFDB).
+[11/16/2024 2:52 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-2F2D-0A50-589A-2218-FA9D-57CF-CDF1-AFDB).
+[11/16/2024 2:53 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:53 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 2:53 PM] - SUCCESS : No license key found for row id (119). Deletion aborted.
+[11/16/2024 2:53 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-5E7A-1E46-65B8-E0A9-20C8-3DCA-405D-0286).
+[11/16/2024 2:53 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-5E7A-1E46-65B8-E0A9-20C8-3DCA-405D-0286).
+[11/16/2024 2:53 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-5E7A-1E46-65B8-E0A9-20C8-3DCA-405D-0286).
+[11/16/2024 2:54 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:54 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 2:55 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:55 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 2:59 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 2:59 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 3:00 PM] - SUCCESS : No license key found for row id (120). Deletion aborted.
+[11/16/2024 3:01 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-CB3E-34BD-01A2-C01B-C6DA-FA9C-52D9-84E3).
+[11/16/2024 3:01 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-CB3E-34BD-01A2-C01B-C6DA-FA9C-52D9-84E3).
+[11/16/2024 3:01 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-CB3E-34BD-01A2-C01B-C6DA-FA9C-52D9-84E3).
+[11/16/2024 3:02 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-16C2-D95B-90F5-E9B4-5B77-C4D7-17D2-EB74).
+[11/16/2024 3:02 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-16C2-D95B-90F5-E9B4-5B77-C4D7-17D2-EB74).
+[11/16/2024 3:02 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-16C2-D95B-90F5-E9B4-5B77-C4D7-17D2-EB74).
+[11/16/2024 3:02 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-8265-D551-F989-EB4B-B5EF-F2AC-9CC2-E64F).
+[11/16/2024 3:02 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-8265-D551-F989-EB4B-B5EF-F2AC-9CC2-E64F).
+[11/16/2024 3:02 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-8265-D551-F989-EB4B-B5EF-F2AC-9CC2-E64F).
+[11/16/2024 3:02 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 3:02 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 3:02 PM] - SUCCESS : No license key found for row id (122). Deletion aborted.
+[11/16/2024 3:02 PM] - SUCCESS : No license key found for row id (121). Deletion aborted.
+[11/16/2024 3:03 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-55AC-E91A-F0FA-61C8-9DF3-1A1F-38C8-82D1).
+[11/16/2024 3:03 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-55AC-E91A-F0FA-61C8-9DF3-1A1F-38C8-82D1).
+[11/16/2024 3:03 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-55AC-E91A-F0FA-61C8-9DF3-1A1F-38C8-82D1).
+[11/16/2024 3:03 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 3:03 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 3:07 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 3:07 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 3:07 PM] - SUCCESS : No license key found for row id (124). Deletion aborted.
+[11/16/2024 3:07 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-E488-1E7D-F14C-43D9-F1ED-B23D-EA38-60A9).
+[11/16/2024 3:07 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-E488-1E7D-F14C-43D9-F1ED-B23D-EA38-60A9).
+[11/16/2024 3:07 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-E488-1E7D-F14C-43D9-F1ED-B23D-EA38-60A9).
+[11/16/2024 3:07 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-E4AC-924C-78A2-189D-2633-E4A6-39EE-1E99).
+[11/16/2024 3:07 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-E4AC-924C-78A2-189D-2633-E4A6-39EE-1E99).
+[11/16/2024 3:07 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-E4AC-924C-78A2-189D-2633-E4A6-39EE-1E99).
+[11/16/2024 3:08 PM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/16/2024 3:08 PM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/16/2024 3:08 PM] - SUCCESS : No license key found for row id (125). Deletion aborted.
+[11/16/2024 3:08 PM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-BD7C-BACD-412E-D268-61AC-DBF0-A557-B7AE).
+[11/16/2024 3:08 PM] - SUCCESS : 1 entries deleted from log table for license key (SLM-BD7C-BACD-412E-D268-61AC-DBF0-A557-B7AE).
+[11/16/2024 3:08 PM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-BD7C-BACD-412E-D268-61AC-DBF0-A557-B7AE).
+[11/19/2024 1:32 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:32 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:33 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-D799-8DDC-3172-AF54-3A4C-C881-7A9E-C353).
+[11/19/2024 1:33 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-D799-8DDC-3172-AF54-3A4C-C881-7A9E-C353).
+[11/19/2024 1:33 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-D799-8DDC-3172-AF54-3A4C-C881-7A9E-C353).
+[11/19/2024 1:33 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:33 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:36 AM] - SUCCESS : No license key found for row id (128). Deletion aborted.
+[11/19/2024 1:36 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6540-30EF-63A5-EF6E-3C37-A465-8846-192B).
+[11/19/2024 1:36 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6540-30EF-63A5-EF6E-3C37-A465-8846-192B).
+[11/19/2024 1:36 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6540-30EF-63A5-EF6E-3C37-A465-8846-192B).
+[11/19/2024 1:43 AM] - SUCCESS : No license key found for row id (129). Deletion aborted.
+[11/19/2024 1:43 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:43 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:43 AM] - SUCCESS : No license key found for row id (129). Deletion aborted.
+[11/19/2024 1:44 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-AE29-5021-38EE-5C99-9982-72B2-14E2-64A1).
+[11/19/2024 1:44 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-AE29-5021-38EE-5C99-9982-72B2-14E2-64A1).
+[11/19/2024 1:44 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-AE29-5021-38EE-5C99-9982-72B2-14E2-64A1).
+[11/19/2024 1:46 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:46 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:46 AM] - SUCCESS : No license key found for row id (130). Deletion aborted.
+[11/19/2024 1:47 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-1CD0-1BA9-C29C-C09B-DCFF-19F6-E85C-7859).
+[11/19/2024 1:47 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-1CD0-1BA9-C29C-C09B-DCFF-19F6-E85C-7859).
+[11/19/2024 1:47 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-1CD0-1BA9-C29C-C09B-DCFF-19F6-E85C-7859).
+[11/19/2024 1:50 AM] - SUCCESS : No license key found for row id (131). Deletion aborted.
+[11/19/2024 1:50 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:50 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:51 AM] - SUCCESS : No license key found for row id (131). Deletion aborted.
+[11/19/2024 1:52 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6954-42D7-18A2-D4EA-E6B0-341E-1CB8-A6B1).
+[11/19/2024 1:52 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6954-42D7-18A2-D4EA-E6B0-341E-1CB8-A6B1).
+[11/19/2024 1:52 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6954-42D7-18A2-D4EA-E6B0-341E-1CB8-A6B1).
+[11/19/2024 1:52 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:52 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:55 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 1:55 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 1:56 AM] - SUCCESS : No license key found for row id (132). Deletion aborted.
+[11/19/2024 2:03 AM] - SUCCESS : No license key found for row id (132). Deletion aborted.
+[11/19/2024 2:03 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-DFF3-16D6-C4D4-9AA1-65C6-3B48-F90F-ACA0).
+[11/19/2024 2:03 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-DFF3-16D6-C4D4-9AA1-65C6-3B48-F90F-ACA0).
+[11/19/2024 2:03 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-DFF3-16D6-C4D4-9AA1-65C6-3B48-F90F-ACA0).
+[11/19/2024 2:03 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-57B7-0FAD-96D5-08A6-FD2E-6349-309C-E0CF).
+[11/19/2024 2:03 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-57B7-0FAD-96D5-08A6-FD2E-6349-309C-E0CF).
+[11/19/2024 2:03 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-57B7-0FAD-96D5-08A6-FD2E-6349-309C-E0CF).
+[11/19/2024 2:03 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 2:03 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 2:06 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 2:06 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 2:26 AM] - SUCCESS : No license key found for row id (133). Deletion aborted.
+[11/19/2024 2:27 AM] - SUCCESS : No license key found for row id (133). Deletion aborted.
+[11/19/2024 2:28 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-6A1C-C6DC-F906-1A0A-81FD-F747-1F0A-8576).
+[11/19/2024 2:28 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-6A1C-C6DC-F906-1A0A-81FD-F747-1F0A-8576).
+[11/19/2024 2:28 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-6A1C-C6DC-F906-1A0A-81FD-F747-1F0A-8576).
+[11/19/2024 2:28 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-89E4-8139-76B7-1003-C7C0-4BC4-6212-BD35).
+[11/19/2024 2:28 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-89E4-8139-76B7-1003-C7C0-4BC4-6212-BD35).
+[11/19/2024 2:28 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-89E4-8139-76B7-1003-C7C0-4BC4-6212-BD35).
+[11/19/2024 2:29 AM] - SUCCESS : No license key found for row id (135). Deletion aborted.
+[11/19/2024 2:32 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 2:32 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 2:32 AM] - SUCCESS : API - license creation (slm_create_new) request received.
+[11/19/2024 2:32 AM] - SUCCESS : API Response - Result: success Message: License successfully created
+[11/19/2024 2:33 AM] - SUCCESS : No license key found for row id (135). Deletion aborted.
+[11/19/2024 2:33 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-C186-4990-98C2-901D-A226-3965-5D65-F806).
+[11/19/2024 2:33 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-C186-4990-98C2-901D-A226-3965-5D65-F806).
+[11/19/2024 2:33 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-C186-4990-98C2-901D-A226-3965-5D65-F806).
+[11/19/2024 2:33 AM] - SUCCESS : 0 entries deleted from devices table for license key (SLM-DAB0-BF76-E594-2E3B-99CF-4EAA-AA48-502E).
+[11/19/2024 2:33 AM] - SUCCESS : 1 entries deleted from log table for license key (SLM-DAB0-BF76-E594-2E3B-99CF-4EAA-AA48-502E).
+[11/19/2024 2:33 AM] - SUCCESS : 0 entries deleted from emails table for license key (SLM-DAB0-BF76-E594-2E3B-99CF-4EAA-AA48-502E).

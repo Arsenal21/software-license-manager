@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: SLM Plus
-Version: 6.1.8
+Version: 6.1.9
 Plugin URI: https://github.com/michelve/software-license-manager/
 Author: Michel Velis
 Author URI: https://github.com/michelve/
 Description: A comprehensive software license management solution for web applications including WordPress plugins, themes, and PHP-based software. Seamlessly integrates with WooCommerce to offer license key generation, management, and validation. Ideal for developers managing software licenses across multiple platforms with built-in multilingual support and performance optimization.
-Text Domain: slmplus
+Text Domain: slm-plus
 Domain Path: /i18n/languages/
 WC tested up to: 6.7
 Requires at least: 5.6
@@ -23,8 +23,9 @@ if (!defined('ABSPATH')) {
 }
 
 // Load plugin textdomain for multilingual support
-function slmplus_load_textdomain() {
-    load_plugin_textdomain('slmplus', false, dirname(plugin_basename(__FILE__)) . '/i18n/languages');
+function slmplus_load_textdomain()
+{
+    load_plugin_textdomain('slm-plus', false, dirname(plugin_basename(__FILE__)) . '/i18n/languages');
 }
 add_action('plugins_loaded', 'slmplus_load_textdomain');
 
@@ -32,7 +33,7 @@ add_action('plugins_loaded', 'slmplus_load_textdomain');
 global $wpdb, $slm_debug_logger;
 
 // Define constants for plugin paths, URLs, and database tables
-define('SLM_VERSION',               '6.1.8');
+define('SLM_VERSION',               '6.1.9');
 define('SLM_DB_VERSION',            '5.1.2');
 define('SLM_REWRITE_VERSION',       '3.0.8');
 define('SLM_FOLDER',                dirname(plugin_basename(__FILE__)));
@@ -65,14 +66,16 @@ if (file_exists(SLM_LIB . 'slm-plugin-core.php')) {
     require_once SLM_LIB . 'slm-plugin-core.php';
 }
 
-function slm_settings_link($links){
-    $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=slm_settings')) . '">' . __('Settings') . '</a>';
-   // $github_link = '<a href="' . esc_url('https://github.com/michelve/software-license-manager') . '" target="_blank">' . __('GitHub') . '</a>';
+function slm_settings_link($links)
+{
+    $settings_link = '<a href="' . esc_url(admin_url('admin.php?page=slm_settings')) . '">' . __('Settings', 'slm-plus') . '</a>';
+    // $github_link = '<a href="' . esc_url('https://github.com/michelve/software-license-manager') . '" target="_blank">' . __('GitHub') . '</a>';
     $links[] = $settings_link;
     //$links[] = $github_link;
     return $links;
 }
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'slm_settings_link');
+
 
 define('SLM_DEFAULT_MAX_DOMAINS', SLM_API_Utility::get_slm_option('default_max_domains'));
 define('SLM_DEFAULT_MAX_DEVICES', SLM_API_Utility::get_slm_option('default_max_devices'));
