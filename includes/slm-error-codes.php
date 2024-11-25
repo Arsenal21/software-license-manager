@@ -35,6 +35,10 @@ class SLM_Error_Codes {
     // License key updates
     const KEY_UPDATE_FAILED             = 220;  // Failed to update the license key
     const KEY_UPDATE_SUCCESS            = 240;  // License key successfully updated
+    const LICENSE_RENEWED               = 241;  // License key successfully renewed
+    const LICENSE_NOT_EXPIRED           = 242;  // License key successfully renewed
+    const ORDER_NOT_FOUND               = 243;  // License key successfully renewed
+    const PRODUCT_NOT_FOUND             = 244;  // License key successfully renewed
 
     // License activation and validation
     const LICENSE_ACTIVATED             = 380;  // License key successfully activated
@@ -45,6 +49,7 @@ class SLM_Error_Codes {
     const LICENSE_IN_USE                = 40;   // License key is currently in use
     const LICENSE_INVALID               = 60;   // License key is invalid
     const LICENSE_VALID                 = 65;   // License key is valid
+    const INVALID_SECRET_KEY            = 67;   // License key is valid
 
     // Miscellaneous errors
     const MISSING_KEY_DELETE_FAILED     = 280;  // Missing license key for deletion failed
@@ -54,4 +59,9 @@ class SLM_Error_Codes {
 
     // Verification errors
     const VERIFY_KEY_INVALID            = 90;   // Verification secret key is invalid
+    const MISSING_PARAMETERS            = 91;   // Verification secret key is invalid
+    const INVALID_NONCE                 = 92;   // Verification secret key is invalid
+    const UPDATE_FAILED                 = 93;
+    const ORDER_ID_MISMATCH             = 94;
+    const ORDER_NOT_COMPLETED           = 95;
 }

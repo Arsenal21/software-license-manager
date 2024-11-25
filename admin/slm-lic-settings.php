@@ -267,18 +267,21 @@ function slm_general_settings()
                                             <?php esc_html_e('Enable WooCommerce downloads expiration. Downloads will expire together with corresponding license.', 'slm-plus'); ?>
                                         </td>
                                     </tr>
-                                </table>
 
-                                <!-- <h3><?php // esc_html_e('WP eStores', 'slm-plus'); ?> </h3>
-                                <table class="form-table">
-                                    <tr valign="top">
-                                        <th scope="row"> <?php //_e('WP eStores', 'slm-plus'); ?></th>
+                                    <tr>
+                                        <th scope="row"><?php esc_html_e('License Cart Page', 'slm-plus'); ?></th>
                                         <td>
-                                            <input name="slm_wpestores" type="checkbox" <?php //if ($options['slm_wpestores'] != '') echo ' checked="checked"'; ?> value="1" />
-                                            <?php //_e('Enable WordPress eStore Plugin Support.', 'slm-plus'); ?>
+                                            <form method="post" action="">
+                                                <?php wp_nonce_field('slm_create_license_cart', 'slm_create_license_cart_nonce'); ?>
+                                                <button type="submit" name="slm_create_license_cart" class="button button-primary">
+                                                    <?php esc_html_e('Create License Cart Page', 'slm-plus'); ?>
+                                                </button>
+                                                <p class="description"><?php esc_html_e('Click this button to create the License Cart page and assign the custom template.', 'slm-plus'); ?></p>
+                                            </form>
                                         </td>
                                     </tr>
-                                </table> -->
+
+                                </table>
                             </div>
                         </div>
 
@@ -341,4 +344,80 @@ function slm_general_settings()
         </div>
         </div>
     <?php
+}
+
+
+add_action('admin_init', 'slm_handle_create_license_cart_page');
+
+function slm_handle_create_license_cart_page() {
+    // Verify the nonce for security
+    if (!isset($_POST['slm_create_license_cart_nonce']) || !wp_verify_nonce($_POST['slm_create_license_cart_nonce'], 'slm_create_license_cart')) {
+        return;
+    }
+
+    // Check if the user has permissions to manage pages
+    if (!current_user_can('edit_pages')) {
+        add_settings_error(
+            'slm_license_cart_error',
+            'slm_no_permission',
+            __('You do not have sufficient permissions to create the License Cart page.', 'slm-plus'),
+            'error'
+        );
+        return;
+    }
+
+    // Use WP_Query to check if the page already exists
+    $query = new WP_Query(array(
+        'post_type'      => 'page',
+        'name'           => 'license-cart', // Check for the slug
+        'post_status'    => 'publish',
+        'posts_per_page' => 1,
+    ));
+
+    if ($query->have_posts()) {
+        add_settings_error(
+            'slm_license_cart_error',
+            'slm_license_cart_exists',
+            __('The License Cart page already exists.', 'slm-plus'),
+            'error'
+        );
+        return;
+    }
+
+    // Create the License Cart page
+    $page_id = wp_insert_post(array(
+        'post_title'     => 'License Cart',
+        'post_content'   => '',
+        'post_status'    => 'publish',
+        'post_name'      => 'license-cart', // Set the slug
+        'post_type'      => 'page',
+        'meta_input'     => array('_wp_page_template' => 'page-license-cart.php'), // Assign the custom template
+    ));
+
+    // Check if the page was created successfully
+    if ($page_id && !is_wp_error($page_id)) {
+        // Hide the page from menus and navigation
+        update_post_meta($page_id, '_menu_item_visibility', 'hidden');
+        add_settings_error(
+            'slm_license_cart_success',
+            'slm_license_cart_created',
+            __('The License Cart page was successfully created.', 'slm-plus'),
+            'updated'
+        );
+    } else {
+        add_settings_error(
+            'slm_license_cart_error',
+            'slm_license_cart_failed',
+            __('Failed to create the License Cart page. Please try again.', 'slm-plus'),
+            'error'
+        );
+    }
+}
+
+
+add_action('admin_notices', 'slm_license_cart_admin_notices');
+
+function slm_license_cart_admin_notices() {
+    settings_errors('slm_license_cart_error');
+    settings_errors('slm_license_cart_success');
 }

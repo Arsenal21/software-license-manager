@@ -383,64 +383,55 @@ function add_slm_properties_meta_box()
 
 function display_slm_properties_meta_box($post)
 {
-    $license_key = get_post_meta($post->ID, 'License Key', true);
-    $license_type = get_post_meta($post->ID, 'License Type', true);
+
+    global $wpdb;
+
     $order = wc_get_order($post->ID);
-    $order_status = $order->get_status();
-
-    // Check if the license key exists in the database
-    if (empty($license_key)) {
-        // Retrieve purchase_id and check if license key exists in the license table
-        $purchase_id = get_post_meta($post->ID, 'purchase_id', true);  // Fetch purchase_id meta
-
-        if (empty($purchase_id)) {
-            // If no purchase_id is found, we attempt to retrieve it from the order if possible
-            $purchase_id = $order->get_id();  // Use order ID if purchase_id isn't set
-        }
-
-        if (!empty($purchase_id)) {
-            global $wpdb;
-            // Query the license table to find a matching license
-            $license_data = $wpdb->get_row($wpdb->prepare(
-                "SELECT license_key, lic_type FROM " . SLM_TBL_LICENSE_KEYS . " WHERE item_reference = %d",
-                $purchase_id
-            ));
-
-            if ($license_data) {
-                // Assign the license data to variables
-                $license_key = $license_data->license_key;
-                $license_type = $license_data->lic_type;
-
-                // Save the purchase_id, license_key, and license_type as metadata
-                update_post_meta($post->ID, 'purchase_id', $purchase_id);
-                update_post_meta($post->ID, 'License Key', $license_key);
-                update_post_meta($post->ID, 'License Type', $license_type);
-
-                // Log success for debugging
-                SLM_Helper_Class::write_log("Purchase ID $purchase_id found. License Key: $license_key, License Type: $license_type saved to order.");
-            } else {
-                // Log that no license was found for the given purchase_id
-                SLM_Helper_Class::write_log("No license found for Purchase ID: $purchase_id.");
-            }
-        }
+    if (!$order) {
+        echo '<p><em>' . esc_html__('Order not found.', 'slm-plus') . '</em></p>';
+        return;
     }
 
+    $order_id = $order->get_id();
+    $order_status = $order->get_status();
 
+    // Fetch license details from the database
+    $license_data = $wpdb->get_row(
+        $wpdb->prepare(
+            "SELECT license_key, lic_type FROM " . SLM_TBL_LICENSE_KEYS . " WHERE wc_order_id = %d LIMIT 1",
+            $order_id
+        )
+    );
 
+    $license_key = $license_data->license_key ?? '';
+    $license_type = $license_data->lic_type ?? '';
 
-    // Check if license can be created based on order status and license key existence
+    // Determine if a new license can be created based on the order status
     $can_create_license = empty($license_key) && in_array($order_status, ['completed', 'processing']);
 
-    // Display license information if a key exists
+    // Display license information if it exists
     if (!empty($license_key)) {
-        echo '<p><strong>' . esc_html__('License Key:', 'slm-plus') . '</strong> ' . esc_html($license_key) . '</p>';
-        echo '<p><strong>' . esc_html__('License Type:', 'slm-plus') . '</strong> ' . esc_html($license_type) . '</p>';
-        echo '<p><em>' . esc_html__('A license key is already assigned to this order.', 'slm-plus') . '</em></p>';
+        $license_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM " . SLM_TBL_LICENSE_KEYS . " WHERE license_key = %s LIMIT 1",
+                $license_key
+            )
+        );
 
-        $license_view_url = esc_url(admin_url('admin.php?page=slm_manage_license&edit_record=' . $license_key));
-        echo '<a href="' . esc_url($license_view_url) . '" class="button button-secondary" target="_blank">' . esc_html__('View License', 'slm-plus') . '</a>';
-    } elseif ($can_create_license) {
-        // Show the license creation option if no license exists and order is eligible
+        if ($license_id) {
+            echo '<p><strong>' . esc_html__('License Key:', 'slm-plus') . '</strong> ' . esc_html($license_key) . '</p>';
+            echo '<p><strong>' . esc_html__('License Type:', 'slm-plus') . '</strong> ' . esc_html($license_type) . '</p>';
+            echo '<p><em>' . esc_html__('A license key is already assigned to this order.', 'slm-plus') . '</em></p>';
+
+            // Link to view the license using its ID
+            $license_view_url = esc_url(admin_url('admin.php?page=slm_manage_license&edit_record=' . $license_id));
+            echo '<a href="' . esc_url($license_view_url) . '" class="button button-secondary" target="_blank">' . esc_html__('View License', 'slm-plus') . '</a>';
+        } else {
+            echo '<p><em>' . esc_html__('License information could not be retrieved.', 'slm-plus') . '</em></p>';
+        }
+    }
+    elseif ($can_create_license) {
+        // Show license creation options for eligible orders
         echo '<label for="slm_lic_type">' . esc_html__('License Type:', 'slm-plus') . '</label>';
         echo '<select id="slm_lic_type" name="slm_lic_type" class="postbox">
                 <option value="subscription" ' . selected($license_type, 'subscription', false) . '>' . esc_html__('Subscription', 'slm-plus') . '</option>
@@ -449,7 +440,7 @@ function display_slm_properties_meta_box($post)
 
         echo '<button type="button" class="button button-primary" id="create_license_button">' . esc_html__('Create License', 'slm-plus') . '</button>';
     } else {
-        // Display informational message for new or ineligible orders
+        // Informational message for ineligible orders
         echo '<p><em>' . esc_html__('Order must be completed or processing to create a license.', 'slm-plus') . '</em></p>';
         echo '<button type="button" class="button button-primary" id="create_license_button" disabled>' . esc_html__('Create License', 'slm-plus') . '</button>';
     }
@@ -510,9 +501,11 @@ function display_slm_properties_meta_box($post)
 add_action('wp_ajax_slm_generate_license_for_order', 'slm_generate_license_for_order_callback');
 function slm_generate_license_for_order_callback()
 {
+    // Validate nonce for security
     check_ajax_referer('slm_generate_license_nonce', 'security');
 
     global $wpdb;
+
     $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : null;
     $lic_type = isset($_POST['lic_type']) ? sanitize_text_field($_POST['lic_type']) : 'subscription';
 
@@ -520,130 +513,103 @@ function slm_generate_license_for_order_callback()
         wp_send_json_error(['message' => __('Invalid order ID', 'slm-plus')]);
     }
 
+    // Fetch the WooCommerce order
     $order = wc_get_order($order_id);
-
     if (!$order || !in_array($order->get_status(), ['completed', 'processing'])) {
         wp_send_json_error(['message' => __('Order must be completed or processing to create a license', 'slm-plus')]);
     }
 
-    // Gather required order details
-    $first_name     = $order->get_billing_first_name();
-    $last_name      = $order->get_billing_last_name();
-    $email          = $order->get_billing_email();
-    $purchase_id    = $order;
-    $txn_id         = $order->get_transaction_id();
-    $company_name   = $order->get_billing_company();
-    $date_created   = $order->get_date_created()->date('Y-m-d');
-    $user_id        = $order->get_user_id();
-    // Get the first item from the order (if available)
-    $order_items = $order->get_items();
-    $product_ref = !empty($order_items) ? reset($order_items)->get_name() : ''; // Using the first item name for simplicity
+    // Fetch necessary details from the order
+    $first_name = $order->get_billing_first_name();
+    $last_name = $order->get_billing_last_name();
+    $email = $order->get_billing_email();
+    $txn_id = $order->get_transaction_id();
+    $company_name = $order->get_billing_company();
+    $date_created = $order->get_date_created() ? $order->get_date_created()->date('Y-m-d') : current_time('mysql');
+    $user_id = $order->get_user_id();
 
+    // Default values from options
+    $slm_billing_length = SLM_API_Utility::get_slm_option('slm_billing_length');
+    $slm_billing_interval = SLM_API_Utility::get_slm_option('slm_billing_interval');
+    $default_domains = SLM_DEFAULT_MAX_DOMAINS;
+    $default_devices = SLM_DEFAULT_MAX_DEVICES;
 
-    $slm_billing_length    = SLM_API_Utility::get_slm_option('slm_billing_length');
-    $slm_billing_interval  = SLM_API_Utility::get_slm_option('slm_billing_interval');
+    // Determine expiration date
+    $date_expiry = $lic_type === 'lifetime' 
+        ? date('Y-m-d', strtotime('+120 years', strtotime($date_created)))
+        : date('Y-m-d', strtotime("+$slm_billing_length $slm_billing_interval", strtotime($date_created)));
 
-    $date_expiry = $lic_type === 'lifetime' ? date('Y-m-d', strtotime("+120 years", strtotime($date_created))) :
-        date('Y-m-d', strtotime("+$slm_billing_length $slm_billing_interval", strtotime($date_created)));
+    $licenses = [];
+    foreach ($order->get_items() as $item) {
+        $product_id = $item->get_product_id();
+        $product = wc_get_product($product_id);
 
-    // License data array, using all fields from original
-    $license_data = [
-        'slm_action'            => 'slm_create_new',
-        'lic_status'            => 'pending',
-        'lic_type'              => $lic_type,
-        'first_name'            => $first_name,
-        'last_name'             => $last_name,
-        'email'                 => $email,
-        'purchase_id'          => $purchase_id,
-        'txn_id'                => $txn_id,
-        'company_name'          => $company_name,
-        'max_allowed_domains'   => SLM_DEFAULT_MAX_DOMAINS,
-        'max_allowed_devices'   => SLM_DEFAULT_MAX_DEVICES,
-        'date_created'          => $date_created,
-        'date_expiry'           => $date_expiry,
-        'product_ref'           => $product_ref,
-        'current_ver'           => SLM_API_Utility::get_slm_option('license_current_version'),
-        'until'                 => SLM_API_Utility::get_slm_option('license_until_version'),
-        'subscr_id'             => $user_id,
-        'item_reference'        => $order_id,
-        'slm_billing_length'    => $slm_billing_length,
-        'slm_billing_interval'  => $slm_billing_interval,
-        'secret_key'            => KEY_API
-    ];
+        if ($product && $product->is_type('slm_license')) {
+            // Fetch custom fields for the license
+            $product_data = [
+                'current_ver' => get_post_meta($product_id, '_license_current_version', true),
+                'until_ver' => get_post_meta($product_id, '_license_until_version', true),
+                'max_devices' => get_post_meta($product_id, '_devices_licenses', true) ?: $default_devices,
+                'max_domains' => get_post_meta($product_id, '_domain_licenses', true) ?: $default_domains,
+                'item_reference' => get_post_meta($product_id, '_license_item_reference', true),
+            ];
 
-    $response = wp_remote_post(SLM_API_URL, [
-        'method'    => 'POST',
-        'body'      => $license_data,
-        'timeout'   => 45,
-        'sslverify' => false,
-    ]);
+            // Generate a new license key
+            $new_license_key = slm_get_license(KEY_API_PREFIX);
 
-    if (is_wp_error($response)) {
-        wp_send_json_error(['message' => __('API request failed', 'slm-plus')]);
+            // Insert the new license into the database
+            $wpdb->insert(SLM_TBL_LICENSE_KEYS, [
+                'license_key' => $new_license_key,
+                'wc_order_id' => $order_id,
+                'product_ref' => $product_id,
+                'txn_id' => $order_id,
+                'purchase_id_' => $order_id,
+                'subscr_id' => $user_id,
+                'item_reference' => $product_data['item_reference'],
+                'max_allowed_domains' => intval($product_data['max_domains']),
+                'max_allowed_devices' => intval($product_data['max_devices']),
+                'date_created' => $date_created,
+                'date_expiry' => $date_expiry,
+                'slm_billing_length' => intval($slm_billing_length),
+                'slm_billing_interval' => sanitize_text_field($slm_billing_interval),
+                'current_ver' => sanitize_text_field($product_data['current_ver']),
+                'until' => sanitize_text_field($product_data['until_ver']),
+                'lic_type' => sanitize_text_field($lic_type),
+                'email' => sanitize_email($email),
+                'first_name' => sanitize_text_field($first_name),
+                'last_name' => sanitize_text_field($last_name),
+                'company_name' => sanitize_text_field($company_name),
+                'lic_status' => 'pending',
+            ]);
+
+            // Add the license key to the order note
+            $order->add_order_note(sprintf(__('License Key generated: %s', 'slm-plus'), $new_license_key));
+            
+            // Collect license info for the response
+            $licenses[] = [
+                'license_key' => $new_license_key,
+                'product_name' => $product->get_name(),
+            ];
+        }
     }
 
-    $body = wp_remote_retrieve_body($response);
-    $api_response = json_decode($body, true);
+    // Save the order after updating
+    $order->save();
 
-    if ($api_response && isset($api_response['result']) && $api_response['result'] === 'success') {
-
-        $license_key = sanitize_text_field($api_response['key']);
-        $_license_current_version = SLM_API_Utility::get_slm_option('license_current_version');
-        $_license_until_version = SLM_API_Utility::get_slm_option('license_until_version');
-        $amount_of_licenses_devices = SLM_DEFAULT_MAX_DEVICES;
-        $sites_allowed = SLM_DEFAULT_MAX_DOMAINS;
-
-        // Add an order note
-        $order->add_order_note(
-            // Translators: %s is the license key generated for the order
-            sprintf(__('License Key generated: %s', 'slm-plus'), $license_key)
-        );
-
-        // Update order item meta with the license key for each item in the order
-        foreach ($order->get_items() as $item_id => $item) {
-            // Sanitize the license key and license type
-            $license_key = sanitize_text_field($license_key);
-            $_license_current_version = sanitize_text_field($_license_current_version);
-            $_license_until_version = sanitize_text_field($_license_until_version);
-            $amount_of_licenses_devices = sanitize_text_field($amount_of_licenses_devices);
-            $sites_allowed = sanitize_text_field($sites_allowed);
-
-            // Ensure the item is a valid order item
-            if ($item instanceof WC_Order_Item) {
-                // Set the license key and license type metadata for the item
-                wc_add_order_item_meta($item, 'License Key',  $license_key, true);
-                wc_add_order_item_meta($item, 'License Type', 'subscription', true);
-
-                $item->update_meta_data('License Key', sanitize_text_field($license_key));
-                $item->update_meta_data('License Type', 'subscription');
-                $item->update_meta_data('Current Ver.', sanitize_text_field($_license_current_version));
-                $item->update_meta_data('Until Ver.', sanitize_text_field($_license_until_version));
-                $item->update_meta_data('Max Devices', sanitize_text_field($amount_of_licenses_devices));
-                $item->update_meta_data('Max Domains', sanitize_text_field($sites_allowed));
-
-                // Save the item metadata
-                $item->save();  // Save the item to persist the metadata
-            }
-        }
-
-        // Save the order after updating the items
-        $order->save();  // This saves the order and ensures the changes are committed
-
-
-        // Optionally, log the order save for debugging
-        SLM_Helper_Class::write_log("Order $order_id saved with updated license information.");
-
-
-        // Send success response
-        wp_send_json_success(['message' => __('License created successfully', 'slm-plus')]);
+    // Send success response with license information
+    if (!empty($licenses)) {
+        wp_send_json_success([
+            'message' => __('License created successfully', 'slm-plus'),
+            'licenses' => $licenses,
+        ]);
     } else {
-        wp_send_json_error(['message' => __('License creation failed', 'slm-plus')]);
+        wp_send_json_error(['message' => __('No licenses were generated', 'slm-plus')]);
     }
 }
 
+
 add_action('wp_ajax_check_order_user_info', 'check_order_user_info_callback');
-function check_order_user_info_callback()
-{
+function check_order_user_info_callback(){
     check_ajax_referer('slm_generate_license_nonce', 'security');
 
     $order_id = isset($_POST['order_id']) ? absint($_POST['order_id']) : null;
@@ -656,7 +622,8 @@ function check_order_user_info_callback()
         $last_name = $order->get_billing_last_name();
         $email = $order->get_billing_email();
         wp_send_json_success(['last_name' => $last_name, 'email' => $email]);
-    } else {
+    }
+    else {
         wp_send_json_error(['message' => __('Order not found', 'slm-plus')]);
     }
 }
