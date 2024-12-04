@@ -57,6 +57,9 @@ https://www.tipsandtricks-hq.com/software-license-manager-plugin-for-wordpress
 
 == Changelog ==
 
+= WIP =
+- Moved the 'jquery' loading to admin side only.
+
 = 4.5.8 =
 - Added minimum PHP version requirement (PHP 7.4.0).
 - Added a condition to suppress the debug warning when the 'item_reference' parameter is not included in the API call.

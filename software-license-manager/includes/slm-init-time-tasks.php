@@ -16,11 +16,12 @@ class SLM_Init_Time_Tasks {
 	}
 
 	function load_scripts() {
-		//Load all common scripts and styles only
-		wp_enqueue_script( 'jquery' );
-
+		//Load any common scripts and styles only
+		
 		//Load all admin side scripts and styles only
 		if ( is_admin() ) {
+                        wp_enqueue_script( 'jquery' );
+                    
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'wplm-custom-admin-js', WP_LICENSE_MANAGER_URL . '/js/wplm-custom-admin.js', array( 'jquery-ui-dialog' ) );//admin only custom js code
 
