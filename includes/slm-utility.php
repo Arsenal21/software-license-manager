@@ -73,6 +73,7 @@ $slm_helper = new SLM_Helper_Class();
 
 class SLM_API_Utility
 {
+    
     /*
      * The args array can contain the following:
      * result (success or error)
@@ -189,6 +190,19 @@ class SLM_API_Utility
 
 class SLM_Utility
 {
+    public static function get_licenses_by_email($email) {
+        global $wpdb;
+    
+        // Query the licenses table for entries matching the email.
+        $table_name = SLM_TBL_LICENSE_KEYS; // Adjust table name if needed.
+        $query = $wpdb->prepare(
+            "SELECT license_key, product_ref, lic_status FROM $table_name WHERE email = %s",
+            $email
+        );
+    
+        return $wpdb->get_results($query, ARRAY_A);
+    }
+
     /**
      * Saves a backup of the plugin's database tables in a secure folder.
      */
