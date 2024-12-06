@@ -185,9 +185,6 @@ function slm_generate_licenses_callback()
                     $license_key = sanitize_text_field($api_response['key']);
                     $success_count++;
 
-                    $item->add_meta_data('License Key', $license_key, true);
-                    $item->add_meta_data('License Type', $slm_lic_type, true);
-
                     $order->add_order_note(
                         // Translators: %s is the generated license key
                         sprintf(__('License Key generated: %s', 'slm-plus'), $license_key)
@@ -209,6 +206,18 @@ function slm_generate_licenses_callback()
             foreach ($order_items as $item) {
                 $product_id = $item->get_product_id();
                 $product_name = $item->get_name();
+
+                // Fetch the license key directly using the order ID
+                $existing_license_key = SLM_Utility::slm_get_license_by_order_id($order_id);
+
+                if ($existing_license_key) {
+                    // Add the current order to associated orders for the existing license
+                    SLM_Utility::slm_add_associated_order($existing_license_key, $order_id);
+
+                    $skipped_orders[] = $order_id;
+                    $skipped_reasons[$order_id] = 'Already has a license';
+                    continue;
+                }
 
                 if ($item->meta_exists('_slm_lic_key')) {
                     $skipped_orders[] = $order_id;
@@ -235,6 +244,7 @@ function slm_generate_licenses_callback()
                         $success_count++;
                         $generated_licenses[] = ['license_key' => $license_key, 'order_id' => $order_id];
 
+                        $item->add_meta_data('_slm_lic_key', $license_key, true);
                         $item->add_meta_data('License Key', $license_key, true);
                         $item->add_meta_data('License Type', $slm_lic_type, true);
 

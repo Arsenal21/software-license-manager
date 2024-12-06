@@ -35,18 +35,36 @@
 
 class SLM_API_Listener
 {
-    function __construct()
-    {
+    function __construct() {
         if (isset($_REQUEST['slm_action']) && isset($_REQUEST['secret_key'])) {
             do_action('slm_api_listener_init');
-            $this->creation_api_listener();
-            $this->activation_api_listener();
-            $this->deactivation_api_listener();
-            $this->check_api_listener();
-            $this->check_api_info();
-            $this->update_api_listener();
+            $slm_action = sanitize_text_field($_REQUEST['slm_action']);
+            switch ($slm_action) {
+                case 'renew_license':
+                    $this->renew_api_listener();
+                    break;
+                case 'slm_create_new':
+                    $this->creation_api_listener();
+                    break;
+                case 'slm_activate':
+                    $this->activation_api_listener();
+                    break;
+                case 'slm_deactivate':
+                    $this->deactivation_api_listener();
+                    break;
+                case 'slm_update':
+                    $this->update_api_listener();
+                    break;
+                case 'slm_check':
+                    $this->check_api_listener();
+                    break;
+                case 'slm_info':
+                    $this->check_api_info();
+                    break;
+            }
         }
     }
+    
 
     function creation_api_listener()
     {
@@ -659,5 +677,183 @@ class SLM_API_Listener
                 SLM_API_Utility::output_api_response($error_args);
             }
         }
+    }
+
+    function wc_slm_handle_license_renewal($order_id, $license_key)
+    {
+        // Log the renewal action for debugging
+        SLM_Helper_Class::write_log("Processing license renewal for Order ID: $order_id, License Key: $license_key");
+
+        // Retrieve the license data
+        $license_data = SLM_Utility::get_licence_by_key($license_key);
+        if (!$license_data) {
+            SLM_Helper_Class::write_log("License key $license_key not found.");
+            return; // Stop if the license is not found
+        }
+
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+
+        // Calculate the new expiration date
+        $renewal_period = intval($license_data['slm_billing_length']);
+        $renewal_term = sanitize_text_field($license_data['slm_billing_interval']);
+        $new_expiry_date = date('Y-m-d', strtotime('+' . $renewal_period . ' ' . $renewal_term));
+
+        // Update the license expiry date in the database
+        $update_result = $wpdb->update(
+            $license_table,
+            ['date_expiry' => $new_expiry_date, 'lic_status' => 'active'],
+            ['license_key' => $license_key]
+        );
+
+        if ($update_result !== false) {
+            SLM_Helper_Class::write_log("License $license_key renewed successfully. New expiry date: $new_expiry_date.");
+        } else {
+            SLM_Helper_Class::write_log("Failed to renew license $license_key.");
+        }
+
+        // Add order note for renewal confirmation
+        $order = wc_get_order($order_id);
+        if ($order) {
+            $order->add_order_note(sprintf(
+                __('License Key %s renewed. New expiry date: %s', 'slm-plus'),
+                $license_key,
+                $new_expiry_date
+            ));
+            $order->save();
+        }
+
+        // Optional: Notify the user about the renewal
+        wc_slm_notify_user_about_renewal($order, $license_key);
+    }
+
+
+    function renew_api_listener() {
+        if (isset($_POST['slm_action']) && trim($_POST['slm_action']) === 'renew_license') {
+            global $wpdb;
+
+            // Verify the secret key for security
+            SLM_API_Utility::verify_secret_key();
+
+            // Get and sanitize the license key and WooCommerce order ID
+            $license_key = sanitize_text_field($_POST['license_key']);
+            $wc_order_id = intval($_POST['wc_order_id']);
+
+            // Check if license key and order ID are provided
+            if (empty($license_key) || empty($wc_order_id)) {
+                SLM_API_Utility::output_api_response([
+                    'result' => 'error',
+                    'message' => 'License key or WooCommerce order ID is missing.',
+                    'error_code' => SLM_Error_Codes::MISSING_PARAMETERS,
+                    'status_code' => 400,
+                ]);
+                return;
+            }
+
+            // Fetch the WooCommerce order
+            $order = wc_get_order($wc_order_id);
+            if (!$order) {
+                SLM_API_Utility::output_api_response([
+                    'result' => 'error',
+                    'message' => 'Invalid WooCommerce order ID.',
+                    'error_code' => SLM_Error_Codes::ORDER_NOT_FOUND,
+                    'status_code' => 404,
+                ]);
+                return;
+            }
+
+            // Fetch license details from the database
+            $license = SLM_Utility::get_license_by_key($license_key);
+            if (!$license) {
+                SLM_API_Utility::output_api_response([
+                    'result' => 'error',
+                    'message' => 'License not found.',
+                    'error_code' => SLM_Error_Codes::LICENSE_INVALID,
+                    'status_code' => 404,
+                ]);
+                return;
+            }
+
+            // Verify the order ID matches the one associated with the license (if applicable)
+            if (!empty($license->wc_order_id) && $license->wc_order_id != $wc_order_id) {
+                SLM_API_Utility::output_api_response([
+                    'result' => 'error',
+                    'message' => 'The provided order ID does not match the one associated with this license.',
+                    'error_code' => SLM_Error_Codes::ORDER_ID_MISMATCH,
+                    'status_code' => 400,
+                ]);
+                return;
+            }
+
+            // Check the WooCommerce order status
+            if ($order->get_status() !== 'completed') {
+                SLM_API_Utility::output_api_response([
+                    'result' => 'error',
+                    'message' => 'The WooCommerce order has not been completed.',
+                    'error_code' => SLM_Error_Codes::ORDER_NOT_COMPLETED,
+                    'status_code' => 400,
+                ]);
+                return;
+            }
+
+            // Handle license renewal process
+            $this->handle_license_renewal($wc_order_id, $license_key);
+
+            // Return a success response
+            SLM_API_Utility::output_api_response([
+                'result' => 'success',
+                'message' => 'License renewed successfully.',
+                'license_key' => $license_key,
+                'renewal_date' => current_time('mysql'),
+                'status_code' => 200,
+            ]);
+        }
+    } 
+
+    private function handle_license_renewal($order_id, $license_key) {
+        // Log the renewal action for debugging
+        SLM_Helper_Class::write_log("Processing license renewal for Order ID: $order_id, License Key: $license_key");
+
+        // Retrieve the license data
+        $license_data = SLM_Utility::get_license_by_key($license_key);
+        if (!$license_data) {
+            SLM_Helper_Class::write_log("License key $license_key not found.");
+            return; // Stop if the license is not found
+        }
+
+        global $wpdb;
+        $license_table = SLM_TBL_LICENSE_KEYS;
+
+        // Calculate the new expiration date
+        $renewal_period = intval($license_data->slm_billing_length);
+        $renewal_term = sanitize_text_field($license_data->slm_billing_interval);
+        $new_expiry_date = date('Y-m-d', strtotime('+' . $renewal_period . ' ' . $renewal_term));
+
+        // Update the license expiry date in the database
+        $update_result = $wpdb->update(
+            $license_table,
+            ['date_expiry' => $new_expiry_date, 'lic_status' => 'active'],
+            ['license_key' => $license_key]
+        );
+
+        if ($update_result !== false) {
+            SLM_Helper_Class::write_log("License $license_key renewed successfully. New expiry date: $new_expiry_date.");
+        } else {
+            SLM_Helper_Class::write_log("Failed to renew license $license_key.");
+        }
+
+        // Add order note for renewal confirmation
+        $order = wc_get_order($order_id);
+        if ($order) {
+            $order->add_order_note(sprintf(
+                __('License Key %s renewed. New expiry date: %s', 'slm-plus'),
+                $license_key,
+                $new_expiry_date
+            ));
+            $order->save();
+        }
+
+        // Notify the user about the renewal
+        wc_slm_notify_user_about_renewal($order, $license_key);
     }
 }

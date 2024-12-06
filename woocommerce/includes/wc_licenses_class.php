@@ -36,7 +36,7 @@ if ($enable_downloads_page == 1) {
 }
 
 
-// Step 1: Register the endpoint and add it to WooCommerce’s query vars
+// Register the endpoint and add it to WooCommerce’s query vars
 add_filter('woocommerce_get_query_vars', function($query_vars) {
     $query_vars['my-licenses'] = 'my-licenses';
     return $query_vars;
@@ -48,7 +48,7 @@ function slm_flush_rewrite_rules() {
 }
 register_activation_hook(__FILE__, 'slm_flush_rewrite_rules');
 
-// Step 2: Add the My Licenses link to WooCommerce account menu
+//Add the My Licenses link to WooCommerce account menu
 function slm_add_my_licenses_endpoint($items) {
     if (SLM_API_Utility::get_slm_option('slm_woo')) {
         // Add "My Licenses" item just before "Log out"
@@ -66,7 +66,7 @@ function slm_add_my_licenses_endpoint($items) {
 }
 add_filter('woocommerce_account_menu_items', 'slm_add_my_licenses_endpoint');
 
-// Step 3: Display content based on endpoint value
+//Display content based on endpoint value
 add_action('woocommerce_account_my-licenses_endpoint', function($value) {
 
     //SLM_Helper_Class::write_log('slm_add_my_licenses_endpoint loaded');
@@ -90,7 +90,7 @@ add_action('woocommerce_account_my-licenses_endpoint', function($value) {
     }
 });
 
-// Step 4: Display the main licenses table
+//Display the main licenses table
 function slm_display_license_table() {
 
     //SLM_Helper_Class::write_log('slm_display_license_table loaded');
@@ -162,7 +162,124 @@ function slm_display_license_table() {
     
 }
 
-//SLM_Helper_Class::write_log('file loaded');
+
+add_action('wp_loaded', function () {
+    if (isset($_GET['renew_license']) && isset($_GET['product_id'])) {
+        // Sanitize inputs
+        $license_key = sanitize_text_field($_GET['renew_license']);
+        $product_id = absint($_GET['product_id']);
+
+        // Validate and process
+        if (!empty($license_key) && !empty($product_id)) {
+            slm_direct_renew_and_redirect($license_key, $product_id);
+        }
+    }
+});
+
+
+
+function slm_direct_renew_and_redirect($license_key, $product_id) {
+    // Ensure WooCommerce is loaded
+    if (!function_exists('wc_get_product')) {
+        error_log('WooCommerce is not loaded. Cannot process renewal.');
+        return;
+    }
+
+    // Prevent redirection loops by checking a custom flag
+    if (isset($_GET['redirected']) && $_GET['redirected'] === 'true') {
+        return; // Skip processing if already redirected
+    }
+
+    // Validate inputs
+    if (empty($license_key) || empty($product_id)) {
+        wc_add_notice(__('Invalid license or product.', 'slm-plus'), 'error');
+        return;
+    }
+
+    // Safely retrieve the product
+    $product = wc_get_product($product_id);
+    if (!$product || !$product->is_type('simple')) {
+        wc_add_notice(__('Invalid product for renewal.', 'slm-plus'), 'error');
+        return;
+    }
+
+    // Delay cart operations
+    add_action('woocommerce_cart_loaded_from_session', function () use ($license_key, $product_id) {
+        $cart_item_data = [
+            'renew_license_key' => sanitize_text_field($license_key), // Attach the license key
+        ];
+        $added_to_cart = WC()->cart->add_to_cart($product_id, 1, 0, [], $cart_item_data);
+
+        if (!$added_to_cart) {
+            wc_add_notice(__('Failed to add product to cart.', 'slm-plus'), 'error');
+            return;
+        }
+
+        // Build the redirect URL with a 'redirected' flag
+        $redirect_url = add_query_arg([
+            'renew_license' => $license_key,
+            'product_id' => $product_id,
+            'add-to-cart' => $product_id,
+            'redirected' => 'true', // Add the flag to prevent loops
+        ], site_url('/license-cart')); // Update to your cart URL
+
+        // Redirect to the custom cart page
+        wp_safe_redirect($redirect_url);
+        exit;
+    });
+}
+
+add_action('woocommerce_before_cart', function() {
+    WC()->cart->get_cart_contents_count(); // Total cart items
+    error_log(print_r(WC()->cart->get_cart(), true)); // Logs all cart items
+});
+
+
+
+
+
+
+// Example usage with enhanced safety checks
+// Example usage with enhanced safety checks
+add_action('init', function () {
+    if (isset($_GET['renew_license']) && isset($_GET['product_id'])) {
+        // Ensure WooCommerce is active
+        if (!function_exists('wc_get_product')) {
+            if (!is_plugin_active('woocommerce/woocommerce.php')) {
+                error_log('WooCommerce is not active. Please enable it to use the SLM Plus plugin.');
+                return;
+            }
+        }
+
+        // Sanitize input values
+        $license_key = sanitize_text_field($_GET['renew_license']);
+        $product_id = absint($_GET['product_id']);
+
+        // Validate required values
+        if (!empty($license_key) && !empty($product_id)) {
+            // Start WooCommerce session if not already initialized
+            if (!WC()->session) {
+                WC()->initialize_session_handler();
+                WC()->session = new WC_Session_Handler();
+                WC()->session->init();
+                error_log('WooCommerce session initialized.');
+            }
+
+            // Store license key in session for later use in checkout
+            WC()->session->set('renew_license_key', $license_key);
+
+            // Log for debugging
+            SLM_Helper_Class::write_log("Renew license key set in session during redirect: {$license_key}");
+
+            // Redirect or process renewal
+            slm_direct_renew_and_redirect($license_key, $product_id);
+        } else {
+            error_log('Missing or invalid license key or product ID for renewal.');
+        }
+    }
+});
+
+
 
 // Step 5: Display individual license details
 function slm_license_view($encoded_license_id) {
@@ -220,8 +337,9 @@ function slm_license_view($encoded_license_id) {
         'date_expiry' => __('Date Expiry', 'slm-plus'),
         'product_ref' => __('Product Reference', 'slm-plus'),
         'subscr_id' => __('Subscription ID', 'slm-plus'),
+        'subscr_id' => __('Subscription ID', 'slm-plus'),
         'max_allowed_domains' => __('Max Allowed Domains', 'slm-plus'),
-        'max_allowed_devices' => __('Max Allowed Devices', 'slm-plus'),
+        'associated_orders' => __('Associated Orders', 'slm-plus'),
         'company_name' => __('Company Name', 'slm-plus'),
     ];
 
@@ -233,7 +351,8 @@ function slm_license_view($encoded_license_id) {
     // Loop through each field and output its label and value dynamically
     foreach ($slm_license_fields as $field_key => $field_label) {
         // Check if the field is set and get the value
-        $field_value = isset($license->$field_key) ? esc_html($license->$field_key) : ''; 
+        $field_value = isset($license->$field_key) ? esc_html($license->$field_key) : '';
+
 
         // Special handling for purchase_id_ to link to the order
         if ($field_key === 'purchase_id_') {
@@ -243,6 +362,103 @@ function slm_license_view($encoded_license_id) {
                 $field_value = '<a href="' . esc_url($order_link) . '">' . esc_html($field_value) . '</a>';
             } else {
                 $field_value = __('No Order Information Available', 'slm-plus');
+            }
+        }
+
+
+        if ($field_key === 'associated_orders') {
+            if (!empty($field_value)) {
+                // Fetch the associated orders using the provided function
+                $associated_orders = SLM_Utility::slm_get_associated_orders($license->license_key);
+        
+                // Debugging: Log the retrieved value
+                SLM_Helper_Class::write_log('Associated Orders Raw Data: ' . print_r($associated_orders, true));
+        
+                if (!empty($associated_orders) && is_array($associated_orders)) {
+                    $links = [];
+                    foreach ($associated_orders as $order_id) {
+                        // Generate a link to the WooCommerce account orders page
+                        $order_url = wc_get_endpoint_url('view-order', $order_id, wc_get_page_permalink('myaccount'));
+                        $links[] = sprintf(
+                            '<a href="%s">#%s</a>',
+                            esc_url($order_url), // Sanitize the URL
+                            esc_html($order_id)  // Escape and sanitize the order ID
+                        );
+                    }
+        
+                    // Join all links with a comma for display
+                    $field_value = implode(', ', $links);
+                } else {
+                    $field_value = __('No Associated Orders Found (Data Issue)', 'slm-plus');
+                }
+            } else {
+                $field_value = __('No Order Information Available', 'slm-plus');
+            }
+        }
+        
+        
+
+        if ($field_key === 'lic_status') {
+            $license_key = isset($license->license_key) ? esc_html($license->license_key) : '';
+            $purchase_id = isset($license->purchase_id_) ? absint($license->purchase_id_) : 0;
+        
+            // Ensure date_expiry is checked safely
+            $expiration_date = isset($license->date_expiry) ? strtotime($license->date_expiry) : false;
+        
+            // Determine if the license is expired
+            $is_expired = (!empty($expiration_date) && $expiration_date < time()) || $license->lic_status === 'expired';
+        
+            if ($is_expired && !empty($license_key) && !empty($purchase_id)) {
+                $product_id = 0; // Initialize product_id
+        
+                // Ensure WooCommerce functions are available
+                if (!function_exists('wc_get_order')) {
+                    // Include WooCommerce files to make functions accessible
+                    if (defined('WC_ABSPATH')) {
+                        include_once WC_ABSPATH . 'includes/wc-order-functions.php';
+                        include_once WC_ABSPATH . 'includes/wc-product-functions.php';
+                    } else {
+                        // If WooCommerce is not loaded, skip further processing
+                        $field_value = sprintf(
+                            '<span class="status-expired">%s</span> <span class="warning">%s</span>',
+                            __('Expired', 'slm-plus'),
+                            __('WooCommerce not loaded.', 'slm-plus')
+                        );
+                        return;
+                    }
+                }
+        
+                // Retrieve the product ID associated with the license
+                $order = wc_get_order($purchase_id);
+        
+                // Ensure order is valid and contains items
+                if ($order) {
+                    $items = $order->get_items();
+                    $product_id = $items ? current($items)->get_product_id() : 0;
+                }
+        
+                if (!empty($product_id)) {
+                    // Generate the renewal URL
+                    $renew_url = add_query_arg([
+                        'renew_license' => $license_key,
+                        'product_id' => $product_id,
+                    ], site_url('/my-account/my-licenses'));
+        
+                    // Update field value to include Renew button
+                    $field_value = sprintf(
+                        '<span class="status-expired">%s</span> <a href="%s" class="button renew-button">%s</a>',
+                        __('Expired', 'slm-plus'),
+                        esc_url($renew_url),
+                        __('Renew', 'slm-plus')
+                    );
+                } else {
+                    // Handle missing product ID case (e.g., display a warning)
+                    $field_value = sprintf(
+                        '<span class="status-expired">%s</span> <span class="warning">%s</span>',
+                        __('Expired', 'slm-plus'),
+                        __('Product not found for renewal.', 'slm-plus')
+                    );
+                }
             }
         }
 
@@ -256,7 +472,12 @@ function slm_license_view($encoded_license_id) {
 
                 if ($product_url && $product_name) {
                     // Format as "#ID - ProductName"
-                    $field_value = '<a href="' . esc_url($product_url) . '">#' . esc_html($product_id) . ' - ' . esc_html($product_name) . '</a>';
+                    $field_value = sprintf(
+                        '<a href="%s">#%s - %s</a>',
+                        esc_url($product_url),         // Sanitize the URL
+                        esc_html($product_id),         // Escape and sanitize the product ID
+                        esc_html($product_name)        // Escape and sanitize the product name
+                    );
                 } else {
                     $field_value = __('Product Not Found', 'slm-plus');
                 }
@@ -270,7 +491,7 @@ function slm_license_view($encoded_license_id) {
             $field_value = ($field_key === 'date_activated') ? __('Not activated yet', 'slm-plus') : __('Not renewed yet', 'slm-plus');
         }
 
-        echo '<tr><th>' . esc_html($field_label) . '</th><td>' . esc_html($field_value) . '</td></tr>';
+        echo '<tr><th>' . esc_html($field_label) . '</th><td>' . $field_value . '</td></tr>';
     }
     echo '</tbody>';
     echo '</table>'; 

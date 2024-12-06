@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die();
+}
+
 /**
  *
  * @package   SLM Plus
@@ -20,6 +25,8 @@ require_once(SLM_LIB . 'slm-error-codes.php');
 require_once(SLM_LIB . 'slm-init-time-tasks.php');
 require_once(SLM_LIB . 'slm-api-listener.php');
 require_once(SLM_LIB . 'slm-scripts.php');
+require_once(SLM_LIB . 'slm-shortcodes.php');
+require_once(SLM_LIB . 'slm-blocks.php');
 
 // Admin-only includes
 if (is_admin()) {
@@ -203,11 +210,10 @@ function wc_log($msg)
 if (SLM_Helper_Class::slm_get_option('slm_woo') == 1 && is_plugin_active('woocommerce/woocommerce.php')) {
     require_once(SLM_WOO . 'includes/wc_licenses_class.php');
     require_once(SLM_WOO . 'includes/slm-meta-boxes.php');
-
     require_once SLM_WOO . 'includes/register-template.php';
     require_once SLM_WOO . 'includes/purchase.php';
     require_once SLM_WOO . 'includes/create-license-orders.php';
-
+    require_once SLM_WOO . 'includes/hooks/license-checkout-hooks.php';
     // Build WooCommerce tabs
     SLM_Utility::slm_woo_build_tab();
 }

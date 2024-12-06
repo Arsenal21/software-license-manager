@@ -73,6 +73,7 @@ $slm_helper = new SLM_Helper_Class();
 
 class SLM_API_Utility
 {
+    
     /*
      * The args array can contain the following:
      * result (success or error)
@@ -112,23 +113,24 @@ class SLM_API_Utility
 
     public static function verify_secret_key()
     {
-        // Get the stored secret key from plugin options
-        $slm_options = get_option('slm_plugin_options');
-        $right_secret_key = $slm_options['lic_verification_secret'] ?? '';
-
-        // Sanitize and retrieve the received secret key
-        $received_secret_key = sanitize_text_field($_REQUEST['secret_key'] ?? '');
+        $slm_options            = get_option('slm_plugin_options');
+        $right_secret_key       = $slm_options['lic_verification_secret'] ?? '';
+        $received_secret_key    = sanitize_text_field($_REQUEST['secret_key'] ?? '');
+        $slm_action             = sanitize_text_field($_REQUEST['slm_action'] ?? '');
 
         // Case-sensitive comparison for the secret keys
         if ($received_secret_key !== $right_secret_key) {
             // Prepare the error response with case-sensitivity note
             $args = array(
                 'result' => 'error',
-                'message' => 'Verification API secret key is invalid. Note: The key comparison is case-sensitive.',
+                'message' => 'Verification API secret key is invalid. Note: The key is case-sensitive.',
+                'slm_action' => $slm_action,
+                'received_secret_key' => $received_secret_key,
                 'error_code' => SLM_Error_Codes::VERIFY_KEY_INVALID
             );
             // Output the API response with the error
             self::output_api_response($args);
+            SLM_Helper_Class::write_log('Verification API secret key is invalid. Note: The key is case-sensitive. ' . $slm_action);
         }
     }
 
@@ -188,9 +190,30 @@ class SLM_API_Utility
 
 class SLM_Utility
 {
+    public static function get_licenses_by_email($email) {
+        global $wpdb;
+    
+        // Query the licenses table for entries matching the email.
+        $table_name = SLM_TBL_LICENSE_KEYS; // Adjust table name if needed.
+        $query = $wpdb->prepare(
+            "SELECT license_key, product_ref, lic_status FROM $table_name WHERE email = %s",
+            $email
+        );
+    
+        return $wpdb->get_results($query, ARRAY_A);
+    }
+
     /**
      * Saves a backup of the plugin's database tables in a secure folder.
      */
+    public static function renew_license($license_key, $order_id) {
+        global $wpdb;
+        $wpdb->update(SLM_TBL_LICENSE_KEYS, [
+            'wc_order_id' => $order_id,
+            'payment_status' => 'pending'
+        ], ['license_key' => $license_key]);
+    }
+    
     public static function slm_save_backup_to_uploads()
     {
         global $wpdb;
@@ -659,8 +682,166 @@ class SLM_Utility
         }
     }
 
+    /**
+     * Get license key by WooCommerce Order ID.
+     *
+     * @param int $order_id WooCommerce order ID.
+     * @return string|null License key associated with the order ID, or null if not found.
+     */
+    public static function slm_get_license_by_order_id($order_id) {
+        global $wpdb;
+        $lic_key_table = SLM_TBL_LICENSE_KEYS;
+
+        // Query to fetch the license key by order ID
+        $query = $wpdb->prepare("SELECT license_key FROM $lic_key_table WHERE wc_order_id = %d", $order_id);
+        $license_key = $wpdb->get_var($query);
+
+        return $license_key ? sanitize_text_field($license_key) : null;
+    }
 
 
+
+    /**
+     * Get associated orders for a license.
+     *
+     * @param mixed $identifier The license key (string) or license ID (integer).
+     * @return array|null List of associated orders or null if none found.
+     */
+    public static function slm_get_associated_orders($identifier) {
+        global $wpdb;
+        $lic_key_table = SLM_TBL_LICENSE_KEYS;
+    
+        // Ensure identifier is valid
+        if (empty($identifier)) {
+            SLM_Helper_Class::write_log('Invalid identifier passed to slm_get_associated_orders: ' . print_r($identifier, true));
+            return [];
+        }
+    
+        // Prepare the query based on identifier type
+        if (is_numeric($identifier)) {
+            $query = $wpdb->prepare("SELECT associated_orders FROM $lic_key_table WHERE id = %d", $identifier);
+        } else {
+            $query = $wpdb->prepare("SELECT associated_orders FROM $lic_key_table WHERE license_key = %s", $identifier);
+        }
+    
+        // Log the query
+        SLM_Helper_Class::write_log('SQL Query: ' . $query);
+    
+        // Execute the query
+        $result = $wpdb->get_var($query);
+    
+        // Debug the raw result
+        SLM_Helper_Class::write_log('Raw associated_orders value: ' . print_r($result, true));
+    
+        // Process the result if not empty
+        if (!empty($result)) {
+            $orders = maybe_unserialize($result);
+            SLM_Helper_Class::write_log('Unserialized associated_orders value: ' . print_r($orders, true));
+    
+            if (is_array($orders)) {
+                return array_values(array_unique(array_map('intval', $orders)));
+            }
+        }
+    
+        // Return empty array if no valid data found
+        return [];
+    }
+    
+    
+    
+
+    /**
+     * Add an order to the associated orders of a license.
+     *
+     * @param mixed $identifier The license key (string) or license ID (integer).
+     * @param int $order_id The WooCommerce order ID to associate with the license.
+     * @return bool True if the operation was successful, false otherwise.
+     */
+    public static function slm_add_associated_order($identifier, $order_id) {
+        global $wpdb;
+        $lic_key_table = SLM_TBL_LICENSE_KEYS;
+    
+        // Validate $order_id
+        if (!is_numeric($order_id) || $order_id <= 0) {
+            error_log("SLM: Invalid order ID provided: $order_id");
+            return false;
+        }
+    
+        // Fetch current license data
+        if (is_numeric($identifier)) {
+            // Identifier is a license ID
+            $license_data = $wpdb->get_row(
+                $wpdb->prepare("SELECT associated_orders, wc_order_id FROM $lic_key_table WHERE id = %d", $identifier),
+                ARRAY_A
+            );
+        } else {
+            // Identifier is a license key
+            $license_data = $wpdb->get_row(
+                $wpdb->prepare("SELECT associated_orders, wc_order_id FROM $lic_key_table WHERE license_key = %s", $identifier),
+                ARRAY_A
+            );
+        }
+    
+        if (!$license_data) {
+            error_log("SLM: License not found for identifier: $identifier");
+            return false;
+        }
+    
+        // Extract current associated orders and wc_order_id
+        $associated_orders = maybe_unserialize($license_data['associated_orders']);
+        $current_wc_order_id = $license_data['wc_order_id'];
+    
+        // Ensure $associated_orders is a valid array
+        if (!is_array($associated_orders)) {
+            $associated_orders = [];
+        }
+    
+        // Add the old wc_order_id to the associated_orders array if it's valid
+        if (!empty($current_wc_order_id) && !in_array($current_wc_order_id, $associated_orders, true)) {
+            $associated_orders[] = $current_wc_order_id;
+        }
+    
+        // Add the new order_id to the associated_orders array if not already present
+        if (!in_array($order_id, $associated_orders, true)) {
+            $associated_orders[] = $order_id;
+        }
+    
+        // Serialize the updated orders for storage
+        $updated_orders = maybe_serialize($associated_orders);
+    
+        // Prepare the query to update the database
+        if (is_numeric($identifier)) {
+            // Update based on license ID
+            $query = $wpdb->prepare(
+                "UPDATE $lic_key_table SET associated_orders = %s, wc_order_id = %d WHERE id = %d",
+                $updated_orders,
+                $order_id,
+                $identifier
+            );
+        } else {
+            // Update based on license key
+            $query = $wpdb->prepare(
+                "UPDATE $lic_key_table SET associated_orders = %s, wc_order_id = %d WHERE license_key = %s",
+                $updated_orders,
+                $order_id,
+                $identifier
+            );
+        }
+    
+        // Execute the query
+        $result = $wpdb->query($query);
+    
+        // Handle and log errors
+        if ($result === false) {
+            error_log("SLM: Failed to update associated orders for identifier: $identifier. Error: " . $wpdb->last_error);
+            return false;
+        }
+    
+        // Log success
+        error_log("SLM: Successfully updated associated orders for identifier: $identifier with Order ID: $order_id");
+        return true;
+    }
+    
 
 
     /*

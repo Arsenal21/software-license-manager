@@ -95,6 +95,24 @@ Give a ⭐️ if this project helped you!
 This feature set offers complete license management for WordPress and WooCommerce environments, providing enhanced control, security, and visibility for admins and end-users.
 
 
+### How to Use the New Shortcodes and Blocks
+
+#### Shortcodes:
+1. **Forgot License**: `[slm_forgot_license]`
+   - Displays a form where users can enter their email to retrieve license information.
+   - Can be added to any page or post manually.
+
+2. **List Licenses**: `[slm_list_licenses]`
+   - Dynamically displays a table of licenses associated with the logged-in user.
+   - Useful for pages where users manage their licenses.
+
+#### Blocks:
+1. **Forgot License Block**:
+   - Found under the "SLM Plus" category in the block editor.
+   - Provides an interactive form preview in the editor.
+   - On the frontend, renders the `[slm_forgot_license]` shortcode.
+
+
 ## ✅ Compatibility
 
 -   [-] Woocommerce

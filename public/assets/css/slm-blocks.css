@@ -1,0 +1,84 @@
+.wp-block-slm-forgot-license {
+    background-color: #f9f9f9;
+    border: 1px dashed #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    font-style: italic;
+}
+/* Style for the block preview */
+.slm-forgot-license-preview {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 400px;
+    font-family: Arial, sans-serif;
+}
+
+/* Vertically stacked form */
+.slm-forgot-license-form {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Adds spacing between form elements */
+    width: 100%; /* Ensure the form takes full width */
+}
+
+.slm-forgot-license-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.slm-forgot-license-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+.slm-forgot-license-form button {
+    padding: 10px;
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: not-allowed; /* Indicate the button is disabled in preview */
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Add hover styling for better preview (if enabled) */
+.slm-forgot-license-form button:hover {
+    background-color: #005f8d;
+}
+
+/* Style for the List Licenses block preview */
+.slm-list-licenses-preview {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-width: 400px;
+    font-family: Arial, sans-serif;
+}
+
+.slm-list-licenses-preview-message {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.slm-list-licenses-placeholder {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.slm-list-licenses-placeholder li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.slm-list-licenses-placeholder li:last-child {
+    border-bottom: none;
+}

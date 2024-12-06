@@ -24,3 +24,30 @@
 .slm-status-badge.status-expired {
     background-color: #6c757d; /* Gray */
 }
+
+.slm-licenses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    text-align: left;
+}
+
+.slm-licenses-table th, .slm-licenses-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.slm-licenses-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.slm-licenses-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.slm-licenses-table tr:hover {
+    background-color: #f1f1f1;
+}

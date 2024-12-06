@@ -176,6 +176,7 @@ function slm_admin_tools_menu()
             </form>
         </div>
     </div>
+    
 
     <div class="postbox">
         <h3 class="hndle"><label for="title"><?php esc_html_e('Backup Database', 'slm-plus'); ?></label></h3>
