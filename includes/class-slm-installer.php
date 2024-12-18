@@ -117,6 +117,8 @@ $status_table_sql = "CREATE TABLE IF NOT EXISTS " . $lic_status_table . " (
     PRIMARY KEY (id),
     UNIQUE KEY unique_status_key (status_key)
 ) " . $charset_collate . ";";
+dbDelta($status_table_sql);
+
 
 // Insert default statuses if table is empty
 $status_count = $wpdb->get_var("SELECT COUNT(*) FROM $lic_status_table");
